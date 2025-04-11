@@ -21,11 +21,11 @@
   "accessibility.signals.format": {
     "sound": "always"
   },
-  "omnisharp.organizeImportsOnFormat": true,
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.autoClosingBrackets": "always",
   "editor.guides.bracketPairs": true,
   "editor.guides.bracketPairsHorizontal": false,
   "editor.guides.highlightActiveBracketPair": true,
-  "editor.matchBrackets": "always"
+  "editor.matchBrackets": "always",
+  "dotnet.formatting.organizeImportsOnFormat": true
 }
