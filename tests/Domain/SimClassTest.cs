@@ -14,7 +14,7 @@ public class SimClassTest
             Name = "TestSimClass",
             BaseClassId = Guid.NewGuid(),
         };
-
+        simClass.SetState(new StateNormal());
         var result = simClass.GetState();
 
         Assert.AreEqual(SimState.Normal, result);
@@ -28,9 +28,9 @@ public class SimClassTest
         {
             Name = "TestSimClassAbstract",
             BaseClassId = Guid.NewGuid(),
-            State = new StateAbstract()
         };
 
+        simClass.SetState(new StateAbstract());
         var result = simClass.GetState();
 
         Assert.AreEqual(SimState.Abstract, result);
@@ -44,9 +44,9 @@ public class SimClassTest
         {
             Name = "TestSimClassSealed",
             BaseClassId = Guid.NewGuid(),
-            State = new StateSealed()
         };
 
+        simClass.SetState(new StateSealed());
         var result = simClass.GetState();
 
         Assert.AreEqual(SimState.Sealed, result);
