@@ -4,5 +4,6 @@ namespace IBussinesLogic;
 
 public interface ISimClassService
 {
-    IEnumerable<SimClass> GetAllSimClass();
+    IEnumerable<SimClass> GetAllSimClasses();
+    SimClass CreateSimClass(string? name, bool? isAbstract, bool? isSealed, Guid? baseClassId);
 }
