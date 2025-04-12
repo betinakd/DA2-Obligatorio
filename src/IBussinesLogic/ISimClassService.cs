@@ -4,5 +4,5 @@ namespace IBussinesLogic;
 
 public interface ISimClassService
 {
-    IEnumerable<SimClass> GetAllSimClass();
+    IEnumerable<SimClass> GetAllSimClasses();
 }
