@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Enums;
 
 namespace Tests.Domain;
 
@@ -16,11 +17,11 @@ public class SimClassTest
 
         var result = simClass.GetState();
 
-        Assert.AreEqual("Normal", result);
+        Assert.AreEqual(SimState.Normal, result);
     }
 
     [TestMethod]
-    
+
     public void CreateSimClass_HasAbstractState()
     {
         var simClass = new SimClass()
@@ -32,12 +33,12 @@ public class SimClassTest
 
         var result = simClass.GetState();
 
-        Assert.AreEqual("Abstract", result);
+        Assert.AreEqual(SimState.Abstract, result);
     }
 
     [TestMethod]
-    
-    public void CreateSimClass_HasAbstractState()
+
+    public void CreateSimClass_HasSealedState()
     {
         var simClass = new SimClass()
         {
@@ -48,7 +49,6 @@ public class SimClassTest
 
         var result = simClass.GetState();
 
-        Assert.AreEqual("Sealed", result);
+        Assert.AreEqual(SimState.Sealed, result);
     }
-
 }

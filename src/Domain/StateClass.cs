@@ -1,4 +1,7 @@
+using Domain.Enums;
+
+namespace Domain;
 public abstract class StateClass
 {
-    public abstract string GetState();
+    public abstract SimState GetState();
 }

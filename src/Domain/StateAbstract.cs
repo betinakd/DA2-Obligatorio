@@ -1,7 +1,11 @@
+using Domain.Enums;
+
+namespace Domain;
+
 public class StateAbstract : StateClass
 {
-    public override string GetState()
+    public override SimState GetState()
     {
-        return "Abstract";
+        return SimState.Abstract;
     }
 }

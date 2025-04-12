@@ -1,7 +1,11 @@
-public class StateSealed : StateClass
+using Domain.Enums;
+
+namespace Domain;
+
+    public class StateSealed : StateClass
 {
-    public override string GetState()
+    public override SimState GetState()
     {
-        return "Sealed";
+        return SimState.Sealed;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Domain;
+﻿using Domain.Enums;
+
+namespace Domain;
 
 public class SimClass
 {
@@ -7,8 +9,8 @@ public class SimClass
     public Guid? BaseClassId { get; set; }
     public StateClass State { get; set; } = new StateNormal();
 
-    public string GetState()
+    public SimState GetState()
     {
-        return State.GetType().Name;
+        return State.GetState();
     }
 }
