@@ -1,5 +1,6 @@
 using Domain;
 using Domain.Enums;
+using Domain.Exceptions;
 
 namespace Tests.Domain;
 
@@ -12,7 +13,6 @@ public class SimClassTest
         var simClass = new SimClass()
         {
             Name = "TestSimClass",
-            BaseClassId = Guid.NewGuid(),
         };
         simClass.SetState(new StateNormal());
         var result = simClass.GetState();
@@ -27,7 +27,6 @@ public class SimClassTest
         var simClass = new SimClass()
         {
             Name = "TestSimClassAbstract",
-            BaseClassId = Guid.NewGuid(),
         };
 
         simClass.SetState(new StateAbstract());
@@ -43,12 +42,48 @@ public class SimClassTest
         var simClass = new SimClass()
         {
             Name = "TestSimClassSealed",
-            BaseClassId = Guid.NewGuid(),
         };
 
         simClass.SetState(new StateSealed());
         var result = simClass.GetState();
 
         Assert.AreEqual(SimState.Sealed, result);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_HasBaseClass()
+    {
+        var baseClass = new SimClass()
+        {
+            Name = "BaseClass",
+        };
+        baseClass.SetState(new StateNormal());
+
+        var simClass = new SimClass()
+        {
+            Name = "DerivedClass",
+            BaseClass = baseClass
+        };
+
+        Assert.IsNotNull(simClass.BaseClass);
+        Assert.AreEqual("BaseClass", simClass.BaseClass?.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetBaseClass_ThrowsException_WhenBaseClassIsSealed()
+    {
+        var baseClass = new SimClass
+        {
+            Name = "SealedBaseClass"
+        };
+        baseClass.SetState(new StateSealed());
+
+        var simClass = new SimClass
+        {
+            Name = "DerivedClass"
+        };
+
+        simClass.BaseClass = baseClass;
     }
 }
