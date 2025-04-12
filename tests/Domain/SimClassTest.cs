@@ -18,4 +18,20 @@ public class SimClassTest
 
         Assert.AreEqual("Normal", result);
     }
+
+    [TestMethod]
+    
+    public void CreateSimClass_HasAbstractState()
+    {
+        var simClass = new SimClass()
+        {
+            Name = "TestSimClassAbstract",
+            BaseClassId = Guid.NewGuid(),
+            State = new StateAbstract()
+        };
+
+        var result = simClass.GetState();
+
+        Assert.AreEqual("Abstract", result);
+    }
 }
