@@ -1,6 +1,7 @@
 using Domain;
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 using Models.Response;
 using Moq;
 using WebApi.Controllers;
@@ -23,7 +24,6 @@ public class SimClassControllerTest
     [TestMethod]
     public void GetAllClasses_ShouldReturnAllClasses()
     {
-        // Arrange: Crear una lista simulada de clases
         var classes = new List<SimClassResponse>
     {
         new SimClassResponse(new SimClass { Id = Guid.NewGuid(), Name = "ClassA" }),
@@ -38,12 +38,34 @@ public class SimClassControllerTest
 
         var resultList = listResult?.Value as List<SimClassResponse>;
 
-        _mockSimClassAdapter?.VerifyAll(); // Verificar que el mock fue llamado
-        Assert.IsNotNull(result); // El resultado no debe ser null
-        Assert.IsInstanceOfType(result, typeof(OkObjectResult)); // El resultado debe ser OkObjectResult
-        Assert.IsNotNull(resultList); // La lista no debe ser null
-        Assert.AreEqual(2, resultList!.Count); // La lista debe contener 2 elementos
-        Assert.AreEqual(classes.First().Name, resultList.First().Name); // Verificar el primer elemento
-        Assert.AreEqual(classes.Last().Name, resultList.Last().Name); // Verificar el último elemento
+        _mockSimClassAdapter?.VerifyAll();
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        Assert.IsNotNull(resultList);
+        Assert.AreEqual(2, resultList!.Count);
+        Assert.AreEqual(classes.First().Name, resultList.First().Name);
+        Assert.AreEqual(classes.Last().Name, resultList.Last().Name);
+    }
+
+    [TestMethod]
+    public void CreateClassCorrectly_ShouldReturnCreatedResultWithClass()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassC" };
+        var request = new SimClassRequest { Name = "ClassC" };
+        var expectedResponse = new SimClassResponse(simClass);
+
+        _mockSimClassAdapter?.Setup(x => x.CreateSimClass(request)).Returns(expectedResponse);
+
+        var result = _simClassController?.CreateSimClass(request);
+
+        var createdResult = result as CreatedResult;
+        var resultClass = createdResult?.Value as SimClassResponse;
+
+        _mockSimClassAdapter?.Verify();
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(CreatedResult));
+        Assert.IsNotNull(resultClass);
+        Assert.AreEqual(expectedResponse.Name, resultClass!.Name);
+        Assert.AreEqual(expectedResponse.Id, resultClass.Id);
     }
 }
