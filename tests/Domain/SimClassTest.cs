@@ -34,4 +34,21 @@ public class SimClassTest
 
         Assert.AreEqual("Abstract", result);
     }
+
+    [TestMethod]
+    
+    public void CreateSimClass_HasAbstractState()
+    {
+        var simClass = new SimClass()
+        {
+            Name = "TestSimClassSealed",
+            BaseClassId = Guid.NewGuid(),
+            State = new StateSealed()
+        };
+
+        var result = simClass.GetState();
+
+        Assert.AreEqual("Sealed", result);
+    }
+
 }
