@@ -10,16 +10,16 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
 {
     private readonly ISimClassAdapter _simClassAdapter = simClassAdapter;
 
-[HttpGet]
-public IActionResult GetAllSimClass()
-{
-    return Ok(_simClassAdapter.GetAllSimClasses().ToList());
-}
+    [HttpGet]
+    public IActionResult GetAllSimClass()
+    {
+        return Ok(_simClassAdapter.GetAllSimClasses().ToList());
+    }
 
-[HttpPost]
-public IActionResult CreateSimClass([FromBody] SimClassRequest newClass)
-{
-    var simClassResponse = _simClassAdapter.CreateSimClass(newClass);
-    return Created("Class created successfully.", simClassResponse);
-}
+    [HttpPost]
+    public IActionResult CreateSimClass([FromBody] SimClassRequest newClass)
+    {
+        var simClassResponse = _simClassAdapter.CreateSimClass(newClass);
+        return Created("Class created successfully.", simClassResponse);
+    }
 }
