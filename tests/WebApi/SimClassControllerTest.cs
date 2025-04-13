@@ -2,11 +2,16 @@ using Adapter.Exceptions;
 using Domain;
 using FluentAssertions;
 using IAdapter;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Models.Request;
 using Models.Response;
 using Moq;
 using WebApi.Controllers;
+using WebApi.Filters;
 
 namespace Tests.WebApi;
 
@@ -103,5 +108,32 @@ public class SimClassControllerTest
         Action act = () => _simClassController?.CreateSimClass(request);
 
         act.Should().Throw<InvalidAttribute>().WithMessage("Cannot set as base a sealed or null Class.");
+    }
+
+    [TestMethod]
+    public void ExceptionFilter_ShouldSetBadRequestWithMessage()
+    {
+        var exceptionMessage = "Este es el error del adapter";
+        var exception = new InvalidAttribute(exceptionMessage);
+
+        var context = new ExceptionContext(
+            new ActionContext
+            {
+                HttpContext = new DefaultHttpContext(),
+                RouteData = new RouteData(),
+                ActionDescriptor = new ControllerActionDescriptor()
+            },
+            [])
+        {
+            Exception = exception
+        };
+
+        var filter = new ExceptionFilter();
+
+        filter.OnException(context);
+
+        var result = context.Result as BadRequestObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
     }
 }

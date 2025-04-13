@@ -4,29 +4,17 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WebApi.Filters;
 
-public class ExceptionFilter : ExceptionFilterAttribute
+public class ExceptionFilter : Attribute, IExceptionFilter
 {
-    public override void OnException(ExceptionContext context)
+    public void OnException(ExceptionContext context)
     {
-        var statusCode = context.Exception switch
+        try
         {
-            InvalidAttribute => StatusCodes.Status400BadRequest,
-            InvalidLogic => StatusCodes.Status409Conflict,
-            ArgumentNullException => StatusCodes.Status400BadRequest,
-            InvalidOperationException => StatusCodes.Status500InternalServerError,
-            _ => StatusCodes.Status500InternalServerError
-        };
-
-        var errorResponse = new
+            throw context.Exception;
+        }
+        catch(InvalidAttribute e)
         {
-            Message = context.Exception.Message
-        };
-
-        context.Result = new JsonResult(errorResponse)
-        {
-            StatusCode = statusCode
-        };
-
-        context.ExceptionHandled = true;
+            context.Result = new BadRequestObjectResult(new { Message = e.Message });
+        }
     }
 }
