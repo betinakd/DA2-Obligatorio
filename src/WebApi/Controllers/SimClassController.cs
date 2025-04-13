@@ -1,9 +1,11 @@
 ﻿using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
+using WebApi.Filters;
 
 namespace WebApi.Controllers;
 
+[ExceptionFilter]
 [ApiController]
 [Route("api/v1/classes")]
 public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBase
@@ -21,6 +23,6 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     {
         var simClassResponse = _simClassAdapter.CreateSimClass(newClass);
 
-        return CreatedAtAction(nameof(CreateSimClass), simClassResponse);
+        return CreatedAtAction(nameof(CreateSimClass), new { id = simClassResponse.Id }, simClassResponse);
     }
 }
