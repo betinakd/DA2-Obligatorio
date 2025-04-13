@@ -1,5 +1,3 @@
-using Adapter.Exceptions;
-using Domain.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -19,14 +17,7 @@ public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapte
 
     public CreatedSimClassResponse CreateSimClass(SimClassRequest request)
     {
-        try
-        {
-            var simClass = _simClassService.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId);
-            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse(simClass) };
-        }
-        catch(SimClassInvalidAttribute ex)
-        {
-            throw new InvalidAttribute(ex.Message);
-        }
+        var simClass = _simClassService.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId);
+        return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse(simClass) };
     }
 }

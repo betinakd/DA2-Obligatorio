@@ -104,7 +104,6 @@ public class SimClassControllerTest
         _mockSimClassAdapter
             ?.Setup(adapter => adapter.CreateSimClass(request))
             .Throws(new InvalidAttribute("Cannot set as base a sealed or null Class."));
-
         Action act = () => _simClassController?.CreateSimClass(request);
 
         act.Should().Throw<InvalidAttribute>().WithMessage("Cannot set as base a sealed or null Class.");
