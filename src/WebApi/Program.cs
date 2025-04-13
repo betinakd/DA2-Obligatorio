@@ -5,7 +5,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 
-// Web Services
 var app = builder.Build();
 
 if(app.Environment.IsDevelopment())
