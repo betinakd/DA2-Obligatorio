@@ -1,6 +1,7 @@
 ﻿using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
+using System;
 
 namespace WebApi.Controllers;
 
@@ -21,5 +22,12 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     {
         var simClassResponse = _simClassAdapter.CreateSimClass(newClass);
         return Created("Class created successfully.", simClassResponse);
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteSimClass(Guid id)
+    {
+        simClassAdapter.DeleteSimClass(id);
+        return NoContent();
     }
 }

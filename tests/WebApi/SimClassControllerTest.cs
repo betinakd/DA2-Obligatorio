@@ -68,4 +68,24 @@ public class SimClassControllerTest
         Assert.AreEqual(expectedResponse.Name, resultClass!.Name);
         Assert.AreEqual(expectedResponse.Id, resultClass.Id);
     }
+
+    [TestMethod]
+    public void DeleteClassCorrectly_ShouldReturnNoContent()
+    {
+        var classId = Guid.NewGuid();
+        var classes = new List<SimClassResponse>
+    {
+        new SimClassResponse(new SimClass { Id = classId, Name = "ClassA" }),
+        new SimClassResponse(new SimClass { Id = Guid.NewGuid(), Name = "ClassB" })
+    };
+
+        _mockSimClassAdapter?.Setup(x => x.DeleteSimClass(classId)).Verifiable();
+        var result = _simClassController?.DeleteSimClass(classId);
+        classes.RemoveAll(c => c.Id == classId);
+
+        _mockSimClassAdapter?.Verify(x => x.DeleteSimClass(classId), Times.Once);
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(NoContentResult));
+        Assert.IsFalse(classes.Any(c => c.Id == classId));
+    }
 }
