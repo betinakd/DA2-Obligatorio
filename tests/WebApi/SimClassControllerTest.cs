@@ -48,24 +48,35 @@ public class SimClassControllerTest
     }
 
     [TestMethod]
-    public void CreateClassCorrectly_ShouldReturnCreatedResultWithClass()
+    public void CreateClassCorrectly_ShouldReturnCreatedAtActionResultWithClass()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassC" };
         var request = new SimClassRequest { Name = "ClassC" };
-        var expectedResponse = new SimClassResponse(simClass);
+        var simClassResponse = new SimClassResponse(simClass);
+        var expectedResponse = new CreatedSimClassResponse
+        {
+            Message = "Class created successfully",
+            SimClass = simClassResponse
+        };
 
-        _mockSimClassAdapter?.Setup(x => x.CreateSimClass(request)).Returns(expectedResponse);
+        _mockSimClassAdapter
+            ?.Setup(x => x.CreateSimClass(request))
+            .Returns(expectedResponse);
 
         var result = _simClassController?.CreateSimClass(request);
 
-        var createdResult = result as CreatedResult;
-        var resultClass = createdResult?.Value as SimClassResponse;
-
-        _mockSimClassAdapter?.Verify();
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(CreatedResult));
-        Assert.IsNotNull(resultClass);
-        Assert.AreEqual(expectedResponse.Name, resultClass!.Name);
-        Assert.AreEqual(expectedResponse.Id, resultClass.Id);
+        var createdAtResult = result as CreatedAtActionResult;
+        Assert.IsNotNull(createdAtResult);
+        Assert.AreEqual(nameof(SimClassController.CreateSimClass), createdAtResult.ActionName);
+
+        var returnedValue = createdAtResult.Value as CreatedSimClassResponse;
+        Assert.IsNotNull(returnedValue);
+        Assert.AreEqual("Class created successfully", returnedValue!.Message);
+        Assert.IsNotNull(returnedValue.SimClass);
+        Assert.AreEqual(simClass.Id, returnedValue.SimClass!.Id);
+        Assert.AreEqual(simClass.Name, returnedValue.SimClass.Name);
+
+        _mockSimClassAdapter?.Verify(x => x.CreateSimClass(request), Times.Once);
     }
 }

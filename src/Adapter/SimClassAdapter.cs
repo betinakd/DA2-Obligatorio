@@ -3,6 +3,7 @@ using IBussinesLogic;
 using Models.Request;
 using Models.Response;
 
+namespace Adapter;
 public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapter
 {
     private readonly ISimClassService _simClassService = simClassService;
@@ -14,9 +15,9 @@ public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapte
         return responses;
     }
 
-    public SimClassResponse CreateSimClass(SimClassRequest request)
+    public CreatedSimClassResponse CreateSimClass(SimClassRequest request)
     {
         var simClass = _simClassService.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId);
-        return new SimClassResponse(simClass);
+        return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = new SimClassResponse(simClass) };
     }
 }

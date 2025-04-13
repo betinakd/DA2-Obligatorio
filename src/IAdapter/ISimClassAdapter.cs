@@ -6,5 +6,5 @@ namespace IAdapter;
 public interface ISimClassAdapter
 {
     IList<SimClassResponse> GetAllSimClasses();
-    SimClassResponse CreateSimClass(SimClassRequest request);
+    CreatedSimClassResponse CreateSimClass(SimClassRequest request);
 }

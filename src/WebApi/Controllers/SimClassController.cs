@@ -20,6 +20,7 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     public IActionResult CreateSimClass([FromBody] SimClassRequest newClass)
     {
         var simClassResponse = _simClassAdapter.CreateSimClass(newClass);
-        return Created("Class created successfully.", simClassResponse);
+
+        return CreatedAtAction(nameof(CreateSimClass), simClassResponse);
     }
 }
