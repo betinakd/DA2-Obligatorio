@@ -1,4 +1,6 @@
+using Adapter.Exceptions;
 using Domain;
+using FluentAssertions;
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
@@ -65,6 +67,8 @@ public class SimClassControllerTest
 
         var result = _simClassController?.CreateSimClass(request);
 
+        _mockSimClassAdapter?.VerifyAll();
+
         Assert.IsNotNull(result);
         var createdAtResult = result as CreatedAtActionResult;
         Assert.IsNotNull(createdAtResult);
@@ -76,7 +80,28 @@ public class SimClassControllerTest
         Assert.IsNotNull(returnedValue.SimClass);
         Assert.AreEqual(simClass.Id, returnedValue.SimClass!.Id);
         Assert.AreEqual(simClass.Name, returnedValue.SimClass.Name);
+    }
 
-        _mockSimClassAdapter?.Verify(x => x.CreateSimClass(request), Times.Once);
+    [TestMethod]
+    public void CreateClassInvalidAttribute_ShouldBeBadRequest()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "InvalidClass" };
+        simClass.SetState(new StateSealed());
+
+        var request = new SimClassRequest
+        {
+            Name = "InvalidClass",
+            IsAbstract = false,
+            IsSealed = true,
+            BaseClassId = simClass.Id
+        };
+
+        _mockSimClassAdapter
+            ?.Setup(adapter => adapter.CreateSimClass(request))
+            .Throws(new InvalidAttribute("Cannot set as base a sealed or null Class."));
+
+        Action act = () => _simClassController?.CreateSimClass(request);
+
+        act.Should().Throw<InvalidAttribute>().WithMessage("Cannot set as base a sealed or null Class.");
     }
 }
