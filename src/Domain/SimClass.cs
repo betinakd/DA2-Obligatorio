@@ -11,6 +11,8 @@ public class SimClass
     private SimClass? _baseClassField = null;
     private StateClass? _state = new StateNormal();
 
+    public List<SimAttribute> Attributes { get; set; } = [];
+
     public string? Name
     {
         get => _name;
@@ -46,6 +48,25 @@ public class SimClass
             }
 
             _baseClassField = value;
+        }
+    }
+
+    public void AddAttribute(SimAttribute attribute)
+    {
+        if(Attributes.Any(a => a.Name == attribute.Name))
+        {
+            throw new SimClassInvalidAttribute("This Class already has an attribute with the same name.");
+        }
+
+        Attributes.Add(attribute);
+    }
+
+    public void DeleteAttribute(SimAttribute attribute)
+    {
+        var numberDeleted = Attributes.RemoveAll(a => a.Name == attribute.Name);
+        if(numberDeleted == 0)
+        {
+            throw new SimClassInvalidOperation("No attribute was deleted, it may not exist.");
         }
     }
 }
