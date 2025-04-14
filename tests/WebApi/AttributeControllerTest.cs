@@ -2,6 +2,7 @@ using Domain;
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
+using Models.Request;
 using Models.Response;
 using Moq;
 using WebApi.Controllers;
@@ -36,6 +37,36 @@ public class AttributeControllerTest
 
         var result = _attributeController?.DeleteAttribute(idToDelete);
         _mockAttributeAdapter?.Verify(a => a.DeleteAttribute(idToDelete), Times.Once);
+
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+    }
+
+    [TestMethod]
+    public void UpdateAttributeControllerWithCorrectBody_ShouldUpdateOk()
+    {
+        var idToUpdate = Guid.NewGuid();
+        var attributeToUpdate = new AttributeRequest()
+        {
+            Id = idToUpdate,
+            Name = "UpdatedAttribute",
+            Type = new SimClassResponse(new SimClass { Name = "UpdatedType" }),
+            Accesibility = SimAccesibility.Public,
+            RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
+        };
+        var expectedResponse = new AttributeResponse()
+        {
+            Id = idToUpdate,
+            Name = "UpdatedAttribute",
+            Type = new SimClassResponse(new SimClass { Name = "UpdatedType" }),
+            Accesibility = SimAccesibility.Public,
+            RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
+        };
+        _mockAttributeAdapter?.Setup(a => a.UpdateAttribute(idToUpdate, attributeToUpdate)).Returns(expectedResponse);
+
+        var result = _attributeController?.UpdateAttribute(idToUpdate, attributeToUpdate);
+        _mockAttributeAdapter?.Verify(a => a.UpdateAttribute(idToUpdate, attributeToUpdate), Times.Once);
 
         Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         var okResult = result as OkObjectResult;
