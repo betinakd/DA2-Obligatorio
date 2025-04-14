@@ -12,9 +12,9 @@ public class ExceptionFilter : Attribute, IExceptionFilter
         {
             throw context.Exception;
         }
-        catch(ObjectNotFoundException e)
+        catch(InvalidAttribute e)
         {
-            context.Result = new NotFoundObjectResult(e.Message);
+            context.Result = new BadRequestObjectResult(new { Message = e.Message });
         }
     }
 }

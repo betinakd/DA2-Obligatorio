@@ -6,9 +6,26 @@ namespace Domain;
 public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string? Name { get; set; }
+    private string? _name;
+
     private SimClass? _baseClassField = null;
     private StateClass? _state = new StateNormal();
+
+    public List<SimAttribute> Attributes { get; set; } = [];
+
+    public string? Name
+    {
+        get => _name;
+        set
+        {
+            if(string.IsNullOrWhiteSpace(value))
+            {
+                throw new SimClassInvalidAttribute("Name cannot be null or empty.");
+            }
+
+            _name = value;
+        }
+    }
 
     public SimState GetState()
     {
@@ -31,6 +48,25 @@ public class SimClass
             }
 
             _baseClassField = value;
+        }
+    }
+
+    public void AddAttribute(SimAttribute attribute)
+    {
+        if(Attributes.Any(a => a.Name == attribute.Name))
+        {
+            throw new SimClassInvalidAttribute("This Class already has an attribute with the same name.");
+        }
+
+        Attributes.Add(attribute);
+    }
+
+    public void DeleteAttribute(SimAttribute attribute)
+    {
+        var numberDeleted = Attributes.RemoveAll(a => a.Name == attribute.Name);
+        if(numberDeleted == 0)
+        {
+            throw new SimClassInvalidOperation("No attribute was deleted, it may not exist.");
         }
     }
 }
