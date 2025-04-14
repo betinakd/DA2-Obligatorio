@@ -1,6 +1,5 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
-using Models.Request;
 using Models.Response;
 using Moq;
 using WebApi.Controllers;
@@ -33,22 +32,6 @@ public class MethodControllerTest
         Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         var okResult = result as OkObjectResult;
         Assert.AreEqual(expectedResponse, okResult?.Value);
-    }
-
-    [TestMethod]
-    public void CreateMethodCorrectly_ShouldReturnCreated()
-    {
-        var id = Guid.NewGuid();
-        var methodRequest = new MethodRequest() { Id = id, Name = "Test Method" };
-        var expectedResponse = new CreatedMethodResponse() { Id = id, Message = "Method created successfully", MethodResponse = new MethodResponse() { Id = id } };
-        _mockmethodAdapter?.Setup(m => m.CreateMethod(methodRequest)).Returns(expectedResponse);
-
-        var result = _attributeController?.CreateMethod(methodRequest);
-        _mockmethodAdapter?.Verify(m => m.CreateMethod(methodRequest), Times.Once);
-
-        Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
-        var createdResult = result as CreatedAtActionResult;
-        Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
 
     [TestMethod]

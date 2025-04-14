@@ -6,6 +6,6 @@ namespace IAdapter;
 public interface IMethodAdapter
 {
     public MethodResponse GetMethod(Guid id);
-    public CreatedMethodResponse CreateMethod(MethodRequest method);
+    public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method);
     public void DeleteMethod(Guid id);
 }
