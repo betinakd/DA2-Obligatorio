@@ -24,4 +24,11 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
         var response = _simMethodAdapter.CreateMethod(methodRequest);
         return CreatedAtAction(nameof(GetMethod), new { id = response.Id }, response);
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteMethod(Guid id)
+    {
+        _simMethodAdapter.DeleteMethod(id);
+        return NoContent();
+    }
 }

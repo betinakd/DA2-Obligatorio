@@ -50,4 +50,16 @@ public class MethodControllerTest
         var createdResult = result as CreatedAtActionResult;
         Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
+
+    [TestMethod]
+    public void DeleteMethodCorrectly_ShouldReturnNoContent()
+    {
+        var methodId = Guid.NewGuid();
+        _mockmethodAdapter?.Setup(m => m.DeleteMethod(methodId));
+
+        var result = _attributeController?.DeleteMethod(methodId);
+        _mockmethodAdapter?.Verify(m => m.DeleteMethod(methodId), Times.Once);
+
+        Assert.IsInstanceOfType(result, typeof(NoContentResult));
+    }
 }

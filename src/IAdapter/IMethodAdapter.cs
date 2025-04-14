@@ -7,4 +7,5 @@ public interface IMethodAdapter
 {
     public MethodResponse GetMethod(Guid id);
     public CreatedMethodResponse CreateMethod(MethodRequest method);
+    public void DeleteMethod(Guid id);
 }
