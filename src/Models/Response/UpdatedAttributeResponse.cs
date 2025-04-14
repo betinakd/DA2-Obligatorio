@@ -1,6 +1,6 @@
 namespace Models.Response;
 
-public class DeletedAttributeResponse()
+public class UpdatedAttributeResponse()
 {
     public Guid? Id { get; set; }
     public string? Message { get; set; }

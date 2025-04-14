@@ -6,5 +6,5 @@ namespace IAdapter;
 public interface IAttributeAdapter
 {
     public DeletedAttributeResponse DeleteAttribute(Guid attributeId);
-    public AttributeResponse UpdateAttribute(Guid attributeId, AttributeRequest attribute);
+    public UpdatedAttributeResponse UpdateAttribute(Guid attributeId, AttributeRequest attribute);
 }

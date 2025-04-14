@@ -63,7 +63,9 @@ public class AttributeControllerTest
             Accesibility = SimAccesibility.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
         };
-        _mockAttributeAdapter?.Setup(a => a.UpdateAttribute(idToUpdate, attributeToUpdate)).Returns(expectedResponse);
+        var updatedExpectedResponse = new UpdatedAttributeResponse() { Message = "Attribute updated succesfully.", Attribute = expectedResponse };
+
+        _mockAttributeAdapter?.Setup(a => a.UpdateAttribute(idToUpdate, attributeToUpdate)).Returns(updatedExpectedResponse);
 
         var result = _attributeController?.UpdateAttribute(idToUpdate, attributeToUpdate);
         _mockAttributeAdapter?.Verify(a => a.UpdateAttribute(idToUpdate, attributeToUpdate), Times.Once);
