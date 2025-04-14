@@ -63,6 +63,10 @@ public class SimClass
 
     public void DeleteAttribute(SimAttribute attribute)
     {
-        Attributes.RemoveAll(a => a.Name == attribute.Name);
+        var numberDeleted = Attributes.RemoveAll(a => a.Name == attribute.Name);
+        if(numberDeleted == 0)
+        {
+            throw new SimClassInvalidOperation("No attribute was deleted, it may not exist.");
+        }
     }
 }
