@@ -1,4 +1,6 @@
+using Adapter.Exceptions;
 using Domain;
+using FluentAssertions;
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
@@ -87,5 +89,18 @@ public class SimClassControllerTest
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(NoContentResult));
         Assert.IsFalse(classes.Any(c => c.Id == classId));
+    }
+
+    [TestMethod]
+    public void DeleteNonExistingClass_ShouldReturnNotFound()
+    {
+        var classId = Guid.NewGuid();
+
+        _mockSimClassAdapter
+            .Setup(act => act.DeleteSimClass(classId))
+            .Throws(new ObjectNotFoundException($"Any class with the specified {classId} id exists."));
+
+        Action act = () => _simClassController.DeleteSimClass(classId);
+        act.Should().Throw<ObjectNotFoundException>();
     }
 }

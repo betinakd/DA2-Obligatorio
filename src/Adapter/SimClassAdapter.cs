@@ -1,9 +1,11 @@
+using Adapter.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
 using Models.Response;
 
-public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapter
+public class SimClassAdapter(ISimClassService simClassService)
+    : ISimClassAdapter
 {
     private readonly ISimClassService _simClassService = simClassService;
 
@@ -18,5 +20,16 @@ public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapte
     {
         var simClass = _simClassService.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId);
         return new SimClassResponse(simClass);
+    }
+
+    public void DeleteSimClass(Guid id)
+    {
+        var classes = _simClassService.GetAllSimClasses();
+        var classExists = classes.Any(c => c.Id == id);
+
+        if(!classExists)
+        {
+            throw new ObjectNotFoundException($"Any class with the specified {id} id exists.");
+        }
     }
 }
