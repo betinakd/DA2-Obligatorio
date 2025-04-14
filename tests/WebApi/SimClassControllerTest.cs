@@ -162,4 +162,28 @@ public class SimClassControllerTest
         Assert.IsNotNull(okResult);
         Assert.AreEqual(expectedResponse, okResult.Value);
     }
+
+    [TestMethod]
+    public void GetInfoClass_ValidClassId_ShouldReturnClassInfo()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassInfo" };
+        var simClassResponse = new SimClassResponse(simClass);
+
+        _mockSimClassAdapter
+            ?.Setup(x => x.GetSimClassInfo(simClass.Id))
+            .Returns(simClassResponse);
+
+        var result = _simClassController?.GetInfoClass(simClass.Id);
+
+        _mockSimClassAdapter?.VerifyAll();
+
+        Assert.IsNotNull(result);
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+
+        var returnedValue = okResult.Value as SimClassResponse;
+        Assert.IsNotNull(returnedValue);
+        Assert.AreEqual(simClass.Id, returnedValue!.Id);
+        Assert.AreEqual(simClass.Name, returnedValue.Name);
+    }
 }

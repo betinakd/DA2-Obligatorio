@@ -32,4 +32,11 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
         var simClassResponse = _simClassAdapter.UpdateSimClass(updateClass);
         return Ok(simClassResponse);
     }
+
+    [HttpGet("{classId}")]
+    public IActionResult GetInfoClass([FromRoute] Guid classId)
+    {
+        var simClassResponse = _simClassAdapter.GetSimClassInfo(classId);
+        return Ok(simClassResponse);
+    }
 }
