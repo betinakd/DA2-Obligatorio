@@ -31,7 +31,8 @@ public class AttributeControllerTest
             Accesibility = SimAccesibility.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
         };
-        _mockAttributeAdapter?.Setup(a => a.DeleteAttribute(idToDelete)).Returns(expectedResponse);
+        var expectedDeletedResponse = new DeletedAttributeResponse() { Message = "Attribute was deleted succesfully", Attribute = expectedResponse };
+        _mockAttributeAdapter?.Setup(a => a.DeleteAttribute(idToDelete)).Returns(expectedDeletedResponse);
 
         var result = _attributeController?.DeleteAttribute(idToDelete);
         _mockAttributeAdapter?.Verify(a => a.DeleteAttribute(idToDelete), Times.Once);

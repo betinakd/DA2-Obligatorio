@@ -4,5 +4,5 @@ namespace IAdapter;
 
 public interface IAttributeAdapter
 {
-    public AttributeResponse DeleteAttribute(Guid attributeId);
+    public DeletedAttributeResponse DeleteAttribute(Guid attributeId);
 }
