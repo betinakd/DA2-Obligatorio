@@ -16,5 +16,9 @@ public class ExceptionFilter : Attribute, IExceptionFilter
         {
             context.Result = new BadRequestObjectResult(new { Message = e.Message });
         }
+        catch(ObjectNotFoundException e)
+        {
+            context.Result = new NotFoundObjectResult(e.Message);
+        }
     }
 }

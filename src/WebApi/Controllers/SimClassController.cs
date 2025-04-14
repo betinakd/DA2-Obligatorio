@@ -33,6 +33,13 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
         return Ok(simClassResponse);
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeleteSimClass(Guid id)
+    {
+        simClassAdapter.DeleteSimClass(id);
+        return NoContent();
+    }
+
     [HttpGet("{classId}")]
     public IActionResult GetInfoClass([FromRoute] Guid classId)
     {

@@ -1,4 +1,3 @@
-using Adapter;
 using Adapter.Exceptions;
 using Domain;
 using IBussinesLogic;
@@ -108,5 +107,23 @@ public class SimClassAdapterTest
         var exception = Assert.ThrowsException<InvalidAttribute>(() =>
             _simClassAdapter?.UpdateSimClass(request));
         Assert.AreEqual("Name cannot be null or empty.", exception.Message);
+    }
+
+    [TestMethod]
+    public void DeleteNonExistentClass_ShouldThrowObjectNotFoundException()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClasses = new List<SimClass>(); // Empty list, no classes exist
+
+        _mockSimClassService
+            ?.Setup(service => service.GetAllSimClasses())
+            .Returns(simClasses);
+
+        var exception = Assert.ThrowsException<ObjectNotFoundException>(() =>
+            _simClassAdapter?.DeleteSimClass(simClassId));
+
+        Assert.AreEqual($"Any class with the specified {simClassId} id exists.", exception.Message);
+
+        _mockSimClassService?.Verify(service => service.GetAllSimClasses(), Times.Once);
     }
 }

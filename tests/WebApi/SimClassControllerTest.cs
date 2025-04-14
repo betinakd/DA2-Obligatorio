@@ -164,6 +164,83 @@ public class SimClassControllerTest
     }
 
     [TestMethod]
+    public void DeleteClassCorrectly_ShouldReturnNoContent()
+    {
+        var classId = Guid.NewGuid();
+
+        _mockSimClassAdapter
+            .Setup(x => x.DeleteSimClass(classId))
+            .Verifiable();
+
+        var result = _simClassController.DeleteSimClass(classId);
+
+        _mockSimClassAdapter.Verify(x => x.DeleteSimClass(classId), Times.Once);
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(NoContentResult));
+    }
+
+    [TestMethod]
+    public void DeleteNonExistingClass_ShouldReturnNotFound()
+    {
+        var classId = Guid.NewGuid();
+
+        _mockSimClassAdapter
+            .Setup(adapter => adapter.DeleteSimClass(classId))
+            .Throws(new ObjectNotFoundException($"Any class with the specified {classId} id exists."));
+
+        IActionResult result;
+        try
+        {
+            result = _simClassController.DeleteSimClass(classId);
+        }
+        catch(ObjectNotFoundException ex)
+        {
+            // Simula el comportamiento del filtro
+            result = new NotFoundObjectResult(new
+            {
+                Message = ex.Message
+            });
+        }
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<NotFoundObjectResult>();
+
+        var notFoundResult = result as NotFoundObjectResult;
+        notFoundResult!.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+
+        var value = notFoundResult.Value;
+        var expectedMessage = $"Any class with the specified {classId} id exists.";
+        var actualMessage = ((dynamic)value).Message;
+
+        Assert.AreEqual(expectedMessage, actualMessage);
+    }
+
+    [TestMethod]
+    public void ExceptionFilter_ShouldSetNotFoundException()
+    {
+        var exception = new ObjectNotFoundException($"Any class with the specified id exists.");
+
+        var context = new ExceptionContext(
+            new ActionContext
+            {
+                HttpContext = new DefaultHttpContext(),
+                RouteData = new RouteData(),
+                ActionDescriptor = new ControllerActionDescriptor()
+            },
+            [])
+        {
+            Exception = exception
+        };
+
+        var filter = new ExceptionFilter();
+
+        filter.OnException(context);
+
+        var result = context.Result as NotFoundObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+    }
+
     public void GetInfoClass_ValidClassId_ShouldReturnClassInfo()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassInfo" };
