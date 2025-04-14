@@ -4,6 +4,8 @@ using IBussinesLogic;
 using Models.Request;
 using Moq;
 
+namespace Tests.Adapter;
+
 [TestClass]
 public class SimClassAdapterTest
 {
@@ -66,5 +68,31 @@ public class SimClassAdapterTest
         Assert.AreEqual(simClass.Name, result.SimClass?.Name);
 
         _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClassCorrectly_ShouldReturnSimClassResponse()
+    {
+        // Arrange
+        var simClassId = Guid.NewGuid();
+        var request = new UpdateSimClassRequest
+        {
+            Id = simClassId,
+            Name = "UpdatedClass"
+        };
+
+        var expectedSimClass = new SimClass { Id = simClassId, Name = "UpdatedClass" };
+
+        _mockSimClassService
+            ?.Setup(service => service.UpdateSimClass(It.Is<SimClass>(s => s.Id == request.Id && s.Name == request.Name)))
+            .Returns(expectedSimClass);
+
+        var result = _simClassAdapter?.UpdateSimClass(request);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedSimClass.Id, result?.Id);
+        Assert.AreEqual(expectedSimClass.Name, result?.Name);
+
+        _mockSimClassService?.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
     }
 }

@@ -1,3 +1,4 @@
+using Domain;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -19,5 +20,11 @@ public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapte
     {
         var simClass = _simClassService.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId);
         return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse(simClass) };
+    }
+
+    public SimClassResponse UpdateSimClass(UpdateSimClassRequest request)
+    {
+        var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name });
+        return new SimClassResponse(simClass);
     }
 }
