@@ -3,6 +3,7 @@ using Adapter.Exceptions;
 using Domain;
 using IBussinesLogic;
 using Models.Request;
+using Models.Response;
 using Moq;
 
 namespace Tests.Adapter;
@@ -82,6 +83,7 @@ public class SimClassAdapterTest
         };
 
         var expectedSimClass = new SimClass { Id = simClassId, Name = "UpdatedClass" };
+        var expectedResult = new UpdateSimClassResponse { Message = "Class updated successfully", SimClass = new SimClassResponse(expectedSimClass) };
 
         _mockSimClassService
             ?.Setup(service => service.UpdateSimClass(It.Is<SimClass>(s => s.Id == request.Id && s.Name == request.Name)))
@@ -90,7 +92,9 @@ public class SimClassAdapterTest
         var result = _simClassAdapter?.UpdateSimClass(request);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(expectedSimClass.Id, result?.Id);
+        Assert.AreEqual(expectedResult.Message, result?.Message);
+        Assert.AreEqual(expectedSimClass.Id, result?.SimClass?.Id);
+        Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
         Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
 
         _mockSimClassService?.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
