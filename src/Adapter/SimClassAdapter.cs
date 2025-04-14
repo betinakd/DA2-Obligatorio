@@ -1,4 +1,6 @@
+using Adapter.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -24,7 +26,14 @@ public class SimClassAdapter(ISimClassService simClassService) : ISimClassAdapte
 
     public SimClassResponse UpdateSimClass(UpdateSimClassRequest request)
     {
-        var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name });
-        return new SimClassResponse(simClass);
+        try
+        {
+            var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name });
+            return new SimClassResponse(simClass);
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 }

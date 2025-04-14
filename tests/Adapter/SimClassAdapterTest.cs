@@ -1,4 +1,5 @@
 using Adapter;
+using Adapter.Exceptions;
 using Domain;
 using IBussinesLogic;
 using Models.Request;
@@ -73,7 +74,6 @@ public class SimClassAdapterTest
     [TestMethod]
     public void UpdateSimClassCorrectly_ShouldReturnSimClassResponse()
     {
-        // Arrange
         var simClassId = Guid.NewGuid();
         var request = new UpdateSimClassRequest
         {
@@ -94,5 +94,15 @@ public class SimClassAdapterTest
         Assert.AreEqual(expectedSimClass.Name, result?.Name);
 
         _mockSimClassService?.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInvalidAttribute_WhenSimClassIsEmpty()
+    {
+        var request = new UpdateSimClassRequest() { Name = " " };
+
+        var exception = Assert.ThrowsException<InvalidAttribute>(() =>
+            _simClassAdapter?.UpdateSimClass(request));
+        Assert.AreEqual("Name cannot be null or empty.", exception.Message);
     }
 }
