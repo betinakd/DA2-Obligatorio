@@ -1,7 +1,6 @@
 using Adapter.Exceptions;
 using Domain;
 using Domain.Exceptions;
-using Adapter.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;

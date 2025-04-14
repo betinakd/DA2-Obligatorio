@@ -193,7 +193,7 @@ public class SimClassControllerTest
         {
             result = _simClassController.DeleteSimClass(classId);
         }
-        catch (ObjectNotFoundException ex)
+        catch(ObjectNotFoundException ex)
         {
             // Simula el comportamiento del filtro
             result = new NotFoundObjectResult(new

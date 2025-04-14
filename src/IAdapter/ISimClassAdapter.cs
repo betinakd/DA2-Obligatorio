@@ -1,6 +1,5 @@
 ﻿using Models.Request;
 using Models.Response;
-using System;
 
 namespace IAdapter;
 
