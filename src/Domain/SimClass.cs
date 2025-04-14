@@ -11,6 +11,8 @@ public class SimClass
     private SimClass? _baseClassField = null;
     private StateClass? _state = new StateNormal();
 
+    public List<SimAttribute> Attributes { get; set; } = [];
+
     public string? Name
     {
         get => _name;
@@ -47,5 +49,10 @@ public class SimClass
 
             _baseClassField = value;
         }
+    }
+
+    public void AddAttribute(SimAttribute attribute)
+    {
+        Attributes.Add(attribute);
     }
 }
