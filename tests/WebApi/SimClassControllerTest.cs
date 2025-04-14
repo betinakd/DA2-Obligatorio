@@ -135,4 +135,31 @@ public class SimClassControllerTest
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
     }
+
+    [TestMethod]
+    public void UpdateClassCorrectly_ShouldReturnOK()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassA" };
+        var simClassRequest = new UpdateSimClassRequest { Name = "ClassB", Id = simClass.Id };
+        var updatedSimClass = new SimClass() { Name = "ClassB", Id = simClass.Id };
+        var expectedResponse = new UpdateSimClassResponse
+        {
+            Id = simClass.Id,
+            Message = "Class Updated correctly",
+            SimClass = new SimClassResponse(updatedSimClass),
+        };
+
+        _mockSimClassAdapter
+            ?.Setup(x => x.UpdateSimClass(simClassRequest))
+            .Returns(expectedResponse);
+
+        var result = _simClassController?.UpdateSimClass(simClassRequest);
+
+        _mockSimClassAdapter?.VerifyAll();
+
+        Assert.IsNotNull(result);
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(expectedResponse, okResult.Value);
+    }
 }
