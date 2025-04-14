@@ -19,7 +19,7 @@ public class SimAttribute
         {
             if(!SyntaxisValidation.IsValidName(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be empty.");
+                throw new SimClassInvalidAttribute("Name cannot be empty or contain invalid characters.");
             }
 
             _name = value;

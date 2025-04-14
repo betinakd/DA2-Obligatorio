@@ -9,6 +9,7 @@ public class SyntaxisValidation
             return false;
         }
 
-        return true;
+        char[] invalidSymbols = ['"', '@', '#', '$', '%', '&', '*', '!', '?', '/', '\\', '=', '+', '(', ')', '{', '}'];
+        return !name.Any(c => invalidSymbols.Contains(c));
     }
 }
