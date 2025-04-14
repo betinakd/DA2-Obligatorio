@@ -2,11 +2,16 @@ using Adapter.Exceptions;
 using Domain;
 using FluentAssertions;
 using IAdapter;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Models.Request;
 using Models.Response;
 using Moq;
 using WebApi.Controllers;
+using WebApi.Filters;
 
 namespace Tests.WebApi;
 
@@ -102,5 +107,31 @@ public class SimClassControllerTest
 
         Action act = () => _simClassController.DeleteSimClass(classId);
         act.Should().Throw<ObjectNotFoundException>();
+    }
+
+    [TestMethod]
+    public void ExceptionFilter_ShouldSetNotFoundException()
+    {
+        var exception = new ObjectNotFoundException($"Any class with the specified id exists.");
+
+        var context = new ExceptionContext(
+            new ActionContext
+            {
+                HttpContext = new DefaultHttpContext(),
+                RouteData = new RouteData(),
+                ActionDescriptor = new ControllerActionDescriptor()
+            },
+            [])
+        {
+            Exception = exception
+        };
+
+        var filter = new ExceptionFilter();
+
+        filter.OnException(context);
+
+        var result = context.Result as NotFoundObjectResult;
+        result.Should().NotBeNull();
+        result!.StatusCode.Should().Be(StatusCodes.Status404NotFound);
     }
 }
