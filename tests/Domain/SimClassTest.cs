@@ -86,4 +86,26 @@ public class SimClassTest
 
         simClass.BaseClass = baseClass;
     }
+
+    [TestMethod]
+    public void AddCorrectAttributeToSimClass_CorrectlyAddsIt()
+    {
+        var simClass = new SimClass()
+        {
+            Name = "TestSimClassWithAttribute"
+        };
+        var relatedClass = new SimClass()
+        {
+            Name = "TypeClass"
+        };
+        var typeClass = new SimClass()
+        {
+            Name = "TypeClass"
+        };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
+
+        simClass.AddAttribute(simAttribute);
+
+        Assert.IsTrue(simClass.Attributes.Any(a => a.Name == "TestAttribute"));
+    }
 }
