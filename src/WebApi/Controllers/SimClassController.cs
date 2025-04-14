@@ -25,4 +25,11 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
 
         return CreatedAtAction(nameof(CreateSimClass), new { id = simClassResponse.Id }, simClassResponse);
     }
+
+    [HttpPut]
+    public IActionResult UpdateSimClass([FromBody] UpdateSimClassRequest updateClass)
+    {
+        var simClassResponse = _simClassAdapter.UpdateSimClass(updateClass);
+        return Ok(simClassResponse);
+    }
 }

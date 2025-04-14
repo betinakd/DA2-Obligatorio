@@ -1,8 +1,12 @@
 using Adapter;
+using Adapter.Exceptions;
 using Domain;
 using IBussinesLogic;
 using Models.Request;
+using Models.Response;
 using Moq;
+
+namespace Tests.Adapter;
 
 [TestClass]
 public class SimClassAdapterTest
@@ -66,5 +70,43 @@ public class SimClassAdapterTest
         Assert.AreEqual(simClass.Name, result.SimClass?.Name);
 
         _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClassCorrectly_ShouldReturnSimClassResponse()
+    {
+        var simClassId = Guid.NewGuid();
+        var request = new UpdateSimClassRequest
+        {
+            Id = simClassId,
+            Name = "UpdatedClass"
+        };
+
+        var expectedSimClass = new SimClass { Id = simClassId, Name = "UpdatedClass" };
+        var expectedResult = new UpdateSimClassResponse { Message = "Class updated successfully", SimClass = new SimClassResponse(expectedSimClass) };
+
+        _mockSimClassService
+            ?.Setup(service => service.UpdateSimClass(It.Is<SimClass>(s => s.Id == request.Id && s.Name == request.Name)))
+            .Returns(expectedSimClass);
+
+        var result = _simClassAdapter?.UpdateSimClass(request);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedResult.Message, result?.Message);
+        Assert.AreEqual(expectedSimClass.Id, result?.SimClass?.Id);
+        Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
+        Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
+
+        _mockSimClassService?.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInvalidAttribute_WhenSimClassIsEmpty()
+    {
+        var request = new UpdateSimClassRequest() { Name = " " };
+
+        var exception = Assert.ThrowsException<InvalidAttribute>(() =>
+            _simClassAdapter?.UpdateSimClass(request));
+        Assert.AreEqual("Name cannot be null or empty.", exception.Message);
     }
 }

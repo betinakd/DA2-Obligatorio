@@ -6,9 +6,24 @@ namespace Domain;
 public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string? Name { get; set; }
+    private string? _name;
+
     private SimClass? _baseClassField = null;
     private StateClass? _state = new StateNormal();
+
+    public string? Name
+    {
+        get => _name;
+        set
+        {
+            if(string.IsNullOrWhiteSpace(value))
+            {
+                throw new SimClassInvalidAttribute("Name cannot be null or empty.");
+            }
+
+            _name = value;
+        }
+    }
 
     public SimState GetState()
     {
