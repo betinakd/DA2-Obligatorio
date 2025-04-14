@@ -1,3 +1,4 @@
+using Models.Request;
 using Models.Response;
 
 namespace IAdapter;
@@ -5,4 +6,5 @@ namespace IAdapter;
 public interface IMethodAdapter
 {
     public MethodResponse GetMethod(Guid id);
+    public CreatedMethodResponse CreateMethod(MethodRequest method);
 }
