@@ -1,22 +1,22 @@
-namespace Models.Enums;
+namespace Domain.Enums;
 
 /// <summary>
 /// Represents the state of a simulation.
 /// </summary>
-public enum SimAccesibility
+public enum SimPrivacity
 {
     /// <summary>
     /// Represents a normal simulation state.
     /// </summary>
-    Sealed,
+    Private,
 
     /// <summary>
     /// Represents an abstract simulation state.
     /// </summary>
-    Abstract,
+    Protected,
 
     /// <summary>
     /// Represents a sealed simulation state.
     /// </summary>
-    Normal,
+    Public,
 }

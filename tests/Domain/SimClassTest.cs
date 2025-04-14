@@ -102,7 +102,7 @@ public class SimClassTest
         {
             Name = "TypeClass"
         };
-        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Privacity = SimPrivacity.Public };
 
         simClass.AddAttribute(simAttribute);
 
@@ -125,8 +125,8 @@ public class SimClassTest
         {
             Name = "TypeClass"
         };
-        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
-        var repeatedName = new SimAttribute() { Name = "TestAttribute", RelatedClass = typeClass, Type = relatedClass, Accesibility = SimAccesibility.Private };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Privacity = SimPrivacity.Public };
+        var repeatedName = new SimAttribute() { Name = "TestAttribute", RelatedClass = typeClass, Type = relatedClass, Privacity = SimPrivacity.Private };
 
         simClass.AddAttribute(simAttribute);
         simClass.AddAttribute(repeatedName);
@@ -147,8 +147,8 @@ public class SimClassTest
         {
             Name = "TypeClass"
         };
-        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
-        var anotherAttribute = new SimAttribute() { Name = "TestAnother", RelatedClass = typeClass, Type = relatedClass, Accesibility = SimAccesibility.Private };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Privacity = SimPrivacity.Public };
+        var anotherAttribute = new SimAttribute() { Name = "TestAnother", RelatedClass = typeClass, Type = relatedClass, Privacity = SimPrivacity.Private };
 
         simClass.AddAttribute(simAttribute);
         simClass.AddAttribute(anotherAttribute);
@@ -174,7 +174,7 @@ public class SimClassTest
         {
             Name = "TypeClass"
         };
-        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Privacity = SimPrivacity.Public };
         simClass.AddAttribute(simAttribute);
         simClass.DeleteAttribute(simAttribute);
         simClass.DeleteAttribute(simAttribute);

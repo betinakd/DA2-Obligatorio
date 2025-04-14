@@ -1,17 +1,16 @@
 using System.Text.Json.Serialization;
 using Models.Enums;
-using Models.Response;
 
-namespace Models.Request;
+namespace Models.Response;
 
-public class AttributeRequest()
+public class MethodResponse()
 {
     public Guid? Id { get; set; }
     public string? Name { get; set; }
-    public SimClassResponse? Type { get; set; }
+    public Guid? IdClassOwner { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimPrivacity Privacity { get; set; }
-
-    public SimClassResponse? RelatedClass { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public SimAccesibility Accesibility { get; set; }
 }

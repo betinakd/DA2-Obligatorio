@@ -33,7 +33,7 @@ public class AttributeTest
         _ = new SimAttribute()
         {
             Name = " ",
-            Accesibility = SimAccesibility.Public,
+            Privacity = SimPrivacity.Public,
             Type = simObject,
             RelatedClass = simInt,
         };
@@ -46,7 +46,7 @@ public class AttributeTest
         _ = new SimAttribute()
         {
             Name = "Invalid@Name",
-            Accesibility = SimAccesibility.Public,
+            Privacity = SimPrivacity.Public,
             Type = simObject,
             RelatedClass = simInt,
         };
@@ -59,7 +59,7 @@ public class AttributeTest
         _ = new SimAttribute()
         {
             Name = "123456",
-            Accesibility = SimAccesibility.Public,
+            Privacity = SimPrivacity.Public,
             Type = simObject,
             RelatedClass = simInt,
         };
@@ -72,7 +72,7 @@ public class AttributeTest
         _ = new SimAttribute()
         {
             Name = "class",
-            Accesibility = SimAccesibility.Public,
+            Privacity = SimPrivacity.Public,
             Type = simObject,
             RelatedClass = simInt,
         };

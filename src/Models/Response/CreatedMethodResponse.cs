@@ -1,8 +1,8 @@
 namespace Models.Response;
 
-public class CreatedAttributeResponse()
+public class CreatedMethodResponse()
 {
     public Guid? Id { get; set; }
     public string? Message { get; set; }
-    public AttributeResponse? Privacity { get; set; }
+    public MethodResponse? MethodResponse { get; set; }
 }
