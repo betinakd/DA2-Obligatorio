@@ -35,6 +35,7 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             throw new InvalidAttribute(ex.Message);
         }
+
     }
 
     public void DeleteSimClass(Guid id)
@@ -46,5 +47,6 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             throw new ObjectNotFoundException($"Any class with the specified {id} id exists.");
         }
+        
     }
 }
