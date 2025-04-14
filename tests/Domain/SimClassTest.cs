@@ -108,4 +108,27 @@ public class SimClassTest
 
         Assert.IsTrue(simClass.Attributes.Any(a => a.Name == "TestAttribute"));
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void AddAttributeWithRepetedNameClass_ShouldThrowSimClassInvalidAttribute()
+    {
+        var simClass = new SimClass()
+        {
+            Name = "TestSimClassWithAttribute"
+        };
+        var relatedClass = new SimClass()
+        {
+            Name = "TypeClass"
+        };
+        var typeClass = new SimClass()
+        {
+            Name = "TypeClass"
+        };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
+        var repeatedName = new SimAttribute() { Name = "TestAttribute", RelatedClass = typeClass, Type = relatedClass, Accesibility = SimAccesibility.Private };
+
+        simClass.AddAttribute(simAttribute);
+        simClass.AddAttribute(repeatedName);
+    }
 }
