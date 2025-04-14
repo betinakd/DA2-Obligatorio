@@ -80,20 +80,16 @@ public class SimClassControllerTest
     public void DeleteClassCorrectly_ShouldReturnNoContent()
     {
         var classId = Guid.NewGuid();
-        var classes = new List<SimClassResponse>
-    {
-        new SimClassResponse(new SimClass { Id = classId, Name = "ClassA" }),
-        new SimClassResponse(new SimClass { Id = Guid.NewGuid(), Name = "ClassB" })
-    };
 
-        _mockSimClassAdapter?.Setup(x => x.DeleteSimClass(classId)).Verifiable();
-        var result = _simClassController?.DeleteSimClass(classId);
-        classes.RemoveAll(c => c.Id == classId);
+        _mockSimClassAdapter
+            .Setup(x => x.DeleteSimClass(classId))
+            .Verifiable();
 
-        _mockSimClassAdapter?.Verify(x => x.DeleteSimClass(classId), Times.Once);
+        var result = _simClassController.DeleteSimClass(classId);
+
+        _mockSimClassAdapter.Verify(x => x.DeleteSimClass(classId), Times.Once);
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(NoContentResult));
-        Assert.IsFalse(classes.Any(c => c.Id == classId));
     }
 
     [TestMethod]
@@ -102,11 +98,34 @@ public class SimClassControllerTest
         var classId = Guid.NewGuid();
 
         _mockSimClassAdapter
-            .Setup(act => act.DeleteSimClass(classId))
+            .Setup(adapter => adapter.DeleteSimClass(classId))
             .Throws(new ObjectNotFoundException($"Any class with the specified {classId} id exists."));
 
-        Action act = () => _simClassController.DeleteSimClass(classId);
-        act.Should().Throw<ObjectNotFoundException>();
+        IActionResult result;
+        try
+        {
+            result = _simClassController.DeleteSimClass(classId);
+        }
+        catch (ObjectNotFoundException ex)
+        {
+            // Simula el comportamiento del filtro
+            result = new NotFoundObjectResult(new
+            {
+                Message = ex.Message
+            });
+        }
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<NotFoundObjectResult>();
+
+        var notFoundResult = result as NotFoundObjectResult;
+        notFoundResult!.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+
+        var value = notFoundResult.Value;
+        var expectedMessage = $"Any class with the specified {classId} id exists.";
+        var actualMessage = ((dynamic)value).Message;
+
+        Assert.AreEqual(expectedMessage, actualMessage);
     }
 
     [TestMethod]

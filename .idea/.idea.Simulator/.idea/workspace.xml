@@ -9,9 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/tests/WebApi/SimClassControllerTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/WebApi/SimClassControllerTest.cs" afterDir="false" />
-    </list>
+    <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -100,7 +98,7 @@
       <workItem from="1744576709060" duration="3104000" />
       <workItem from="1744599992537" duration="157000" />
       <workItem from="1744605426058" duration="5230000" />
-      <workItem from="1744641688416" duration="1568000" />
+      <workItem from="1744641688416" duration="2799000" />
     </task>
     <servers />
   </component>
