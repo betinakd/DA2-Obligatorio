@@ -131,4 +131,30 @@ public class SimClassTest
         simClass.AddAttribute(simAttribute);
         simClass.AddAttribute(repeatedName);
     }
+
+    [TestMethod]
+    public void DeleteExistentAttribute_ShouldDeleteIt()
+    {
+        var simClass = new SimClass()
+        {
+            Name = "TestSimClassWithAttribute"
+        };
+        var relatedClass = new SimClass()
+        {
+            Name = "TypeClass"
+        };
+        var typeClass = new SimClass()
+        {
+            Name = "TypeClass"
+        };
+        var simAttribute = new SimAttribute() { Name = "TestAttribute", RelatedClass = relatedClass, Type = typeClass, Accesibility = SimAccesibility.Public };
+        var anotherAttribute = new SimAttribute() { Name = "TestAnother", RelatedClass = typeClass, Type = relatedClass, Accesibility = SimAccesibility.Private };
+
+        simClass.AddAttribute(simAttribute);
+        simClass.AddAttribute(anotherAttribute);
+
+        simClass.DeleteAttribute(simAttribute);
+
+        Assert.IsFalse(simClass.Attributes.Any(a => a.Name == "TestAttribute"));
+    }
 }
