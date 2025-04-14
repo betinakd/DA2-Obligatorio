@@ -240,7 +240,7 @@ public class SimClassControllerTest
         result.Should().NotBeNull();
         result!.StatusCode.Should().Be(StatusCodes.Status404NotFound);
     }
-  
+
     public void GetInfoClass_ValidClassId_ShouldReturnClassInfo()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassInfo" };

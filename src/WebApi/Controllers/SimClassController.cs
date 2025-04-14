@@ -39,7 +39,7 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
         simClassAdapter.DeleteSimClass(id);
         return NoContent();
     }
-    
+
     [HttpGet("{classId}")]
     public IActionResult GetInfoClass([FromRoute] Guid classId)
     {
