@@ -51,4 +51,17 @@ public class AttributeTest
             RelatedClass = simInt,
         };
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void CreateAttributeWithOnlyNumbers_ShouldThrowSimClassInvalidAttribute()
+    {
+        _ = new SimAttribute()
+        {
+            Name = "123456",
+            Accesibility = SimAccesibility.Public,
+            Type = simObject,
+            RelatedClass = simInt,
+        };
+    }
 }
