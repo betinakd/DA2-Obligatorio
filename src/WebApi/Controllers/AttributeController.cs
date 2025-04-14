@@ -1,5 +1,6 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 using WebApi.Filters;
 
 namespace WebApi.Controllers;
@@ -15,6 +16,13 @@ public class AttributeController(IAttributeAdapter simClassAdapter) : Controller
     public IActionResult DeleteAttribute(Guid id)
     {
         var result = _simAttributeAdapter.DeleteAttribute(id);
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult UpdateAttribute(Guid id, [FromBody] AttributeRequest attribute)
+    {
+        var result = _simAttributeAdapter.UpdateAttribute(id, attribute);
         return Ok(result);
     }
 }
