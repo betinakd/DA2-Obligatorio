@@ -53,6 +53,11 @@ public class SimClass
 
     public void AddAttribute(SimAttribute attribute)
     {
+        if(Attributes.Any(a => a.Name == attribute.Name))
+        {
+            throw new SimClassInvalidAttribute("This Class already has an attribute with the same name.");
+        }
+
         Attributes.Add(attribute);
     }
 }
