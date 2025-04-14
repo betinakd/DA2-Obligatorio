@@ -91,7 +91,7 @@ public class SimClassAdapterTest
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expectedSimClass.Id, result?.Id);
-        Assert.AreEqual(expectedSimClass.Name, result?.Name);
+        Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
 
         _mockSimClassService?.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
     }
