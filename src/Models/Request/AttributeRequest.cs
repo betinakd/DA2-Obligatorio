@@ -11,7 +11,7 @@ public class AttributeRequest()
     public SimClassResponse? Type { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SimAccesibility Accesibility { get; set; }
+    public SimPrivacity Privacity { get; set; }
 
     public SimClassResponse? RelatedClass { get; set; }
 }

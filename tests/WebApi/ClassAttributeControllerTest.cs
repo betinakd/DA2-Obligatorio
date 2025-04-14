@@ -7,6 +7,8 @@ using Models.Response;
 using Moq;
 using WebApi.Controllers;
 
+namespace Tests.WebApi;
+
 [TestClass]
 public class ClassAttributeControllerTest
 {
@@ -29,7 +31,7 @@ public class ClassAttributeControllerTest
             Id = id,
             Name = "DummyAttribute",
             Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
-            Accesibility = SimAccesibility.Public,
+            Privacity = SimPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
         };
         var expectedResponse = new AttributeResponse()
@@ -37,10 +39,10 @@ public class ClassAttributeControllerTest
             Id = id,
             Name = "DummyAttribute",
             Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
-            Accesibility = SimAccesibility.Public,
+            Privacity = SimPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
         };
-        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Attribute = expectedResponse };
+        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Privacity = expectedResponse };
         _mockAttributeAdapter?.Setup(a => a.CreateAttribute(id, request)).Returns(expectedCreatedResponse);
 
         var result = _attributeController?.CreateAttribute(id, request);

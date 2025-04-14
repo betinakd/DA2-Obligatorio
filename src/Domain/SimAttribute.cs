@@ -9,7 +9,7 @@ public class SimAttribute
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
     public SimClass? Type { get; set; }
-    public SimAccesibility Accesibility { get; set; } = SimAccesibility.Public;
+    public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
     public required SimClass RelatedClass { get; set; }
 
     public string Name
