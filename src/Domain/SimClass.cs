@@ -60,4 +60,9 @@ public class SimClass
 
         Attributes.Add(attribute);
     }
+
+    public void DeleteAttribute(SimAttribute attribute)
+    {
+        Attributes.RemoveAll(a => a.Name == attribute.Name);
+    }
 }
