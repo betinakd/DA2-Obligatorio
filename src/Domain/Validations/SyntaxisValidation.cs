@@ -9,12 +9,18 @@ public class SyntaxisValidation
             return false;
         }
 
-        char[] invalidSymbols = { '"', '@', '#', '$', '%', '&', '*', '!', '?', '/', '\\', '=', '+', '(', ')', '{', '}' };
+        char[] invalidSymbols = ['"', '@', '#', '$', '%', '&', '*', '!', '?', '/', '\\', '=', '+', '(', ')', '{', '}'];
         return !name.Any(c => invalidSymbols.Contains(c));
     }
 
     public static bool OnlyNumbers(string input)
     {
         return input.All(char.IsDigit);
+    }
+
+    public static bool ReservedWords(string word)
+    {
+        string[] reservedWords = ["class", "public", "private", "protected", "internal", "void", "static", "string", "int", "bool"];
+        return reservedWords.Contains(word.ToLower());
     }
 }
