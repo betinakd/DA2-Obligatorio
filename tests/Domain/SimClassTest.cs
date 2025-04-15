@@ -17,7 +17,7 @@ public class SimClassTest
         simClass.SetState(new StateNormal());
         var result = simClass.GetState();
 
-        Assert.AreEqual(SimState.Normal, result);
+        Assert.AreEqual(SimAccesibility.Normal, result);
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class SimClassTest
         simClass.SetState(new StateAbstract());
         var result = simClass.GetState();
 
-        Assert.AreEqual(SimState.Abstract, result);
+        Assert.AreEqual(SimAccesibility.Abstract, result);
     }
 
     [TestMethod]
@@ -47,7 +47,7 @@ public class SimClassTest
         simClass.SetState(new StateSealed());
         var result = simClass.GetState();
 
-        Assert.AreEqual(SimState.Sealed, result);
+        Assert.AreEqual(SimAccesibility.Sealed, result);
     }
 
     [TestMethod]
