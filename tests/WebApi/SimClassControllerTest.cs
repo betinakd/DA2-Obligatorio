@@ -77,7 +77,7 @@ public class SimClassControllerTest
         Assert.IsNotNull(result);
         var createdAtResult = result as CreatedAtActionResult;
         Assert.IsNotNull(createdAtResult);
-        Assert.AreEqual(nameof(SimClassController.CreateSimClass), createdAtResult.ActionName);
+        Assert.AreEqual(nameof(SimClassController.GetInfoClass), createdAtResult.ActionName);
 
         var returnedValue = createdAtResult.Value as CreatedSimClassResponse;
         Assert.IsNotNull(returnedValue);
