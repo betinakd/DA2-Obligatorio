@@ -84,4 +84,24 @@ public class MethodControllerTest
         Assert.AreEqual(expectedResponse.Parameter.Id, createdResult?.RouteValues["id"]);
         Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
+
+    [TestMethod]
+    public void CreateMethodInvocationCorrectly_ShoulReturnCreated()
+    {
+        var methodId = Guid.NewGuid();
+
+        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parametros = [] };
+        var invocationResponse = new InvocationResponse { Id = Guid.NewGuid() };
+        var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = invocationResponse };
+
+        _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateInvocation(invocationRequest, methodId);
+        _mockmethodAdapter?.Verify(m => m.CreateInvocation(methodId, invocationRequest), Times.Once);
+
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.InvocationResponse.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
+    }
 }
