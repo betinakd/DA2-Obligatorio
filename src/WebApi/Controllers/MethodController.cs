@@ -30,4 +30,10 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     {
         return Ok(_simMethodAdapter.AddParameter(id, request));
     }
+
+    [HttpPost("{id}/localVariables")]
+    public IActionResult AddMethodLocalVariable(Guid id, [FromBody] MethodElementsRequest request)
+    {
+        return Ok(_simMethodAdapter.AddLocalVariable(id, request));
+    }
 }

@@ -39,4 +39,15 @@ public class MethodAdapter(IMethodService methodService)
         };
         return response;
     }
+
+    public MethodElementsResponse AddLocalVariable(Guid id, MethodElementsRequest method)
+    {
+        var methodToAddInfo = methodService.AddLocalVariable(id, method.Name, method.Type);
+        var response = new MethodElementsResponse
+        {
+            Id = methodToAddInfo.Id,
+            Message = "Local variable added successfully"
+        };
+        return response;
+    }
 }

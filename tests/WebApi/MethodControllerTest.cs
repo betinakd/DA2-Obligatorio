@@ -3,7 +3,6 @@ using FluentAssertions;
 using IAdapter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Models.Request;
 using Models.Response;
 using Moq;
@@ -76,7 +75,7 @@ public class MethodControllerTest
     }
 
     [TestMethod]
-    public void AddMethodWithNullAttributes_ShouldReturnBadRequest()
+    public void AddParameterWithNullAttributes_ShouldReturnBadRequest()
     {
         var methodId = Guid.NewGuid();
         var parameterName = " ";
@@ -114,5 +113,29 @@ public class MethodControllerTest
         var actualMessage = ((dynamic)value).Message;
 
         Assert.AreEqual(expectedMessage, actualMessage);
+    }
+
+    [TestMethod]
+    public void AddMethodLocalVariablesCorrectly_ShouldReturnOK()
+    {
+        var methodId = Guid.NewGuid();
+        var variableName = "var";
+        var variableType = "string";
+
+        var request = new MethodElementsRequest
+        {
+            MethodId = methodId,
+            Name = variableName,
+            Type = variableType
+        };
+
+        _mockmethodAdapter
+            .Setup(m => m.AddLocalVariable(methodId, request));
+
+        var result = _attributeController?.AddMethodLocalVariable(methodId, request);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        _mockmethodAdapter.Verify(m => m.AddLocalVariable(methodId, request), Times.Once);
     }
 }
