@@ -9,13 +9,13 @@ namespace Tests.WebApi;
 [TestClass]
 public class InvocationMethodControllerTest
 {
-    private Mock<IMethodInvocationAdapter>? _mockInvocationMethodAdapter;
+    private Mock<IMethodAdapter>? _mockInvocationMethodAdapter;
     private InvocationsMethodController? _invocationsMethodController;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockInvocationMethodAdapter = new Mock<IMethodInvocationAdapter>();
+        _mockInvocationMethodAdapter = new Mock<IMethodAdapter>();
         _invocationsMethodController = new InvocationsMethodController(_mockInvocationMethodAdapter.Object);
     }
 
@@ -24,7 +24,7 @@ public class InvocationMethodControllerTest
     {
         var id = Guid.NewGuid();
         var expectedResponse = new InvocationResponse { IdReference = id, MethodName = "TestMethod", Parametros = [] };
-        _mockInvocationMethodAdapter?.Setup(m => m.GetInvocation(id)).Returns(expectedResponse);
+        _mockInvocationMethodAdapter?.Setup(m => m.GetInvocation(id)).Returns(() => expectedResponse);
 
         var result = _invocationsMethodController?.GetInvocation(id) as OkObjectResult;
 

@@ -13,4 +13,5 @@ public interface IMethodAdapter
     public ParameterResponse GetParameter(Guid id);
     public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter);
     public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest method);
+    public InvocationResponse GetInvocation(Guid id);
 }
