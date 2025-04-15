@@ -29,6 +29,6 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     public IActionResult CreateVariables([FromBody] VariableRequest variable, Guid id)
     {
         var response = _simMethodAdapter.CreateVariable(id, variable);
-        return CreatedAtRoute("GetVariableById", new { id = response.Variable.Id }, response);
+        return CreatedAtRoute("GetVariableById", new { id = response?.Variable?.Id }, response);
     }
 }
