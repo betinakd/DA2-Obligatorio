@@ -11,7 +11,7 @@ public class VariableMethodController(IMethodAdapter methodAdapter) : Controller
 {
     private readonly IMethodAdapter _simMethodAdapter = methodAdapter;
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetVariableById")]
     public IActionResult GetVariable(Guid id)
     {
         return Ok(_simMethodAdapter.GetVariable(id));

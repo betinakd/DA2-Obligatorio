@@ -9,4 +9,5 @@ public interface IMethodAdapter
     public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method);
     public void DeleteMethod(Guid id);
     public VariableResponse GetVariable(Guid id);
+    public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable);
 }

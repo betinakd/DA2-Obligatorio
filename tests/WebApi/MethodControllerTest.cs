@@ -1,5 +1,6 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 using Models.Response;
 using Moq;
 using WebApi.Controllers;
@@ -44,5 +45,24 @@ public class MethodControllerTest
         _mockmethodAdapter?.Verify(m => m.DeleteMethod(methodId), Times.Once);
 
         Assert.IsInstanceOfType(result, typeof(NoContentResult));
+    }
+
+    [TestMethod]
+    public void CreateVariableCorrectly_ShouldReturnCreated()
+    {
+        var methodId = Guid.NewGuid();
+        var variableRequest = new VariableRequest { MethodId = methodId, Name = "testVariable" };
+        var variableResponse = new VariableResponse { Id = Guid.NewGuid(), Name = "test" };
+        var expectedResponse = new CreatedVariableResponse { Message = "Variable created successfully", Variable = variableResponse };
+
+        _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateVariables(variableRequest, methodId);
+        _mockmethodAdapter?.Verify(m => m.CreateVariable(methodId, variableRequest), Times.Once);
+
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.Variable.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
 }

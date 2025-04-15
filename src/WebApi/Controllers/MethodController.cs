@@ -1,5 +1,6 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 using WebApi.Filters;
 
 namespace WebApi.Controllers;
@@ -22,5 +23,12 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     {
         _simMethodAdapter.DeleteMethod(id);
         return NoContent();
+    }
+
+    [HttpPost("{id}/variables")]
+    public IActionResult CreateVariables([FromBody] VariableRequest variable, Guid id)
+    {
+        var response = _simMethodAdapter.CreateVariable(id, variable);
+        return CreatedAtRoute("GetVariableById", new { id = response.Variable.Id }, response);
     }
 }
