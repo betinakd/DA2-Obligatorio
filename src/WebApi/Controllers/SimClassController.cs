@@ -36,7 +36,7 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     [HttpDelete("{id}")]
     public IActionResult DeleteSimClass(Guid id)
     {
-        simClassAdapter.DeleteSimClass(id);
+        _simClassAdapter.DeleteSimClass(id);
         return NoContent();
     }
 
