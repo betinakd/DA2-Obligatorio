@@ -27,7 +27,7 @@ public class MethodAdapter(IMethodService methodService)
 
     public MethodElementsResponse AddParameter(Guid id, MethodElementsRequest method)
     {
-        if(method.Name == null || method.Type == null)
+        if (string.IsNullOrWhiteSpace(method.Name) || string.IsNullOrWhiteSpace(method.Type))
         {
             throw new InvalidAttribute("Parameter information cant be empty");
         }

@@ -1,7 +1,10 @@
 using Adapter;
 using Adapter.Exceptions;
 using Domain;
+using FluentAssertions;
 using IBussinesLogic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Models.Request;
 using Models.Response;
 using Moq;
@@ -87,5 +90,27 @@ public class MethodAdapterTest
         Assert.AreEqual(expectedResponse.Message, result.Message);
 
         _mockMethodService?.Verify(service => service.AddLocalVariable(methodId, methodRequest.Name, methodRequest.Type), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddMethodParameter_ShouldThrowInvalidAttribute_WhenNameOrTypeIsNull()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterName = " ";
+        var parameterType = " ";
+
+        var request = new MethodElementsRequest
+        {
+            MethodId = methodId,
+            Name = parameterName,
+            Type = parameterType
+        };
+
+        var exception = Assert.ThrowsException<InvalidAttribute>(() =>
+        {
+            _methodAdapter?.AddParameter(methodId, request);
+        });
+
+        Assert.AreEqual("Parameter information cant be empty", exception.Message);
     }
 }
