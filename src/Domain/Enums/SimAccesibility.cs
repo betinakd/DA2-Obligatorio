@@ -3,7 +3,7 @@ namespace Domain.Enums;
 /// <summary>
 /// Represents the state of a simulation.
 /// </summary>
-public enum SimState
+public enum SimAccesibility
 {
     /// <summary>
     /// Represents a normal simulation state.

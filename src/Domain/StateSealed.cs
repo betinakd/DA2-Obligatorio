@@ -4,8 +4,8 @@ namespace Domain;
 
 public class StateSealed : StateClass
 {
-    public override SimState GetState()
+    public override SimAccesibility GetState()
     {
-        return SimState.Sealed;
+        return SimAccesibility.Sealed;
     }
 }

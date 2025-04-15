@@ -27,7 +27,7 @@ public class SimClass
         }
     }
 
-    public SimState GetState()
+    public SimAccesibility GetState()
     {
         return _state?.GetState() ?? throw new InvalidOperationException("State is not set.");
     }
@@ -42,7 +42,7 @@ public class SimClass
         get => _baseClassField;
         set
         {
-            if(value == null || value?.GetState() == SimState.Sealed)
+            if(value == null || value?.GetState() == SimAccesibility.Sealed)
             {
                 throw new SimClassInvalidAttribute("Cannot set as base a sealed or null Class.");
             }

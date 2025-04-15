@@ -4,8 +4,8 @@ namespace Domain;
 
 public class StateAbstract : StateClass
 {
-    public override SimState GetState()
+    public override SimAccesibility GetState()
     {
-        return SimState.Abstract;
+        return SimAccesibility.Abstract;
     }
 }
