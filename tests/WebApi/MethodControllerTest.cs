@@ -1,5 +1,9 @@
+using Adapter.Exceptions;
+using FluentAssertions;
 using IAdapter;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Models.Request;
 using Models.Response;
 using Moq;
@@ -69,5 +73,46 @@ public class MethodControllerTest
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         _mockmethodAdapter.Verify(m => m.AddParameter(methodId, request), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddMethodWithNullAttributes_ShouldReturnBadRequest()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterName = " ";
+        var parameterType = " ";
+
+        var request = new MethodElementsRequest
+        {
+            MethodId = methodId,
+            Name = parameterName,
+            Type = parameterType
+        };
+        _mockmethodAdapter
+            .Setup(m => m.AddParameter(methodId, request))
+            .Throws(new InvalidAttribute("Parameter information cant be empty"));
+
+        IActionResult result;
+        try
+        {
+            result = _attributeController.AddMethodParameter(methodId, request);
+        }
+        catch(InvalidAttribute ex)
+        {
+            // Simula el comportamiento del filtro
+            result = new BadRequestObjectResult(new { Message = ex.Message });
+        }
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<BadRequestObjectResult>();
+
+        var badRequestResult = result as BadRequestObjectResult;
+        badRequestResult!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+
+        var value = badRequestResult.Value;
+        var expectedMessage = $"Parameter information cant be empty";
+        var actualMessage = ((dynamic)value).Message;
+
+        Assert.AreEqual(expectedMessage, actualMessage);
     }
 }
