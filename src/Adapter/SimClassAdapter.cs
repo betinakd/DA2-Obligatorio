@@ -39,10 +39,11 @@ public class SimClassAdapter(ISimClassService simClassService)
 
     public void DeleteSimClass(Guid id)
     {
-        var classes = _simClassService.GetAllSimClasses();
-        var classExists = classes.Any(c => c.Id == id);
-
-        if(!classExists)
+        try
+        {
+            _simClassService.DeleteSimClass(id);
+        }
+        catch(Exception)
         {
             throw new ObjectNotFoundException($"Any class with the specified {id} id exists.");
         }

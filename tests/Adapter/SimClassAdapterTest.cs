@@ -113,18 +113,18 @@ public class SimClassAdapterTest
     public void DeleteNonExistentClass_ShouldThrowObjectNotFoundException()
     {
         var simClassId = Guid.NewGuid();
-        var simClasses = new List<SimClass>(); // Empty list, no classes exist
+        var simClasses = new List<SimClass>();
 
         _mockSimClassService
-            ?.Setup(service => service.GetAllSimClasses())
-            .Returns(simClasses);
+            ?.Setup(service => service.DeleteSimClass(simClassId))
+            .Throws(new Exception());
 
         var exception = Assert.ThrowsException<ObjectNotFoundException>(() =>
             _simClassAdapter?.DeleteSimClass(simClassId));
 
         Assert.AreEqual($"Any class with the specified {simClassId} id exists.", exception.Message);
 
-        _mockSimClassService?.Verify(service => service.GetAllSimClasses(), Times.Once);
+        _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
     }
 
     [TestMethod]
@@ -138,6 +138,26 @@ public class SimClassAdapterTest
 
         var exception = Assert.ThrowsException<ObjectNotFoundException>(() =>
             _simClassAdapter?.GetSimClassInfo(simClassId));
+        _mockSimClassService?.Verify(service => service.GetSimClassById(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void GetExistentClass_ShouldReturnSimClassResponse()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass { Id = simClassId, Name = "ExistingClass" };
+        var simClassResponse = new SimClassResponse(simClass);
+
+        _mockSimClassService
+            ?.Setup(service => service.GetSimClassById(simClassId))
+            .Returns(simClass);
+
+        var result = _simClassAdapter?.GetSimClassInfo(simClassId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simClassResponse.Id, result?.Id);
+        Assert.AreEqual(simClassResponse.Name, result?.Name);
+
         _mockSimClassService?.Verify(service => service.GetSimClassById(simClassId), Times.Once);
     }
 }
