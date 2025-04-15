@@ -160,4 +160,35 @@ public class SimClassAdapterTest
 
         _mockSimClassService?.Verify(service => service.GetSimClassById(simClassId), Times.Once);
     }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldCallService_WhenIdIsValid()
+    {
+        var simClassId = Guid.NewGuid();
+
+        _mockSimClassService
+            ?.Setup(service => service.DeleteSimClass(simClassId))
+            .Verifiable();
+
+        _simClassAdapter?.DeleteSimClass(simClassId);
+
+        _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldThrowObjectNotFoundException_WhenServiceThrowsException()
+    {
+        var simClassId = Guid.NewGuid();
+
+        _mockSimClassService
+            ?.Setup(service => service.DeleteSimClass(simClassId))
+            .Throws(new Exception());
+
+        var exception = Assert.ThrowsException<ObjectNotFoundException>(() =>
+            _simClassAdapter?.DeleteSimClass(simClassId));
+
+        Assert.AreEqual($"Any class with the specified {simClassId} id exists.", exception.Message);
+
+        _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
+    }
 }
