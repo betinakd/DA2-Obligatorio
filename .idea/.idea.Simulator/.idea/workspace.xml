@@ -10,14 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Domain/SimClassParameter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Models/Request/MethodElementsRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Models/Response/MethodElementsResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Adapter/MethodAdapterTest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IAdapter/IMethodAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/IAdapter/IMethodAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Models.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Models.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/WebApi/Controllers/MethodController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/WebApi/Controllers/MethodController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/WebApi/MethodControllerTest copy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/WebApi/MethodControllerTest copy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Adapter/MethodAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Adapter/MethodAdapter.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -39,7 +35,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/add-classParameter",
+    "git-widget-placeholder": "feature/add-methodElement",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -110,13 +106,52 @@
       <workItem from="1744641688416" duration="2799000" />
       <workItem from="1744654185674" duration="566000" />
       <workItem from="1744684366590" duration="2947000" />
+      <workItem from="1744692770507" duration="1969000" />
+      <workItem from="1744749821831" duration="2402000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnitTestsCoverage.Settings">
+    <option name="coveragePercentColumnWidth" value="150" />
+    <option name="sortOrder" value="ASCENDING" />
+    <option name="symbolColumnWidth" value="560" />
+    <coverage-tree-state>
+      <expand>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 0% 787/787" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 0% 787/787" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 0% 379/379" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 0% 787/787" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 0% 379/379" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 0% 61/61" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+      </expand>
+      <select />
+    </coverage-tree-state>
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>

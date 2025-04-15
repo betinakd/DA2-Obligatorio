@@ -9,6 +9,7 @@ namespace Adapter;
 public class MethodAdapter(IMethodService methodService)
     : IMethodAdapter
 {
+    private readonly IMethodService _methodService = methodService;
     public MethodResponse GetMethod(Guid id)
     {
         throw new NotImplementedException();
@@ -31,7 +32,7 @@ public class MethodAdapter(IMethodService methodService)
             throw new InvalidAttribute("Parameter information cant be empty");
         }
 
-        var methodParameter = methodService.AddMethodParameter(id, method.Name, method.Type);
+        var methodParameter = _methodService.AddMethodParameter(id, method.Name, method.Type);
         var response = new MethodElementsResponse
         {
             Id = methodParameter.Id,
@@ -47,7 +48,7 @@ public class MethodAdapter(IMethodService methodService)
             throw new InvalidAttribute("Local varible information cant be empty");
         }
 
-        var methodToAddInfo = methodService.AddLocalVariable(id, method.Name, method.Type);
+        var methodToAddInfo = _methodService.AddLocalVariable(id, method.Name, method.Type);
         var response = new MethodElementsResponse
         {
             Id = methodToAddInfo.Id,
