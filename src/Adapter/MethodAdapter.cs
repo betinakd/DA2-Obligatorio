@@ -42,6 +42,11 @@ public class MethodAdapter(IMethodService methodService)
 
     public MethodElementsResponse AddLocalVariable(Guid id, MethodElementsRequest method)
     {
+        if(method.Name == null || method.Type == null)
+        {
+            throw new InvalidAttribute("Local varible information cant be empty");
+        }
+
         var methodToAddInfo = methodService.AddLocalVariable(id, method.Name, method.Type);
         var response = new MethodElementsResponse
         {
