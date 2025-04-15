@@ -50,13 +50,15 @@ public class SimClassAdapter(ISimClassService simClassService)
 
     public SimClassResponse GetSimClassInfo(Guid classId)
     {
-        var simClass = _simClassService.GetSimClassById(classId.ToString());
-        if(simClass == null)
+        try
         {
-            throw new ArgumentException("SimClass not found", nameof(classId));
+            var simClass = _simClassService.GetSimClassById(classId);
+            var simClassResponse = new SimClassResponse(simClass);
+            return simClassResponse;
         }
-
-        var simClassResponse = new SimClassResponse(simClass);
-        return simClassResponse;
+        catch(Exception)
+        {
+            throw new ObjectNotFoundException("SimClass not found");
+        }
     }
 }

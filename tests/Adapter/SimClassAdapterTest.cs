@@ -126,4 +126,18 @@ public class SimClassAdapterTest
 
         _mockSimClassService?.Verify(service => service.GetAllSimClasses(), Times.Once);
     }
+
+    [TestMethod]
+    public void GetNonExistentClass_ShouldThrowObjectNotFoundException()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass() { Id = simClassId, Name = "Name" };
+        var simClassResponse = new SimClassResponse(simClass);
+        _mockSimClassService
+            ?.Setup(service => service.GetSimClassById(simClassId)).Throws(new Exception());
+
+        var exception = Assert.ThrowsException<ObjectNotFoundException>(() =>
+            _simClassAdapter?.GetSimClassInfo(simClassId));
+        _mockSimClassService?.Verify(service => service.GetSimClassById(simClassId), Times.Once);
+    }
 }
