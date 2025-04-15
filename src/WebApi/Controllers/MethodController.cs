@@ -1,5 +1,6 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 using WebApi.Filters;
 
 namespace WebApi.Controllers;
@@ -22,5 +23,11 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     {
         _simMethodAdapter.DeleteMethod(id);
         return NoContent();
+    }
+
+    [HttpPost("{id}")]
+    public IActionResult AddMethodParameter(Guid id, [FromBody] MethodElementsRequest request)
+    {
+        return Ok(_simMethodAdapter.AddParameter(id, request));
     }
 }
