@@ -7,9 +7,9 @@ namespace WebApi.Controllers;
 [ExceptionFilter]
 [ApiController]
 [Route("api/v1/invocations")]
-public class InvocationsMethodController(IMethodInvocationAdapter invocationAdapter) : ControllerBase
+public class InvocationsMethodController(IMethodAdapter invocationAdapter) : ControllerBase
 {
-    private readonly IMethodInvocationAdapter _invocationAdapter = invocationAdapter;
+    private readonly IMethodAdapter _invocationAdapter = invocationAdapter;
 
     [HttpGet("{id}", Name = "GetInvocationById")]
     public IActionResult GetInvocation(Guid id)
