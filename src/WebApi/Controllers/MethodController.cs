@@ -25,7 +25,7 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("{id}")]
+    [HttpPost("{id}/paremeters")]
     public IActionResult AddMethodParameter(Guid id, [FromBody] MethodElementsRequest request)
     {
         return Ok(_simMethodAdapter.AddParameter(id, request));
