@@ -65,4 +65,23 @@ public class MethodControllerTest
         Assert.AreEqual(expectedResponse.Variable.Id, createdResult?.RouteValues["id"]);
         Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
+
+    [TestMethod]
+    public void CreateParameterCorrectly_ShouldReturnCreated()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterRequest = new ParameterRequest { MethodId = methodId, Name = "testParameter" };
+        var parameterResponse = new ParameterResponse { Id = Guid.NewGuid(), Name = "test" };
+        var expectedResponse = new CreatedParameterResponse { Message = "Parameter created successfully", Parameter = parameterResponse };
+
+        _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateParameter(parameterRequest, methodId);
+        _mockmethodAdapter?.Verify(m => m.CreateParameter(methodId, parameterRequest), Times.Once);
+
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.Parameter.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
+    }
 }

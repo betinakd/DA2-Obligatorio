@@ -11,4 +11,5 @@ public interface IMethodAdapter
     public VariableResponse GetVariable(Guid id);
     public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable);
     public ParameterResponse GetParameter(Guid id);
+    public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter);
 }
