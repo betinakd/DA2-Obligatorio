@@ -113,4 +113,26 @@ public class MethodAdapterTest
 
         Assert.AreEqual("Parameter information cant be empty", exception.Message);
     }
+
+    [TestMethod]
+    public void AddMethodLocalVariable_ShouldThrowInvalidAttribute_WhenNameOrTypeIsNull()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterName = " ";
+        var parameterType = " ";
+
+        var request = new MethodElementsRequest
+        {
+            MethodId = methodId,
+            Name = parameterName,
+            Type = parameterType
+        };
+
+        var exception = Assert.ThrowsException<InvalidAttribute>(() =>
+        {
+            _methodAdapter?.AddLocalVariable(methodId, request);
+        });
+
+        Assert.AreEqual("Local variable information cant be empty", exception.Message);
+    }
 }
