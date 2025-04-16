@@ -1,8 +1,7 @@
 namespace Models.Request;
-
-public class MethodElementsRequest
+public class ParameterRequest()
 {
-    public Guid? MethodId { get; set; }
     public string? Name { get; set; }
+    public Guid? MethodId { get; set; }
     public string? Type { get; set; }
 }

@@ -6,8 +6,8 @@ public class SimClassResponse(SimClass simClass)
 {
     public Guid? Id { get; set; } = simClass.Id;
     public string? Name { get; set; } = simClass.Name;
-    public bool? IsAbstract { get; set; } = simClass.GetState() == SimState.Abstract;
-    public bool? IsSealed { get; set; } = simClass.GetState() == SimState.Sealed;
+    public bool? IsAbstract { get; set; } = simClass.GetState() == SimAccesibility.Abstract;
+    public bool? IsSealed { get; set; } = simClass.GetState() == SimAccesibility.Sealed;
 
     public string? Message { get; set; }
 }

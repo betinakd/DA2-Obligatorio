@@ -25,15 +25,24 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("{id}/paremeters")]
-    public IActionResult AddMethodParameter(Guid id, [FromBody] MethodElementsRequest request)
+    [HttpPost("{id}/variables")]
+    public IActionResult CreateVariables([FromBody] VariableRequest variable, Guid id)
     {
-        return Ok(_simMethodAdapter.AddParameter(id, request));
+        var response = _simMethodAdapter.CreateVariable(id, variable);
+        return CreatedAtRoute("GetVariableById", new { id = response?.Variable?.Id }, response);
     }
 
-    [HttpPost("{id}/localVariables")]
-    public IActionResult AddMethodLocalVariable(Guid id, [FromBody] MethodElementsRequest request)
+    [HttpPost("{id}/parameters")]
+    public IActionResult CreateParameter([FromBody] ParameterRequest parameter, Guid id)
     {
-        return Ok(_simMethodAdapter.AddLocalVariable(id, request));
+        var response = _simMethodAdapter.CreateParameter(id, parameter);
+        return CreatedAtRoute("GetParameterById", new { id = response?.Parameter?.Id }, response);
+    }
+
+    [HttpPost("{id}/invocations")]
+    public IActionResult CreateInvocation([FromBody] InvocationRequest invocationRequest, Guid id)
+    {
+        var response = _simMethodAdapter.CreateInvocation(id, invocationRequest);
+        return CreatedAtRoute("GetInvocationId", new { id = response?.InvocationResponse?.Id }, response);
     }
 }

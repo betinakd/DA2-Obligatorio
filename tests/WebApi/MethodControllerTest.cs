@@ -51,92 +51,61 @@ public class MethodControllerTest
     }
 
     [TestMethod]
-    public void AddMethodParameterCorrectly_ShouldReturnOK()
+    public void CreateVariableCorrectly_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var parameterName = "param1";
-        var parameterType = "string";
+        var variableRequest = new VariableRequest { MethodId = methodId, Name = "testVariable" , Type = "type" };
+        var variableResponse = new VariableResponse { Id = Guid.NewGuid(), Name = "test" , MethodId = methodId , Type = "type" };
+        var expectedResponse = new CreatedVariableResponse { Message = "Variable created successfully", Variable = variableResponse };
 
-        var request = new MethodElementsRequest
-        {
-            MethodId = methodId,
-            Name = parameterName,
-            Type = parameterType
-        };
+        _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns(expectedResponse);
 
-        _mockmethodAdapter
-            .Setup(m => m.AddParameter(methodId, request));
+        var result = _attributeController?.CreateVariables(variableRequest, methodId);
+        _mockmethodAdapter?.Verify(m => m.CreateVariable(methodId, variableRequest), Times.Once);
 
-        var result = _attributeController?.AddMethodParameter(methodId, request);
-
-        Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-        _mockmethodAdapter.Verify(m => m.AddParameter(methodId, request), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.Variable.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
 
     [TestMethod]
-    public void AddParameterWithNullAttributes_ShouldReturnBadRequest()
+    public void CreateParameterCorrectly_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var parameterName = " ";
-        var parameterType = " ";
+        var parameterRequest = new ParameterRequest { MethodId = methodId, Name = "testParameter" , Type = "type" };
+        var parameterResponse = new ParameterResponse { Id = Guid.NewGuid(), Name = "test" , MethodId = methodId, Type = "type" };
+        var expectedResponse = new CreatedParameterResponse { Message = "Parameter created successfully", Parameter = parameterResponse };
 
-        var request = new MethodElementsRequest
-        {
-            MethodId = methodId,
-            Name = parameterName,
-            Type = parameterType
-        };
-        _mockmethodAdapter
-            .Setup(m => m.AddParameter(methodId, request))
-            .Throws(new InvalidAttribute("Parameter information cant be empty"));
+        _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns(expectedResponse);
 
-        IActionResult result;
-        try
-        {
-            result = _attributeController.AddMethodParameter(methodId, request);
-        }
-        catch(InvalidAttribute ex)
-        {
-            // Simula el comportamiento del filtro
-            result = new BadRequestObjectResult(new { Message = ex.Message });
-        }
+        var result = _attributeController?.CreateParameter(parameterRequest, methodId);
+        _mockmethodAdapter?.Verify(m => m.CreateParameter(methodId, parameterRequest), Times.Once);
 
-        result.Should().NotBeNull();
-        result.Should().BeOfType<BadRequestObjectResult>();
-
-        var badRequestResult = result as BadRequestObjectResult;
-        badRequestResult!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-
-        var value = badRequestResult.Value;
-        var expectedMessage = $"Parameter information cant be empty";
-        var actualMessage = ((dynamic)value).Message;
-
-        Assert.AreEqual(expectedMessage, actualMessage);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.Parameter.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
 
     [TestMethod]
-    public void AddMethodLocalVariablesCorrectly_ShouldReturnOK()
+    public void CreateMethodInvocationCorrectly_ShoulReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var variableName = "var";
-        var variableType = "string";
 
-        var request = new MethodElementsRequest
-        {
-            MethodId = methodId,
-            Name = variableName,
-            Type = variableType
-        };
+        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parametros = [] };
+        var invocationResponse = new InvocationResponse { Id = Guid.NewGuid() };
+        var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = invocationResponse };
 
-        _mockmethodAdapter
-            .Setup(m => m.AddLocalVariable(methodId, request));
+        _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns(expectedResponse);
 
-        var result = _attributeController?.AddMethodLocalVariable(methodId, request);
+        var result = _attributeController?.CreateInvocation(invocationRequest, methodId);
+        _mockmethodAdapter?.Verify(m => m.CreateInvocation(methodId, invocationRequest), Times.Once);
 
-        Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-        _mockmethodAdapter.Verify(m => m.AddLocalVariable(methodId, request), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.InvocationResponse.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
 
     [TestMethod]
@@ -146,20 +115,20 @@ public class MethodControllerTest
         var parameterName = " ";
         var parameterType = " ";
 
-        var request = new MethodElementsRequest
+        var request = new VariableRequest
         {
             MethodId = methodId,
             Name = parameterName,
             Type = parameterType
         };
         _mockmethodAdapter
-            .Setup(m => m.AddLocalVariable(methodId, request))
+            .Setup(m => m.CreateVariable(methodId, request))
             .Throws(new InvalidAttribute("Local varible information cant be empty"));
 
         IActionResult result;
         try
         {
-            result = _attributeController.AddMethodLocalVariable(methodId, request);
+            result = _attributeController?.CreateVariables(request, methodId);
         }
         catch(InvalidAttribute ex)
         {
@@ -175,6 +144,47 @@ public class MethodControllerTest
 
         var value = badRequestResult.Value;
         var expectedMessage = $"Local varible information cant be empty";
+        var actualMessage = ((dynamic)value).Message;
+
+        Assert.AreEqual(expectedMessage, actualMessage);
+    }
+
+    [TestMethod]
+    public void AddParameterWithNullAttributes_ShouldReturnBadRequest()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterName = " ";
+        var parameterType = " ";
+
+        var request = new ParameterRequest
+        {
+            MethodId = methodId,
+            Name = parameterName,
+            Type = parameterType
+        };
+        _mockmethodAdapter
+            .Setup(m => m.CreateParameter(methodId, request))
+            .Throws(new InvalidAttribute("Parameter information cant be empty"));
+
+        IActionResult result;
+        try
+        {
+            result = _attributeController.CreateParameter(request, methodId);
+        }
+        catch(InvalidAttribute ex)
+        {
+            // Simula el comportamiento del filtro
+            result = new BadRequestObjectResult(new { Message = ex.Message });
+        }
+
+        result.Should().NotBeNull();
+        result.Should().BeOfType<BadRequestObjectResult>();
+
+        var badRequestResult = result as BadRequestObjectResult;
+        badRequestResult!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+
+        var value = badRequestResult.Value;
+        var expectedMessage = $"Parameter information cant be empty";
         var actualMessage = ((dynamic)value).Message;
 
         Assert.AreEqual(expectedMessage, actualMessage);

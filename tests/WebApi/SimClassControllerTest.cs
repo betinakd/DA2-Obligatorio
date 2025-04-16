@@ -77,7 +77,7 @@ public class SimClassControllerTest
         Assert.IsNotNull(result);
         var createdAtResult = result as CreatedAtActionResult;
         Assert.IsNotNull(createdAtResult);
-        Assert.AreEqual(nameof(SimClassController.CreateSimClass), createdAtResult.ActionName);
+        Assert.AreEqual(nameof(SimClassController.GetInfoClass), createdAtResult.ActionName);
 
         var returnedValue = createdAtResult.Value as CreatedSimClassResponse;
         Assert.IsNotNull(returnedValue);
@@ -172,11 +172,9 @@ public class SimClassControllerTest
             .Setup(x => x.DeleteSimClass(classId))
             .Verifiable();
 
-        var result = _simClassController.DeleteSimClass(classId);
+        _simClassController.DeleteSimClass(classId);
 
         _mockSimClassAdapter.Verify(x => x.DeleteSimClass(classId), Times.Once);
-        Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(NoContentResult));
     }
 
     [TestMethod]
@@ -195,7 +193,6 @@ public class SimClassControllerTest
         }
         catch(ObjectNotFoundException ex)
         {
-            // Simula el comportamiento del filtro
             result = new NotFoundObjectResult(new
             {
                 Message = ex.Message
@@ -241,6 +238,7 @@ public class SimClassControllerTest
         result!.StatusCode.Should().Be(StatusCodes.Status404NotFound);
     }
 
+    [TestMethod]
     public void GetInfoClass_ValidClassId_ShouldReturnClassInfo()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassInfo" };

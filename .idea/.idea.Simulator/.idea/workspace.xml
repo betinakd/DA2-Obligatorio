@@ -10,9 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/Adapter/MethodAdapterTest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Adapter/MethodAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Adapter/MethodAdapter.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +105,7 @@
       <workItem from="1744654185674" duration="566000" />
       <workItem from="1744684366590" duration="2947000" />
       <workItem from="1744692770507" duration="1969000" />
-      <workItem from="1744749821831" duration="2402000" />
+      <workItem from="1744749821831" duration="5683000" />
     </task>
     <servers />
   </component>
@@ -117,23 +115,51 @@
   <component name="UnitTestsCoverage.Settings">
     <option name="coveragePercentColumnWidth" value="150" />
     <option name="sortOrder" value="ASCENDING" />
-    <option name="symbolColumnWidth" value="560" />
+    <option name="symbolColumnWidth" value="186" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 787/787" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 787/787" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 0% 379/379" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 0% 787/787" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 0% 379/379" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 0% 61/61" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 74% 16/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 74% 16/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 77% 6/26" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="WebApi 77% 20/86" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="WebApi 77% 20/86" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="WebApi 94% 4/70" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="WebApi 77% 20/86" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="WebApi 94% 4/70" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Controllers 93% 4/58" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />

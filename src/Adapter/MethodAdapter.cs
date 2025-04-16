@@ -25,35 +25,64 @@ public class MethodAdapter(IMethodService methodService)
         throw new NotImplementedException();
     }
 
-    public MethodElementsResponse AddParameter(Guid id, MethodElementsRequest method)
+    public VariableResponse GetVariable(Guid id)
     {
-        if (string.IsNullOrWhiteSpace(method.Name) || string.IsNullOrWhiteSpace(method.Type))
-        {
-            throw new InvalidAttribute("Parameter information cant be empty");
-        }
-
-        var methodParameter = _methodService.AddMethodParameter(id, method.Name, method.Type);
-        var response = new MethodElementsResponse
-        {
-            Id = methodParameter.Id,
-            Message = "Parameter added successfully"
-        };
-        return response;
+        throw new NotImplementedException();
     }
 
-    public MethodElementsResponse AddLocalVariable(Guid id, MethodElementsRequest method)
+    public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
     {
-        if (string.IsNullOrWhiteSpace(method.Name) || string.IsNullOrWhiteSpace(method.Type))
+        if (string.IsNullOrWhiteSpace(variable.Name) || string.IsNullOrWhiteSpace(variable.Type))
         {
             throw new InvalidAttribute("Local variable information cant be empty");
         }
 
-        var methodToAddInfo = _methodService.AddLocalVariable(id, method.Name, method.Type);
-        var response = new MethodElementsResponse
+        var newAttribute = _methodService.AddLocalVariable(idMethod, variable.Name, variable.Type);
+        var response = new CreatedVariableResponse
         {
-            Id = methodToAddInfo.Id,
-            Message = "Local variable added successfully"
+            Message = "Local variable added successfully",
+            Variable = new VariableResponse
+            {
+                Id = newAttribute.Id,
+                Name = newAttribute.Name,
+                MethodId = idMethod,
+                Type = (newAttribute.RelatedClass).Name
+            }
         };
         return response;
+    }
+
+    public ParameterResponse GetParameter(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
+    {
+        if (string.IsNullOrWhiteSpace(parameter.Name) || string.IsNullOrWhiteSpace(parameter.Type))
+        {
+            throw new InvalidAttribute("Parameter information cant be empty");
+        }
+
+        var methodParameter = _methodService.AddMethodParameter(idMethod, parameter.Name, parameter.Type);
+        var response = new CreatedParameterResponse
+        {
+            Message = "Parameter added successfully",
+            Parameter = new ParameterResponse
+            {
+                Name = methodParameter.Name, MethodId = idMethod, Type = parameter.Type
+            }
+        };
+        return response;
+    }
+
+    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest method)
+    {
+        throw new NotImplementedException();
+    }
+
+    public InvocationResponse GetInvocation(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }
