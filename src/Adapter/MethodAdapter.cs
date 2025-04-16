@@ -32,7 +32,7 @@ public class MethodAdapter(IMethodService methodService)
 
     public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
     {
-        if (string.IsNullOrWhiteSpace(variable.Name) || string.IsNullOrWhiteSpace(variable.Type))
+        if(string.IsNullOrWhiteSpace(variable.Name) || string.IsNullOrWhiteSpace(variable.Type))
         {
             throw new InvalidAttribute("Local variable information cant be empty");
         }
@@ -59,7 +59,7 @@ public class MethodAdapter(IMethodService methodService)
 
     public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
     {
-        if (string.IsNullOrWhiteSpace(parameter.Name) || string.IsNullOrWhiteSpace(parameter.Type))
+        if(string.IsNullOrWhiteSpace(parameter.Name) || string.IsNullOrWhiteSpace(parameter.Type))
         {
             throw new InvalidAttribute("Parameter information cant be empty");
         }
@@ -70,7 +70,9 @@ public class MethodAdapter(IMethodService methodService)
             Message = "Parameter added successfully",
             Parameter = new ParameterResponse
             {
-                Name = methodParameter.Name, MethodId = idMethod, Type = parameter.Type
+                Name = methodParameter.Name,
+                MethodId = idMethod,
+                Type = parameter.Type
             }
         };
         return response;

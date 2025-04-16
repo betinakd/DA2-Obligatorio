@@ -9,9 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,7 +130,7 @@
       <workItem from="1744749821831" duration="5683000" />
       <workItem from="1744759216889" duration="6665000" />
       <workItem from="1744766313428" duration="1502000" />
-      <workItem from="1744771242532" duration="814000" />
+      <workItem from="1744771242532" duration="1395000" />
     </task>
     <servers />
   </component>
@@ -140,10 +138,10 @@
     <option name="version" value="3" />
   </component>
   <component name="UnitTestsCoverage.Settings">
-    <option name="coveragePercentColumnWidth" value="150" />
+    <option name="coveragePercentColumnWidth" value="90" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="2" />
-    <option name="symbolColumnWidth" value="495" />
+    <option name="symbolColumnWidth" value="238" />
     <coverage-tree-state>
       <expand />
       <select />

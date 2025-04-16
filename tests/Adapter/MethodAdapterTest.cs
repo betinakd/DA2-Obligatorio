@@ -45,8 +45,8 @@ public class MethodAdapterTest
             MethodId = methodId
         };
 
-        var relatedClass = new SimClass{ Name = "string" };
-        var typeClass = new SimClass{ Name = "string" };
+        var relatedClass = new SimClass { Name = "string" };
+        var typeClass = new SimClass { Name = "string" };
         var expectedattribute = new SimAttribute() { Name = parameterName, RelatedClass = relatedClass, Type = typeClass };
 
         var expectedResponse = new CreatedParameterResponse
