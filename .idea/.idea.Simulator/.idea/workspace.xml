@@ -11,7 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Adapter/MethodAdapterTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Adapter/MethodAdapterTest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,6 +132,7 @@
       <workItem from="1744749821831" duration="5683000" />
       <workItem from="1744759216889" duration="6665000" />
       <workItem from="1744766313428" duration="1502000" />
+      <workItem from="1744771242532" duration="814000" />
     </task>
     <servers />
   </component>
@@ -143,40 +143,9 @@
     <option name="coveragePercentColumnWidth" value="150" />
     <option name="sortOrder" value="DESCENDING" />
     <option name="sortedColumn" value="2" />
-    <option name="symbolColumnWidth" value="417" />
+    <option name="symbolColumnWidth" value="495" />
     <coverage-tree-state>
-      <expand>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 55% 32/71" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 55% 32/71" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 6% 32/34" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 55% 32/71" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 6% 32/34" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="MethodAdapter 0% 32/32" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-      </expand>
+      <expand />
       <select />
     </coverage-tree-state>
   </component>

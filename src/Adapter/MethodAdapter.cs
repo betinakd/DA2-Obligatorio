@@ -70,7 +70,7 @@ public class MethodAdapter(IMethodService methodService)
             Message = "Parameter added successfully",
             Parameter = new ParameterResponse
             {
-                Name = parameter.Name, MethodId = idMethod, Type = parameter.Type
+                Name = methodParameter.Name, MethodId = idMethod, Type = parameter.Type
             }
         };
         return response;
