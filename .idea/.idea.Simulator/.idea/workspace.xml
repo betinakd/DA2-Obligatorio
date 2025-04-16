@@ -11,6 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a14d89f8-3274-4655-9d22-fdf6f1c3644b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Simulator/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Adapter/MethodAdapterTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Adapter/MethodAdapterTest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +21,31 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Adapter/MethodAdapter.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Adapter/SimClassAdapter.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Domain/SimClass.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Domain/StateAbstract.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Domain/StateClass.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Domain/StateNormal.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Domain/StateSealed.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/IBussinesLogic/IMethodService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/IBussinesLogic/ISimClassService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/Models/Response/SimClassResponse.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/WebApi/Controllers/MethodController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/src/WebApi/Controllers/SimClassController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/Adapter/MethodAdapterTest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/Adapter/SimClassAdapterTest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/Domain/SimClassTest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/WebApi/MethodControllerTest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/WebApi/MethodControllerTest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/WebApi/MethodControllerTest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/cande/OneDrive/Escritorio/Clases/Diseño 2/Obligatorio/271395-294598-221509/tests/WebApi/SimClassControllerTest.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -29,19 +54,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/add-methodElement",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/add-methodElement&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.WebApi: IIS Express">
     <configuration name="WebApi: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/WebApi/WebApi.csproj" />
@@ -106,6 +131,8 @@
       <workItem from="1744684366590" duration="2947000" />
       <workItem from="1744692770507" duration="1969000" />
       <workItem from="1744749821831" duration="5683000" />
+      <workItem from="1744759216889" duration="6665000" />
+      <workItem from="1744766313428" duration="1502000" />
     </task>
     <servers />
   </component>
@@ -114,52 +141,40 @@
   </component>
   <component name="UnitTestsCoverage.Settings">
     <option name="coveragePercentColumnWidth" value="150" />
-    <option name="sortOrder" value="ASCENDING" />
-    <option name="symbolColumnWidth" value="186" />
+    <option name="sortOrder" value="DESCENDING" />
+    <option name="sortedColumn" value="2" />
+    <option name="symbolColumnWidth" value="417" />
     <coverage-tree-state>
       <expand>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 74% 16/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 55% 32/71" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 74% 16/62" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Adapter 77% 6/26" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 55% 32/71" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 6% 32/34" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
         <path>
           <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="WebApi 77% 20/86" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="WebApi 77% 20/86" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="WebApi 94% 4/70" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-        </path>
-        <path>
-          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
-          <item name="Total 86% 119/842" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="src 76% 93/380" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="WebApi 77% 20/86" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="WebApi 94% 4/70" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
-          <item name="Controllers 93% 4/58" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Total 81% 196/1018" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="src 71% 139/479" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 55% 32/71" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="Adapter 6% 32/34" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="MethodAdapter 0% 32/32" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
         </path>
       </expand>
       <select />

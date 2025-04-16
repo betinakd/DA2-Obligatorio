@@ -46,7 +46,7 @@ public class MethodAdapter(IMethodService methodService)
                 Id = newAttribute.Id,
                 Name = newAttribute.Name,
                 MethodId = idMethod,
-                Type = (newAttribute.RelatedClass).Name
+                Type = newAttribute.RelatedClass.Name
             }
         };
         return response;
@@ -70,7 +70,7 @@ public class MethodAdapter(IMethodService methodService)
             Message = "Parameter added successfully",
             Parameter = new ParameterResponse
             {
-                Name = methodParameter.Name, MethodId = idMethod, Type = parameter.Type
+                Name = parameter.Name, MethodId = idMethod, Type = parameter.Type
             }
         };
         return response;
