@@ -31,7 +31,7 @@ public class ClassAttributeControllerTest
             Id = id,
             Name = "DummyAttribute",
             Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
-            Privacity = SimPrivacity.Public,
+            Privacity = SimModelsPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
         };
         var expectedResponse = new AttributeResponse()
@@ -39,7 +39,7 @@ public class ClassAttributeControllerTest
             Id = id,
             Name = "DummyAttribute",
             Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
-            Privacity = SimPrivacity.Public,
+            Privacity = SimModelsPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
         };
         var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Privacity = expectedResponse };

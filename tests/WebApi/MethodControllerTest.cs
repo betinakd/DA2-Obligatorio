@@ -54,8 +54,8 @@ public class MethodControllerTest
     public void CreateVariableCorrectly_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var variableRequest = new VariableRequest { MethodId = methodId, Name = "testVariable", Type = "type" };
-        var variableResponse = new VariableResponse { Id = Guid.NewGuid(), Name = "test", MethodId = methodId, Type = "type" };
+        var variableRequest = new VariableRequest { MethodId = methodId, Name = "testVariable", ClassTypeId = Guid.NewGuid() };
+        var variableResponse = new VariableResponse { Id = Guid.NewGuid(), Name = "test", MethodId = methodId, ClassTypeId = Guid.NewGuid() };
         var expectedResponse = new CreatedVariableResponse { Message = "Variable created successfully", Variable = variableResponse };
 
         _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns(expectedResponse);
@@ -73,8 +73,8 @@ public class MethodControllerTest
     public void CreateParameterCorrectly_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var parameterRequest = new ParameterRequest { MethodId = methodId, Name = "testParameter", Type = "type" };
-        var parameterResponse = new ParameterResponse { Id = Guid.NewGuid(), Name = "test", MethodId = methodId, Type = "type" };
+        var parameterRequest = new ParameterRequest { MethodId = methodId, Name = "testParameter", ClassTypeId = Guid.NewGuid() };
+        var parameterResponse = new ParameterResponse { Id = Guid.NewGuid(), Name = "test", MethodId = methodId, ClassTypeId = Guid.NewGuid() };
         var expectedResponse = new CreatedParameterResponse { Message = "Parameter created successfully", Parameter = parameterResponse };
 
         _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns(expectedResponse);
@@ -119,7 +119,7 @@ public class MethodControllerTest
         {
             MethodId = methodId,
             Name = parameterName,
-            Type = parameterType
+            ClassTypeId = Guid.Empty,
         };
         _mockmethodAdapter
             .Setup(m => m.CreateVariable(methodId, request))
@@ -160,7 +160,7 @@ public class MethodControllerTest
         {
             MethodId = methodId,
             Name = parameterName,
-            Type = parameterType
+            ClassTypeId = Guid.Empty
         };
         _mockmethodAdapter
             .Setup(m => m.CreateParameter(methodId, request))

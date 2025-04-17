@@ -8,7 +8,7 @@ public enum SimAccesibility
     /// <summary>
     /// Represents a normal simulation state.
     /// </summary>
-    Normal,
+    Sealed,
 
     /// <summary>
     /// Represents an abstract simulation state.
@@ -18,5 +18,5 @@ public enum SimAccesibility
     /// <summary>
     /// Represents a sealed simulation state.
     /// </summary>
-    Sealed,
+    Normal,
 }

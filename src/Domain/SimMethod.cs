@@ -1,8 +1,13 @@
+using Domain.Enums;
+
 namespace Domain;
 
 public class SimMethod
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
-    public SimAttribute? ReturnType { get; set; } = null!;
+    public SimClass? ReturnType { get; set; } = null!;
+    public SimClass RelatedClass { get; set; } = null!;
+    public SimPrivacity Privacity { get; set; }
+    public SimAccesibility Accesibility { get; set; }
 }

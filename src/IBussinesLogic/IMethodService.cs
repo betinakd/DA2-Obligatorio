@@ -4,8 +4,12 @@ namespace IBussinesLogic;
 
 public interface IMethodService
 {
-    IEnumerable<SimMethod> GetAllSimMethods();
-    SimMethod CreateClassMethod(string? name, string? returnType, string? accessModifier, bool? isStatic, bool? isAbstract, Guid? classId);
-    SimAttribute AddMethodParameter(Guid methodId, string? name, string? type);
-    SimAttribute AddLocalVariable(Guid methodId, string? name, string? type);
+    public SimMethod GetMethodById(Guid id);
+    public SimMethod CreateClassMethod(string? name, string? returnType, string? accessModifier, bool? isStatic, bool? isAbstract, Guid? classId);
+    public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter);
+    public SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable);
+    public Parameter GetParameterById(Guid id);
+    public LocalVariable GetVariableById(Guid id);
+    public SimMethod AddMethod(Guid id, SimMethod method);
+    public void DeleteMethod(Guid id);
 }

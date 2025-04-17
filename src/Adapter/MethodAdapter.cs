@@ -1,4 +1,6 @@
 using Adapter.Exceptions;
+using Domain;
+using Domain.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -6,76 +8,186 @@ using Models.Response;
 
 namespace Adapter;
 
-public class MethodAdapter(IMethodService methodService)
+public class MethodAdapter(IMethodService methodService, ISimClassService simClassService)
     : IMethodAdapter
 {
     private readonly IMethodService _methodService = methodService;
+    private readonly ISimClassService _simClassService = simClassService;
+
     public MethodResponse GetMethod(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var method = _methodService.GetMethodById(id);
+            return new MethodResponse
+            {
+                Id = method.Id,
+                Name = method.Name,
+                IdClassOwner = method.RelatedClass.Id,
+                Privacity = EnumMapper.MapToModelPrivacity(method.Privacity),
+                Accesibility = EnumMapper.MapToModelAccesibility(method.Accesibility),
+                ReturnTypeId = method.ReturnType.Id
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid method ID.");
+        }
     }
 
     public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var classOwner = _simClassService.GetSimClassById(idClass);
+            var returnType = _simClassService.GetSimClassById(method.ReturnTypeId);
+
+            var newMethod = new SimMethod
+            {
+                Id = Guid.NewGuid(),
+                Name = method.Name,
+                RelatedClass = classOwner,
+                Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
+                Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
+                ReturnType = returnType
+            };
+
+            var createdMethod = _methodService.AddMethod(idClass, newMethod);
+
+            return new CreatedMethodResponse
+            {
+                Message = "Method created successfully",
+                MethodResponse = new MethodResponse
+                {
+                    Id = createdMethod.Id,
+                    Name = createdMethod.Name,
+                    IdClassOwner = createdMethod.RelatedClass.Id,
+                    Privacity = EnumMapper.MapToModelPrivacity(createdMethod.Privacity),
+                    Accesibility = EnumMapper.MapToModelAccesibility(createdMethod.Accesibility),
+                    ReturnTypeId = createdMethod.ReturnType.Id
+                }
+            };
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 
     public void DeleteMethod(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _methodService.DeleteMethod(id);
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid method ID.");
+        }
     }
 
     public VariableResponse GetVariable(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var variable = _methodService.GetVariableById(id);
+            return new VariableResponse
+            {
+                Id = variable.Id,
+                Name = variable.Name,
+                MethodId = variable.RelatedMethod.Id,
+                ClassTypeId = variable.Type.Id
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid variable ID.");
+        }
     }
 
     public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
     {
-        if(string.IsNullOrWhiteSpace(variable.Name) || string.IsNullOrWhiteSpace(variable.Type))
+        try
         {
-            throw new InvalidAttribute("Local variable information cant be empty");
-        }
-
-        var newAttribute = _methodService.AddLocalVariable(idMethod, variable.Name, variable.Type);
-        var response = new CreatedVariableResponse
-        {
-            Message = "Local variable added successfully",
-            Variable = new VariableResponse
+            var type = _simClassService.GetSimClassById(variable.ClassTypeId);
+            var method = _methodService.GetMethodById(idMethod);
+            var localVariable = new LocalVariable()
             {
-                Id = newAttribute.Id,
-                Name = newAttribute.Name,
-                MethodId = idMethod,
-                Type = newAttribute.RelatedClass.Name
-            }
-        };
-        return response;
+                Id = Guid.NewGuid(),
+                Name = variable.Name,
+                Type = type,
+                RelatedMethod = method,
+            };
+            var newAttribute = _methodService.AddLocalVariable(idMethod, localVariable);
+            var response = new CreatedVariableResponse
+            {
+                Message = "Variable created successfully",
+                Variable = new VariableResponse()
+                {
+                    Id = newAttribute.Id,
+                    Name = newAttribute.Name,
+                    MethodId = idMethod,
+                    ClassTypeId = newAttribute.RelatedClass.Id
+                }
+            };
+            return response;
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 
     public ParameterResponse GetParameter(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var parameter = _methodService.GetParameterById(id);
+            return new ParameterResponse
+            {
+                Id = parameter.Id,
+                Name = parameter.Name,
+                MethodId = parameter.RelatedMethod.Id,
+                ClassTypeId = parameter.Type.Id
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid parameter ID.");
+        }
     }
 
     public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
     {
-        if(string.IsNullOrWhiteSpace(parameter.Name) || string.IsNullOrWhiteSpace(parameter.Type))
+        try
         {
-            throw new InvalidAttribute("Parameter information cant be empty");
-        }
-
-        var methodParameter = _methodService.AddMethodParameter(idMethod, parameter.Name, parameter.Type);
-        var response = new CreatedParameterResponse
-        {
-            Message = "Parameter added successfully",
-            Parameter = new ParameterResponse
+            var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+            var method = _methodService.GetMethodById(idMethod);
+            var parameterMethod = new Parameter()
             {
-                Name = methodParameter.Name,
-                MethodId = idMethod,
-                Type = parameter.Type
-            }
-        };
-        return response;
+                Id = Guid.NewGuid(),
+                Name = parameter.Name,
+                Type = type,
+                RelatedMethod = method,
+            };
+            var newAttribute = _methodService.AddMethodParameter(idMethod, parameterMethod);
+            var response = new CreatedParameterResponse
+            {
+                Message = "Parameter created successfully",
+                Parameter = new ParameterResponse()
+                {
+                    Id = newAttribute.Id,
+                    Name = newAttribute.Name,
+                    MethodId = idMethod,
+                    ClassTypeId = newAttribute.RelatedClass.Id
+                }
+            };
+            return response;
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 
     public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest method)

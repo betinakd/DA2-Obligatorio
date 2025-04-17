@@ -31,7 +31,7 @@ public class AttributeControllerTest
             Id = idToDelete,
             Name = "DummyAttribute",
             Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
-            Privacity = SimPrivacity.Public,
+            Privacity = SimModelsPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
         };
         var expectedDeletedResponse = new DeletedAttributeResponse() { Message = "Attribute was deleted succesfully", Attribute = expectedResponse };
@@ -54,7 +54,7 @@ public class AttributeControllerTest
             Id = idToUpdate,
             Name = "UpdatedAttribute",
             Type = new SimClassResponse(new SimClass { Name = "UpdatedType" }),
-            Privacity = SimPrivacity.Public,
+            Privacity = SimModelsPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
         };
         var expectedResponse = new AttributeResponse()
@@ -62,7 +62,7 @@ public class AttributeControllerTest
             Id = idToUpdate,
             Name = "UpdatedAttribute",
             Type = new SimClassResponse(new SimClass { Name = "UpdatedType" }),
-            Privacity = SimPrivacity.Public,
+            Privacity = SimModelsPrivacity.Public,
             RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
         };
         var updatedExpectedResponse = new UpdatedAttributeResponse() { Message = "Attribute updated succesfully.", Attribute = expectedResponse };
