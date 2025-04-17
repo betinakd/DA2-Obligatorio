@@ -513,4 +513,15 @@ public class MethodAdapterTest
         result.Parameters[0].MethodId.Should().Be(methodId);
         result.Parameters[0].ClassTypeId.Should().Be(classTypeId);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void GetWrongInvocation_ShouldThrowInvalidOperationException()
+    {
+        var invocationId = Guid.NewGuid();
+
+        _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Throws(new SimClassInvalidAttribute("error"));
+
+        _methodAdapter!.GetInvocation(invocationId);
+    }
 }
