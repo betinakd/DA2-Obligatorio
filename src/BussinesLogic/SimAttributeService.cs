@@ -57,6 +57,11 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
             throw new NonExistentValueLogic("Class does not exist.");
         }
 
+        if(_simAttributeDA.ExistAttributeName(attribute.RelatedClass.Id, attribute.Name))
+        {
+            throw new InUseValueLogic("Attribute name already exists.");
+        }
+
         return null;
     }
 }
