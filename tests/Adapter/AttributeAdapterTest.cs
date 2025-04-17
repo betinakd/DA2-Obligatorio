@@ -131,4 +131,58 @@ public class AttributeAdapterTest
 
         Assert.AreEqual(exceptionMessage, ex.Message);
     }
+
+    [TestMethod]
+    public void CreateAttribute_WithValidData_CreatesAndReturnsResponse()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var attributeRequest = new AttributeRequest
+        {
+            Name = "TestAttribute",
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            RelatedClassId = relatedClassId,
+            TypeId = typeId,
+            Id = attributeId
+        };
+
+        var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+
+        var createdSimAttribute = new SimAttribute()
+        {
+            Id = attributeId,
+            Name = attributeRequest.Name,
+            Privacity = SimPrivacity.Public,
+            RelatedClass = relatedClass,
+            Type = typeClass
+        };
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(relatedClassId))
+            .Returns(relatedClass);
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(typeId))
+            .Returns(typeClass);
+
+        _mockSimAttributeService!
+            .Setup(s => s.CreateAttribute(attributeId, It.IsAny<SimAttribute>()))
+            .Returns(createdSimAttribute);
+
+        var result = _simAttributeAdapter!.CreateAttribute(attributeId, attributeRequest);
+
+        _mockSimClassService.Verify(s => s.GetSimClassById(relatedClassId), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(typeId), Times.Once);
+        _mockSimAttributeService.Verify(s => s.CreateAttribute(attributeId, It.IsAny<SimAttribute>()), Times.Once);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(attributeId, result.Attribute.Id);
+        Assert.AreEqual(attributeRequest.Name, result.Attribute.Name);
+        Assert.AreEqual(attributeRequest.Privacity, result.Attribute.Privacity);
+        Assert.AreEqual(attributeRequest.RelatedClassId, result.Attribute.RelatedClassId);
+        Assert.AreEqual(attributeRequest.TypeId, result.Attribute.TypeId);
+        Assert.AreEqual("Attribute created successfully.", result.Message);
+    }
 }
