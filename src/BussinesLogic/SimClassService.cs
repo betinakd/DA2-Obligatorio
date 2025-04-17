@@ -1,5 +1,6 @@
 ﻿using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using IBussinesLogic;
 using IDataAccess;
 
@@ -10,6 +11,16 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
     public SimClass CreateSimClass(string name, bool isAbstract, bool isSealed, Guid baseClassId)
     {
+        if(_simClassDA.ExistSimClassName(name))
+        {
+            throw new DuplicateValueLogic("SimClass name already exists.");
+        }
+
+        if(!_simClassDA.ExistSimClassById(baseClassId))
+        {
+            throw new NonExistentValueLogic("Base class not found.");
+        }
+
         try
         {
             var baseClass = _simClassDA.GetSimClassById(baseClassId);
@@ -22,9 +33,9 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
             _simClassDA.CreateSimClass(simClass);
             return simClass;
         }
-        catch(Exception ex)
+        catch(SimClassInvalidAttribute ex)
         {
-            throw new DuplicateValueLogic(ex.Message);
+            throw new InvalidAttributeLogic(ex.Message);
         }
     }
 

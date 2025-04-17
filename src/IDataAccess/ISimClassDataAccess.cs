@@ -11,4 +11,5 @@ public interface ISimClassDataAccess
     public bool ExistSimClassById(Guid id);
     public void UpdateSimClass(SimClass simClass);
     public bool InUseByOther(Guid id);
+    public bool ExistSimClassName(string name);
 }

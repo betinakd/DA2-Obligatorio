@@ -1,6 +1,7 @@
 using BussinesLogic;
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using IDataAccess;
 using Moq;
 
@@ -24,15 +25,21 @@ public class SimClassServiceTest
     {
         var baseClassId = Guid.NewGuid();
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
         _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
+
         var result = _simClassService.CreateSimClass("TestClass", false, false, baseClassId);
 
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
-        s => s.Name == "TestClass" &&
-             s.BaseClass == baseClass &&
-             s.Id != Guid.Empty)), Times.Once);
+            s => s.Name == "TestClass" &&
+                 s.BaseClass == baseClass &&
+                 s.Id != Guid.Empty)), Times.Once);
+
         Assert.IsNotNull(result);
         Assert.AreEqual("TestClass", result.Name);
         Assert.AreEqual(baseClass, result.BaseClass);
@@ -40,13 +47,77 @@ public class SimClassServiceTest
     }
 
     [TestMethod]
-    public void CreateSimClass_ShouldThrowDuplicateValueLogic_WhenExceptionIsThrown()
+    public void CreateSimClass_ShouldThrowDuplicateValueLogic_WhenNameAlreadyExists()
     {
         var baseClassId = Guid.NewGuid();
-        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Throws(new Exception("error"));
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
 
         Assert.ThrowsException<DuplicateValueLogic>(() =>
             _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
+
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(It.IsAny<Guid>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldThrowNonExistentValueLogic_WhenBaseClassDoesNotExist()
+    {
+        var baseClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
+
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(It.IsAny<Guid>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldThrowInvalidAttributeLogic_WhenSimClassInvalidAttributeIsThrown()
+    {
+        var baseClassId = Guid.NewGuid();
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
+        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>())).Throws(new SimClassInvalidAttribute("Invalid attribute"));
+
+        Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
+
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldCreateAndReturnSimClass_WhenAllIsValid()
+    {
+        var baseClassId = Guid.NewGuid();
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
+        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
+
+        var result = _simClassService.CreateSimClass("TestClass", false, false, baseClassId);
+
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
+            s => s.Name == "TestClass" &&
+                 s.BaseClass == baseClass &&
+                 s.Id != Guid.Empty)), Times.Once);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("TestClass", result.Name);
+        Assert.AreEqual(baseClass, result.BaseClass);
+        Assert.AreNotEqual(Guid.Empty, result.Id);
     }
 
     [TestMethod]
