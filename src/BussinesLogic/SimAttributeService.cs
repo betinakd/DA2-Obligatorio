@@ -27,7 +27,10 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
 
     public void DeleteAttribute(Guid attributeId)
     {
-        throw new NotImplementedException();
+        if(!_simAttributeDA.ExistAttributeById(attributeId))
+        {
+            throw new NonExistentValueLogic("Attribute does not exist.");
+        }
     }
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
