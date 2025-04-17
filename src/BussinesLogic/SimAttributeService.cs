@@ -8,15 +8,21 @@ namespace BussinesLogic;
 public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimClassDataAccess simClassDA) : ISimAttributeService
 {
     private readonly ISimAttributeDataAccess _simAttributeDA = simAttributeDA;
+    private readonly ISimClassDataAccess _simClassDA = simClassDA;
 
-    public SimAttribute CreateAttribute(Guid claseId, SimAttribute attribute)
+    public SimAttribute CreateAttribute(Guid classId, SimAttribute attribute)
     {
-        if(!simClassDA.ExistSimClassById(claseId))
+        if(!_simClassDA.ExistSimClassById(classId))
         {
             throw new NonExistentValueLogic("Class does not exist.");
         }
 
-        return _simAttributeDA.CreateAttribute(claseId, attribute);
+        if(_simAttributeDA.ExistAttributeName(classId, attribute.Name))
+        {
+            throw new InUseValueLogic("Attribute name already exists.");
+        }
+
+        return _simAttributeDA.CreateAttribute(classId, attribute);
     }
 
     public void DeleteAttribute(Guid attributeId)

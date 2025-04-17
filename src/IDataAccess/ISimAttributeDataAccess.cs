@@ -4,5 +4,6 @@ namespace IDataAccess;
 
 public interface ISimAttributeDataAccess
 {
-    public SimAttribute CreateAttribute(Guid claseId, SimAttribute attribute);
+    public SimAttribute CreateAttribute(Guid classId, SimAttribute attribute);
+    public bool ExistAttributeName(Guid classId, string attributeName);
 }
