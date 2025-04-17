@@ -24,10 +24,14 @@ public class SimClassServiceTest
         var baseClassId = Guid.NewGuid();
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
-
+        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
         var result = _simClassService.CreateSimClass("TestClass", false, false, baseClassId);
 
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
+        s => s.Name == "TestClass" &&
+             s.BaseClass == baseClass &&
+             s.Id != Guid.Empty)), Times.Once);
         Assert.IsNotNull(result);
         Assert.AreEqual("TestClass", result.Name);
         Assert.AreEqual(baseClass, result.BaseClass);
