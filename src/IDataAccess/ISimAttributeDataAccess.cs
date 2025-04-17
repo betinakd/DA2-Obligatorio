@@ -8,4 +8,5 @@ public interface ISimAttributeDataAccess
     public bool ExistAttributeName(Guid classId, string attributeName);
     public bool ExistAttributeById(Guid attributeId);
     public void DeleteAttribute(Guid attributeId);
+    public bool InUseByOther(Guid attributeId);
 }

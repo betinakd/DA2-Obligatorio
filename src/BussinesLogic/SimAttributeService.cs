@@ -31,6 +31,11 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
         {
             throw new NonExistentValueLogic("Attribute does not exist.");
         }
+
+        if(_simAttributeDA.InUseByOther(attributeId))
+        {
+            throw new InUseValueLogic("Attribute is in use by another entity.");
+        }
     }
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
