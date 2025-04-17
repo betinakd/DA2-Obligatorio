@@ -63,33 +63,40 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
 
     public CreatedAttributeResponse CreateAttribute(Guid id, AttributeRequest attribute)
     {
-        var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
-        var type = _simClassService.GetSimClassById(attribute.TypeId);
-
-        var newAttribute = new SimAttribute()
+        try
         {
-            Id = id,
-            Name = attribute.Name,
-            Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
-            RelatedClass = relatedClass,
-            Type = type,
-        };
+            var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
+            var type = _simClassService.GetSimClassById(attribute.TypeId);
 
-        var createdAttribute = _simAttributeService.CreateAttribute(id, newAttribute);
-
-        var response = new CreatedAttributeResponse()
-        {
-            Attribute = new AttributeResponse()
+            var newAttribute = new SimAttribute()
             {
-                Id = createdAttribute.Id,
-                Name = createdAttribute.Name,
-                Privacity = EnumMapper.MapToModelPrivacity(createdAttribute.Privacity),
-                RelatedClassId = createdAttribute.RelatedClass.Id,
-                TypeId = createdAttribute.Type.Id
-            },
-            Message = "Attribute created successfully."
-        };
+                Id = id,
+                Name = attribute.Name,
+                Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
+                RelatedClass = relatedClass,
+                Type = type,
+            };
 
-        return response;
+            var createdAttribute = _simAttributeService.CreateAttribute(id, newAttribute);
+
+            var response = new CreatedAttributeResponse()
+            {
+                Attribute = new AttributeResponse()
+                {
+                    Id = createdAttribute.Id,
+                    Name = createdAttribute.Name,
+                    Privacity = EnumMapper.MapToModelPrivacity(createdAttribute.Privacity),
+                    RelatedClassId = createdAttribute.RelatedClass.Id,
+                    TypeId = createdAttribute.Type.Id
+                },
+                Message = "Attribute created successfully."
+            };
+
+            return response;
+        }
+        catch(Exception ex)
+        {
+            throw new ObjectNotFoundException(ex.Message);
+        }
     }
 }
