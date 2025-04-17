@@ -59,6 +59,12 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
 
     public SimClass UpdateSimClass(SimClass simClass)
     {
-        throw new NotImplementedException();
+        if(!_simClassDA.ExistSimClassById(simClass.Id))
+        {
+            throw new NonExistentValueLogic("SimClass not found.");
+        }
+
+        _simClassDA.UpdateSimClass(simClass);
+        return simClass;
     }
 }

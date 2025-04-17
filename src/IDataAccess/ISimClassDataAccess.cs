@@ -9,4 +9,5 @@ public interface ISimClassDataAccess
     public void DeleteSimClass(Guid id);
     public IList<SimClass> GetAllSimClasses();
     public bool ExistSimClassById(Guid id);
+    public void UpdateSimClass(SimClass simClass);
 }
