@@ -220,4 +220,49 @@ public class SimAttributeServiceTest
 
         _simAttributeService.UpdateAttribute(attributeId, attribute);
     }
+
+    [TestMethod]
+    public void UpdateAttribute_ShouldSucceed_WhenAllConditionsAreMet()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "ValidAttributeName",
+            RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Privacity = SimPrivacity.Public
+        };
+
+        var updatedAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "ValidAttributeName",
+            RelatedClass = attribute.RelatedClass,
+            Type = attribute.Type,
+            Privacity = attribute.Privacity
+        };
+
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(relatedClassId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeName(relatedClassId, attribute.Name)).Returns(false);
+        _mockSimAttributeDataAccess.Setup(da => da.UpdateAttribute(attributeId, attribute)).Returns(updatedAttribute);
+
+        var result = _simAttributeService.UpdateAttribute(attributeId, attribute);
+
+        _mockSimAttributeDataAccess.Verify(da => da.ExistAttributeById(attributeId), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.InUseByOther(attributeId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(relatedClassId), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.ExistAttributeName(relatedClassId, attribute.Name), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.UpdateAttribute(attributeId, attribute), Times.Once);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(attributeId, result.Id);
+        Assert.AreEqual("ValidAttributeName", result.Name);
+        Assert.AreEqual(attribute.RelatedClass, result.RelatedClass);
+        Assert.AreEqual(attribute.Type, result.Type);
+        Assert.AreEqual(attribute.Privacity, result.Privacity);
+    }
 }
