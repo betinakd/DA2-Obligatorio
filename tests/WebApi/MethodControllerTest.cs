@@ -93,7 +93,7 @@ public class MethodControllerTest
     {
         var methodId = Guid.NewGuid();
 
-        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parametros = [] };
+        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parameters = [] };
         var invocationResponse = new InvocationResponse { Id = Guid.NewGuid() };
         var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = invocationResponse };
 
