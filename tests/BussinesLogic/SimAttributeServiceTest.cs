@@ -1,4 +1,5 @@
 using BussinesLogic;
+using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Enums;
 using IDataAccess;
@@ -10,17 +11,38 @@ namespace Tests.BussinesLogic;
 public class SimAttributeServiceTest
 {
     private Mock<ISimAttributeDataAccess>? _mockSimAttributeDataAccess;
+    private Mock<ISimClassDataAccess>? _mockSimClassDataAccess;
     private SimAttributeService? _simAttributeService;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockSimAttributeDataAccess = new Mock<ISimAttributeDataAccess>(MockBehavior.Strict);
-        _simAttributeService = new SimAttributeService(_mockSimAttributeDataAccess.Object);
+        _mockSimClassDataAccess = new Mock<ISimClassDataAccess>(MockBehavior.Strict);
+        _simAttributeService = new SimAttributeService(_mockSimAttributeDataAccess.Object, _mockSimClassDataAccess.Object);
     }
 
     [TestMethod]
-    public void CreateAttribute_ShouldReturnCreatedAttribute_WhenAttributeIsValid()
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void CreateAttribute_ShouldThrowException_WhenClassDoesNotExist()
+    {
+        var classId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = classId, Name = "TestClass" },
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Privacity = SimPrivacity.Public
+        };
+
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(false);
+
+        _simAttributeService.CreateAttribute(classId, attribute);
+    }
+
+    [TestMethod]
+    public void CreateAttribute_ShouldReturnCreatedAttribute_WhenClassExists()
     {
         var classId = Guid.NewGuid();
         var attributeId = Guid.NewGuid();
@@ -36,10 +58,12 @@ public class SimAttributeServiceTest
             Privacity = SimPrivacity.Public
         };
 
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
         _mockSimAttributeDataAccess.Setup(da => da.CreateAttribute(classId, attribute)).Returns(attribute);
 
         var result = _simAttributeService.CreateAttribute(classId, attribute);
 
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.Once);
         _mockSimAttributeDataAccess.Verify(da => da.CreateAttribute(classId, attribute), Times.Once);
 
         Assert.IsNotNull(result);
