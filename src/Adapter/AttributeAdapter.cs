@@ -1,3 +1,4 @@
+using Adapter.Exceptions;
 using Domain;
 using IAdapter;
 using IBussinesLogic;
@@ -25,32 +26,39 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
 
     public UpdatedAttributeResponse UpdateAttribute(Guid attributeId, AttributeRequest attribute)
     {
-        var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
-        var type = _simClassService.GetSimClassById(attribute.TypeId);
-        var updatedAttribute = new SimAttribute()
+        try
         {
-            Id = attributeId,
-            Name = attribute.Name,
-            Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
-            RelatedClass = relatedClass,
-            Type = type,
-        };
-        _simAttributeService.UpdateAttribute(attributeId, updatedAttribute);
-
-        var response = new UpdatedAttributeResponse()
-        {
-            Attribute = new AttributeResponse()
+            var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
+            var type = _simClassService.GetSimClassById(attribute.TypeId);
+            var updatedAttribute = new SimAttribute()
             {
                 Id = attributeId,
                 Name = attribute.Name,
-                Privacity = attribute.Privacity,
-                RelatedClassId = attribute.RelatedClassId,
-                TypeId = attribute.TypeId
-            },
-            Message = "Attribute updated successfully."
-        };
+                Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
+                RelatedClass = relatedClass,
+                Type = type,
+            };
+            _simAttributeService.UpdateAttribute(attributeId, updatedAttribute);
 
-        return response;
+            var response = new UpdatedAttributeResponse()
+            {
+                Attribute = new AttributeResponse()
+                {
+                    Id = attributeId,
+                    Name = attribute.Name,
+                    Privacity = attribute.Privacity,
+                    RelatedClassId = attribute.RelatedClassId,
+                    TypeId = attribute.TypeId
+                },
+                Message = "Attribute updated successfully."
+            };
+
+            return response;
+        }
+        catch(Exception ex)
+        {
+            throw new ObjectNotFoundException(ex.Message);
+        }
     }
 
     public CreatedAttributeResponse CreateAttribute(Guid id, AttributeRequest attribute)
