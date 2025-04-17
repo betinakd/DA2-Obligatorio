@@ -64,6 +64,11 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
             throw new NonExistentValueLogic("SimClass not found.");
         }
 
+        if(_simClassDA.InUseByOther(simClass.Id))
+        {
+            throw new InUseValueLogic("SimClass is in use and cannot be updated.");
+        }
+
         _simClassDA.UpdateSimClass(simClass);
         return simClass;
     }
