@@ -23,26 +23,15 @@ public class AttributeControllerTest
     }
 
     [TestMethod]
-    public void DeletAttributeControllerWithCorrectId_ShouldDeleteOk()
+    public void DeleteAttributeControllerWithCorrectId_ShouldReturnNoContent()
     {
         var idToDelete = Guid.NewGuid();
-        var expectedResponse = new AttributeResponse()
-        {
-            Id = idToDelete,
-            Name = "DummyAttribute",
-            Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
-            Privacity = SimModelsPrivacity.Public,
-            RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
-        };
-        var expectedDeletedResponse = new DeletedAttributeResponse() { Message = "Attribute was deleted succesfully", Attribute = expectedResponse };
-        _mockAttributeAdapter?.Setup(a => a.DeleteAttribute(idToDelete)).Returns(expectedDeletedResponse);
+        _mockAttributeAdapter?.Setup(a => a.DeleteAttribute(idToDelete));
 
         var result = _attributeController?.DeleteAttribute(idToDelete);
         _mockAttributeAdapter?.Verify(a => a.DeleteAttribute(idToDelete), Times.Once);
 
-        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-        var okResult = result as OkObjectResult;
-        Assert.IsNotNull(okResult);
+        Assert.IsInstanceOfType(result, typeof(NoContentResult));
     }
 
     [TestMethod]

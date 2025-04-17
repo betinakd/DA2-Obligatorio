@@ -11,7 +11,14 @@ public class AttributeAdapter(ISimAttributeService simAttributeService) : IAttri
 
     public void DeleteAttribute(Guid attributeId)
     {
-        _simAttributeService.DeleteAttribute(attributeId);
+        try
+        {
+            _simAttributeService.DeleteAttribute(attributeId);
+        }
+        catch(Exception ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
     }
 
     public UpdatedAttributeResponse UpdateAttribute(Guid attributeId, AttributeRequest attribute)
