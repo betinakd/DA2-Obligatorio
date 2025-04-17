@@ -1,15 +1,15 @@
-using Adapter.Exceptions;
 using Domain.Enums;
+using Models.Enums;
 
 public static class EnumMapper
 {
-    public static SimPrivacity GetPrivacity(string value)
+    public static SimModelsPrivacity MapToModelPrivacity(SimPrivacity privacity)
     {
-        return Enum.TryParse(value, true, out SimPrivacity privacity) ? privacity : throw new InvalidAttribute("Invalid privacity value.");
+        return (SimModelsPrivacity)(int)privacity;
     }
 
-    public static SimAccesibility GetState(string value)
+    public static SimModelsAccesibility MapToModelAccesibility(SimAccesibility accesibility)
     {
-        return Enum.TryParse(value, true, out SimAccesibility state) ? state : throw new InvalidAttribute("Invalid state value.");
+        return (SimModelsAccesibility)(int)accesibility;
     }
 }

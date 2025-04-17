@@ -10,7 +10,8 @@ public class MethodResponse()
     public Guid? IdClassOwner { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SimPrivacity Privacity { get; set; }
+    public SimModelsPrivacity Privacity { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SimAccesibility Accesibility { get; set; }
+    public SimModelsAccesibility Accesibility { get; set; }
+    public Guid ReturnTypeId { get; set; }
 }

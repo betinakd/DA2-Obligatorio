@@ -1,9 +1,11 @@
 using Adapter;
 using Adapter.Exceptions;
 using Domain;
+using Domain.Enums;
 using Domain.Exceptions;
 using FluentAssertions;
 using IBussinesLogic;
+using Models.Enums;
 using Models.Request;
 using Moq;
 
@@ -252,5 +254,54 @@ public class MethodAdapterTest
         var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
 
         adapter.GetVariable(variableId);
+    }
+
+    [TestMethod]
+    public void GetMethod_ShouldReturnMethodResponse_WhenValid()
+    {
+        var methodId = Guid.NewGuid();
+        var classOwnerId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = classOwnerId, Name = "TestClass" },
+            Privacity = SimPrivacity.Public,
+            Accesibility = SimAccesibility.Normal,
+            ReturnType = new SimClass { Id = returnTypeId, Name = "int" }
+        };
+
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
+
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        var result = adapter.GetMethod(methodId);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(methodId);
+        result.Name.Should().Be("TestMethod");
+        result.IdClassOwner.Should().Be(classOwnerId);
+        result.Privacity.Should().Be(SimModelsPrivacity.Public);
+        result.Accesibility.Should().Be(SimModelsAccesibility.Normal);
+        result.ReturnTypeId.Should().Be(returnTypeId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void GetMethod_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockMethodService.Setup(s => s.GetMethodById(methodId)).Throws(new SimClassInvalidAttribute("error"));
+
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        adapter.GetMethod(methodId);
     }
 }

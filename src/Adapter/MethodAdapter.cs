@@ -16,7 +16,23 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public MethodResponse GetMethod(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var method = _methodService.GetMethodById(id);
+            return new MethodResponse
+            {
+                Id = method.Id,
+                Name = method.Name,
+                IdClassOwner = method.RelatedClass.Id,
+                Privacity = EnumMapper.MapToModelPrivacity(method.Privacity),
+                Accesibility = EnumMapper.MapToModelAccesibility(method.Accesibility),
+                ReturnTypeId = method.ReturnType.Id
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid method ID.");
+        }
     }
 
     public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method)
