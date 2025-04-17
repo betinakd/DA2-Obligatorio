@@ -1,3 +1,4 @@
+using Adapter.Exceptions;
 using Domain;
 using IAdapter;
 using IBussinesLogic;
@@ -12,19 +13,26 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
 
     public string ExecuteMethod(MethodExecutionRequest request)
     {
-        var parameters = new List<Parameter>();
-        foreach(var parameter in request.Parameters)
+        try
         {
-            var typeParameter = _simClassService.GetSimClassById(parameter.ClassTypeId);
-            var par = new Parameter()
+            var parameters = new List<Parameter>();
+            foreach(var parameter in request.Parameters)
             {
-                Name = parameter.Name,
-                Type = typeParameter,
-            };
+                var typeParameter = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var par = new Parameter()
+                {
+                    Name = parameter.Name,
+                    Type = typeParameter,
+                };
 
-            parameters.Add(par);
+                parameters.Add(par);
+            }
+
+            return _executionService.ExecuteMethod(request.MethodName, parameters, request.InstanceTypeId, request.ReferenceTypeId, request.InstanceName);
         }
-
-        return _executionService.ExecuteMethod(request.MethodName, parameters, request.InstanceTypeId, request.ReferenceTypeId, request.InstanceName);
+        catch(Exception ex)
+        {
+            throw new InvalidExecutionException(ex.Message);
+        }
     }
 }
