@@ -76,7 +76,14 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public void DeleteMethod(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _methodService.DeleteMethod(id);
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid method ID.");
+        }
     }
 
     public VariableResponse GetVariable(Guid id)

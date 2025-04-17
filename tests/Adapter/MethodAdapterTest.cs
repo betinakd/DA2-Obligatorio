@@ -377,4 +377,33 @@ public class MethodAdapterTest
 
         adapter.CreateMethod(idClass, methodRequest);
     }
+
+    [TestMethod]
+    public void DeleteMethod_ShouldCallDeleteMethod_WhenValid()
+    {
+        var methodId = Guid.NewGuid();
+
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        adapter.DeleteMethod(methodId);
+
+        mockMethodService.Verify(s => s.DeleteMethod(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void DeleteMethod_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockMethodService.Setup(s => s.DeleteMethod(methodId)).Throws(new SimClassInvalidAttribute("error"));
+
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        adapter.DeleteMethod(methodId);
+    }
 }
