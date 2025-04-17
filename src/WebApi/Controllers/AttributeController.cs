@@ -15,8 +15,8 @@ public class AttributeController(IAttributeAdapter simClassAdapter) : Controller
     [HttpDelete("{id}")]
     public IActionResult DeleteAttribute(Guid id)
     {
-        var result = _simAttributeAdapter.DeleteAttribute(id);
-        return Ok(result);
+        _simAttributeAdapter.DeleteAttribute(id);
+        return NoContent();
     }
 
     [HttpPut("{id}")]

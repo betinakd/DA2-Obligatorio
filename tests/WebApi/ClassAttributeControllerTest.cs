@@ -1,4 +1,3 @@
-using Domain;
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
@@ -30,19 +29,19 @@ public class ClassAttributeControllerTest
         {
             Id = id,
             Name = "DummyAttribute",
-            Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
+            TypeId = Guid.NewGuid(),
             Privacity = SimModelsPrivacity.Public,
-            RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
+            RelatedClassId = Guid.NewGuid()
         };
         var expectedResponse = new AttributeResponse()
         {
             Id = id,
             Name = "DummyAttribute",
-            Type = new SimClassResponse(new SimClass { Name = "DummyType" }),
+            TypeId = Guid.NewGuid(),
             Privacity = SimModelsPrivacity.Public,
-            RelatedClass = new SimClassResponse(new SimClass { Name = "DummyRelatedClass" })
+            RelatedClassId = Guid.NewGuid()
         };
-        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Privacity = expectedResponse };
+        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Attribute = expectedResponse };
         _mockAttributeAdapter?.Setup(a => a.CreateAttribute(id, request)).Returns(expectedCreatedResponse);
 
         var result = _attributeController?.CreateAttribute(id, request);
