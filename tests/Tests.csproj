@@ -23,6 +23,8 @@
     <ProjectReference Include="..\src\IBussinesLogic\IBussinesLogic.csproj" />
     <ProjectReference Include="..\src\Models\Models.csproj" />
     <ProjectReference Include="..\src\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\src\IDataAccess\IDataAccess.csproj" />
+    <ProjectReference Include="..\src\BussinesLogic\BussinesLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
