@@ -472,4 +472,45 @@ public class MethodAdapterTest
 
         _methodAdapter!.CreateInvocation(methodId, invocationRequest);
     }
+
+    [TestMethod]
+    public void GetInvocation_ShouldReturnInvocationResponse_WhenValid()
+    {
+        var invocationId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var simClass = new SimClass { Id = classTypeId, Name = "int" };
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = simClass,
+            RelatedMethod = method
+        };
+
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            MethodName = "TestMethod",
+            ReferenceId = Guid.NewGuid(),
+            RelatedMethod = method,
+            Parameters = [parameter]
+        };
+
+        _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Returns(invocation);
+
+        var result = _methodAdapter!.GetInvocation(invocationId);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(invocationId);
+        result.MethodName.Should().Be("TestMethod");
+        result.IdReference.Should().Be(invocation.ReferenceId);
+        result.Parameters.Should().HaveCount(1);
+        result.Parameters[0].Id.Should().Be(parameter.Id);
+        result.Parameters[0].Name.Should().Be("param1");
+        result.Parameters[0].MethodId.Should().Be(methodId);
+        result.Parameters[0].ClassTypeId.Should().Be(classTypeId);
+    }
 }
