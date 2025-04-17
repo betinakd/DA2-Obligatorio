@@ -42,6 +42,11 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
     {
-        throw new NotImplementedException();
+        if(!_simAttributeDA.ExistAttributeById(attributeId))
+        {
+            throw new NonExistentValueLogic("Attribute does not exist.");
+        }
+
+        return null;
     }
 }
