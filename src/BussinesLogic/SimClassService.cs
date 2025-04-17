@@ -1,0 +1,57 @@
+﻿using BussinesLogic.Exceptions;
+using Domain;
+using IBussinesLogic;
+using IDataAccess;
+
+namespace BussinesLogic;
+
+public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
+{
+    private readonly ISimClassDataAccess _simClassDA = simClassDA;
+    public SimClass CreateSimClass(string name, bool isAbstract, bool isSealed, Guid baseClassId)
+    {
+        try
+        {
+            var baseClass = _simClassDA.GetSimClassById(baseClassId);
+            var simClass = new SimClass()
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                BaseClass = baseClass
+            };
+            _simClassDA.CreateSimClass(simClass);
+            return simClass;
+        }
+        catch(Exception ex)
+        {
+            throw new DuplicateValueLogic(ex.Message);
+        }
+    }
+
+    public void DeleteSimClass(Guid id)
+    {
+        try
+        {
+            _simClassDA.DeleteSimClass(id);
+        }
+        catch (Exception ex)
+        {
+            throw new NonExistentValueLogic(ex.Message);
+        }
+    }
+
+    public IList<SimClass> GetAllSimClasses()
+    {
+        return _simClassDA.GetAllSimClasses();
+    }
+
+    public SimClass GetSimClassById(Guid id)
+    {
+        return _simClassDA.GetSimClassById(id);
+    }
+
+    public SimClass UpdateSimClass(SimClass simClass)
+    {
+        throw new NotImplementedException();
+    }
+}
