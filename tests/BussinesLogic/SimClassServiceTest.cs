@@ -48,4 +48,25 @@ public class SimClassServiceTest
         Assert.ThrowsException<DuplicateValueLogic>(() =>
             _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
     }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldCallDataAccessWithCorrectId()
+    {
+        var simClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.DeleteSimClass(simClassId));
+
+        _simClassService.DeleteSimClass(simClassId);
+
+        _mockSimClassDataAccess.Verify(da => da.DeleteSimClass(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldThrowNonExistentValueLogic_WhenExceptionIsThrown()
+    {
+        var simClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.DeleteSimClass(simClassId)).Throws(new Exception("error"));
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simClassService.DeleteSimClass(simClassId));
+    }
 }
