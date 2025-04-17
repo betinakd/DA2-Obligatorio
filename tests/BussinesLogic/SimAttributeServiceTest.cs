@@ -104,4 +104,15 @@ public class SimAttributeServiceTest
 
         _simAttributeService.DeleteAttribute(attributeId);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteAttribute_ShouldThrowException_WhenAttributeIsInUseByAnotherEntity()
+    {
+        var attributeId = Guid.NewGuid();
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(true);
+
+        _simAttributeService.DeleteAttribute(attributeId);
+    }
 }
