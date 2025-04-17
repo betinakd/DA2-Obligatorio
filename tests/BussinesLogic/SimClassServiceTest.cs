@@ -50,24 +50,32 @@ public class SimClassServiceTest
     }
 
     [TestMethod]
-    public void DeleteSimClass_ShouldCallDataAccessWithCorrectId()
+    public void DeleteSimClass_ShouldDelete_WhenSimClassExistsAndNotInUse()
     {
         var simClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(false);
         _mockSimClassDataAccess.Setup(da => da.DeleteSimClass(simClassId));
 
         _simClassService.DeleteSimClass(simClassId);
 
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.DeleteSimClass(simClassId), Times.Once);
     }
 
     [TestMethod]
-    public void DeleteSimClass_ShouldThrowNonExistentValueLogic_WhenExceptionIsThrown()
+    public void DeleteSimClass_ShouldThrowNonExistentValueLogic_WhenSimClassDoesNotExist()
     {
         var simClassId = Guid.NewGuid();
-        _mockSimClassDataAccess.Setup(da => da.DeleteSimClass(simClassId)).Throws(new Exception("error"));
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(false);
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simClassService.DeleteSimClass(simClassId));
+
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.InUseByOther(It.IsAny<Guid>()), Times.Never);
+        _mockSimClassDataAccess.Verify(da => da.DeleteSimClass(It.IsAny<Guid>()), Times.Never);
     }
 
     [TestMethod]
@@ -155,5 +163,20 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(It.IsAny<SimClass>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldThrowInUseValueLogic_WhenSimClassIsInUse()
+    {
+        var simClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(true);
+
+        Assert.ThrowsException<InUseValueLogic>(() =>
+            _simClassService.DeleteSimClass(simClassId));
+
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.DeleteSimClass(It.IsAny<Guid>()), Times.Never);
     }
 }

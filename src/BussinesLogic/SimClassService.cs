@@ -30,14 +30,17 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
 
     public void DeleteSimClass(Guid id)
     {
-        try
+        if(!_simClassDA.ExistSimClassById(id))
         {
-            _simClassDA.DeleteSimClass(id);
+            throw new NonExistentValueLogic("SimClass not found.");
         }
-        catch(Exception ex)
+
+        if(_simClassDA.InUseByOther(id))
         {
-            throw new NonExistentValueLogic(ex.Message);
+            throw new InUseValueLogic("SimClass is in use and cannot be updated.");
         }
+
+        _simClassDA.DeleteSimClass(id);
     }
 
     public IList<SimClass> GetAllSimClasses()
