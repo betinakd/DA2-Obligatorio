@@ -52,6 +52,11 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
             throw new InUseValueLogic("Attribute is in use by another entity.");
         }
 
+        if(!_simClassDA.ExistSimClassById(attribute.RelatedClass.Id))
+        {
+            throw new NonExistentValueLogic("Class does not exist.");
+        }
+
         return null;
     }
 }
