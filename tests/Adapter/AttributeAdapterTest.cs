@@ -126,8 +126,7 @@ public class AttributeAdapterTest
             .Throws(new Exception(exceptionMessage));
 
         var ex = Assert.ThrowsException<ObjectNotFoundException>(() =>
-            _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest)
-        );
+            _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest));
 
         Assert.AreEqual(exceptionMessage, ex.Message);
     }
@@ -184,5 +183,33 @@ public class AttributeAdapterTest
         Assert.AreEqual(attributeRequest.RelatedClassId, result.Attribute.RelatedClassId);
         Assert.AreEqual(attributeRequest.TypeId, result.Attribute.TypeId);
         Assert.AreEqual("Attribute created successfully.", result.Message);
+    }
+
+    [TestMethod]
+    public void CreateAttribute_WhenServiceThrowsException_ThrowsObjectNotFoundException()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var attributeRequest = new AttributeRequest
+        {
+            Name = "TestAttribute",
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            RelatedClassId = relatedClassId,
+            TypeId = typeId,
+            Id = attributeId
+        };
+
+        var exceptionMessage = "Related class not found";
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(relatedClassId))
+            .Throws(new Exception(exceptionMessage));
+
+        var ex = Assert.ThrowsException<ObjectNotFoundException>(() =>
+            _simAttributeAdapter!.CreateAttribute(attributeId, attributeRequest));
+
+        Assert.AreEqual(exceptionMessage, ex.Message);
     }
 }
