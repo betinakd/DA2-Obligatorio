@@ -146,6 +146,27 @@ public class SimAttributeServiceTest
         };
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(false);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(false);
+
+        _simAttributeService.UpdateAttribute(attributeId, attribute);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void UpdateAttribute_ShouldThrowException_WhenAttributeIsInUseByAnotherEntity()
+    {
+        var attributeId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Privacity = SimPrivacity.Public
+        };
+
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(true);
 
         _simAttributeService.UpdateAttribute(attributeId, attribute);
     }
