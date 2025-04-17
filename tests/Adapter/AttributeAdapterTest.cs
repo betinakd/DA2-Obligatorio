@@ -1,5 +1,7 @@
 using Adapter;
+using Adapter.Exceptions;
 using Domain;
+using Domain.Enums;
 using IBussinesLogic;
 using Models.Request;
 using Moq;
@@ -60,11 +62,21 @@ public class AttributeAdapterTest
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             RelatedClassId = relatedClassId,
-            TypeId = typeId
+            TypeId = typeId,
+            Id = attributeId
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
         var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+
+        var attributeSimClass = new SimAttribute()
+        {
+            Id = attributeId,
+            Name = attributeRequest.Name,
+            Privacity = SimPrivacity.Public,
+            RelatedClass = relatedClass,
+            Type = typeClass
+        };
 
         _mockSimClassService!
             .Setup(s => s.GetSimClassById(relatedClassId))
@@ -74,7 +86,8 @@ public class AttributeAdapterTest
             .Returns(typeClass);
 
         _mockSimAttributeService!
-            .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()));
+            .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
+            .Returns(attributeSimClass);
 
         var result = _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
 
@@ -89,5 +102,33 @@ public class AttributeAdapterTest
         Assert.AreEqual(attributeRequest.RelatedClassId, result.Attribute.RelatedClassId);
         Assert.AreEqual(attributeRequest.TypeId, result.Attribute.TypeId);
         Assert.AreEqual("Attribute updated successfully.", result.Message);
+    }
+
+    [TestMethod]
+    public void UpdateAttribute_WhenServiceThrowsException_ThrowsObjectNotFoundException()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var attributeRequest = new AttributeRequest
+        {
+            Name = "TestAttribute",
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            RelatedClassId = relatedClassId,
+            TypeId = typeId
+        };
+
+        var exceptionMessage = "Related class not found";
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(relatedClassId))
+            .Throws(new Exception(exceptionMessage));
+
+        var ex = Assert.ThrowsException<ObjectNotFoundException>(() =>
+            _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest)
+        );
+
+        Assert.AreEqual(exceptionMessage, ex.Message);
     }
 }
