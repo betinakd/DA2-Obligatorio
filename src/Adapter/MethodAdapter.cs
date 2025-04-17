@@ -248,6 +248,29 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public InvocationResponse GetInvocation(Guid id)
     {
-        throw new NotImplementedException();
+        var invocation = _methodService.GetInvocationById(id);
+
+        var parameters = new List<ParameterResponse>();
+        if(invocation.Parameters != null)
+        {
+            foreach(var parameter in invocation.Parameters)
+            {
+                parameters.Add(new ParameterResponse
+                {
+                    Id = parameter.Id,
+                    Name = parameter.Name,
+                    MethodId = parameter.RelatedMethod.Id,
+                    ClassTypeId = parameter.Type.Id
+                });
+            }
+        }
+
+        return new InvocationResponse
+        {
+            Id = invocation.Id,
+            IdReference = invocation.ReferenceId,
+            MethodName = invocation.MethodName,
+            Parameters = parameters
+        };
     }
 }
