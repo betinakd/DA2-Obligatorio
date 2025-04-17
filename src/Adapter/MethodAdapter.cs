@@ -69,7 +69,21 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public ParameterResponse GetParameter(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var parameter = _methodService.GetParameterById(id);
+            return new ParameterResponse
+            {
+                Id = parameter.Id,
+                Name = parameter.Name,
+                MethodId = parameter.RelatedMethod.Id,
+                ClassTypeId = parameter.Type.Id
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid parameter ID.");
+        }
     }
 
     public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
