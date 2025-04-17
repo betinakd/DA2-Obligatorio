@@ -69,4 +69,21 @@ public class SimClassServiceTest
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simClassService.DeleteSimClass(simClassId));
     }
+
+    [TestMethod]
+    public void GetAllSimClasses_ShouldReturnAllSimClasses()
+    {
+        var simClasses = new List<SimClass>
+        {
+            new SimClass { Id = Guid.NewGuid(), Name = "Class1" },
+            new SimClass { Id = Guid.NewGuid(), Name = "Class2" }
+        };
+        _mockSimClassDataAccess.Setup(da => da.GetAllSimClasses()).Returns(simClasses);
+
+        var result = _simClassService.GetAllSimClasses();
+
+        _mockSimClassDataAccess.Verify(da => da.GetAllSimClasses(), Times.Once);
+        Assert.IsNotNull(result);
+        CollectionAssert.AreEqual(simClasses, result.ToList());
+    }
 }
