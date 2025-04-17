@@ -74,23 +74,35 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
     {
-        if(string.IsNullOrWhiteSpace(parameter.Name) || string.IsNullOrWhiteSpace(parameter.Type))
+        try
         {
-            throw new InvalidAttribute("Parameter information cant be empty");
-        }
-
-        var methodParameter = _methodService.AddMethodParameter(idMethod, parameter.Name, parameter.Type);
-        var response = new CreatedParameterResponse
-        {
-            Message = "Parameter added successfully",
-            Parameter = new ParameterResponse
+            var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+            var method = _methodService.GetMethodById(idMethod);
+            var parameterMethod = new Parameter()
             {
-                Name = methodParameter.Name,
-                MethodId = idMethod,
-                Type = parameter.Type
-            }
-        };
-        return response;
+                Id = Guid.NewGuid(),
+                Name = parameter.Name,
+                Type = type,
+                RelatedMethod = method,
+            };
+            var newAttribute = _methodService.AddMethodParameter(idMethod, parameterMethod);
+            var response = new CreatedParameterResponse
+            {
+                Message = "Parameter created successfully",
+                Parameter = new ParameterResponse()
+                {
+                    Id = newAttribute.Id,
+                    Name = newAttribute.Name,
+                    MethodId = idMethod,
+                    ClassTypeId = newAttribute.RelatedClass.Id
+                }
+            };
+            return response;
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 
     public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest method)

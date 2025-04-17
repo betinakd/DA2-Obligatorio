@@ -5,7 +5,6 @@ using Domain.Exceptions;
 using FluentAssertions;
 using IBussinesLogic;
 using Models.Request;
-using Models.Response;
 using Moq;
 
 namespace Tests.Adapter;
@@ -26,73 +25,72 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    public void AddMethodParameter_ShouldReturnCreatedParameterResponse_WhenValid()
+    public void CreateParameter_ShouldReturnCreatedParameterResponse_WhenValid()
     {
-        // Arrange
         var methodId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
         var parameterName = "ValidParameter";
-        var parameterType = "string";
 
         var request = new ParameterRequest
         {
             MethodId = methodId,
             Name = parameterName,
-            Type = parameterType
+            ClassTypeId = classTypeId
         };
 
-        var expectedParameterResponse = new ParameterResponse
+        var simClass = new SimClass { Id = classTypeId, Name = "int" };
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var parameter = new Parameter
         {
             Id = Guid.NewGuid(),
             Name = parameterName,
-            Type = parameterType,
-            MethodId = methodId
+            Type = simClass,
+            RelatedMethod = method
         };
-
-        var relatedClass = new SimClass { Name = "string" };
-        var typeClass = new SimClass { Name = "string" };
-        var expectedattribute = new SimAttribute() { Name = parameterName, RelatedClass = relatedClass, Type = typeClass };
-
-        var expectedResponse = new CreatedParameterResponse
+        var simAttribute = new SimAttribute
         {
-            Message = "Parameter added successfully",
-            Parameter = expectedParameterResponse
+            Id = parameter.Id,
+            Name = parameterName,
+            RelatedClass = simClass
         };
 
-        _mockMethodService
-            ?.Setup(service => service.AddMethodParameter(methodId, request.Name, request.Type))
-            .Returns(expectedattribute);
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Returns(simClass);
+        mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        mockMethodService.Setup(s => s.AddMethodParameter(methodId, It.IsAny<Parameter>())).Returns(simAttribute);
 
-        var result = _methodAdapter?.CreateParameter(methodId, request);
-        _mockMethodService?.Verify(service => service.AddMethodParameter(methodId, request.Name, request.Type), Times.Once);
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        var result = adapter.CreateParameter(methodId, request);
 
         result.Should().NotBeNull();
-        result.Should().BeOfType<CreatedParameterResponse>();
-        Assert.AreEqual(result.Message, "Parameter added successfully");
-        var parameters = result.Parameter;
-        Assert.AreEqual(parameters.Name, parameterName);
-        Assert.AreEqual(parameters.MethodId, methodId);
-        Assert.AreEqual(parameters.Type, parameterType);
+        result.Message.Should().Be("Parameter created successfully");
+        result.Parameter.Name.Should().Be(parameterName);
+        result.Parameter.MethodId.Should().Be(methodId);
+        result.Parameter.ClassTypeId.Should().Be(classTypeId);
     }
 
-    public void AddMethodParameter_ShouldThrowInvalidAttribute_WhenNameOrTypeIsNull()
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttribute))]
+    public void CreateParameter_ShouldThrowInvalidAttribute_WhenSimClassInvalidAttributeIsThrown()
     {
         var methodId = Guid.NewGuid();
-        var parameterName = " ";
-        var parameterType = " ";
-
+        var classTypeId = Guid.NewGuid();
         var request = new ParameterRequest
         {
-            Name = parameterName,
             MethodId = methodId,
-            Type = parameterType
+            Name = "Invalid",
+            ClassTypeId = classTypeId
         };
 
-        var exception = Assert.ThrowsException<InvalidAttribute>(() =>
-        {
-            _methodAdapter?.CreateParameter(methodId, request);
-        });
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Throws(new SimClassInvalidAttribute("SimClass error"));
 
-        Assert.AreEqual("Parameter information cant be empty", exception.Message);
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        adapter.CreateParameter(methodId, request);
     }
 
     [TestMethod]
