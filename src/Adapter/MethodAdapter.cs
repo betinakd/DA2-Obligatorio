@@ -1,4 +1,6 @@
 using Adapter.Exceptions;
+using Domain;
+using Domain.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -6,10 +8,12 @@ using Models.Response;
 
 namespace Adapter;
 
-public class MethodAdapter(IMethodService methodService)
+public class MethodAdapter(IMethodService methodService, ISimClassService simClassService)
     : IMethodAdapter
 {
     private readonly IMethodService _methodService = methodService;
+    private readonly ISimClassService _simClassService = simClassService;
+
     public MethodResponse GetMethod(Guid id)
     {
         throw new NotImplementedException();
@@ -32,24 +36,35 @@ public class MethodAdapter(IMethodService methodService)
 
     public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
     {
-        if(string.IsNullOrWhiteSpace(variable.Name) || string.IsNullOrWhiteSpace(variable.Type))
+        try
         {
-            throw new InvalidAttribute("Local variable information cant be empty");
-        }
-
-        var newAttribute = _methodService.AddLocalVariable(idMethod, variable.Name, variable.Type);
-        var response = new CreatedVariableResponse
-        {
-            Message = "Local variable added successfully",
-            Variable = new VariableResponse
+            var type = _simClassService.GetSimClassById(variable.ClassTypeId);
+            var method = _methodService.GetMethodById(idMethod);
+            var localVariable = new LocalVariable()
             {
-                Id = newAttribute.Id,
-                Name = newAttribute.Name,
-                MethodId = idMethod,
-                Type = newAttribute.RelatedClass.Name
-            }
-        };
-        return response;
+                Id = Guid.NewGuid(),
+                Name = variable.Name,
+                Type = type,
+                RelatedMethod = method,
+            };
+            var newAttribute = _methodService.AddLocalVariable(idMethod, localVariable);
+            var response = new CreatedVariableResponse
+            {
+                Message = "Variable created successfully",
+                Variable = new VariableResponse()
+                {
+                    Id = newAttribute.Id,
+                    Name = newAttribute.Name,
+                    MethodId = idMethod,
+                    ClassTypeId = newAttribute.RelatedClass.Id
+                }
+            };
+            return response;
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 
     public ParameterResponse GetParameter(Guid id)

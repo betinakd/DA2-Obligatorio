@@ -1,6 +1,7 @@
 using Adapter;
 using Adapter.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using FluentAssertions;
 using IBussinesLogic;
 using Models.Request;
@@ -13,13 +14,15 @@ namespace Tests.Adapter;
 public class MethodAdapterTest
 {
     private Mock<IMethodService>? _mockMethodService;
+    private Mock<ISimClassService>? _mockSimClassService;
     private MethodAdapter? _methodAdapter;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
-        _methodAdapter = new MethodAdapter(_mockMethodService.Object);
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _methodAdapter = new MethodAdapter(_mockMethodService.Object, _mockSimClassService.Object);
     }
 
     [TestMethod]
@@ -93,73 +96,69 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    public void AddMethodVariable_ShouldReturnCreatedParameterResponse_WhenValid()
+    public void CreateVariable_ShouldReturnCreatedVariableResponse_WhenValid()
     {
         var methodId = Guid.NewGuid();
-        var varName = "ValidVariable";
-        var varType = "string";
+        var classTypeId = Guid.NewGuid();
+        var variableName = "ValidVariable";
 
         var request = new VariableRequest
         {
             MethodId = methodId,
-            Name = varName,
-            Type = varType
+            Name = variableName,
+            ClassTypeId = classTypeId
         };
 
-        var expectedVariableResponse = new VariableResponse
+        var simClass = new SimClass { Id = classTypeId, Name = "string" };
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var localVariable = new LocalVariable
         {
             Id = Guid.NewGuid(),
-            Name = varName,
-            Type = varType,
-            MethodId = methodId
+            Name = variableName,
+            Type = simClass,
+            RelatedMethod = method
         };
-
-        var relatedClass = new SimClass { Name = "string" };
-        var typeClass = new SimClass { Name = "string" };
-        var expectedattribute = new SimAttribute { Name = varName, RelatedClass = relatedClass, Type = typeClass };
-
-        var expectedResponse = new CreatedVariableResponse
+        var simAttribute = new SimAttribute
         {
-            Message = "Local variable added successfully",
-            Variable = expectedVariableResponse
+            Id = localVariable.Id,
+            Name = variableName,
+            RelatedClass = simClass
         };
 
-        _mockMethodService
-            ?.Setup(service => service.AddLocalVariable(methodId, request.Name, request.Type))
-            .Returns(expectedattribute);
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Returns(simClass);
+        mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        mockMethodService.Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>())).Returns(simAttribute);
 
-        var result = _methodAdapter?.CreateVariable(methodId, request);
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
 
-        _mockMethodService?.Verify(service => service.AddLocalVariable(methodId, request.Name, request.Type), Times.Once); // Verifica el método correcto
+        var result = adapter.CreateVariable(methodId, request);
 
         result.Should().NotBeNull();
-        result.Should().BeOfType<CreatedVariableResponse>();
-        Assert.AreEqual(result.Message, "Local variable added successfully");
-        var variable = result.Variable;
-        Assert.AreEqual(variable.Name, varName);
-        Assert.AreEqual(variable.MethodId, methodId);
-        Assert.AreEqual(variable.Type, varType);
+        result.Message.Should().Be("Variable created successfully");
+        result.Variable.Name.Should().Be(variableName);
+        result.Variable.MethodId.Should().Be(methodId);
+        result.Variable.ClassTypeId.Should().Be(classTypeId);
     }
 
     [TestMethod]
-    public void AddMethodLocalVariable_ShouldThrowInvalidAttribute_WhenNameOrTypeIsNull()
+    [ExpectedException(typeof(InvalidAttribute))]
+    public void CreateVariable_ShouldThrowInvalidAttribute_WhenSimClassInvalidAttributeIsThrown()
     {
         var methodId = Guid.NewGuid();
-        var parameterName = " ";
-        var parameterType = " ";
-
+        var classTypeId = Guid.NewGuid();
         var request = new VariableRequest
         {
-            Name = parameterName,
             MethodId = methodId,
-            Type = parameterType
+            Name = " ",
+            ClassTypeId = classTypeId
         };
 
-        var exception = Assert.ThrowsException<InvalidAttribute>(() =>
-        {
-            _methodAdapter?.CreateVariable(methodId, request);
-        });
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
 
-        Assert.AreEqual("Local variable information cant be empty", exception.Message);
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+        adapter.CreateVariable(methodId, request);
     }
 }
