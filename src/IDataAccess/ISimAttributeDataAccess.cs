@@ -9,4 +9,5 @@ public interface ISimAttributeDataAccess
     public bool ExistAttributeById(Guid attributeId);
     public void DeleteAttribute(Guid attributeId);
     public bool InUseByOther(Guid attributeId);
+    public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute);
 }

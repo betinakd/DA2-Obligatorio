@@ -62,6 +62,6 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
             throw new InUseValueLogic("Attribute name already exists.");
         }
 
-        return null;
+        return _simAttributeDA.UpdateAttribute(attributeId, attribute);
     }
 }
