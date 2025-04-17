@@ -36,6 +36,8 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
         {
             throw new InUseValueLogic("Attribute is in use by another entity.");
         }
+
+        _simAttributeDA.DeleteAttribute(attributeId);
     }
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
