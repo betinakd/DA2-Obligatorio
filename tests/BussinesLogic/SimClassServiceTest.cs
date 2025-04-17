@@ -1,4 +1,5 @@
 using BussinesLogic;
+using BussinesLogic.Exceptions;
 using Domain;
 using IDataAccess;
 using Moq;
@@ -36,5 +37,15 @@ public class SimClassServiceTest
         Assert.AreEqual("TestClass", result.Name);
         Assert.AreEqual(baseClass, result.BaseClass);
         Assert.AreNotEqual(Guid.Empty, result.Id);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldThrowDuplicateValueLogic_WhenExceptionIsThrown()
+    {
+        var baseClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Throws(new Exception("error"));
+
+        Assert.ThrowsException<DuplicateValueLogic>(() =>
+            _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
     }
 }
