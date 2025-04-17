@@ -41,7 +41,7 @@ public class ClassAttributeControllerTest
             Privacity = SimModelsPrivacity.Public,
             RelatedClassId = Guid.NewGuid()
         };
-        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Privacity = expectedResponse };
+        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Attribute = expectedResponse };
         _mockAttributeAdapter?.Setup(a => a.CreateAttribute(id, request)).Returns(expectedCreatedResponse);
 
         var result = _attributeController?.CreateAttribute(id, request);

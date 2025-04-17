@@ -4,5 +4,5 @@ public class CreatedAttributeResponse()
 {
     public Guid? Id { get; set; }
     public string? Message { get; set; }
-    public AttributeResponse? Privacity { get; set; }
+    public AttributeResponse? Attribute { get; set; }
 }
