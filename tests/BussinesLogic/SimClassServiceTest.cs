@@ -86,4 +86,18 @@ public class SimClassServiceTest
         Assert.IsNotNull(result);
         CollectionAssert.AreEqual(simClasses, result.ToList());
     }
+
+    [TestMethod]
+    public void GetSimClassById_ShouldReturnSimClass()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass { Id = simClassId, Name = "TestClass" };
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
+
+        var result = _simClassService.GetSimClassById(simClassId);
+
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simClass, result);
+    }
 }
