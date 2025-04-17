@@ -304,4 +304,77 @@ public class MethodAdapterTest
 
         adapter.GetMethod(methodId);
     }
+
+    [TestMethod]
+    public void CreateMethod_ShouldReturnCreatedMethodResponse_WhenValid()
+    {
+        var idClass = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+        var methodName = "TestMethod";
+
+        var methodRequest = new MethodRequest
+        {
+            Name = methodName,
+            Privacity = SimModelsPrivacity.Public,
+            Accesibility = SimModelsAccesibility.Normal,
+            ReturnTypeId = returnTypeId
+        };
+
+        var classOwner = new SimClass { Id = idClass, Name = "TestClass" };
+        var returnType = new SimClass { Id = returnTypeId, Name = "int" };
+
+        var simMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = methodName,
+            RelatedClass = classOwner,
+            Privacity = SimPrivacity.Public,
+            Accesibility = SimAccesibility.Normal,
+            ReturnType = returnType
+        };
+
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Returns(classOwner);
+        mockSimClassService.Setup(s => s.GetSimClassById(returnTypeId)).Returns(returnType);
+        mockMethodService.Setup(s => s.AddMethod(idClass, It.IsAny<SimMethod>())).Returns(simMethod);
+
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        var result = adapter.CreateMethod(idClass, methodRequest);
+
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Method created successfully");
+        result.MethodResponse.Should().NotBeNull();
+        result.MethodResponse.Id.Should().Be(simMethod.Id);
+        result.MethodResponse.Name.Should().Be(methodName);
+        result.MethodResponse.IdClassOwner.Should().Be(idClass);
+        result.MethodResponse.Privacity.Should().Be(SimModelsPrivacity.Public);
+        result.MethodResponse.Accesibility.Should().Be(SimModelsAccesibility.Normal);
+        result.MethodResponse.ReturnTypeId.Should().Be(returnTypeId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttribute))]
+    public void CreateMethod_ShouldThrowInvalidAttribute_WhenSimClassInvalidAttributeIsThrown()
+    {
+        var idClass = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var methodRequest = new MethodRequest
+        {
+            Name = "TestMethod",
+            Privacity = SimModelsPrivacity.Public,
+            Accesibility = SimModelsAccesibility.Normal,
+            ReturnTypeId = returnTypeId
+        };
+
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockMethodService = new Mock<IMethodService>();
+        mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Throws(new SimClassInvalidAttribute("SimClass error"));
+
+        var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
+
+        adapter.CreateMethod(idClass, methodRequest);
+    }
 }

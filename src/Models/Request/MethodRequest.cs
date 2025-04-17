@@ -13,4 +13,5 @@ public class MethodRequest()
     public SimModelsPrivacity Privacity { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsAccesibility Accesibility { get; set; }
+    public Guid ReturnTypeId { get; set; }
 }

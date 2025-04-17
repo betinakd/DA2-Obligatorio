@@ -10,4 +10,5 @@ public interface IMethodService
     SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable);
     Parameter GetParameterById(Guid id);
     LocalVariable GetVariableById(Guid id);
+    SimMethod AddMethod(Guid id, SimMethod method);
 }

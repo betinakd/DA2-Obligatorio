@@ -12,4 +12,14 @@ public static class EnumMapper
     {
         return (SimModelsAccesibility)(int)accesibility;
     }
+
+    public static SimPrivacity MapToDomainPrivacity(SimModelsPrivacity privacity)
+    {
+        return (SimPrivacity)(int)privacity;
+    }
+
+    public static SimAccesibility MapToDomainAccesibility(SimModelsAccesibility accesibility)
+    {
+        return (SimAccesibility)(int)accesibility;
+    }
 }

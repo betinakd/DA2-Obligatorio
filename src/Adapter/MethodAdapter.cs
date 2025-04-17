@@ -37,7 +37,41 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var classOwner = _simClassService.GetSimClassById(idClass);
+            var returnType = _simClassService.GetSimClassById(method.ReturnTypeId);
+
+            var newMethod = new SimMethod
+            {
+                Id = Guid.NewGuid(),
+                Name = method.Name,
+                RelatedClass = classOwner,
+                Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
+                Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
+                ReturnType = returnType
+            };
+
+            var createdMethod = _methodService.AddMethod(idClass, newMethod);
+
+            return new CreatedMethodResponse
+            {
+                Message = "Method created successfully",
+                MethodResponse = new MethodResponse
+                {
+                    Id = createdMethod.Id,
+                    Name = createdMethod.Name,
+                    IdClassOwner = createdMethod.RelatedClass.Id,
+                    Privacity = EnumMapper.MapToModelPrivacity(createdMethod.Privacity),
+                    Accesibility = EnumMapper.MapToModelAccesibility(createdMethod.Accesibility),
+                    ReturnTypeId = createdMethod.ReturnType.Id
+                }
+            };
+        }
+        catch(SimClassInvalidAttribute ex)
+        {
+            throw new InvalidAttribute(ex.Message);
+        }
     }
 
     public void DeleteMethod(Guid id)
