@@ -65,12 +65,12 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
     {
         try
         {
-            var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
+            var relatedClass = _simClassService.GetSimClassById(id);
             var type = _simClassService.GetSimClassById(attribute.TypeId);
 
             var newAttribute = new SimAttribute()
             {
-                Id = id,
+                Id = Guid.NewGuid(),
                 Name = attribute.Name,
                 Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
                 RelatedClass = relatedClass,
