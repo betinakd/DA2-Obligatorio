@@ -27,4 +27,20 @@ public class AttributeAdapterTest
 
         _mockSimAttributeService.Verify(s => s.DeleteAttribute(attributeId), Times.Once);
     }
+
+    [TestMethod]
+    public void DeleteAttribute_WhenServiceThrowsException_ThrowsInvalidOperationException()
+    {
+        var attributeId = Guid.NewGuid();
+        var exceptionMessage = "Error al eliminar";
+
+        _mockSimAttributeService!
+            .Setup(s => s.DeleteAttribute(attributeId))
+            .Throws(new Exception(exceptionMessage));
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            _simAttributeAdapter!.DeleteAttribute(attributeId));
+
+        Assert.AreEqual(exceptionMessage, ex.Message);
+    }
 }
