@@ -94,4 +94,14 @@ public class SimAttributeServiceTest
 
         _simAttributeService.CreateAttribute(classId, attribute);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void DeleteAttribute_ShouldThrowException_WhenAttributeDoesNotExist()
+    {
+        var attributeId = Guid.NewGuid();
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(false);
+
+        _simAttributeService.DeleteAttribute(attributeId);
+    }
 }
