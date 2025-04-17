@@ -1,4 +1,3 @@
-using Domain;
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
@@ -42,17 +41,17 @@ public class AttributeControllerTest
         {
             Id = idToUpdate,
             Name = "UpdatedAttribute",
-            Type = new SimClassResponse(new SimClass { Name = "UpdatedType" }),
+            TypeId = Guid.NewGuid(),
             Privacity = SimModelsPrivacity.Public,
-            RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
+            RelatedClassId = Guid.NewGuid()
         };
         var expectedResponse = new AttributeResponse()
         {
             Id = idToUpdate,
             Name = "UpdatedAttribute",
-            Type = new SimClassResponse(new SimClass { Name = "UpdatedType" }),
+            TypeId = Guid.NewGuid(),
             Privacity = SimModelsPrivacity.Public,
-            RelatedClass = new SimClassResponse(new SimClass { Name = "UpdatedRelatedClass" })
+            RelatedClassId = Guid.NewGuid()
         };
         var updatedExpectedResponse = new UpdatedAttributeResponse() { Message = "Attribute updated succesfully.", Attribute = expectedResponse };
 
