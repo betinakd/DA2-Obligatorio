@@ -60,6 +60,7 @@ public class SimAttributeServiceTest
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
         _mockSimAttributeDataAccess.Setup(da => da.CreateAttribute(classId, attribute)).Returns(attribute);
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeName(classId, attribute.Name)).Returns(false);
 
         var result = _simAttributeService.CreateAttribute(classId, attribute);
 
@@ -72,5 +73,25 @@ public class SimAttributeServiceTest
         Assert.AreEqual(SimPrivacity.Public, result.Privacity);
         Assert.AreEqual(relatedClass, result.RelatedClass);
         Assert.AreEqual(typeClass, result.Type);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void CreateAttribute_ShouldThrowException_WhenAttributeNameAlreadyExists()
+    {
+        var classId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "ExistingAttribute",
+            RelatedClass = new SimClass { Id = classId, Name = "TestClass" },
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Privacity = SimPrivacity.Public
+        };
+
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeName(classId, attribute.Name)).Returns(true);
+
+        _simAttributeService.CreateAttribute(classId, attribute);
     }
 }
