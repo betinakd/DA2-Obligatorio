@@ -167,14 +167,14 @@ public class AttributeAdapterTest
             .Returns(typeClass);
 
         _mockSimAttributeService!
-            .Setup(s => s.CreateAttribute(attributeId, It.IsAny<SimAttribute>()))
+            .Setup(s => s.CreateAttribute(relatedClassId, It.IsAny<SimAttribute>()))
             .Returns(createdSimAttribute);
 
-        var result = _simAttributeAdapter!.CreateAttribute(attributeId, attributeRequest);
+        var result = _simAttributeAdapter!.CreateAttribute(relatedClassId, attributeRequest);
 
         _mockSimClassService.Verify(s => s.GetSimClassById(relatedClassId), Times.Once);
         _mockSimClassService.Verify(s => s.GetSimClassById(typeId), Times.Once);
-        _mockSimAttributeService.Verify(s => s.CreateAttribute(attributeId, It.IsAny<SimAttribute>()), Times.Once);
+        _mockSimAttributeService.Verify(s => s.CreateAttribute(relatedClassId, It.IsAny<SimAttribute>()), Times.Once);
 
         Assert.IsNotNull(result);
         Assert.AreEqual(attributeId, result.Attribute.Id);
@@ -208,7 +208,7 @@ public class AttributeAdapterTest
             .Throws(new Exception(exceptionMessage));
 
         var ex = Assert.ThrowsException<ObjectNotFoundException>(() =>
-            _simAttributeAdapter!.CreateAttribute(attributeId, attributeRequest));
+            _simAttributeAdapter!.CreateAttribute(relatedClassId, attributeRequest));
 
         Assert.AreEqual(exceptionMessage, ex.Message);
     }
