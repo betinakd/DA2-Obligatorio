@@ -1,4 +1,5 @@
 using Adapter;
+using Adapter.Exceptions;
 using Domain;
 using IBussinesLogic;
 using Models.Request;
@@ -65,5 +66,30 @@ public class ExecutionAdapterTest
         Assert.AreEqual("expectedResult", result);
         _simClassService.VerifyAll();
         _mockExecutionService.VerifyAll();
+    }
+
+    [TestMethod]
+    public void ExecuteMethod_WhenExceptionThrown_ShouldThrowInvalidExecutionException()
+    {
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            InstanceTypeId = Guid.NewGuid(),
+            ReferenceTypeId = Guid.NewGuid(),
+            InstanceName = "Instance1",
+            Parameters =
+        [
+            new ParameterRequest { Name = "param1", ClassTypeId = Guid.NewGuid() }
+        ]
+        };
+
+        _simClassService!
+            .Setup(s => s.GetSimClassById(It.IsAny<Guid>()))
+            .Throws(new Exception("SimClass error"));
+
+        Assert.ThrowsException<InvalidExecutionException>(() =>
+        {
+            _executionAdapter!.ExecuteMethod(request);
+        });
     }
 }
