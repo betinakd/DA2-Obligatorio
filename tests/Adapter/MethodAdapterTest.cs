@@ -447,4 +447,29 @@ public class MethodAdapterTest
         result.InvocationResponse.Parameters[0].ClassTypeId.Should().Be(classTypeId);
         result.InvocationResponse.Parameters[0].MethodId.Should().Be(methodId);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void CreateWrongInvocation_ShouldThrowInvalidOperationException()
+    {
+        var methodId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+        var parameterName = "param1";
+
+        var parameterRequest = new ParameterRequest
+        {
+            Name = parameterName,
+            ClassTypeId = classTypeId
+        };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = Guid.NewGuid(),
+            Parameters = [parameterRequest]
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Throws(new Exception("error"));
+
+        _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+    }
 }
