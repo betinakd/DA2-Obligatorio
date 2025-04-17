@@ -190,13 +190,94 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest method)
+    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest invocation)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var method = _methodService.GetMethodById(idMethod);
+
+            var newInvocation = new Invocation
+            {
+                Id = Guid.NewGuid(),
+                MethodName = method.Name,
+                ReferenceId = invocation.IdReference,
+                RelatedMethod = method
+            };
+            var parametersResponses = new List<ParameterResponse>();
+            foreach(var parameter in invocation.Parameters)
+            {
+                var newParameter = new Parameter()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = parameter.Name,
+                    Type = _simClassService.GetSimClassById(parameter.ClassTypeId),
+                    RelatedMethod = _methodService.GetMethodById(idMethod)
+                };
+
+                var newParameterResponse = new ParameterResponse()
+                {
+                    Id = newParameter.Id,
+                    Name = newParameter.Name,
+                    MethodId = idMethod,
+                    ClassTypeId = newParameter.Type.Id
+                };
+
+                newInvocation.Parameters.Add(newParameter);
+                parametersResponses.Add(newParameterResponse);
+            }
+
+            _ = _methodService.AddInvocation(idMethod, newInvocation);
+
+            return new CreatedInvocationResponse
+            {
+                Message = "Invocation created successfully",
+                InvocationResponse = new InvocationResponse
+                {
+                    Id = newInvocation.Id,
+                    IdReference = newInvocation.ReferenceId,
+                    MethodName = newInvocation.MethodName,
+                    Parameters = parametersResponses,
+                }
+            };
+        }
+        catch(Exception ex)
+        {
+            throw new InvalidOperationException("Error creating invocation: " + ex.Message);
+        }
     }
 
     public InvocationResponse GetInvocation(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var invocation = _methodService.GetInvocationById(id);
+
+            var parameters = new List<ParameterResponse>();
+            if(invocation.Parameters != null)
+            {
+                foreach(var parameter in invocation.Parameters)
+                {
+                    parameters.Add(new ParameterResponse
+                    {
+                        Id = parameter.Id,
+                        Name = parameter.Name,
+                        MethodId = parameter.RelatedMethod.Id,
+                        ClassTypeId = parameter.Type.Id
+                    });
+                }
+            }
+
+            return new InvocationResponse
+            {
+                Id = invocation.Id,
+                IdReference = invocation.ReferenceId,
+                MethodName = invocation.MethodName,
+                Parameters = parameters
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid invocation ID.");
+        }
     }
 }

@@ -12,4 +12,6 @@ public interface IMethodService
     public LocalVariable GetVariableById(Guid id);
     public SimMethod AddMethod(Guid id, SimMethod method);
     public void DeleteMethod(Guid id);
+    public Invocation AddInvocation(Guid idMethod, Invocation newInvocation);
+    public Invocation GetInvocationById(Guid id);
 }

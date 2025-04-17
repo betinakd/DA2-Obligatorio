@@ -23,7 +23,7 @@ public class InvocationMethodControllerTest
     public void GetInvocationMethodCorrectly_ShouldThrowOk()
     {
         var id = Guid.NewGuid();
-        var expectedResponse = new InvocationResponse { IdReference = id, MethodName = "TestMethod", Parametros = [] };
+        var expectedResponse = new InvocationResponse { IdReference = id, MethodName = "TestMethod", Parameters = [] };
         _mockInvocationMethodAdapter?.Setup(m => m.GetInvocation(id)).Returns(() => expectedResponse);
 
         var result = _invocationsMethodController?.GetInvocation(id) as OkObjectResult;
