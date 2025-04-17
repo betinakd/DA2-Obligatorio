@@ -147,6 +147,7 @@ public class SimAttributeServiceTest
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(false);
         _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(attribute.RelatedClass.Id)).Returns(false);
 
         _simAttributeService.UpdateAttribute(attributeId, attribute);
     }
@@ -167,6 +168,29 @@ public class SimAttributeServiceTest
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
         _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(attribute.RelatedClass.Id)).Returns(true);
+
+        _simAttributeService.UpdateAttribute(attributeId, attribute);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void UpdateAttribute_ShouldThrowException_WhenRelatedClassDoesNotExist()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = relatedClassId, Name = "NonExistentClass" },
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Privacity = SimPrivacity.Public
+        };
+
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(relatedClassId)).Returns(false);
 
         _simAttributeService.UpdateAttribute(attributeId, attribute);
     }
