@@ -248,29 +248,36 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public InvocationResponse GetInvocation(Guid id)
     {
-        var invocation = _methodService.GetInvocationById(id);
-
-        var parameters = new List<ParameterResponse>();
-        if(invocation.Parameters != null)
+        try
         {
-            foreach(var parameter in invocation.Parameters)
+            var invocation = _methodService.GetInvocationById(id);
+
+            var parameters = new List<ParameterResponse>();
+            if(invocation.Parameters != null)
             {
-                parameters.Add(new ParameterResponse
+                foreach(var parameter in invocation.Parameters)
                 {
-                    Id = parameter.Id,
-                    Name = parameter.Name,
-                    MethodId = parameter.RelatedMethod.Id,
-                    ClassTypeId = parameter.Type.Id
-                });
+                    parameters.Add(new ParameterResponse
+                    {
+                        Id = parameter.Id,
+                        Name = parameter.Name,
+                        MethodId = parameter.RelatedMethod.Id,
+                        ClassTypeId = parameter.Type.Id
+                    });
+                }
             }
-        }
 
-        return new InvocationResponse
+            return new InvocationResponse
+            {
+                Id = invocation.Id,
+                IdReference = invocation.ReferenceId,
+                MethodName = invocation.MethodName,
+                Parameters = parameters
+            };
+        }
+        catch(SimClassInvalidAttribute)
         {
-            Id = invocation.Id,
-            IdReference = invocation.ReferenceId,
-            MethodName = invocation.MethodName,
-            Parameters = parameters
-        };
+            throw new InvalidOperationException("Invalid invocation ID.");
+        }
     }
 }
