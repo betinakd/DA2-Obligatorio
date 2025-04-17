@@ -8,4 +8,5 @@ public interface ISimClassDataAccess
     public void CreateSimClass(SimClass simClass);
     public void DeleteSimClass(Guid id);
     public IList<SimClass> GetAllSimClasses();
+    public bool ExistSimClassById(Guid id);
 }

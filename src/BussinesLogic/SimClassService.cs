@@ -34,7 +34,7 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
         {
             _simClassDA.DeleteSimClass(id);
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             throw new NonExistentValueLogic(ex.Message);
         }
@@ -47,7 +47,14 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
 
     public SimClass GetSimClassById(Guid id)
     {
-        return _simClassDA.GetSimClassById(id);
+        if(_simClassDA.ExistSimClassById(id))
+        {
+            return _simClassDA.GetSimClassById(id);
+        }
+        else
+        {
+            throw new NonExistentValueLogic("SimClass not found.");
+        }
     }
 
     public SimClass UpdateSimClass(SimClass simClass)

@@ -92,12 +92,26 @@ public class SimClassServiceTest
     {
         var simClassId = Guid.NewGuid();
         var simClass = new SimClass { Id = simClassId, Name = "TestClass" };
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
 
         var result = _simClassService.GetSimClassById(simClassId);
 
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
+    }
+
+    [TestMethod]
+    public void GetSimClassById_ShouldThrowNonExistentValueLogic_WhenNotExists()
+    {
+        var simClassId = Guid.NewGuid();
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simClassService.GetSimClassById(simClassId));
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(It.IsAny<Guid>()), Times.Never);
     }
 }
