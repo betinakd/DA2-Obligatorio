@@ -31,7 +31,21 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
     public VariableResponse GetVariable(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var variable = _methodService.GetVariableById(id);
+            return new VariableResponse
+            {
+                Id = variable.Id,
+                Name = variable.Name,
+                MethodId = variable.RelatedMethod.Id,
+                ClassTypeId = variable.Type.Id
+            };
+        }
+        catch(SimClassInvalidAttribute)
+        {
+            throw new InvalidOperationException("Invalid variable ID.");
+        }
     }
 
     public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
