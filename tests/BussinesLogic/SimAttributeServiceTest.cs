@@ -115,4 +115,19 @@ public class SimAttributeServiceTest
 
         _simAttributeService.DeleteAttribute(attributeId);
     }
+
+    [TestMethod]
+    public void DeleteAttribute_ShouldSucceed_WhenAttributeExistsAndNotInUse()
+    {
+        var attributeId = Guid.NewGuid();
+        _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(false);
+        _mockSimAttributeDataAccess.Setup(da => da.DeleteAttribute(attributeId)).Verifiable();
+
+        _simAttributeService.DeleteAttribute(attributeId);
+
+        _mockSimAttributeDataAccess.Verify(da => da.ExistAttributeById(attributeId), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.InUseByOther(attributeId), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.DeleteAttribute(attributeId), Times.Once);
+    }
 }
