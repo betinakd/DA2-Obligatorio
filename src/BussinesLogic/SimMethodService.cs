@@ -91,6 +91,6 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Variable does not exist.");
         }
 
-        return null;
+        return _simMethodDA.GetVariableById(id);
     }
 }

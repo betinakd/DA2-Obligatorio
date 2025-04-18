@@ -14,4 +14,5 @@ public interface ISimMethodDataAccess
     bool ExistParameter(Guid id);
     Parameter GetParameterById(Guid id);
     bool ExistVariableById(Guid id);
+    LocalVariable GetVariableById(Guid id);
 }
