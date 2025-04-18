@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using BussinesLogic.Exceptions;
 using Domain;
 using IBussinesLogic;
@@ -21,10 +20,19 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.CreateInvocation(idMethod, newInvocation);
     }
 
-    [ExcludeFromCodeCoverage]
-    public SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable)
+    public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(methodId))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        if(_simMethodDA.MethodVariableRepeatedValues(methodId, localVariable))
+        {
+            throw new InUseValueLogic("Local variable with that name is already in use.");
+        }
+
+        return _simMethodDA.AddLocalVariable(methodId, localVariable);
     }
 
     public SimMethod AddMethod(Guid idClass, SimMethod method)
@@ -42,16 +50,29 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.CreateMethod(idClass, method);
     }
 
-    [ExcludeFromCodeCoverage]
-    public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter)
+    public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(methodId))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        if(_simMethodDA.MethodParameterRepeatedValues(methodId, parameter))
+        {
+            throw new InUseValueLogic("Parameter with that name is already in use.");
+        }
+
+        return _simMethodDA.AddMethodParameter(methodId, parameter);
     }
 
-    [ExcludeFromCodeCoverage]
     public void DeleteMethod(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(id))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        _simMethodDA.DeleteMethod(id);
     }
 
     public Invocation GetInvocationById(Guid id)

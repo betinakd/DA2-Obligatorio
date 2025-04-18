@@ -15,4 +15,9 @@ public interface ISimMethodDataAccess
     Parameter GetParameterById(Guid id);
     bool ExistVariableById(Guid id);
     LocalVariable GetVariableById(Guid id);
+    bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable);
+    LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable);
+    bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter);
+    Parameter AddMethodParameter(Guid methodId, Parameter parameter);
+    void DeleteMethod(Guid id);
 }

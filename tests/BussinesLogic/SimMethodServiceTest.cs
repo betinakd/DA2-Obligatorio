@@ -202,4 +202,40 @@ public class SimMethodServiceTest
         Assert.AreEqual(expectedVariable, result);
         _mockSimMethodDataAccess.Verify(m => m.GetVariableById(variableId), Times.Once);
     }
+
+    [TestMethod]
+    public void AddLocalVariable_ShouldReturnSimAttribute_WhenValid()
+    {
+        var methodId = Guid.NewGuid();
+        var localVariableId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = localVariableId,
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+        var expectedAttribute = new LocalVariable()
+        {
+            Id = localVariableId,
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.AddLocalVariable(methodId, localVariable))
+            .Returns(expectedAttribute);
+
+        var result = _simMethodService!.AddLocalVariable(methodId, localVariable);
+
+        Assert.AreEqual(expectedAttribute, result);
+        _mockSimMethodDataAccess.Verify(m => m.AddLocalVariable(methodId, localVariable), Times.Once);
+    }
 }
