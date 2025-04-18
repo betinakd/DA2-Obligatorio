@@ -27,19 +27,19 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         throw new NotImplementedException();
     }
 
-    public SimMethod AddMethod(Guid id, SimMethod method)
+    public SimMethod AddMethod(Guid idClass, SimMethod method)
     {
-        if(!_simClassDA.ExistSimClassById(id))
+        if(!_simClassDA.ExistSimClassById(idClass))
         {
             throw new NonExistentValueLogic("Sim class does not exist.");
         }
 
-        if(_simMethodDA.ExistsMethodInClass(id, method))
+        if(_simMethodDA.ExistsMethodInClass(idClass, method))
         {
             throw new InUseValueLogic("Method with same firm is already in the specified class.");
         }
 
-        return null;
+        return _simMethodDA.CreateMethod(idClass, method);
     }
 
     [ExcludeFromCodeCoverage]

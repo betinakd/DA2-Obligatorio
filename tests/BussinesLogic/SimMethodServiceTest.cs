@@ -72,7 +72,23 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(classId, method)).Returns(true);
 
         Assert.ThrowsException<InUseValueLogic>(() =>
-            _simMethodService!.AddMethod(classId, method)
-        );
+            _simMethodService!.AddMethod(classId, method));
+    }
+
+    [TestMethod]
+    public void AddMethod_ShouldReturnSimMethod_WhenClassExistsAndMethodIsUnique()
+    {
+        var classId = Guid.NewGuid();
+        var method = new SimMethod();
+        var expectedMethod = new SimMethod();
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(classId)).Returns(true);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(classId, method)).Returns(false);
+        _mockSimMethodDataAccess.Setup(m => m.CreateMethod(classId, method)).Returns(expectedMethod);
+
+        var result = _simMethodService!.AddMethod(classId, method);
+
+        Assert.AreEqual(expectedMethod, result);
+        _mockSimMethodDataAccess.Verify(m => m.CreateMethod(classId, method), Times.Once);
     }
 }
