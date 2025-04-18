@@ -1,6 +1,8 @@
 using Adapter.Exceptions;
 using Domain;
+using Domain.Enums;
 using IBussinesLogic;
+using Models.Enums;
 using Models.Request;
 using Models.Response;
 using Moq;
@@ -54,11 +56,12 @@ public class SimClassAdapterTest
             Name = "ValidClass",
             IsAbstract = false,
             IsSealed = false,
-            BaseClassId = Guid.NewGuid()
+            BaseClassId = Guid.NewGuid(),
+            State = SimModelsAccesibility.Normal
         };
 
         _mockSimClassService
-            ?.Setup(service => service.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId))
+            ?.Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
             .Returns(simClass);
 
         var result = _simClassAdapter?.CreateSimClass(request);
@@ -68,7 +71,7 @@ public class SimClassAdapterTest
         Assert.AreEqual(simClass.Id, result.SimClass?.Id);
         Assert.AreEqual(simClass.Name, result.SimClass?.Name);
 
-        _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId), Times.Once);
+        _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
     }
 
     [TestMethod]
@@ -82,7 +85,17 @@ public class SimClassAdapterTest
         };
 
         var expectedSimClass = new SimClass { Id = simClassId, Name = "UpdatedClass" };
-        var expectedResult = new UpdateSimClassResponse { Message = "Class updated successfully", SimClass = new SimClassResponse(expectedSimClass) };
+        var expectedResult = new UpdateSimClassResponse
+        {
+            Message = "Class updated successfully",
+            SimClass = new SimClassResponse()
+            {
+                Id = expectedSimClass.Id,
+                Message = "Class updated Successfully",
+                Name = expectedSimClass.Name,
+                State = SimModelsAccesibility.Abstract
+            }
+        };
 
         _mockSimClassService
             ?.Setup(service => service.UpdateSimClass(It.Is<SimClass>(s => s.Id == request.Id && s.Name == request.Name)))
@@ -132,7 +145,7 @@ public class SimClassAdapterTest
     {
         var simClassId = Guid.NewGuid();
         var simClass = new SimClass() { Id = simClassId, Name = "Name" };
-        var simClassResponse = new SimClassResponse(simClass);
+        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal, Message = "Class not found" };
         _mockSimClassService
             ?.Setup(service => service.GetSimClassById(simClassId)).Throws(new Exception());
 
@@ -146,7 +159,7 @@ public class SimClassAdapterTest
     {
         var simClassId = Guid.NewGuid();
         var simClass = new SimClass { Id = simClassId, Name = "ExistingClass" };
-        var simClassResponse = new SimClassResponse(simClass);
+        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal, Message = "Class found" };
 
         _mockSimClassService
             ?.Setup(service => service.GetSimClassById(simClassId))

@@ -1,5 +1,6 @@
 using Adapter.Exceptions;
 using Domain;
+using Domain.Enums;
 using FluentAssertions;
 using IAdapter;
 using Microsoft.AspNetCore.Http;
@@ -33,8 +34,8 @@ public class SimClassControllerTest
     {
         var classes = new List<SimClassResponse>
     {
-        new SimClassResponse(new SimClass { Id = Guid.NewGuid(), Name = "ClassA" }),
-        new SimClassResponse(new SimClass { Id = Guid.NewGuid(), Name = "ClassB" })
+        new SimClassResponse() { Id = Guid.NewGuid(), Name = "ClassA" },
+        new SimClassResponse() { Id = Guid.NewGuid(), Name = "ClassB" }
     };
 
         _mockSimClassAdapter?.Setup(x => x.GetAllSimClasses()).Returns(classes);
@@ -59,7 +60,7 @@ public class SimClassControllerTest
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassC" };
         var request = new SimClassRequest { Name = "ClassC" };
-        var simClassResponse = new SimClassResponse(simClass);
+        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name };
         var expectedResponse = new CreatedSimClassResponse
         {
             Message = "Class created successfully",
@@ -91,7 +92,7 @@ public class SimClassControllerTest
     public void CreateClassInvalidAttribute_ShouldBeBadRequest()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "InvalidClass" };
-        simClass.SetState(new StateSealed());
+        simClass.State = SimAccesibility.Sealed;
 
         var request = new SimClassRequest
         {
@@ -146,7 +147,7 @@ public class SimClassControllerTest
         {
             Id = simClass.Id,
             Message = "Class Updated correctly",
-            SimClass = new SimClassResponse(updatedSimClass),
+            SimClass = new SimClassResponse() { Id = updatedSimClass.Id, Message = "Class Updated Correctly", Name = updatedSimClass.Name },
         };
 
         _mockSimClassAdapter
@@ -242,7 +243,7 @@ public class SimClassControllerTest
     public void GetInfoClass_ValidClassId_ShouldReturnClassInfo()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassInfo" };
-        var simClassResponse = new SimClassResponse(simClass);
+        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name };
 
         _mockSimClassAdapter
             ?.Setup(x => x.GetSimClassInfo(simClass.Id))

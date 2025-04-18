@@ -1,5 +1,6 @@
 ﻿using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using Domain.Exceptions;
 using IBussinesLogic;
 using IDataAccess;
@@ -9,7 +10,7 @@ namespace BussinesLogic;
 public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
 {
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
-    public SimClass CreateSimClass(string name, bool isAbstract, bool isSealed, Guid baseClassId)
+    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId)
     {
         if(_simClassDA.ExistSimClassName(name))
         {
@@ -28,7 +29,8 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
             {
                 Id = Guid.NewGuid(),
                 Name = name,
-                BaseClass = baseClass
+                BaseClass = baseClass,
+                State = simAccesibility
             };
             _simClassDA.CreateSimClass(simClass);
             return simClass;

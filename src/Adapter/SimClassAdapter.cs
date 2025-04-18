@@ -14,22 +14,28 @@ public class SimClassAdapter(ISimClassService simClassService)
     public IList<SimClassResponse> GetAllSimClasses()
     {
         var classes = _simClassService.GetAllSimClasses();
-        var responses = classes.Select(c => new SimClassResponse(c)).ToList();
+        var responses = classes.Select(c => new SimClassResponse()
+        {
+            Id = c.Id,
+            Name = c.Name,
+            State = EnumMapper.MapToModelAccesibility(c.State),
+            Message = "Class retrieved successfully"
+        }).ToList();
         return responses;
     }
 
     public CreatedSimClassResponse CreateSimClass(SimClassRequest request)
     {
-        var simClass = _simClassService.CreateSimClass(request.Name, request.IsAbstract, request.IsSealed, request.BaseClassId);
-        return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse(simClass) };
+        var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
+        return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = request.State } };
     }
 
     public UpdateSimClassResponse UpdateSimClass(UpdateSimClassRequest request)
     {
         try
         {
-            var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name });
-            return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = new SimClassResponse(simClass) };
+            var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name, State = EnumMapper.MapToDomainAccesibility(request.State) });
+            return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = request.State } };
         }
         catch(SimClassInvalidAttribute ex)
         {
@@ -54,7 +60,13 @@ public class SimClassAdapter(ISimClassService simClassService)
         try
         {
             var simClass = _simClassService.GetSimClassById(classId);
-            var simClassResponse = new SimClassResponse(simClass);
+            var simClassResponse = new SimClassResponse()
+            {
+                Id = simClass.Id,
+                Message = "Class retrieved successfully",
+                Name = simClass.Name,
+                State = EnumMapper.MapToModelAccesibility(simClass.State)
+            };
             return simClassResponse;
         }
         catch(Exception)
