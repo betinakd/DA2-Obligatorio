@@ -136,4 +136,37 @@ public class ExecutionServiceTest
 
         _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void ExecuteMethod_ShouldThrow_WhenMethodIsPrivate()
+    {
+        var methodName = "TestMethod";
+        var parameters = new List<Parameter>();
+        var idInstanceType = Guid.NewGuid();
+        var idReferenceType = Guid.NewGuid();
+        var instanceName = "TestInstance";
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idInstanceType))
+            .Returns(true);
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idReferenceType))
+            .Returns(true);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(false);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(false);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(true);
+
+        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
+    }
 }
