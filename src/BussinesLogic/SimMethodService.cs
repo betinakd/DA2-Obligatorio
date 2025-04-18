@@ -29,6 +29,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
     public SimMethod AddMethod(Guid id, SimMethod method)
     {
+        if(!_simClassDA.ExistSimClassById(id))
+        {
+            throw new NonExistentValueLogic("Sim class does not exist.");
+        }
+
         return null;
     }
 
