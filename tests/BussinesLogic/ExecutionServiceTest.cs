@@ -242,4 +242,47 @@ public class ExecutionServiceTest
 
         _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
     }
+
+    [TestMethod]
+    public void ExecuteMethod_ShouldReturnResult_WhenAllChecksPass()
+    {
+        var methodName = "TestMethod";
+        var parameters = new List<Parameter>();
+        var idInstanceType = Guid.NewGuid();
+        var idReferenceType = Guid.NewGuid();
+        var instanceName = "TestInstance";
+        var expectedResult = "ExecutionResult";
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idInstanceType))
+            .Returns(true);
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idReferenceType))
+            .Returns(true);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(false);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(false);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(false);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(false);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.GetExecution(methodName, parameters, idInstanceType, idReferenceType))
+            .Returns(expectedResult);
+
+        var result = _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
+
+        Assert.AreEqual(expectedResult, result);
+    }
 }
