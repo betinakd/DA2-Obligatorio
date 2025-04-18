@@ -84,9 +84,13 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.GetParameterById(id);
     }
 
-    [ExcludeFromCodeCoverage]
     public LocalVariable GetVariableById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistVariableById(id))
+        {
+            throw new NonExistentValueLogic("Variable does not exist.");
+        }
+
+        return null;
     }
 }

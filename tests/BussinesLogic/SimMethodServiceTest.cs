@@ -176,4 +176,14 @@ public class SimMethodServiceTest
         Assert.AreEqual(expectedParameter, result);
         _mockSimMethodDataAccess.Verify(m => m.GetParameterById(parameterId), Times.Once);
     }
+
+    [TestMethod]
+    public void GetVariableById_ShouldThrowException_WhenVariableDoesNotExist()
+    {
+        var variableId = Guid.NewGuid();
+        _mockSimMethodDataAccess!.Setup(m => m.ExistVariableById(variableId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simMethodService!.GetVariableById(variableId));
+    }
 }
