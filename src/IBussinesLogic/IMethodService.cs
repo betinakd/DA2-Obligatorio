@@ -5,7 +5,6 @@ namespace IBussinesLogic;
 public interface IMethodService
 {
     public SimMethod GetMethodById(Guid id);
-    public SimMethod CreateClassMethod(string? name, string? returnType, string? accessModifier, bool? isStatic, bool? isAbstract, Guid? classId);
     public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter);
     public SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable);
     public Parameter GetParameterById(Guid id);

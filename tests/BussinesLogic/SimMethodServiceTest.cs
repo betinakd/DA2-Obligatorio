@@ -101,4 +101,105 @@ public class SimMethodServiceTest
         Assert.AreEqual(expectedMethod, result);
         _mockSimMethodDataAccess.Verify(m => m.CreateMethod(classId, method), Times.Once);
     }
+
+    [TestMethod]
+    public void GetInvocationById_ShouldThrowException_WhenInvocationDoesNotExist()
+    {
+        var invocationId = Guid.NewGuid();
+        _mockSimMethodDataAccess!.Setup(m => m.ExistInvocationById(invocationId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simMethodService!.GetInvocationById(invocationId));
+    }
+
+    [TestMethod]
+    public void GetInvocationById_ShouldReturnInvocation_WhenInvocationExists()
+    {
+        var invocationId = Guid.NewGuid();
+        var expectedInvocation = new Invocation { Id = invocationId };
+
+        _mockSimMethodDataAccess!.Setup(m => m.ExistInvocationById(invocationId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetInvocationById(invocationId)).Returns(expectedInvocation);
+
+        var result = _simMethodService!.GetInvocationById(invocationId);
+
+        Assert.AreEqual(expectedInvocation, result);
+        _mockSimMethodDataAccess.Verify(m => m.GetInvocationById(invocationId), Times.Once);
+    }
+
+    [TestMethod]
+    public void GetMethodById_ShouldThrowException_WhenMethodDoesNotExist()
+    {
+        var methodId = Guid.NewGuid();
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simMethodService!.GetMethodById(methodId));
+    }
+
+    [TestMethod]
+    public void GetMethodById_ShouldReturnMethod_WhenMethodExists()
+    {
+        var methodId = Guid.NewGuid();
+        var expectedMethod = new SimMethod { Id = methodId };
+
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(expectedMethod);
+
+        var result = _simMethodService!.GetMethodById(methodId);
+
+        Assert.AreEqual(expectedMethod, result);
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    public void GetParameterById_ShouldThrowException_WhenParameterDoesNotExist()
+    {
+        var parameterId = Guid.NewGuid();
+        _mockSimMethodDataAccess!.Setup(m => m.ExistParameter(parameterId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simMethodService!.GetParameterById(parameterId));
+    }
+
+    [TestMethod]
+    public void GetParameterById_ShouldReturnParameter_WhenParameterExists()
+    {
+        var parameterId = Guid.NewGuid();
+        var expectedParameter = new Parameter { Id = parameterId };
+
+        _mockSimMethodDataAccess!.Setup(m => m.ExistParameter(parameterId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetParameterById(parameterId)).Returns(expectedParameter);
+
+        var result = _simMethodService!.GetParameterById(parameterId);
+
+        Assert.AreEqual(expectedParameter, result);
+        _mockSimMethodDataAccess.Verify(m => m.GetParameterById(parameterId), Times.Once);
+    }
+
+    [TestMethod]
+    public void GetVariableById_ShouldThrowException_WhenVariableDoesNotExist()
+    {
+        var variableId = Guid.NewGuid();
+        _mockSimMethodDataAccess!.Setup(m => m.ExistVariableById(variableId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simMethodService!.GetVariableById(variableId));
+    }
+
+    [TestMethod]
+    public void GetVariableById_ShouldReturnVariable_WhenVariableExists()
+    {
+        var variableId = Guid.NewGuid();
+        var relatedMethodInstance = new SimMethod { Id = Guid.NewGuid() };
+        var expectedVariable = new LocalVariable { Id = variableId, Name = "TestVariable", RelatedMethod = relatedMethodInstance };
+
+        _mockSimMethodDataAccess!.Setup(m => m.ExistVariableById(variableId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetVariableById(variableId)).Returns(expectedVariable);
+
+        var result = _simMethodService!.GetVariableById(variableId);
+
+        Assert.AreEqual(expectedVariable, result);
+        _mockSimMethodDataAccess.Verify(m => m.GetVariableById(variableId), Times.Once);
+    }
 }

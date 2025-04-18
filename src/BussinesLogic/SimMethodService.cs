@@ -49,38 +49,48 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
     }
 
     [ExcludeFromCodeCoverage]
-    public SimMethod CreateClassMethod(string? name, string? returnType, string? accessModifier, bool? isStatic, bool? isAbstract, Guid? classId)
-    {
-        throw new NotImplementedException();
-    }
-
-    [ExcludeFromCodeCoverage]
     public void DeleteMethod(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    [ExcludeFromCodeCoverage]
     public Invocation GetInvocationById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistInvocationById(id))
+        {
+            throw new NonExistentValueLogic("Invocation does not exist.");
+        }
+
+        return _simMethodDA.GetInvocationById(id);
     }
 
-    [ExcludeFromCodeCoverage]
     public SimMethod GetMethodById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(id))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        return _simMethodDA.GetMethodById(id);
     }
 
-    [ExcludeFromCodeCoverage]
     public Parameter GetParameterById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistParameter(id))
+        {
+            throw new NonExistentValueLogic("Parameter does not exist.");
+        }
+
+        return _simMethodDA.GetParameterById(id);
     }
 
-    [ExcludeFromCodeCoverage]
     public LocalVariable GetVariableById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistVariableById(id))
+        {
+            throw new NonExistentValueLogic("Variable does not exist.");
+        }
+
+        return _simMethodDA.GetVariableById(id);
     }
 }
