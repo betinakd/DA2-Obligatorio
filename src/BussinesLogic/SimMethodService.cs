@@ -74,10 +74,14 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.GetMethodById(id);
     }
 
-    [ExcludeFromCodeCoverage]
     public Parameter GetParameterById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistParameter(id))
+        {
+            throw new NonExistentValueLogic("Parameter does not exist.");
+        }
+
+        return null;
     }
 
     [ExcludeFromCodeCoverage]
