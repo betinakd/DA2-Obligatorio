@@ -21,10 +21,14 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.CreateInvocation(idMethod, newInvocation);
     }
 
-    [ExcludeFromCodeCoverage]
     public SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(methodId))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        return null;
     }
 
     public SimMethod AddMethod(Guid idClass, SimMethod method)
@@ -44,12 +48,6 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
     [ExcludeFromCodeCoverage]
     public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter)
-    {
-        throw new NotImplementedException();
-    }
-
-    [ExcludeFromCodeCoverage]
-    public SimMethod CreateClassMethod(string? name, string? returnType, string? accessModifier, bool? isStatic, bool? isAbstract, Guid? classId)
     {
         throw new NotImplementedException();
     }
