@@ -92,4 +92,23 @@ public class SimMethodServiceTest2
         Assert.AreEqual(localVariable, result);
         _mockSimMethodDataAccess.Verify(m => m.AddLocalVariable(methodId, localVariable), Times.Once);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void AddMethodParameter_MethodDoesNotExist_ThrowsNonExistentValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(false);
+
+        _simMethodService!.AddMethodParameter(methodId, parameter);
+    }
 }

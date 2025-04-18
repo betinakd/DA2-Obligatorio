@@ -51,10 +51,14 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.CreateMethod(idClass, method);
     }
 
-    [ExcludeFromCodeCoverage]
     public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(methodId))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        return null;
     }
 
     [ExcludeFromCodeCoverage]
