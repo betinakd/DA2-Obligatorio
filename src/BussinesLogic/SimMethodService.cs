@@ -34,6 +34,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Sim class does not exist.");
         }
 
+        if(_simMethodDA.ExistsMethodInClass(id, method))
+        {
+            throw new InUseValueLogic("Method with same firm is already in the specified class.");
+        }
+
         return null;
     }
 
