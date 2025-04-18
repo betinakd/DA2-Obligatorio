@@ -5,9 +5,10 @@ using IDataAccess;
 
 namespace BussinesLogic;
 
-public class ExecutionService(ISimClassDataAccess simClassDA) : IExecutionService
+public class ExecutionService(ISimClassDataAccess simClassDA, IExecutionDataAccess executionDataAccess) : IExecutionService
 {
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
+    private readonly IExecutionDataAccess _executionDA = executionDataAccess;
 
     public string ExecuteMethod(string methodName, List<Parameter> parameters, Guid idInstanceType, Guid idReferenceType, string instanceName)
     {
@@ -19,6 +20,11 @@ public class ExecutionService(ISimClassDataAccess simClassDA) : IExecutionServic
         if(!_simClassDA.ExistSimClassById(idReferenceType))
         {
             throw new NonExistentValueLogic("Reference class not found.");
+        }
+
+        if(_executionDA.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
+        {
+            throw new InvalidOperationLogic($"Can not execute {methodName} because it is abstract.");
         }
 
         return null;
