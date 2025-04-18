@@ -28,6 +28,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
+        if(_simMethodDA.MethodVariableRepeatedValues(methodId, localVariable))
+        {
+            throw new InUseValueLogic("Local variable with that name is already in use.");
+        }
+
         return null;
     }
 

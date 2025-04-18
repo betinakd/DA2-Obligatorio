@@ -37,6 +37,31 @@ public class SimMethodServiceTest2
         _mockSimMethodDataAccess!
             .Setup(m => m.ExistMethodById(methodId))
             .Returns(false);
+        _mockSimMethodDataAccess!
+.Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+.Returns(false);
+        _simMethodService!.AddLocalVariable(methodId, localVariable);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddLocalVariable_LocalVariableNameRepeated_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+        };
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+            .Returns(true);
+
         _simMethodService!.AddLocalVariable(methodId, localVariable);
     }
 }
