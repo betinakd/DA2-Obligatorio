@@ -136,4 +136,19 @@ public class SimMethodServiceTest
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.GetMethodById(methodId));
     }
+
+    [TestMethod]
+    public void GetMethodById_ShouldReturnMethod_WhenMethodExists()
+    {
+        var methodId = Guid.NewGuid();
+        var expectedMethod = new SimMethod { Id = methodId };
+
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(expectedMethod);
+
+        var result = _simMethodService!.GetMethodById(methodId);
+
+        Assert.AreEqual(expectedMethod, result);
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
 }

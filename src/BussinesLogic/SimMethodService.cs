@@ -71,7 +71,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
-        return null;
+        return _simMethodDA.GetMethodById(id);
     }
 
     [ExcludeFromCodeCoverage]
