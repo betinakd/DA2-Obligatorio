@@ -47,6 +47,10 @@ public class ExecutionServiceTest
     .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
     .Returns(false);
 
+        _mockExecuteDataAccess!
+.Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+.Returns(false);
+
         _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
     }
 
@@ -75,6 +79,10 @@ public class ExecutionServiceTest
         _mockExecuteDataAccess!
         .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
         .Returns(false);
+
+        _mockExecuteDataAccess!
+.Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+.Returns(false);
 
         _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
     }
@@ -105,6 +113,10 @@ public class ExecutionServiceTest
 .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
 .Returns(false);
 
+        _mockExecuteDataAccess!
+    .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+    .Returns(false);
+
         _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
     }
 
@@ -134,11 +146,15 @@ public class ExecutionServiceTest
             .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
             .Returns(true);
 
+        _mockExecuteDataAccess!
+    .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+    .Returns(false);
+
         _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidOperationLogic))]
     public void ExecuteMethod_ShouldThrow_WhenMethodIsPrivate()
     {
         var methodName = "TestMethod";

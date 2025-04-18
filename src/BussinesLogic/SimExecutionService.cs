@@ -34,7 +34,7 @@ public class ExecutionService(ISimClassDataAccess simClassDA, IExecutionDataAcce
 
         if(_executionDA.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
         {
-            throw new InvalidOperationException($"Can not execute a private method.");
+            throw new InvalidOperationLogic($"Can not execute a private method.");
         }
 
         return null;
