@@ -1,6 +1,7 @@
 using BussinesLogic;
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using IDataAccess;
 using Moq;
 
@@ -79,8 +80,17 @@ public class SimMethodServiceTest
     public void AddMethod_ShouldReturnSimMethod_WhenClassExistsAndMethodIsUnique()
     {
         var classId = Guid.NewGuid();
-        var method = new SimMethod();
-        var expectedMethod = new SimMethod();
+        var method = new SimMethod()
+        {
+            Accesibility = SimAccesibility.Normal,
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            Privacity = SimPrivacity.Public,
+            RelatedClass = new SimClass() { Id = classId, Name = "TestClass" },
+            ReturnType = new SimClass() { Id = Guid.NewGuid(), Name = "TestClass" }
+        };
+
+        var expectedMethod = method;
 
         _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(classId)).Returns(true);
         _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(classId, method)).Returns(false);
