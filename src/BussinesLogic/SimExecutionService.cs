@@ -32,6 +32,11 @@ public class ExecutionService(ISimClassDataAccess simClassDA, IExecutionDataAcce
             throw new InvalidOperationLogic($"Can not execute {methodName} because it is sealed for the instance.");
         }
 
+        if(_executionDA.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
+        {
+            throw new InvalidOperationException($"Can not execute a private method.");
+        }
+
         return null;
     }
 }

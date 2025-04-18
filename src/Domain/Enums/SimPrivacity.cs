@@ -6,17 +6,17 @@ namespace Domain.Enums;
 public enum SimPrivacity
 {
     /// <summary>
-    /// Represents a normal simulation state.
+    /// Represents a Private simulation state.
     /// </summary>
     Private,
 
     /// <summary>
-    /// Represents an abstract simulation state.
+    /// Represents an Protected simulation state.
     /// </summary>
     Protected,
 
     /// <summary>
-    /// Represents a sealed simulation state.
+    /// Represents a Public simulation state.
     /// </summary>
     Public,
 }
