@@ -61,7 +61,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Invocation does not exist.");
         }
 
-        return null;
+        return _simMethodDA.GetInvocationById(id);
     }
 
     [ExcludeFromCodeCoverage]
