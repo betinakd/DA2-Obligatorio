@@ -11,4 +11,5 @@ public interface ISimMethodDataAccess
     bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable);
     LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable);
     bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter);
+    Parameter AddMethodParameter(Guid methodId, Parameter parameter);
 }

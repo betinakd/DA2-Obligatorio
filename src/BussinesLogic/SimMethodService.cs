@@ -51,7 +51,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.CreateMethod(idClass, method);
     }
 
-    public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter)
+    public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
     {
         if(!_simMethodDA.ExistMethodById(methodId))
         {
@@ -63,7 +63,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Parameter with that name is already in use.");
         }
 
-        return null;
+        return _simMethodDA.AddMethodParameter(methodId, parameter);
     }
 
     [ExcludeFromCodeCoverage]

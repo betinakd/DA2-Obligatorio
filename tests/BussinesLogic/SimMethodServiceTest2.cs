@@ -133,4 +133,31 @@ public class SimMethodServiceTest2
 
         _simMethodService!.AddMethodParameter(methodId, parameter);
     }
+
+    [TestMethod]
+    public void AddMethodParameter_ValidInput_ReturnsParameter()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodParameterRepeatedValues(methodId, parameter))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.AddMethodParameter(methodId, parameter))
+            .Returns(parameter);
+
+        var result = _simMethodService!.AddMethodParameter(methodId, parameter);
+
+        Assert.AreEqual(parameter, result);
+        _mockSimMethodDataAccess.Verify(m => m.AddMethodParameter(methodId, parameter), Times.Once);
+    }
 }

@@ -178,8 +178,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 {
                     Id = newAttribute.Id,
                     Name = newAttribute.Name,
-                    MethodId = idMethod,
-                    ClassTypeId = newAttribute.RelatedClass.Id
+                    MethodId = newAttribute.RelatedMethod.Id,
+                    ClassTypeId = newAttribute.Type.Id
                 }
             };
             return response;

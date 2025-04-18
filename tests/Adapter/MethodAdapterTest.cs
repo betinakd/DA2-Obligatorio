@@ -49,18 +49,12 @@ public class MethodAdapterTest
             Type = simClass,
             RelatedMethod = method
         };
-        var simAttribute = new SimAttribute
-        {
-            Id = parameter.Id,
-            Name = parameterName,
-            RelatedClass = simClass
-        };
 
         var mockSimClassService = new Mock<ISimClassService>();
         var mockMethodService = new Mock<IMethodService>();
         mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Returns(simClass);
         mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
-        mockMethodService.Setup(s => s.AddMethodParameter(methodId, It.IsAny<Parameter>())).Returns(simAttribute);
+        mockMethodService.Setup(s => s.AddMethodParameter(methodId, It.IsAny<Parameter>())).Returns(parameter);
 
         var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object);
 
