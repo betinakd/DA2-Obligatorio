@@ -58,6 +58,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
+        if(_simMethodDA.MethodParameterRepeatedValues(methodId, parameter))
+        {
+            throw new InUseValueLogic("Parameter with that name is already in use.");
+        }
+
         return null;
     }
 

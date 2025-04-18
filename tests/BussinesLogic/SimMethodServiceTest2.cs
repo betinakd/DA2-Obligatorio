@@ -111,4 +111,26 @@ public class SimMethodServiceTest2
 
         _simMethodService!.AddMethodParameter(methodId, parameter);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddMethodParameter_ParameterNameRepeated_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodParameterRepeatedValues(methodId, parameter))
+            .Returns(true);
+
+        _simMethodService!.AddMethodParameter(methodId, parameter);
+    }
 }
