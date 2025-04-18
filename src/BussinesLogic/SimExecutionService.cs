@@ -16,6 +16,11 @@ public class ExecutionService(ISimClassDataAccess simClassDA) : IExecutionServic
             throw new NonExistentValueLogic("Instance class not found.");
         }
 
+        if(!_simClassDA.ExistSimClassById(idReferenceType))
+        {
+            throw new NonExistentValueLogic("Reference class not found.");
+        }
+
         return null;
     }
 }
