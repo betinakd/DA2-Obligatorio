@@ -22,6 +22,11 @@ public class ExecutionService(ISimClassDataAccess simClassDA, IExecutionDataAcce
             throw new NonExistentValueLogic("Reference class not found.");
         }
 
+        if(_executionDA.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
+        {
+            throw new NonExistentValueLogic("Method not found in class or its base classes.");
+        }
+
         if(_executionDA.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
         {
             throw new InvalidOperationLogic($"Can not execute {methodName} because it is abstract.");
