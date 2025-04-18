@@ -238,4 +238,173 @@ public class SimMethodServiceTest
         Assert.AreEqual(expectedAttribute, result);
         _mockSimMethodDataAccess.Verify(m => m.AddLocalVariable(methodId, localVariable), Times.Once);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void AddLocalVariable_MethodDoesNotExist_ThrowsNonExistentValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+        };
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+.Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+.Returns(false);
+        _simMethodService!.AddLocalVariable(methodId, localVariable);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddLocalVariable_LocalVariableNameRepeated_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+        };
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+            .Returns(true);
+
+        _simMethodService!.AddLocalVariable(methodId, localVariable);
+    }
+
+    [TestMethod]
+    public void AddLocalVariable_ValidInput_ReturnsLocalVariable()
+    {
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.AddLocalVariable(methodId, localVariable))
+            .Returns(localVariable);
+
+        var result = _simMethodService!.AddLocalVariable(methodId, localVariable);
+
+        Assert.AreEqual(localVariable, result);
+        _mockSimMethodDataAccess.Verify(m => m.AddLocalVariable(methodId, localVariable), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void AddMethodParameter_MethodDoesNotExist_ThrowsNonExistentValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(false);
+
+        _simMethodService!.AddMethodParameter(methodId, parameter);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddMethodParameter_ParameterNameRepeated_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodParameterRepeatedValues(methodId, parameter))
+            .Returns(true);
+
+        _simMethodService!.AddMethodParameter(methodId, parameter);
+    }
+
+    [TestMethod]
+    public void AddMethodParameter_ValidInput_ReturnsParameter()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodParameterRepeatedValues(methodId, parameter))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.AddMethodParameter(methodId, parameter))
+            .Returns(parameter);
+
+        var result = _simMethodService!.AddMethodParameter(methodId, parameter);
+
+        Assert.AreEqual(parameter, result);
+        _mockSimMethodDataAccess.Verify(m => m.AddMethodParameter(methodId, parameter), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void DeleteMethod_MethodDoesNotExist_ThrowsNonExistentValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(false);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    public void DeleteMethod_ValidId_DeletesMethod()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.DeleteMethod(methodId))
+            .Verifiable();
+
+        _simMethodService!.DeleteMethod(methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
+    }
 }
