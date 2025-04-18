@@ -42,6 +42,6 @@ public class ExecutionService(ISimClassDataAccess simClassDA, IExecutionDataAcce
             throw new InvalidOperationLogic($"Can not execute a private method.");
         }
 
-        return null;
+        return _executionDA.GetExecution(methodName, parameters, idInstanceType, idReferenceType);
     }
 }
