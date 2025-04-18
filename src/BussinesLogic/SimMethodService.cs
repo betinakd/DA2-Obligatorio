@@ -64,10 +64,14 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.GetInvocationById(id);
     }
 
-    [ExcludeFromCodeCoverage]
     public SimMethod GetMethodById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(id))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        return null;
     }
 
     [ExcludeFromCodeCoverage]
