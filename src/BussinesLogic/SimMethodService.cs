@@ -49,21 +49,19 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
     }
 
     [ExcludeFromCodeCoverage]
-    public SimMethod CreateClassMethod(string? name, string? returnType, string? accessModifier, bool? isStatic, bool? isAbstract, Guid? classId)
-    {
-        throw new NotImplementedException();
-    }
-
-    [ExcludeFromCodeCoverage]
     public void DeleteMethod(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    [ExcludeFromCodeCoverage]
     public Invocation GetInvocationById(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistInvocationById(id))
+        {
+            throw new NonExistentValueLogic("Invocation does not exist.");
+        }
+
+        return null;
     }
 
     [ExcludeFromCodeCoverage]
