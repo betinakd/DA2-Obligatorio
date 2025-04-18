@@ -66,10 +66,12 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.AddMethodParameter(methodId, parameter);
     }
 
-    [ExcludeFromCodeCoverage]
     public void DeleteMethod(Guid id)
     {
-        throw new NotImplementedException();
+        if(!_simMethodDA.ExistMethodById(id))
+        {
+            throw new NonExistentValueLogic("Method does not exist.");
+        }
     }
 
     [ExcludeFromCodeCoverage]

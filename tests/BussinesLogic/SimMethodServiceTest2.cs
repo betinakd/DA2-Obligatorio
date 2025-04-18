@@ -160,4 +160,17 @@ public class SimMethodServiceTest2
         Assert.AreEqual(parameter, result);
         _mockSimMethodDataAccess.Verify(m => m.AddMethodParameter(methodId, parameter), Times.Once);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void DeleteMethod_MethodDoesNotExist_ThrowsNonExistentValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(false);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
 }
