@@ -81,7 +81,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Parameter does not exist.");
         }
 
-        return null;
+        return _simMethodDA.GetParameterById(id);
     }
 
     [ExcludeFromCodeCoverage]

@@ -12,4 +12,5 @@ public interface ISimMethodDataAccess
     Invocation GetInvocationById(Guid id);
     SimMethod GetMethodById(Guid id);
     bool ExistParameter(Guid id);
+    Parameter GetParameterById(Guid id);
 }
