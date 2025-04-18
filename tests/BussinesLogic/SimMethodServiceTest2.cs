@@ -173,4 +173,21 @@ public class SimMethodServiceTest2
 
         _simMethodService!.DeleteMethod(methodId);
     }
+
+    [TestMethod]
+    public void DeleteMethod_ValidId_DeletesMethod()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.DeleteMethod(methodId))
+            .Verifiable();
+
+        _simMethodService!.DeleteMethod(methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
+    }
 }
