@@ -27,6 +27,11 @@ public class ExecutionService(ISimClassDataAccess simClassDA, IExecutionDataAcce
             throw new InvalidOperationLogic($"Can not execute {methodName} because it is abstract.");
         }
 
+        if(_executionDA.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
+        {
+            throw new InvalidOperationLogic($"Can not execute {methodName} because it is sealed for the instance.");
+        }
+
         return null;
     }
 }
