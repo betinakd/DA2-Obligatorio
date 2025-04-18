@@ -18,7 +18,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
-        return null;
+        return _simMethodDA.CreateInvocation(idMethod, newInvocation);
     }
 
     [ExcludeFromCodeCoverage]
@@ -27,11 +27,9 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         throw new NotImplementedException();
     }
 
-    [ExcludeFromCodeCoverage]
-
     public SimMethod AddMethod(Guid id, SimMethod method)
     {
-        throw new NotImplementedException();
+        return null;
     }
 
     [ExcludeFromCodeCoverage]

@@ -33,4 +33,20 @@ public class SimMethodServiceTest
             _simMethodService!.AddInvocation(methodId, invocation)
         );
     }
+
+    [TestMethod]
+    public void AddInvocation_ShouldReturnInvocation_WhenMethodExists()
+    {
+        var methodId = Guid.NewGuid();
+        var newInvocation = new Invocation();
+        var expectedInvocation = new Invocation();
+
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, newInvocation)).Returns(expectedInvocation);
+
+        var result = _simMethodService!.AddInvocation(methodId, newInvocation);
+
+        Assert.AreEqual(expectedInvocation, result);
+        _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, newInvocation), Times.Once);
+    }
 }
