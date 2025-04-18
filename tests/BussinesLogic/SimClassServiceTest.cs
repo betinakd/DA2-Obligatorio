@@ -1,6 +1,7 @@
 using BussinesLogic;
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using Domain.Exceptions;
 using IDataAccess;
 using Moq;
@@ -30,7 +31,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
         _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
 
-        var result = _simClassService.CreateSimClass("TestClass", false, false, baseClassId);
+        var result = _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId);
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
@@ -38,7 +39,8 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
             s => s.Name == "TestClass" &&
                  s.BaseClass == baseClass &&
-                 s.Id != Guid.Empty)), Times.Once);
+                 s.Id != Guid.Empty &&
+                 s.State == SimAccesibility.Normal)), Times.Once);
 
         Assert.IsNotNull(result);
         Assert.AreEqual("TestClass", result.Name);
@@ -54,7 +56,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
 
         Assert.ThrowsException<DuplicateValueLogic>(() =>
-            _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
+            _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId));
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(It.IsAny<Guid>()), Times.Never);
@@ -68,7 +70,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(false);
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
-            _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
+            _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId));
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
@@ -86,7 +88,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>())).Throws(new SimClassInvalidAttribute("Invalid attribute"));
 
         Assert.ThrowsException<InvalidAttributeLogic>(() =>
-            _simClassService.CreateSimClass("TestClass", false, false, baseClassId));
+            _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId));
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
@@ -104,7 +106,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
         _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
 
-        var result = _simClassService.CreateSimClass("TestClass", false, false, baseClassId);
+        var result = _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId);
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
@@ -112,7 +114,8 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
             s => s.Name == "TestClass" &&
                  s.BaseClass == baseClass &&
-                 s.Id != Guid.Empty)), Times.Once);
+                 s.Id != Guid.Empty &&
+                 s.State == SimAccesibility.Normal)), Times.Once);
 
         Assert.IsNotNull(result);
         Assert.AreEqual("TestClass", result.Name);

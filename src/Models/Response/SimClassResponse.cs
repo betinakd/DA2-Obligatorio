@@ -1,13 +1,12 @@
-﻿using Domain;
-using Domain.Enums;
+﻿using Models.Enums;
+
 namespace Models.Response;
 
-public class SimClassResponse(SimClass simClass)
+public class SimClassResponse()
 {
-    public Guid? Id { get; set; } = simClass.Id;
-    public string? Name { get; set; } = simClass.Name;
-    public bool? IsAbstract { get; set; } = simClass.GetState() == SimAccesibility.Abstract;
-    public bool? IsSealed { get; set; } = simClass.GetState() == SimAccesibility.Sealed;
+    public Guid? Id { get; set; }
+    public string? Name { get; set; }
+    public SimModelsAccesibility State { get; set; }
 
     public string? Message { get; set; }
 }

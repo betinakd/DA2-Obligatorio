@@ -9,7 +9,7 @@ public class SimClass
     private string? _name;
 
     private SimClass? _baseClassField = null;
-    private StateClass? _state = new StateNormal();
+    public SimAccesibility State { get; set; } = SimAccesibility.Normal;
 
     public List<SimAttribute> Attributes { get; set; } = [];
 
@@ -27,22 +27,12 @@ public class SimClass
         }
     }
 
-    public SimAccesibility GetState()
-    {
-        return _state?.GetState() ?? throw new InvalidOperationException("State is not set.");
-    }
-
-    public void SetState(StateClass state)
-    {
-        _state = state;
-    }
-
     public SimClass? BaseClass
     {
         get => _baseClassField;
         set
         {
-            if(value == null || value?.GetState() == SimAccesibility.Sealed)
+            if(value == null || value?.State == SimAccesibility.Sealed)
             {
                 throw new SimClassInvalidAttribute("Cannot set as base a sealed or null Class.");
             }
