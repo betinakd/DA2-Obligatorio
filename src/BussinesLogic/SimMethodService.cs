@@ -21,7 +21,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         return _simMethodDA.CreateInvocation(idMethod, newInvocation);
     }
 
-    public SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable)
+    public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable)
     {
         if(!_simMethodDA.ExistMethodById(methodId))
         {
@@ -33,7 +33,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Local variable with that name is already in use.");
         }
 
-        return null;
+        return _simMethodDA.AddLocalVariable(methodId, localVariable);
     }
 
     public SimMethod AddMethod(Guid idClass, SimMethod method)

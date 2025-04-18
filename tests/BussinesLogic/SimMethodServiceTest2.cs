@@ -64,4 +64,32 @@ public class SimMethodServiceTest2
 
         _simMethodService!.AddLocalVariable(methodId, localVariable);
     }
+
+    [TestMethod]
+    public void AddLocalVariable_ValidInput_ReturnsLocalVariable()
+    {
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
+            Name = "TestVariable",
+            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.AddLocalVariable(methodId, localVariable))
+            .Returns(localVariable);
+
+        var result = _simMethodService!.AddLocalVariable(methodId, localVariable);
+
+        Assert.AreEqual(localVariable, result);
+        _mockSimMethodDataAccess.Verify(m => m.AddLocalVariable(methodId, localVariable), Times.Once);
+    }
 }

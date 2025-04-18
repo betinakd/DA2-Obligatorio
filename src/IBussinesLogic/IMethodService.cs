@@ -6,7 +6,7 @@ public interface IMethodService
 {
     public SimMethod GetMethodById(Guid id);
     public SimAttribute AddMethodParameter(Guid methodId, Parameter parameter);
-    public SimAttribute AddLocalVariable(Guid methodId, LocalVariable localVariable);
+    public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable);
     public Parameter GetParameterById(Guid id);
     public LocalVariable GetVariableById(Guid id);
     public SimMethod AddMethod(Guid id, SimMethod method);
