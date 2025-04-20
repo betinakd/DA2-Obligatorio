@@ -7,6 +7,8 @@ public class SimMethod
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public SimClass? ReturnType { get; set; } = null!;
+    public Guid? RelatedClassId { get; set; }
+
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }
     public SimAccesibility Accesibility { get; set; }

@@ -1,4 +1,7 @@
-﻿using BussinesLogic;
+﻿using System.Diagnostics.CodeAnalysis;
+using Adapter;
+using BussinesLogic;
+using DataAccess;
 using DataAccess.Context;
 using IAdapter;
 using IBussinesLogic;
@@ -7,25 +10,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ServiceFactory;
-
-public static class ServiceFactory
+[ExcludeFromCodeCoverage]
+public static class SimulatorServiceFactory
 {
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services, string? connectionString)
     {
         services.AddScoped<ISimClassAdapter, SimClassAdapter>();
         services.AddScoped<ISimClassService, SimClassService>();
         services.AddScoped<ISimClassDataAccess, SimClassDataAccess>();
         services.AddScoped<IMethodAdapter, MethodAdapter>();
-        services.AddScoped<IMethodService, MethodService>();
-        services.AddScoped<ISimMethodDataAccess, MethodDataAccess>();
+        services.AddScoped<IMethodService, SimMethodService>();
+        services.AddScoped<ISimMethodDataAccess, SimMethodDataAccess>();
         services.AddScoped<IAttributeAdapter, AttributeAdapter>();
         services.AddScoped<ISimAttributeService, SimAttributeService>();
         services.AddScoped<ISimAttributeDataAccess, SimAttributeDataAccess>();
         services.AddScoped<IExecutionAdapter, ExecutionAdapter>();
         services.AddScoped<IExecutionService, ExecutionService>();
         services.AddScoped<IExecutionDataAccess, ExecutionDataAccess>();
-        services.AddDbContext<SimulatorDbContext>(options =>
-            options.UseSqlServer("DefaultConnection"));
+        services.AddDbContext<DbContext, SimulatorDbContext>(options => options.UseSqlServer(connectionString));
 
         return services;
     }

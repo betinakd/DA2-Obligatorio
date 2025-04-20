@@ -15,20 +15,92 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        Configuration(modelBuilder);
         DataSeed(modelBuilder);
+    }
+
+    private void Configuration(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<SimClass>()
+            .HasOne(s => s.BaseClass) // una clase tiene UNA clase base
+            .WithMany() // una clase base puede tener MUCHAS derivadas (sin propiedad inversa)
+            .HasForeignKey("BaseClassId") // FK en la misma tabla
+            .OnDelete(DeleteBehavior.Restrict);      // evita eliminar en cascada recursiva
+
+        modelBuilder.Entity<SimAttribute>()
+                    .HasOne(a => a.RelatedClass)
+                    .WithMany(c => c.Attributes)
+                    .HasForeignKey(a => a.RelatedClassId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SimMethod>()
+                    .HasOne(m => m.RelatedClass)
+                    .WithMany(c => c.Methods)
+                    .HasForeignKey(m => m.RelatedClassId)
+                    .OnDelete(DeleteBehavior.Cascade);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
     {
-        var objectClass = new SimClass { Name = "Object", State = SimAccesibility.Normal };
+        var objectClassId = Guid.NewGuid();
+
         modelBuilder.Entity<SimClass>().HasData(
-            objectClass,
-            new SimClass { Name = "int", BaseClass = objectClass },
-            new SimClass { Name = "string", BaseClass = objectClass },
-            new SimClass { Name = "float", BaseClass = objectClass },
-            new SimClass { Name = "double", BaseClass = objectClass },
-            new SimClass { Name = "decimal", BaseClass = objectClass },
-            new SimClass { Name = "char", BaseClass = objectClass },
-            new SimClass { Name = "bool", BaseClass = objectClass });
+            new SimClass
+            {
+                Id = objectClassId,
+                Name = "Object",
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "int",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "string",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "float",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "double",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "decimal",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "char",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            },
+            new SimClass
+            {
+                Id = Guid.NewGuid(),
+                Name = "bool",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal
+            });
     }
 }

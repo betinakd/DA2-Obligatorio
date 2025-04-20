@@ -7,6 +7,7 @@ public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private string? _name;
+    public Guid? BaseClassId { get; set; }
 
     private SimClass? _baseClassField = null;
     public SimAccesibility State { get; set; } = SimAccesibility.Normal;
