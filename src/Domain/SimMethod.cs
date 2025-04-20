@@ -10,4 +10,7 @@ public class SimMethod
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }
     public SimAccesibility Accesibility { get; set; }
+    public List<Parameter> Parameters { get; set; } = [];
+    public List<LocalVariable> LocalVariables { get; set; } = [];
+    public List<Invocation> Invocations { get; set; } = [];
 }
