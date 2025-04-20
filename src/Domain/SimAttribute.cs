@@ -11,7 +11,7 @@ public class SimAttribute
     public SimClass? Type { get; set; }
     public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
     public required SimClass RelatedClass { get; set; }
-
+    public Guid RelatedClassId { get; set; }
     public string Name
     {
         get => _name;
