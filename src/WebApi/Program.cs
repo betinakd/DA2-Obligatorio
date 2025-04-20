@@ -4,6 +4,7 @@ using WebApi.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// web services
 builder.Services.AddControllers(options => options.Filters.Add<ExceptionFilter>());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
