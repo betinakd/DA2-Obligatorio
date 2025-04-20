@@ -24,10 +24,21 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<SimClass>()
-            .HasOne(s => s.BaseClass) // una clase tiene UNA clase base
-            .WithMany() // una clase base puede tener MUCHAS derivadas (sin propiedad inversa)
-            .HasForeignKey("BaseClassId") // FK en la misma tabla
-            .OnDelete(DeleteBehavior.Restrict);      // evita eliminar en cascada recursiva
+            .HasOne(s => s.BaseClass)
+            .WithMany()
+            .HasForeignKey("BaseClassId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<SimClass>()
+            .HasMany(s => s.Methods)
+            .WithOne(m => m.RelatedClass)
+            .HasForeignKey(m => m.RelatedClassId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SimClass>()
+            .HasMany(s => s.Attributes)
+            .WithOne(m => m.RelatedClass)
+            .HasForeignKey(m => m.RelatedClassId);
 
         modelBuilder.Entity<SimAttribute>()
                     .HasOne(a => a.RelatedClass)
@@ -40,6 +51,48 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .WithMany(c => c.Methods)
                     .HasForeignKey(m => m.RelatedClassId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SimMethod>()
+                    .HasMany(m => m.Parameters)
+                    .WithOne(p => p.RelatedMethod)
+                    .HasForeignKey(p => p.RelatedMethodId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SimMethod>()
+                    .HasMany(m => m.LocalVariables)
+                    .WithOne(v => v.RelatedMethod)
+                    .HasForeignKey(v => v.RelatedMethodId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Parameter>()
+                    .HasOne(p => p.RelatedMethod)
+                    .WithMany(m => m.Parameters)
+                    .HasForeignKey(p => p.RelatedMethodId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<LocalVariable>()
+                    .HasOne(v => v.RelatedMethod)
+                    .WithMany(m => m.LocalVariables)
+                    .HasForeignKey(v => v.RelatedMethodId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SimMethod>()
+                    .HasMany(i => i.Invocations)
+                    .WithOne()
+                    .HasForeignKey(v => v.RelatedMethodId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SimAttribute>()
+                    .HasOne(a => a.Type)
+                    .WithMany()
+                    .HasForeignKey("TypeId")
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Invocation>()
+                    .HasOne(i => i.RelatedMethod)
+                    .WithMany(m => m.Invocations)
+                    .HasForeignKey(i => i.RelatedMethodId)
+                    .OnDelete(DeleteBehavior.Cascade);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
@@ -51,7 +104,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             {
                 Id = objectClassId,
                 Name = "Object",
-                State = SimAccesibility.Normal
+                State = SimAccesibility.Normal,
             },
             new SimClass
             {
@@ -101,6 +154,15 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "bool",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal
+            });
+
+        modelBuilder.Entity<SimMethod>().HasData(
+            new SimMethod
+            {
+                Id = Guid.NewGuid(),
+                Name = "Equals",
+                Accesibility = SimAccesibility.Normal,
+                RelatedClassId = objectClassId
             });
     }
 }
