@@ -69,4 +69,18 @@ public class SimClassDataAccessTest
         Assert.AreEqual(simClass.Id, result!.Id);
         Assert.AreEqual(simClass.Name, result.Name);
     }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldRemoveSimClassFromDatabase_WhenClassExists()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass { Id = simClassId, Name = "Test Class" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        _simClassDataAccess!.DeleteSimClass(simClassId);
+
+        var result = _context.SimClasses.FirstOrDefault(c => c.Id == simClassId);
+        Assert.IsNull(result);
+    }
 }
