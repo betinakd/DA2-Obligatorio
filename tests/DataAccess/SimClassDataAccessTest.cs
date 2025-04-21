@@ -56,4 +56,17 @@ public class SimClassDataAccessTest
         Assert.AreEqual(simClassId, result.Id);
         Assert.AreEqual("Test Class", result.Name);
     }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldAddSimClassToDatabase()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "Test Class" };
+
+        _simClassDataAccess!.CreateSimClass(simClass);
+
+        var result = _context.SimClasses.FirstOrDefault(c => c.Id == simClass.Id);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simClass.Id, result!.Id);
+        Assert.AreEqual(simClass.Name, result.Name);
+    }
 }
