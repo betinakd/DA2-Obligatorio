@@ -26,7 +26,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<SimClass>()
             .HasOne(s => s.BaseClass)
             .WithMany()
-            .HasForeignKey("BaseClassId")
+            .HasForeignKey(b => b.BaseClassId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<SimClass>()
@@ -68,7 +68,13 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasOne(p => p.RelatedMethod)
                     .WithMany(m => m.Parameters)
                     .HasForeignKey(p => p.RelatedMethodId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Parameter>()
+                    .HasOne(p => p.Type)
+                    .WithMany()
+                    .HasForeignKey(p => p.TypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<LocalVariable>()
                     .HasOne(v => v.RelatedMethod)
@@ -91,7 +97,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<SimAttribute>()
                     .HasOne(a => a.Type)
                     .WithMany()
-                    .HasForeignKey("TypeId")
+                    .HasForeignKey(b => b.TypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Invocation>()

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FixReturnTypeSeed : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -169,20 +169,20 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "BaseClassId", "Name", "State" },
                 values: new object[,]
                 {
-                    { new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), null, "Object", 2 },
-                    { new Guid("1f1c058f-d16f-4026-ad14-cfaf5dacd162"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "double", 2 },
-                    { new Guid("69944855-67ad-47dc-9950-6c653b9d29eb"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "float", 2 },
-                    { new Guid("6d0b9c8e-4cc7-472c-9835-c9ee7456317c"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "string", 2 },
-                    { new Guid("ada0ea3d-1087-47db-a128-8015e0c966e6"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "char", 2 },
-                    { new Guid("ba2feee1-2f3d-4b90-af73-6d949b4ac453"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "int", 2 },
-                    { new Guid("dd58c2f0-4606-4fff-ad0b-0ea5b8808c08"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "decimal", 2 },
-                    { new Guid("ead16992-fbcd-44d6-a92c-db535c962582"), new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), "bool", 2 }
+                    { new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), null, "Object", 2 },
+                    { new Guid("155777ae-6e2e-4137-9019-a7e909f4184c"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "decimal", 2 },
+                    { new Guid("1ac3a574-fcdf-4ecf-9a0c-7d5a181fae19"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "float", 2 },
+                    { new Guid("a101c08b-80fe-4123-9d06-bb61fc6e5d6e"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "string", 2 },
+                    { new Guid("a3bd3704-226e-40a2-921e-f0f29bfc61a8"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "bool", 2 },
+                    { new Guid("b5c3d936-17a1-4466-8079-ab14ae01b17a"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "char", 2 },
+                    { new Guid("c6df8671-e785-4f72-b2fa-93c1ebef1aa2"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "double", 2 },
+                    { new Guid("ef81f642-4a4a-4423-88c1-d81f8f2a5843"), new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), "int", 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "SimMethods",
                 columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturTypeId" },
-                values: new object[] { new Guid("b2320cd7-26f5-4503-b319-1919459a21bf"), 2, "Equals", 0, new Guid("8ffcbe9b-8013-434c-b430-c910f791e602"), new Guid("ead16992-fbcd-44d6-a92c-db535c962582") });
+                values: new object[] { new Guid("14bd333c-406a-4e1a-bb77-44a898d92c7d"), 2, "Equals", 0, new Guid("99a4b484-f05b-4758-a15f-e1170ea00fd0"), new Guid("a3bd3704-226e-40a2-921e-f0f29bfc61a8") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invocations_RelatedMethodId",

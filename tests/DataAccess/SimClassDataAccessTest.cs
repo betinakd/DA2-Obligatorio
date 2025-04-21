@@ -115,4 +115,42 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(isInUse);
     }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInSimMethods()
+    {
+        var simClassId = Guid.NewGuid();
+        var simMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            RelatedClassId = simClassId,
+            Name = "Test Method"
+        };
+
+        _context.SimMethods.Add(simMethod);
+        _context.SaveChanges();
+
+        var isInUse = _simClassDataAccess!.InUseByOther(simClassId);
+
+        Assert.IsTrue(isInUse);
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInParameters()
+    {
+        var typeId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            TypeId = typeId,
+            Name = "Test Parameter"
+        };
+
+        _context.Parameters.Add(parameter);
+        _context.SaveChanges();
+
+        var isInUse = _simClassDataAccess!.InUseByOther(typeId);
+
+        Assert.IsTrue(isInUse);
+    }
 }

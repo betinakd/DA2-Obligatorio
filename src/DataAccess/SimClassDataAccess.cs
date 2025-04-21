@@ -1,22 +1,27 @@
-using System.Diagnostics.CodeAnalysis;
 using DataAccess.Context;
 using Domain;
 using IDataAccess;
 
 namespace DataAccess;
-[ExcludeFromCodeCoverage]
+
 public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAccess
 {
     private readonly SimulatorDbContext _context = context;
 
     public void CreateSimClass(SimClass simClass)
     {
-        throw new NotImplementedException();
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
     }
 
     public void DeleteSimClass(Guid id)
     {
-        throw new NotImplementedException();
+        var simClass = _context.SimClasses.FirstOrDefault(c => c.Id == id);
+        if(simClass != null)
+        {
+            _context.SimClasses.Remove(simClass);
+            _context.SaveChanges();
+        }
     }
 
     public bool ExistSimClassById(Guid id)
@@ -41,7 +46,12 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public bool InUseByOther(Guid id)
     {
-        throw new NotImplementedException();
+        var baseClass = _context.SimClasses.Any(c => c.BaseClassId == id);
+        var attribute = _context.SimAttributes.Any(c => c.RelatedClassId == id || c.TypeId == id);
+        var method = _context.SimMethods.Any(c => c.RelatedClassId == id);
+        var parameter = _context.Parameters.Any(c => c.TypeId == id);
+
+        return baseClass || attribute || method || parameter;
     }
 
     public void UpdateSimClass(SimClass simClass)
