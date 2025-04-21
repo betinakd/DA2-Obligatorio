@@ -113,7 +113,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("Privacity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("RelatedClassId")
+                    b.Property<Guid?>("RelatedClassId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("TypeId")
@@ -152,56 +152,56 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "Object",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("6bcaef21-441d-4d61-a8c8-96c9ac3c9cd2"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("f2bdcb72-86b4-4546-9b98-94ee3e6f6862"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "int",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("6410546b-ab34-4168-9d5e-c434400dcef2"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("0ea21daa-75d4-4072-ad0c-97cbf5e806bd"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "string",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("51e7d7df-c95c-4e93-ad81-2d6371aaf7a8"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("db3531f5-2430-4ef5-a07c-158e217c0d40"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "float",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("465ea3e8-af4f-4f03-adf7-c8003c30a259"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("dc1f15a3-65b3-4f5b-a4bd-a19e51c95038"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "double",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("083aa66d-50d6-48ea-b0d2-17376e66c072"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("2f6e81fd-d9f3-4b3b-8495-18db97a180d8"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "decimal",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("e05387be-86de-4edd-bb56-1624fb55439e"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("b5467b9b-29be-4986-ac3f-b69c6116f0ff"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "char",
                             State = 2
                         },
                         new
                         {
-                            Id = new Guid("1a77b10e-c125-4f2f-808c-286546e2afba"),
-                            BaseClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d"),
+                            Id = new Guid("3a7c1a39-708a-408d-b360-5ac1b9e77ef5"),
+                            BaseClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
                             Name = "bool",
                             State = 2
                         });
@@ -226,25 +226,26 @@ namespace DataAccess.Migrations
                     b.Property<Guid?>("RelatedClassId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReturnTypeId")
+                    b.Property<Guid?>("ReturTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RelatedClassId");
 
-                    b.HasIndex("ReturnTypeId");
+                    b.HasIndex("ReturTypeId");
 
                     b.ToTable("SimMethods");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bbe54e44-2ccd-4c0e-9379-d5ac3cc5f0b2"),
+                            Id = new Guid("b48d1779-02c9-4048-999d-230d7e66b978"),
                             Accesibility = 2,
                             Name = "Equals",
                             Privacity = 0,
-                            RelatedClassId = new Guid("450360bc-385d-4d28-8f4b-74fb804bd34d")
+                            RelatedClassId = new Guid("504f38cd-996c-4845-a703-5a449050c775"),
+                            ReturTypeId = new Guid("3a7c1a39-708a-408d-b360-5ac1b9e77ef5")
                         });
                 });
 
@@ -253,7 +254,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Domain.SimMethod", "RelatedMethod")
                         .WithMany("Invocations")
                         .HasForeignKey("RelatedMethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("RelatedMethod");
                 });
@@ -299,13 +300,12 @@ namespace DataAccess.Migrations
                     b.HasOne("Domain.SimClass", "RelatedClass")
                         .WithMany("Attributes")
                         .HasForeignKey("RelatedClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.SimClass", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("RelatedClass");
 
@@ -331,7 +331,8 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Domain.SimClass", "ReturnType")
                         .WithMany()
-                        .HasForeignKey("ReturnTypeId");
+                        .HasForeignKey("ReturTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("RelatedClass");
 

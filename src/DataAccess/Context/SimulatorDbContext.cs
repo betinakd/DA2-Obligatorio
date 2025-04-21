@@ -44,7 +44,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasOne(a => a.RelatedClass)
                     .WithMany(c => c.Attributes)
                     .HasForeignKey(a => a.RelatedClassId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<SimMethod>()
                     .HasOne(m => m.RelatedClass)
@@ -82,22 +82,29 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasForeignKey(v => v.RelatedMethodId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<SimMethod>()
+                    .HasOne(m => m.ReturnType)
+                    .WithMany()
+                    .HasForeignKey(m => m.ReturTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<SimAttribute>()
                     .HasOne(a => a.Type)
                     .WithMany()
                     .HasForeignKey("TypeId")
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Invocation>()
                     .HasOne(i => i.RelatedMethod)
                     .WithMany(m => m.Invocations)
                     .HasForeignKey(i => i.RelatedMethodId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
     {
         var objectClassId = Guid.NewGuid();
+        var boolClassId = Guid.NewGuid();
 
         modelBuilder.Entity<SimClass>().HasData(
             new SimClass
@@ -150,7 +157,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             },
             new SimClass
             {
-                Id = Guid.NewGuid(),
+                Id = boolClassId,
                 Name = "bool",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal
@@ -159,10 +166,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<SimMethod>().HasData(
             new SimMethod
             {
-                Id = Guid.NewGuid(),
                 Name = "Equals",
                 Accesibility = SimAccesibility.Normal,
-                RelatedClassId = objectClassId
+                RelatedClassId = objectClassId,
+                ReturTypeId = boolClassId
             });
     }
 }

@@ -1,11 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
+using DataAccess.Context;
 using Domain;
 using IDataAccess;
 
 namespace DataAccess;
 [ExcludeFromCodeCoverage]
-public class SimClassDataAccess : ISimClassDataAccess
+public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAccess
 {
+    private readonly SimulatorDbContext _context = context;
+
     public void CreateSimClass(SimClass simClass)
     {
         throw new NotImplementedException();
@@ -18,7 +21,7 @@ public class SimClassDataAccess : ISimClassDataAccess
 
     public bool ExistSimClassById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.Any(c => c.Id == id);
     }
 
     public bool ExistSimClassName(string name)
@@ -33,7 +36,7 @@ public class SimClassDataAccess : ISimClassDataAccess
 
     public SimClass GetSimClassById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.FirstOrDefault(c => c.Id == id);
     }
 
     public bool InUseByOther(Guid id)
