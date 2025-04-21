@@ -1,6 +1,7 @@
 using DataAccess;
 using DataAccess.Context;
 using Domain;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Tests.DataAccess;
@@ -96,6 +97,21 @@ public class SimClassDataAccessTest
         _context.SaveChanges();
 
         var isInUse = _simClassDataAccess!.InUseByOther(baseClassId);
+
+        Assert.IsTrue(isInUse);
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInSimAttributes()
+    {
+        var simClassId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var simAttribute = new SimAttribute() { Id = Guid.NewGuid(), RelatedClassId = simClassId, TypeId = typeId, Privacity = SimPrivacity.Public, Name = "Vehiculo", RelatedClass = new SimClass { Id = simClassId, Name = "Test1" }, Type = new SimClass { Id = typeId, Name = "Test2" } };
+
+        _context.SimAttributes.Add(simAttribute);
+        _context.SaveChanges();
+
+        var isInUse = _simClassDataAccess!.InUseByOther(simClassId);
 
         Assert.IsTrue(isInUse);
     }
