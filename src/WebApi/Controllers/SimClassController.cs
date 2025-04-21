@@ -21,9 +21,9 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     [HttpPost]
     public IActionResult CreateSimClass([FromBody] SimClassRequest newClass)
     {
-        var simClassResponse = _simClassAdapter.CreateSimClass(newClass);
+        var createdClass = _simClassAdapter.CreateSimClass(newClass);
 
-        return CreatedAtAction(nameof(GetInfoClass), new { id = simClassResponse.Id }, simClassResponse);
+        return CreatedAtAction(nameof(GetInfoClass), new { classId = createdClass.Id }, createdClass);
     }
 
     [HttpPut]

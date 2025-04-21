@@ -8,6 +8,7 @@ public class SimAttribute
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
+    public Guid? TypeId { get; set; }
     public SimClass? Type { get; set; }
     public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
     public required SimClass RelatedClass { get; set; }

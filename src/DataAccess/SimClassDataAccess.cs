@@ -1,48 +1,71 @@
-using System.Diagnostics.CodeAnalysis;
+using DataAccess.Context;
 using Domain;
 using IDataAccess;
 
 namespace DataAccess;
-[ExcludeFromCodeCoverage]
-public class SimClassDataAccess : ISimClassDataAccess
+
+public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAccess
 {
+    private readonly SimulatorDbContext _context = context;
+
     public void CreateSimClass(SimClass simClass)
     {
-        throw new NotImplementedException();
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
     }
 
     public void DeleteSimClass(Guid id)
     {
-        throw new NotImplementedException();
+        var simClass = _context.SimClasses.FirstOrDefault(c => c.Id == id);
+        if(simClass != null)
+        {
+            _context.SimClasses.Remove(simClass);
+            _context.SaveChanges();
+        }
     }
 
     public bool ExistSimClassById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.Any(c => c.Id == id);
     }
 
     public bool ExistSimClassName(string name)
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.Any(c => c.Name.ToLower() == name.ToLower());
     }
 
     public IList<SimClass> GetAllSimClasses()
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.ToList();
     }
 
     public SimClass GetSimClassById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.FirstOrDefault(c => c.Id == id);
     }
 
     public bool InUseByOther(Guid id)
     {
-        throw new NotImplementedException();
+        var baseClass = _context.SimClasses.Any(c => c.BaseClassId == id);
+        var attribute = _context.SimAttributes.Any(c => c.RelatedClassId == id || c.TypeId == id);
+        var method = _context.SimMethods.Any(c => c.RelatedClassId == id);
+        var parameter = _context.Parameters.Any(c => c.TypeId == id);
+        var localVar = _context.LocalVariables.Any(c => c.TypeId == id);
+        var invocations = _context.Invocations.Any(c => c.ReferenceId == id);
+
+        return baseClass || attribute || method || parameter || localVar || invocations;
     }
 
     public void UpdateSimClass(SimClass simClass)
     {
-        throw new NotImplementedException();
+        var existingSimClass = _context.SimClasses.FirstOrDefault(c => c.Id == simClass.Id);
+        if(existingSimClass != null)
+        {
+            existingSimClass.Name = simClass.Name;
+            existingSimClass.BaseClassId = simClass.BaseClassId;
+            existingSimClass.State = simClass.State;
+
+            _context.SaveChanges();
+        }
     }
 }
