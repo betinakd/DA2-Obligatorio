@@ -58,6 +58,14 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public void UpdateSimClass(SimClass simClass)
     {
-        throw new NotImplementedException();
+        var existingSimClass = _context.SimClasses.FirstOrDefault(c => c.Id == simClass.Id);
+        if(existingSimClass != null)
+        {
+            existingSimClass.Name = simClass.Name;
+            existingSimClass.BaseClassId = simClass.BaseClassId;
+            existingSimClass.State = simClass.State;
+
+            _context.SaveChanges();
+        }
     }
 }

@@ -210,4 +210,36 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(exists);
     }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldUpdateExistingSimClass()
+    {
+        var simClassId = Guid.NewGuid();
+        var originalSimClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "Original Name",
+            BaseClassId = Guid.NewGuid(),
+            State = SimAccesibility.Abstract
+        };
+
+        _context.SimClasses.Add(originalSimClass);
+        _context.SaveChanges();
+
+        var updatedSimClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "Updated Name",
+            BaseClassId = Guid.NewGuid(),
+            State = SimAccesibility.Normal
+        };
+
+        _simClassDataAccess!.UpdateSimClass(updatedSimClass);
+
+        var result = _context.SimClasses.FirstOrDefault(c => c.Id == simClassId);
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Updated Name", result!.Name);
+        Assert.AreEqual(updatedSimClass.BaseClassId, result.BaseClassId);
+        Assert.AreEqual(SimAccesibility.Normal, result.State);
+    }
 }
