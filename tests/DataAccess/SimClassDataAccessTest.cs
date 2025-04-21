@@ -41,4 +41,19 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(exists);
     }
+
+    [TestMethod]
+    public void GetSimClassById_ShouldReturnSimClass_WhenClassExists()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass { Id = simClassId, Name = "Test Class" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.GetSimClassById(simClassId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simClassId, result.Id);
+        Assert.AreEqual("Test Class", result.Name);
+    }
 }
