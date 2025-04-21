@@ -83,4 +83,20 @@ public class SimClassDataAccessTest
         var result = _context.SimClasses.FirstOrDefault(c => c.Id == simClassId);
         Assert.IsNull(result);
     }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInBaseClassId()
+    {
+        var baseClassId = Guid.NewGuid();
+        var baseClass = new SimClass { Id = baseClassId, Name = "Base Class" };
+        var referencingClass = new SimClass { Id = Guid.NewGuid(), Name = "Referencing Class", BaseClassId = baseClassId, BaseClass = baseClass };
+
+        _context.SimClasses.Add(baseClass);
+        _context.SimClasses.Add(referencingClass);
+        _context.SaveChanges();
+
+        var isInUse = _simClassDataAccess!.InUseByOther(baseClassId);
+
+        Assert.IsTrue(isInUse);
+    }
 }
