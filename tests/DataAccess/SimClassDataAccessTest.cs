@@ -176,4 +176,26 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(isInUse);
     }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInInvocations()
+    {
+        var referenceId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            ReferenceId = referenceId,
+            MethodName = "Test",
+            RelatedMethodId = methodId,
+            RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
+        };
+
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var isInUse = _simClassDataAccess!.InUseByOther(referenceId);
+
+        Assert.IsTrue(isInUse);
+    }
 }
