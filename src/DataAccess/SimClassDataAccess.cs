@@ -31,7 +31,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public bool ExistSimClassName(string name)
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.Any(c => c.Name.ToLower() == name.ToLower());
     }
 
     public IList<SimClass> GetAllSimClasses()

@@ -198,4 +198,16 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(isInUse);
     }
+
+    [TestMethod]
+    public void ExistSimClassName_ShouldReturnTrue_WhenNameExists()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "Test Class" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var exists = _simClassDataAccess!.ExistSimClassName("test class");
+
+        Assert.IsTrue(exists);
+    }
 }
