@@ -82,6 +82,12 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasForeignKey(v => v.RelatedMethodId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<LocalVariable>()
+                    .HasOne(v => v.Type)
+                    .WithMany()
+                    .HasForeignKey(v => v.TypeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<SimMethod>()
                     .HasMany(i => i.Invocations)
                     .WithOne()

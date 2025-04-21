@@ -153,4 +153,27 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(isInUse);
     }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInLocalVariables()
+    {
+        var typeId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = Guid.NewGuid(),
+            TypeId = typeId,
+            Name = "Test Local Variable",
+            RelatedMethodId = methodId,
+            Type = new SimClass { Id = typeId, Name = "Test Type" },
+            RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
+        };
+
+        _context.LocalVariables.Add(localVariable);
+        _context.SaveChanges();
+
+        var isInUse = _simClassDataAccess!.InUseByOther(typeId);
+
+        Assert.IsTrue(isInUse);
+    }
 }

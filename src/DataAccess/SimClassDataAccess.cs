@@ -50,8 +50,9 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
         var attribute = _context.SimAttributes.Any(c => c.RelatedClassId == id || c.TypeId == id);
         var method = _context.SimMethods.Any(c => c.RelatedClassId == id);
         var parameter = _context.Parameters.Any(c => c.TypeId == id);
+        var localVar = _context.LocalVariables.Any(c => c.TypeId == id);
 
-        return baseClass || attribute || method || parameter;
+        return baseClass || attribute || method || parameter || localVar;
     }
 
     public void UpdateSimClass(SimClass simClass)
