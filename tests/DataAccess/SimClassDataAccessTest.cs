@@ -242,4 +242,22 @@ public class SimClassDataAccessTest
         Assert.AreEqual(updatedSimClass.BaseClassId, result.BaseClassId);
         Assert.AreEqual(SimAccesibility.Normal, result.State);
     }
+
+    [TestMethod]
+    public void GetAllSimClasses_ShouldReturnAllSimClasses()
+    {
+        var simClass1 = new SimClass { Id = Guid.NewGuid(), Name = "Class 1" };
+        var simClass2 = new SimClass { Id = Guid.NewGuid(), Name = "Class 2" };
+
+        _context.SimClasses.Add(simClass1);
+        _context.SimClasses.Add(simClass2);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.GetAllSimClasses();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Count);
+        Assert.IsTrue(result.Any(c => c.Name == "Class 1"));
+        Assert.IsTrue(result.Any(c => c.Name == "Class 2"));
+    }
 }

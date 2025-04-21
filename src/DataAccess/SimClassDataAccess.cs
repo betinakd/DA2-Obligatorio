@@ -36,7 +36,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public IList<SimClass> GetAllSimClasses()
     {
-        throw new NotImplementedException();
+        return _context.SimClasses.ToList();
     }
 
     public SimClass GetSimClassById(Guid id)
