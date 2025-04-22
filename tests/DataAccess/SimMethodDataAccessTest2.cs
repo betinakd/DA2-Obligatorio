@@ -72,4 +72,29 @@ public class SimMethodDataAccessTest2
 
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public void GetVariableById_ReturnsVariable_WhenExists()
+    {
+        var variableId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var localVariable = new LocalVariable()
+        {
+            Id = variableId,
+            TypeId = typeId,
+            Name = "TestLocalVariable",
+            RelatedMethodId = methodId,
+            Type = new SimClass { Id = typeId, Name = "TestType" },
+            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
+        };
+        _context.LocalVariables.Add(localVariable);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.GetVariableById(variableId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(variableId, result.Id);
+        Assert.AreEqual("TestLocalVariable", result.Name);
+    }
 }

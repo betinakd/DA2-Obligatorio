@@ -79,7 +79,7 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public LocalVariable GetVariableById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.LocalVariables.FirstOrDefault(v => v.Id == id);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
