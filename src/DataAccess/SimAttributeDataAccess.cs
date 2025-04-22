@@ -1,15 +1,20 @@
 using System.Diagnostics.CodeAnalysis;
+using DataAccess.Context;
 using Domain;
 using IDataAccess;
 
 namespace DataAccess;
 
-[ExcludeFromCodeCoverage]
-public class SimAttributeDataAccess : ISimAttributeDataAccess
+public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeDataAccess
 {
+    private readonly SimulatorDbContext _context = context;
     public SimAttribute CreateAttribute(Guid classId, SimAttribute attribute)
     {
-        throw new NotImplementedException();
+        attribute.RelatedClassId = classId;
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        return attribute;
     }
 
     public void DeleteAttribute(Guid attributeId)
