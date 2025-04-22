@@ -159,4 +159,14 @@ public class SimMethodDataAccessTest
 
         Assert.IsTrue(exists);
     }
+
+    [TestMethod]
+    public void ExistInvocationById_ShouldReturnFalse_WhenInvocationDoesNotExist()
+    {
+        var nonExistentId = Guid.NewGuid();
+
+        var exists = _simMethodDataAccess.ExistInvocationById(nonExistentId);
+
+        Assert.IsFalse(exists);
+    }
 }
