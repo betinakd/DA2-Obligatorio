@@ -78,4 +78,27 @@ public class SimMethodDataAccessTest
         Assert.AreEqual(parameter.RelatedMethodId, parameterInDb.RelatedMethodId);
         Assert.AreEqual(parameter.Id, result.Id);
     }
+
+    [TestMethod]
+    public void CreateInvocation_ShouldAddInvocationToDatabase()
+    {
+        var referenceId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            ReferenceId = referenceId,
+            MethodName = "Test",
+            RelatedMethodId = methodId,
+            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
+        };
+
+        var result = _simMethodDataAccess.CreateInvocation(methodId, invocation);
+
+        var invocationInDb = _context.Invocations.FirstOrDefault(i => i.Id == invocation.Id);
+        Assert.IsNotNull(invocationInDb);
+        Assert.AreEqual(invocation.RelatedMethodId, invocationInDb.RelatedMethodId);
+        Assert.AreEqual(invocation.Id, result.Id);
+        Assert.AreEqual(invocation.ReferenceId, invocationInDb.ReferenceId);
+    }
 }

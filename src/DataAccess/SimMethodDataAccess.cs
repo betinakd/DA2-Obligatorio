@@ -24,7 +24,9 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Invocation CreateInvocation(Guid idMethod, Invocation newInvocation)
     {
-        throw new NotImplementedException();
+        _context.Invocations.Add(newInvocation);
+        _context.SaveChanges();
+        return newInvocation;
     }
 
     public SimMethod CreateMethod(Guid idClass, SimMethod method)
