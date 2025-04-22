@@ -54,7 +54,15 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public bool ExistsMethodInClass(Guid idClass, SimMethod method)
     {
-        throw new NotImplementedException();
+        return _context.SimMethods
+            .Where(m => m.RelatedClassId == idClass && m.Name == method.Name)
+            .AsEnumerable()
+            .Any(m =>
+                m.Parameters.Count == method.Parameters.Count &&
+                m.Parameters.All(p =>
+                    method.Parameters.Any(mp =>
+                        mp.Name == p.Name &&
+                        mp.TypeId == p.TypeId)));
     }
 
     public bool ExistVariableById(Guid id)

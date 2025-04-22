@@ -192,4 +192,81 @@ public class SimMethodDataAccessTest2
 
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    public void ExistsMethodInClass_ReturnsTrue_WhenMethodWithSameSignatureExists()
+    {
+        var classId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            Parameters =
+        [
+            new Parameter { Id = Guid.NewGuid(), Name = "param1", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param2", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param3", TypeId = typeId },
+        ]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.Parameters.AddRange(method.Parameters);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "TestMethod",
+            Parameters =
+        [
+            new Parameter { Id = Guid.NewGuid(), Name = "param1", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param2", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param3", TypeId = typeId },
+        ]
+        };
+
+        var result = _simMethodDataAccess.ExistsMethodInClass(classId, methodToCheck);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void ExistsMethodInClass_ReturnsFalse_WhenMethodWithSameSignatureNotExists()
+    {
+        var classId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            Parameters =
+        [
+            new Parameter { Id = Guid.NewGuid(), Name = "param1", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param2", TypeId = typeId },
+        ]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.Parameters.AddRange(method.Parameters);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "TestMethod",
+            Parameters =
+        [
+            new Parameter { Id = Guid.NewGuid(), Name = "param1", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param2", TypeId = typeId },
+            new Parameter { Id = Guid.NewGuid(), Name = "param3", TypeId = typeId },
+        ]
+        };
+
+        var result = _simMethodDataAccess.ExistsMethodInClass(classId, methodToCheck);
+
+        Assert.IsFalse(result);
+    }
 }
