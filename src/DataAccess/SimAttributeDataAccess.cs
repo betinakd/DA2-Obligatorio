@@ -54,7 +54,8 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public bool ExistAttributeName(Guid classId, string attributeName)
     {
-        throw new NotImplementedException();
+        return _context.SimAttributes
+            .Any(a => a.RelatedClassId == classId && a.Name == attributeName);
     }
 
     public bool InUseByOther(Guid attributeId)
