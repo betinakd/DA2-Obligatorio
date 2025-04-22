@@ -19,7 +19,7 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
             return attribute;
         }
-        catch(DbUpdateException ex)
+        catch(Exception ex)
         {
             throw new DataAccessException("Data base problem", ex);
         }
