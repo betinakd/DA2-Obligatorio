@@ -72,18 +72,25 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
     {
-        var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        try
+        {
+            var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
 
-        existingAttribute.Name = attribute.Name;
-        existingAttribute.TypeId = attribute.TypeId;
-        existingAttribute.Type = attribute.Type;
-        existingAttribute.Privacity = attribute.Privacity;
-        existingAttribute.RelatedClass = attribute.RelatedClass;
-        existingAttribute.RelatedClassId = existingAttribute.RelatedClass.Id;
+            existingAttribute.Name = attribute.Name;
+            existingAttribute.TypeId = attribute.TypeId;
+            existingAttribute.Type = attribute.Type;
+            existingAttribute.Privacity = attribute.Privacity;
+            existingAttribute.RelatedClass = attribute.RelatedClass;
+            existingAttribute.RelatedClassId = existingAttribute.RelatedClass.Id;
 
-        _context.SimAttributes.Update(existingAttribute);
-        _context.SaveChanges();
+            _context.SimAttributes.Update(existingAttribute);
+            _context.SaveChanges();
 
-        return existingAttribute;
+            return existingAttribute;
+        }
+        catch(Exception ex)
+        {
+            throw new DataAccessException("Data base problem", ex);
+        }
     }
 }

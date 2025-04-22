@@ -256,7 +256,7 @@ public class SimAttributeDataAccessTest
     }
 
     [TestMethod]
-    public void UpdateAttributeCorrectly_ShouldReturnSimAttribute()
+    public void UpdateAttribute_ShouldReturnSimAttribute()
     {
         var relatedClassId = Guid.NewGuid();
         var relatedClass = new SimClass
@@ -301,5 +301,46 @@ public class SimAttributeDataAccessTest
         result.GetType().Should().Be(typeof(SimAttribute));
         Assert.AreEqual(newName, result.Name);
         Assert.AreEqual(newRelatedClassId, result.RelatedClassId);
+    }
+
+    [TestMethod]
+    public void UpdateAttribute_ShouldThrowException_WhenDatabaseErrorOccurs()
+    {
+        var relatedClassId = Guid.NewGuid();
+        var relatedClass = new SimClass
+        {
+            Id = relatedClassId,
+            Name = "Test Class"
+        };
+        _simClassDataAccess.CreateSimClass(relatedClass);
+
+        var attributeId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "Test Attribute",
+            Type = relatedClass,
+            TypeId = relatedClassId,
+            RelatedClass = relatedClass,
+            RelatedClassId = relatedClassId
+        };
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        Assert.IsNotNull(existingAttribute);
+
+        var newRelatedClassId = Guid.NewGuid();
+        var newRelatedClass = new SimClass
+        {
+            Id = newRelatedClassId,
+            Name = "Test Class 2"
+        };
+        _context.Dispose();
+
+        Action act = () => _simAttributeDataAccess.UpdateAttribute(attribute.Id,attribute);
+
+        act.Should().Throw<DataAccessException>()
+            .WithMessage("Data base problem");
     }
 }
