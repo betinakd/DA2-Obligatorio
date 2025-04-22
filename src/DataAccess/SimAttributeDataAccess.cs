@@ -1,7 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
 using DataAccess.Context;
+using DataAccess.CustomExceptions;
 using Domain;
 using IDataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
@@ -10,11 +11,18 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
     private readonly SimulatorDbContext _context = context;
     public SimAttribute CreateAttribute(Guid classId, SimAttribute attribute)
     {
-        attribute.RelatedClassId = classId;
-        _context.SimAttributes.Add(attribute);
-        _context.SaveChanges();
+        try
+        {
+            attribute.RelatedClassId = classId;
+            _context.SimAttributes.Add(attribute);
+            _context.SaveChanges();
 
-        return attribute;
+            return attribute;
+        }
+        catch(DbUpdateException ex)
+        {
+            throw new DataAccessException("Data base problem", ex);
+        }
     }
 
     public void DeleteAttribute(Guid attributeId)

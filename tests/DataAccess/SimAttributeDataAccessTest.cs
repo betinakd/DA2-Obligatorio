@@ -1,5 +1,6 @@
 using DataAccess;
 using DataAccess.Context;
+using DataAccess.CustomExceptions;
 using Domain;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -60,5 +61,35 @@ public class SimAttributeDataAccessTest
         Assert.AreEqual(attribute.Name, result.Name);
         Assert.AreEqual(relatedClassId, result.RelatedClassId);
         Assert.AreEqual(relatedClassId, result.TypeId);
+    }
+
+    [TestMethod]
+    public void CreateAttribute_ShouldThrowException_WhenDatabaseErrorOccurs()
+    {
+        var relatedClassId = Guid.NewGuid();
+        var relatedClass = new SimClass
+        {
+            Id = relatedClassId,
+            Name = "Test Class"
+        };
+        _simClassDataAccess.CreateSimClass(relatedClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test Attribute",
+            RelatedClass = relatedClass,
+            RelatedClassId = relatedClassId,
+            Type = relatedClass,
+            TypeId = relatedClassId
+        };
+
+        _context.Dispose();
+
+        Action act = () => _simAttributeDataAccess.CreateAttribute(relatedClassId, attribute);
+
+        act.Should().Throw<DataAccessException>()
+            .WithMessage("Data base problem")
+            .WithInnerException<DbUpdateException>();
     }
 }
