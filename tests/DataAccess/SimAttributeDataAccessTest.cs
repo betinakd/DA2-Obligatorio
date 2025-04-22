@@ -92,4 +92,31 @@ public class SimAttributeDataAccessTest
             .WithMessage("Data base problem")
             .WithInnerException<DbUpdateException>();
     }
+
+    [TestMethod]
+    public void DeleteAttribute_ShouldRemoveAttribute_WhenAttributeExists()
+    {
+        var relatedClassId = Guid.NewGuid();
+        var relatedClass = new SimClass
+        {
+            Id = relatedClassId,
+            Name = "Test Class"
+        };
+        _simClassDataAccess.CreateSimClass(relatedClass);
+
+        var attributeId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "Test Attribute",
+            RelatedClass = relatedClass
+        };
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        _simAttributeDataAccess.DeleteAttribute(attributeId);
+
+        var existsAfterDelete = _context.SimAttributes.Any(a => a.Id == attributeId);
+        Assert.IsFalse(existsAfterDelete);
+    }
 }
