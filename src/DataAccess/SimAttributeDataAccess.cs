@@ -39,6 +39,11 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
         }
     }
 
+    public bool InUseByOther(Guid attributeId)
+    {
+        throw new NotImplementedException();
+    }
+
     public bool ExistAttributeById(Guid attributeId)
     {
         try
@@ -65,13 +70,20 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
         }
     }
 
-    public bool InUseByOther(Guid attributeId)
-    {
-        throw new NotImplementedException();
-    }
-
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
     {
-        throw new NotImplementedException();
+        var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+
+        existingAttribute.Name = attribute.Name;
+        existingAttribute.TypeId = attribute.TypeId;
+        existingAttribute.Type = attribute.Type;
+        existingAttribute.Privacity = attribute.Privacity;
+        existingAttribute.RelatedClass = attribute.RelatedClass;
+        existingAttribute.RelatedClassId = existingAttribute.RelatedClass.Id;
+
+        _context.SimAttributes.Update(existingAttribute);
+        _context.SaveChanges();
+
+        return existingAttribute;
     }
 }
