@@ -197,4 +197,26 @@ public class SimMethodDataAccessTest
 
         Assert.IsFalse(exists);
     }
+
+    [TestMethod]
+    public void ExistParameter_ShouldReturnTrue_WhenParameterExists()
+    {
+        var methodId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "ExistingParameter",
+            TypeId = typeId,
+            RelatedMethodId = methodId,
+            Type = new SimClass { Id = typeId, Name = "TestType" },
+            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
+        };
+        _context.Parameters.Add(parameter);
+        _context.SaveChanges();
+
+        var exists = _simMethodDataAccess.ExistParameter(parameter.Id);
+
+        Assert.IsTrue(exists);
+    }
 }
