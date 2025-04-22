@@ -121,4 +121,23 @@ public class SimMethodDataAccessTest
         Assert.AreEqual(simMethod.RelatedClassId, methodInDb.RelatedClassId);
         Assert.AreEqual(simMethod.Id, result.Id);
     }
+
+    [TestMethod]
+    public void DeleteMethod_ShouldRemoveMethodFromDatabase()
+    {
+        var simClassId = Guid.NewGuid();
+        var simMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            RelatedClassId = simClassId,
+            Name = "MethodToDelete"
+        };
+        _context.SimMethods.Add(simMethod);
+        _context.SaveChanges();
+
+        _simMethodDataAccess.DeleteMethod(simMethod.Id);
+
+        var methodInDb = _context.SimMethods.Find(simMethod.Id);
+        Assert.IsNull(methodInDb);
+    }
 }

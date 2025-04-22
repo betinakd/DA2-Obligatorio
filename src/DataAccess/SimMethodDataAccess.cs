@@ -36,14 +36,14 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return method;
     }
 
-    public object CreateMethod(object classId, object method)
-    {
-        throw new NotImplementedException();
-    }
-
     public void DeleteMethod(Guid id)
     {
-        throw new NotImplementedException();
+        var method = _context.SimMethods.Find(id);
+        if(method != null)
+        {
+            _context.SimMethods.Remove(method);
+            _context.SaveChanges();
+        }
     }
 
     public bool ExistInvocationById(Guid id)
