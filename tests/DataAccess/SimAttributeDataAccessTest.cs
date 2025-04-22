@@ -1,10 +1,8 @@
 using DataAccess;
 using DataAccess.Context;
-using DataAccess.CustomExceptions;
 using Domain;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 
 namespace Tests.DataAccess;
 
@@ -199,10 +197,10 @@ public class SimAttributeDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            Parameters = new List<Parameter>
-            {
+            Parameters =
+            [
                 new Parameter { TypeId = attributeId }
-            }
+            ]
         };
 
         _context!.Invocations.Add(invocation);

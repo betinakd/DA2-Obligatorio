@@ -2,7 +2,6 @@ using DataAccess.Context;
 using DataAccess.CustomExceptions;
 using Domain;
 using IDataAccess;
-using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
