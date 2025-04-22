@@ -119,4 +119,33 @@ public class SimAttributeDataAccessTest
         var existsAfterDelete = _context.SimAttributes.Any(a => a.Id == attributeId);
         Assert.IsFalse(existsAfterDelete);
     }
+
+    [TestMethod]
+    public void DeleteAttribute_ShouldThrowException_WhenDatabaseErrorOccurs()
+    {
+        var relatedClassId = Guid.NewGuid();
+        var relatedClass = new SimClass
+        {
+            Id = relatedClassId,
+            Name = "Test Class"
+        };
+        _simClassDataAccess.CreateSimClass(relatedClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test Attribute",
+            RelatedClass = relatedClass,
+            RelatedClassId = relatedClassId,
+            Type = relatedClass,
+            TypeId = relatedClassId
+        };
+
+        _context.Dispose();
+
+        Action act = () => _simAttributeDataAccess.DeleteAttribute(attribute.Id);
+
+        act.Should().Throw<DataAccessException>()
+            .WithMessage("Data base problem");
+    }
 }
