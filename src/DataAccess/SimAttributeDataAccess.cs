@@ -41,7 +41,9 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public bool InUseByOther(Guid attributeId)
     {
-        throw new NotImplementedException();
+        return _context.Invocations
+            .Any(invocation => invocation.Parameters
+                .Any(parameter => parameter.TypeId == attributeId));
     }
 
     public bool ExistAttributeById(Guid attributeId)
