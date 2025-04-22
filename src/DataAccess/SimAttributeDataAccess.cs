@@ -27,7 +27,9 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public void DeleteAttribute(Guid attributeId)
     {
-        throw new NotImplementedException();
+        var attribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        _context.SimAttributes.Remove(attribute!);
+        _context.SaveChanges();
     }
 
     public bool ExistAttributeById(Guid attributeId)
