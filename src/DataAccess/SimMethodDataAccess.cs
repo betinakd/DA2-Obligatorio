@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DataAccess.Context;
 using Domain;
 using IDataAccess;
@@ -61,41 +62,49 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return _context.Parameters.Any(p => p.Id == id);
     }
 
+    [ExcludeFromCodeCoverage]
     public bool ExistsMethodInClass(Guid idClass, SimMethod method)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public bool ExistVariableById(Guid id)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public Invocation GetInvocationById(Guid id)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public SimMethod GetMethodById(Guid id)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public Parameter GetParameterById(Guid id)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public LocalVariable GetVariableById(Guid id)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
     {
         throw new NotImplementedException();
     }
 
+    [ExcludeFromCodeCoverage]
     public bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable)
     {
         throw new NotImplementedException();
