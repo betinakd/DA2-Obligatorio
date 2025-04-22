@@ -97,4 +97,25 @@ public class SimMethodDataAccessTest2
         Assert.AreEqual(variableId, result.Id);
         Assert.AreEqual("TestLocalVariable", result.Name);
     }
+
+    [TestMethod]
+    public void GetParameterById_ReturnsParameter_WhenExists()
+    {
+        var parameterId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = parameterId,
+            Name = "TestParameter",
+            RelatedMethodId = methodId
+        };
+        _context.Parameters.Add(parameter);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.GetParameterById(parameterId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(parameterId, result.Id);
+        Assert.AreEqual("TestParameter", result.Name);
+    }
 }

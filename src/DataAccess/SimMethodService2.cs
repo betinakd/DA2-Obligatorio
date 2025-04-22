@@ -74,7 +74,7 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public Parameter GetParameterById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.Parameters.FirstOrDefault(p => p.Id == id);
     }
 
     public LocalVariable GetVariableById(Guid id)
