@@ -64,7 +64,7 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public Invocation GetInvocationById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.Invocations.FirstOrDefault(i => i.Id == id);
     }
 
     public SimMethod GetMethodById(Guid id)

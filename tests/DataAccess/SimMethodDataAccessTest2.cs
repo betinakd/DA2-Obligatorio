@@ -140,4 +140,23 @@ public class SimMethodDataAccessTest2
         Assert.AreEqual(methodId, result.Id);
         Assert.AreEqual("TestMethod", result.Name);
     }
+
+    [TestMethod]
+    public void GetInvocationById_ReturnsInvocation_WhenExists()
+    {
+        var invocationId = Guid.NewGuid();
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            MethodName = "TestInvocation"
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.GetInvocationById(invocationId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(invocationId, result.Id);
+        Assert.AreEqual("TestInvocation", result.MethodName);
+    }
 }
