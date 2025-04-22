@@ -148,4 +148,29 @@ public class SimAttributeDataAccessTest
         act.Should().Throw<DataAccessException>()
             .WithMessage("Data base problem");
     }
+
+    [TestMethod]
+    public void ExistAttributeById_ShouldReturnTrue_WhenAttributeExists()
+    {
+        var relatedClassId = Guid.NewGuid();
+        var relatedClass = new SimClass
+        {
+            Id = relatedClassId,
+            Name = "Test Class"
+        };
+        _simClassDataAccess.CreateSimClass(relatedClass);
+
+        var attributeId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "Test Attribute",
+            RelatedClass = relatedClass
+        };
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        var exists = _simAttributeDataAccess.ExistAttributeById(attributeId);
+        Assert.IsTrue(exists);
+    }
 }
