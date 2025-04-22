@@ -53,7 +53,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public bool ExistMethodById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimMethods.Any(m => m.Id == id);
     }
 
     public bool ExistParameter(Guid id)

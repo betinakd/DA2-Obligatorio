@@ -169,4 +169,22 @@ public class SimMethodDataAccessTest
 
         Assert.IsFalse(exists);
     }
+
+    [TestMethod]
+    public void ExistMethodById_ShouldReturnTrue_WhenMethodExists()
+    {
+        var simClassId = Guid.NewGuid();
+        var simMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            RelatedClassId = simClassId,
+            Name = "ExistingMethod"
+        };
+        _context.SimMethods.Add(simMethod);
+        _context.SaveChanges();
+
+        var exists = _simMethodDataAccess.ExistMethodById(simMethod.Id);
+
+        Assert.IsTrue(exists);
+    }
 }
