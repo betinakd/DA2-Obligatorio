@@ -80,13 +80,13 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasOne(v => v.RelatedMethod)
                     .WithMany(m => m.LocalVariables)
                     .HasForeignKey(v => v.RelatedMethodId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<LocalVariable>()
                     .HasOne(v => v.Type)
                     .WithMany()
                     .HasForeignKey(v => v.TypeId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<SimMethod>()
                     .HasMany(i => i.Invocations)
@@ -178,8 +178,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<SimMethod>().HasData(
             new SimMethod
             {
+                Id = Guid.NewGuid(),
                 Name = "Equals",
                 Accesibility = SimAccesibility.Normal,
+                Privacity = SimPrivacity.Public,
                 RelatedClassId = objectClassId,
                 ReturTypeId = boolClassId
             });
