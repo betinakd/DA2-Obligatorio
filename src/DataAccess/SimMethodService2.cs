@@ -59,7 +59,7 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public bool ExistVariableById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.LocalVariables.Any(v => v.Id == id);
     }
 
     public Invocation GetInvocationById(Guid id)
