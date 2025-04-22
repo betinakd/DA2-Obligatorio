@@ -118,4 +118,26 @@ public class SimMethodDataAccessTest2
         Assert.AreEqual(parameterId, result.Id);
         Assert.AreEqual("TestParameter", result.Name);
     }
+
+    [TestMethod]
+    public void GetMethodById_ReturnsMethod_WhenExists()
+    {
+        var methodId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var simMethod = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = relatedClassId,
+            RelatedClass = new SimClass() { Id = relatedClassId, Name = "TestClass" }
+        };
+        _context.SimMethods.Add(simMethod);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.GetMethodById(methodId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(methodId, result.Id);
+        Assert.AreEqual("TestMethod", result.Name);
+    }
 }

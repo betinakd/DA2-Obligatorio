@@ -69,7 +69,7 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public SimMethod GetMethodById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimMethods.FirstOrDefault(m => m.Id == id);
     }
 
     public Parameter GetParameterById(Guid id)
