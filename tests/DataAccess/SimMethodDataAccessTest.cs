@@ -140,4 +140,23 @@ public class SimMethodDataAccessTest
         var methodInDb = _context.SimMethods.Find(simMethod.Id);
         Assert.IsNull(methodInDb);
     }
+
+    [TestMethod]
+    public void ExistInvocationById_ShouldReturnTrue_WhenInvocationExists()
+    {
+        var invocationId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            RelatedMethodId = methodId,
+            MethodName = "TestInvocation"
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var exists = _simMethodDataAccess.ExistInvocationById(invocationId);
+
+        Assert.IsTrue(exists);
+    }
 }
