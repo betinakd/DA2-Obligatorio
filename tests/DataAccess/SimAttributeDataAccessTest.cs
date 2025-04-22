@@ -4,6 +4,7 @@ using DataAccess.CustomExceptions;
 using Domain;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.DataAccess;
 
@@ -12,7 +13,8 @@ public class SimAttributeDataAccessTest
     private SimulatorDbContext? _context;
     private SimClassDataAccess? _simClassDataAccess;
     private SimAttributeDataAccess? _simAttributeDataAccess;
-
+    private Mock<SimulatorDbContext>? _mockContext;
+    private Mock<DbSet<Invocation>>? _mockInvocations;
     [TestInitialize]
     public void Setup()
     {
@@ -23,6 +25,8 @@ public class SimAttributeDataAccessTest
         _context = new SimulatorDbContext(options);
         _simClassDataAccess = new SimClassDataAccess(_context);
         _simAttributeDataAccess = new SimAttributeDataAccess(_context);
+        _mockContext = new Mock<SimulatorDbContext>();
+        _mockInvocations = new Mock<DbSet<Invocation>>();
     }
 
     [TestCleanup]
@@ -342,5 +346,33 @@ public class SimAttributeDataAccessTest
 
         act.Should().Throw<DataAccessException>()
             .WithMessage("Data base problem");
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenAttributeIsUsed()
+    {
+        var attributeId = Guid.NewGuid();
+        var invocations = new List<Invocation>
+        {
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Parameters = new List<Parameter>
+                {
+                    new Parameter { TypeId = attributeId }
+                }
+            }
+        }.AsQueryable();
+
+        _mockInvocations.As<IQueryable<Invocation>>().Setup(m => m.Provider).Returns(invocations.Provider);
+        _mockInvocations.As<IQueryable<Invocation>>().Setup(m => m.Expression).Returns(invocations.Expression);
+        _mockInvocations.As<IQueryable<Invocation>>().Setup(m => m.ElementType).Returns(invocations.ElementType);
+        _mockInvocations.As<IQueryable<Invocation>>().Setup(m => m.GetEnumerator()).Returns(invocations.GetEnumerator());
+
+        _mockContext.Setup(c => c.Invocations).Returns(_mockInvocations.Object);
+
+        var dataAccess = new SimAttributeDataAccess(_mockContext.Object);
+        var result = dataAccess.InUseByOther(attributeId);
+        Assert.IsTrue(result);
     }
 }
