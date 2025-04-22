@@ -84,7 +84,7 @@ public class SimMethodDataAccess2(SimulatorDbContext context) : ISimMethodDataAc
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
     {
-        throw new NotImplementedException();
+        return _context.Parameters.Any(p => p.RelatedMethodId == methodId && p.Name == parameter.Name);
     }
 
     public bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable)

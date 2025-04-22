@@ -59,4 +59,17 @@ public class SimMethodDataAccessTest2
 
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public void MethodParameterRepeatedValues_ReturnsTrue_WhenParameterExists()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter { Name = "param1", RelatedMethodId = methodId };
+        _context.Parameters.Add(parameter);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.MethodParameterRepeatedValues(methodId, new Parameter { Name = "param1" });
+
+        Assert.IsTrue(result);
+    }
 }
