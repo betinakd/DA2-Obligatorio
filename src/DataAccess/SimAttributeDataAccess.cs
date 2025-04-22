@@ -41,9 +41,16 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public bool InUseByOther(Guid attributeId)
     {
-        return _context.Invocations
-            .Any(invocation => invocation.Parameters
-                .Any(parameter => parameter.TypeId == attributeId));
+        try
+        {
+            return _context.Invocations
+                .Any(invocation => invocation.Parameters
+                    .Any(parameter => parameter.TypeId == attributeId));
+        }
+        catch(Exception ex)
+        {
+            throw new DataAccessException("Data base problem", ex);
+        }
     }
 
     public bool ExistAttributeById(Guid attributeId)

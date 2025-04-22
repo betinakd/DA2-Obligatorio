@@ -375,4 +375,17 @@ public class SimAttributeDataAccessTest
         var result = dataAccess.InUseByOther(attributeId);
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public void InUseByOther_ShouldThrowsException_WhenDatabaseErrorOccurs()
+    {
+        var attributeId = Guid.NewGuid();
+        _mockContext.Setup(c => c.Invocations).Throws(new DbUpdateException("Simulated database error"));
+        var dataAccess = new SimAttributeDataAccess(_mockContext.Object);
+
+        Action act = () => dataAccess.InUseByOther(attributeId);
+        act.Should().Throw<DataAccessException>()
+            .WithMessage("Data base problem")
+            .WithInnerException<DbUpdateException>();
+    }
 }
