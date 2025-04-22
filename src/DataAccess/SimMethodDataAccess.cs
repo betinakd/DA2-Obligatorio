@@ -1,15 +1,18 @@
-using System.Diagnostics.CodeAnalysis;
+using DataAccess.Context;
 using Domain;
 using IDataAccess;
 
 namespace DataAccess;
 
-[ExcludeFromCodeCoverage]
-public class SimMethodDataAccess : ISimMethodDataAccess
+public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAccess
 {
+    private readonly SimulatorDbContext _context = context;
+
     public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable)
     {
-        throw new NotImplementedException();
+        _context.LocalVariables.Add(localVariable);
+        _context.SaveChanges();
+        return localVariable;
     }
 
     public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
