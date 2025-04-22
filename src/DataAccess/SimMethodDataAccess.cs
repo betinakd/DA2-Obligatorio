@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DataAccess.Context;
 using Domain;
 using IDataAccess;
@@ -62,51 +61,51 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return _context.Parameters.Any(p => p.Id == id);
     }
 
-    [ExcludeFromCodeCoverage]
     public bool ExistsMethodInClass(Guid idClass, SimMethod method)
     {
-        throw new NotImplementedException();
+        return _context.SimMethods
+            .Where(m => m.RelatedClassId == idClass && m.Name == method.Name)
+            .AsEnumerable()
+            .Any(m =>
+                m.Parameters.Count == method.Parameters.Count &&
+                m.Parameters.All(p =>
+                    method.Parameters.Any(mp =>
+                        mp.Name == p.Name &&
+                        mp.TypeId == p.TypeId)));
     }
 
-    [ExcludeFromCodeCoverage]
     public bool ExistVariableById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.LocalVariables.Any(v => v.Id == id);
     }
 
-    [ExcludeFromCodeCoverage]
     public Invocation GetInvocationById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.Invocations.FirstOrDefault(i => i.Id == id);
     }
 
-    [ExcludeFromCodeCoverage]
     public SimMethod GetMethodById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.SimMethods.FirstOrDefault(m => m.Id == id);
     }
 
-    [ExcludeFromCodeCoverage]
     public Parameter GetParameterById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.Parameters.FirstOrDefault(p => p.Id == id);
     }
 
-    [ExcludeFromCodeCoverage]
     public LocalVariable GetVariableById(Guid id)
     {
-        throw new NotImplementedException();
+        return _context.LocalVariables.FirstOrDefault(v => v.Id == id);
     }
 
-    [ExcludeFromCodeCoverage]
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
     {
-        throw new NotImplementedException();
+        return _context.Parameters.Any(p => p.RelatedMethodId == methodId && p.Name == parameter.Name);
     }
 
-    [ExcludeFromCodeCoverage]
     public bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable)
     {
-        throw new NotImplementedException();
+        return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name == localVariable.Name);
     }
 }
