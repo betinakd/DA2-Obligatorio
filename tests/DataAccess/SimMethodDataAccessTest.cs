@@ -53,4 +53,29 @@ public class SimMethodDataAccessTest
         Assert.AreEqual(localVariable.RelatedMethodId, variableInDb.RelatedMethodId);
         Assert.AreEqual(localVariable.Id, result.Id);
     }
+
+    [TestMethod]
+    public void AddMethodParameter_ShouldAddParameterToDatabase()
+    {
+        var methodId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestParameter",
+            TypeId = typeId,
+            RelatedMethodId = methodId,
+            Type = new SimClass { Id = typeId, Name = "TestType" },
+            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
+        };
+
+        var result = _simMethodDataAccess.AddMethodParameter(methodId, parameter);
+
+        var parameterInDb = _context.Parameters.FirstOrDefault(p => p.Id == parameter.Id);
+        Assert.IsNotNull(parameterInDb);
+        Assert.AreEqual(parameter.Name, parameterInDb.Name);
+        Assert.AreEqual(parameter.TypeId, parameterInDb.TypeId);
+        Assert.AreEqual(parameter.RelatedMethodId, parameterInDb.RelatedMethodId);
+        Assert.AreEqual(parameter.Id, result.Id);
+    }
 }
