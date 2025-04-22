@@ -31,6 +31,13 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public SimMethod CreateMethod(Guid idClass, SimMethod method)
     {
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+        return method;
+    }
+
+    public object CreateMethod(object classId, object method)
+    {
         throw new NotImplementedException();
     }
 
