@@ -41,8 +41,15 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public bool ExistAttributeById(Guid attributeId)
     {
-        return _context.SimAttributes
-            .Any(a => a.Id == attributeId);
+        try
+        {
+            return _context.SimAttributes
+                .Any(a => a.Id == attributeId);
+        }
+        catch(Exception ex)
+        {
+            throw new DataAccessException("Data base problem", ex);
+        }
     }
 
     public bool ExistAttributeName(Guid classId, string attributeName)
