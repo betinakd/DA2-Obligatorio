@@ -31,6 +31,11 @@ public class SimClass
                 throw new SimClassInvalidAttribute("Name cannot contain only numbers.");
             }
 
+            if(SyntaxisValidation.ReservedWords(value))
+            {
+                throw new SimClassInvalidAttribute("Name cannot be a reserved word.");
+            }
+
             _name = value;
         }
     }

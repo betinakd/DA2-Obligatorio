@@ -135,4 +135,13 @@ public class SimClassTest
 
         simClass.Name = "123456";
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetName_ShouldThrowException_WhenNameIsReservedWord()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "class";
+    }
 }
