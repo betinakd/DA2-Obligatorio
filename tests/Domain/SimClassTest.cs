@@ -144,4 +144,32 @@ public class SimClassTest
 
         simClass.Name = "class";
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetBaseClass_ShouldThrowException_WhenAbstractMethodsAreNotImplemented()
+    {
+        var baseClass = new SimClass
+        {
+            Name = "AbstractBaseClass",
+            State = SimAccesibility.Abstract,
+            Methods =
+        [
+            new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
+            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+        ]
+        };
+
+        var derivedClass = new SimClass
+        {
+            Name = "DerivedClass",
+            State = SimAccesibility.Normal,
+            Methods =
+        [
+            new SimMethod { Name = "ConcreteMethod", Accesibility = SimAccesibility.Normal }
+        ]
+        };
+
+        derivedClass.BaseClass = baseClass;
+    }
 }

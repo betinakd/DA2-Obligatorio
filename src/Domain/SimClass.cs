@@ -50,6 +50,17 @@ public class SimClass
                 throw new SimClassInvalidAttribute("Cannot set as base a sealed or null Class.");
             }
 
+            if(value?.State == SimAccesibility.Abstract && State != SimAccesibility.Abstract)
+            {
+                var abstractMethods = value.Methods.Where(m => m.Accesibility == SimAccesibility.Abstract).ToList();
+                var missingMethods = abstractMethods.Where(am => !Methods.Any(m => m.Name == am.Name)).ToList();
+
+                if(missingMethods.Any())
+                {
+                    throw new SimClassInvalidAttribute($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+                }
+            }
+
             _baseClassField = value;
         }
     }
