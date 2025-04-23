@@ -32,6 +32,7 @@ public class SimMethodServiceTest
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.AddInvocation(methodId, invocation));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -61,6 +62,7 @@ public class SimMethodServiceTest
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.AddMethod(classId, method));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -97,10 +99,9 @@ public class SimMethodServiceTest
             .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
             .Verifiable();
 
-        _mockSimMethodDataAccess.Verify();
-
         Assert.ThrowsException<InUseValueLogic>(() =>
             _simMethodService!.AddMethod(classId, method));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -141,7 +142,6 @@ public class SimMethodServiceTest
             .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
             .Verifiable();
 
-        _mockSimMethodDataAccess.Verify();
         var result = _simMethodService!.AddMethod(classId, method);
 
         Assert.AreEqual(expectedMethod, result);
@@ -153,9 +153,10 @@ public class SimMethodServiceTest
     {
         var invocationId = Guid.NewGuid();
         _mockSimMethodDataAccess!.Setup(m => m.ExistInvocationById(invocationId)).Returns(false);
-
+        _mockSimMethodDataAccess.Verify();
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.GetInvocationById(invocationId));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -179,8 +180,10 @@ public class SimMethodServiceTest
         var methodId = Guid.NewGuid();
         _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(false);
 
+        _mockSimMethodDataAccess.Verify();
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.GetMethodById(methodId));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -206,6 +209,7 @@ public class SimMethodServiceTest
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.GetParameterById(parameterId));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -231,6 +235,7 @@ public class SimMethodServiceTest
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
             _simMethodService!.GetVariableById(variableId));
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -304,6 +309,7 @@ public class SimMethodServiceTest
 .Setup(m => m.MethodVariableRepeatedValues(methodId, localVariable))
 .Returns(false);
         _simMethodService!.AddLocalVariable(methodId, localVariable);
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -326,6 +332,7 @@ public class SimMethodServiceTest
             .Returns(true);
 
         _simMethodService!.AddLocalVariable(methodId, localVariable);
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -373,6 +380,7 @@ public class SimMethodServiceTest
             .Returns(false);
 
         _simMethodService!.AddMethodParameter(methodId, parameter);
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -395,6 +403,7 @@ public class SimMethodServiceTest
             .Returns(true);
 
         _simMethodService!.AddMethodParameter(methodId, parameter);
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -435,6 +444,7 @@ public class SimMethodServiceTest
             .Returns(false);
 
         _simMethodService!.DeleteMethod(methodId);
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
@@ -487,6 +497,7 @@ public class SimMethodServiceTest
             .Verifiable();
 
         _simMethodService!.AddMethod(idClass, method);
+        _mockSimMethodDataAccess.Verify();
     }
 
     [TestMethod]
