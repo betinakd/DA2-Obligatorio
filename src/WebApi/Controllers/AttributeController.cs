@@ -1,11 +1,9 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
-using WebApi.Filters;
 
 namespace WebApi.Controllers;
 
-[ExceptionFilter]
 [ApiController]
 [Route("api/v1/attributes")]
 public class AttributeController(IAttributeAdapter simClassAdapter) : ControllerBase

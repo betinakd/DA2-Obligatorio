@@ -1,11 +1,9 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
-using WebApi.Filters;
 
 namespace WebApi.Controllers;
 
-[ExceptionFilter]
 [ApiController]
 [Route("api/v1/methods")]
 public class MethodController(IMethodAdapter methodAdapter) : ControllerBase

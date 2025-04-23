@@ -16,7 +16,6 @@ builder.Services.AddServices(connectionString);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Cors
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -33,7 +32,6 @@ var app = builder.Build();
 
 app.UseCors();
 
-// Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
