@@ -26,6 +26,11 @@ public class SimClass
                 throw new SimClassInvalidAttribute("Name cannot be empty or contain invalid characters.");
             }
 
+            if(SyntaxisValidation.OnlyNumbers(value))
+            {
+                throw new SimClassInvalidAttribute("Name cannot contain only numbers.");
+            }
+
             _name = value;
         }
     }

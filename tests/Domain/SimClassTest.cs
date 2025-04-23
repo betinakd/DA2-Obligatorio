@@ -126,4 +126,13 @@ public class SimClassTest
 
         simClass.Name = "Invalid Name!";
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetName_ShouldThrowException_WhenNameContainsOnlyNumbers()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "123456";
+    }
 }
