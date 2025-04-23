@@ -68,9 +68,36 @@ public class SimMethodServiceTest
     {
         var classId = Guid.NewGuid();
         var method = new SimMethod();
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            State = SimAccesibility.Normal
+        };
 
         _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(classId)).Returns(true);
         _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(classId, method)).Returns(true);
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(classId))
+            .Returns(true);
+        _mockSimClassDataAccess!
+            .Setup(m => m.GetSimClassById(classId))
+            .Returns(simClass);
+        _mockSimClassDataAccess!
+            .Setup(m => m.InUseByOther(classId))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistsMethodInClass(classId, method))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.CreateMethod(classId, method))
+            .Returns(method);
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
+            .Verifiable();
+
+        _mockSimMethodDataAccess.Verify();
 
         Assert.ThrowsException<InUseValueLogic>(() =>
             _simMethodService!.AddMethod(classId, method));
@@ -90,12 +117,31 @@ public class SimMethodServiceTest
             ReturnType = new SimClass() { Id = Guid.NewGuid(), Name = "TestClass" }
         };
 
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            State = SimAccesibility.Normal
+        };
         var expectedMethod = method;
 
         _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(classId)).Returns(true);
         _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(classId, method)).Returns(false);
         _mockSimMethodDataAccess.Setup(m => m.CreateMethod(classId, method)).Returns(expectedMethod);
+        _mockSimClassDataAccess!
+        .Setup(m => m.GetSimClassById(classId))
+        .Returns(simClass);
+        _mockSimClassDataAccess!
+            .Setup(m => m.InUseByOther(classId))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.CreateMethod(classId, method))
+            .Returns(method);
+        _mockSimClassDataAccess!
+            .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
+            .Verifiable();
 
+        _mockSimMethodDataAccess.Verify();
         var result = _simMethodService!.AddMethod(classId, method);
 
         Assert.AreEqual(expectedMethod, result);
@@ -406,5 +452,149 @@ public class SimMethodServiceTest
         _simMethodService!.DeleteMethod(methodId);
 
         _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddMethod_ShouldThrowException_WhenIsAbstractAndClassIsInUse()
+    {
+        var idClass = Guid.NewGuid();
+        var method = new SimMethod { Accesibility = SimAccesibility.Abstract, Name = "AbstractMethod" };
+        var simClass = new SimClass
+        {
+            Id = idClass,
+            Name = "TestClass",
+            State = SimAccesibility.Normal
+        };
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idClass))
+            .Returns(true);
+        _mockSimClassDataAccess!
+            .Setup(m => m.GetSimClassById(idClass))
+            .Returns(simClass);
+        _mockSimClassDataAccess!
+            .Setup(m => m.InUseByOther(idClass))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistsMethodInClass(idClass, method))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.CreateMethod(idClass, method))
+            .Returns(method);
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
+            .Verifiable();
+
+        _simMethodService!.AddMethod(idClass, method);
+    }
+
+    [TestMethod]
+    public void AddMethod_ShouldUpdateClassStateToAbstract_WhenAbstractMethodIsAdded()
+    {
+        var idClass = Guid.NewGuid();
+        var method = new SimMethod { Accesibility = SimAccesibility.Abstract, Name = "AbstractMethod" };
+
+        var simClass = new SimClass
+        {
+            Id = idClass,
+            Name = "TestClass",
+            State = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idClass))
+            .Returns(true);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistsMethodInClass(idClass, method))
+            .Returns(false);
+        _mockSimClassDataAccess!
+            .Setup(m => m.InUseByOther(idClass))
+            .Returns(false);
+        _mockSimClassDataAccess!
+            .Setup(m => m.GetSimClassById(idClass))
+            .Returns(simClass);
+        _mockSimClassDataAccess!
+            .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
+            .Verifiable();
+        _mockSimMethodDataAccess!
+            .Setup(m => m.CreateMethod(idClass, method))
+            .Returns(method);
+
+        _simMethodService!.AddMethod(idClass, method);
+
+        Assert.AreEqual(SimAccesibility.Abstract, simClass.State);
+        _mockSimClassDataAccess.Verify(m => m.UpdateSimClass(simClass), Times.Once);
+        _mockSimMethodDataAccess.Verify(m => m.CreateMethod(idClass, method), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddMethod_ShouldNotThrowException_WhenMethodIsNotAbstract()
+    {
+        var idClass = Guid.NewGuid();
+        var method = new SimMethod { Accesibility = SimAccesibility.Normal, Name = "NormalMethod" };
+
+        var simClass = new SimClass
+        {
+            Id = idClass,
+            Name = "TestClass",
+            State = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idClass))
+            .Returns(true);
+        _mockSimClassDataAccess!
+            .Setup(m => m.GetSimClassById(idClass))
+            .Returns(simClass);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistsMethodInClass(idClass, method))
+            .Returns(false);
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.CreateMethod(idClass, method))
+            .Returns(method);
+
+        _simMethodService!.AddMethod(idClass, method);
+
+        _mockSimMethodDataAccess.Verify(m => m.CreateMethod(idClass, method), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddMethod_ShouldNotThrowException_WhenAbstractMethodIsNotInUseByAnotherClass()
+    {
+        var idClass = Guid.NewGuid();
+        var method = new SimMethod { Accesibility = SimAccesibility.Abstract, Name = "AbstractMethod" };
+
+        var simClass = new SimClass
+        {
+            Id = idClass,
+            Name = "TestClass",
+            State = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(idClass))
+            .Returns(true);
+        _mockSimClassDataAccess!
+            .Setup(m => m.GetSimClassById(idClass))
+            .Returns(simClass);
+        _mockSimClassDataAccess!
+            .Setup(m => m.InUseByOther(idClass))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistsMethodInClass(idClass, method))
+            .Returns(false);
+        _mockSimMethodDataAccess!
+            .Setup(m => m.CreateMethod(idClass, method))
+            .Returns(method);
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
+            .Verifiable();
+
+        _simMethodService!.AddMethod(idClass, method);
+
+        _mockSimMethodDataAccess.Verify(m => m.CreateMethod(idClass, method), Times.Once);
     }
 }
