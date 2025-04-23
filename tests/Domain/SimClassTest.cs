@@ -117,4 +117,13 @@ public class SimClassTest
         simClass.DeleteAttribute(simAttribute);
         simClass.DeleteAttribute(simAttribute);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetName_ShouldThrowException_WhenNameIsInvalid()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "Invalid Name!";
+    }
 }

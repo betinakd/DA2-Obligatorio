@@ -119,7 +119,7 @@ public class SimClassAdapterTest
 
         var exception = Assert.ThrowsException<InvalidAttribute>(() =>
             _simClassAdapter?.UpdateSimClass(request));
-        Assert.AreEqual("Name cannot be null or empty.", exception.Message);
+        Assert.AreEqual("Name cannot be empty or contain invalid characters.", exception.Message);
     }
 
     [TestMethod]

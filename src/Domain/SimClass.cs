@@ -1,12 +1,13 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
+using Domain.Validations;
 
 namespace Domain;
 
 public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    private string? _name;
+    private string _name = string.Empty;
     public Guid? BaseClassId { get; set; }
 
     private SimClass? _baseClassField = null;
@@ -15,14 +16,14 @@ public class SimClass
     public List<SimAttribute> Attributes { get; set; } = [];
     public List<SimMethod> Methods { get; set; } = [];
 
-    public string? Name
+    public string Name
     {
         get => _name;
         set
         {
-            if(string.IsNullOrWhiteSpace(value))
+            if(!SyntaxisValidation.IsValidName(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be null or empty.");
+                throw new SimClassInvalidAttribute("Name cannot be empty or contain invalid characters.");
             }
 
             _name = value;
