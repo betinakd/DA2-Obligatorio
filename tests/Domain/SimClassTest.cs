@@ -172,4 +172,34 @@ public class SimClassTest
 
         derivedClass.BaseClass = baseClass;
     }
+
+    [TestMethod]
+    public void Methods_ShouldSetStateToAbstract_WhenListContainsAbstractMethod()
+    {
+        var simClass = new SimClass
+        {
+            Methods =
+        [
+            new SimMethod { Name = "ConcreteMethod", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "AbstractMethod", Accesibility = SimAccesibility.Abstract }
+        ]
+        };
+
+        Assert.AreEqual(SimAccesibility.Abstract, simClass.State);
+    }
+
+    [TestMethod]
+    public void Methods_ShouldNotChangeState_WhenListDoesNotContainAbstractMethod()
+    {
+        var simClass = new SimClass
+        {
+            Methods =
+        [
+            new SimMethod { Name = "ConcreteMethod1", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "ConcreteMethod2", Accesibility = SimAccesibility.Normal }
+        ]
+        };
+
+        Assert.AreEqual(SimAccesibility.Normal, simClass.State);
+    }
 }

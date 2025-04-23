@@ -14,7 +14,22 @@ public class SimClass
     public SimAccesibility State { get; set; } = SimAccesibility.Normal;
 
     public List<SimAttribute> Attributes { get; set; } = [];
-    public List<SimMethod> Methods { get; set; } = [];
+    private List<SimMethod> _methods = [];
+
+    public List<SimMethod> Methods
+    {
+        get => _methods;
+
+        set
+        {
+            _methods = value ?? [];
+
+            if(_methods.Any(m => m.Accesibility == SimAccesibility.Abstract))
+            {
+                State = SimAccesibility.Abstract;
+            }
+        }
+    }
 
     public string Name
     {

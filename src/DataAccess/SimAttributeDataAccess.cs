@@ -1,5 +1,4 @@
 using DataAccess.Context;
-using DataAccess.CustomExceptions;
 using Domain;
 using IDataAccess;
 
@@ -10,95 +9,53 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
     private readonly SimulatorDbContext _context = context;
     public SimAttribute CreateAttribute(Guid classId, SimAttribute attribute)
     {
-        try
-        {
-            attribute.RelatedClassId = classId;
-            _context.SimAttributes.Add(attribute);
-            _context.SaveChanges();
+        attribute.RelatedClassId = classId;
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
 
-            return attribute;
-        }
-        catch(Exception ex)
-        {
-            throw new DataAccessException("Data base problem", ex);
-        }
+        return attribute;
     }
 
     public void DeleteAttribute(Guid attributeId)
     {
-        try
-        {
-            var attribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
-            _context.SimAttributes.Remove(attribute!);
-            _context.SaveChanges();
-        }
-        catch(Exception ex)
-        {
-            throw new DataAccessException("Data base problem", ex);
-        }
+        var attribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        _context.SimAttributes.Remove(attribute!);
+        _context.SaveChanges();
     }
 
     public bool InUseByOther(Guid attributeId)
     {
-        try
-        {
-            return _context.Invocations
+        return _context.Invocations
                 .Any(invocation => invocation.Parameters
-                    .Any(parameter => parameter.TypeId == attributeId));
-        }
-        catch(Exception ex)
-        {
-            throw new DataAccessException("Data base problem", ex);
-        }
+                .Any(parameter => parameter.TypeId == attributeId));
     }
 
     public bool ExistAttributeById(Guid attributeId)
     {
-        try
-        {
-            return _context.SimAttributes
-                .Any(a => a.Id == attributeId);
-        }
-        catch(Exception ex)
-        {
-            throw new DataAccessException("Data base problem", ex);
-        }
+        return _context.SimAttributes
+            .Any(a => a.Id == attributeId);
     }
 
     public bool ExistAttributeName(Guid classId, string attributeName)
     {
-        try
-        {
-            return _context.SimAttributes
-                .Any(a => a.RelatedClassId == classId && a.Name == attributeName);
-        }
-        catch(Exception ex)
-        {
-            throw new DataAccessException("Data base problem", ex);
-        }
+        return _context.SimAttributes
+            .Any(a => a.RelatedClassId == classId && a.Name == attributeName);
     }
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
     {
-        try
-        {
-            var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
 
-            existingAttribute.Name = attribute.Name;
-            existingAttribute.TypeId = attribute.TypeId;
-            existingAttribute.Type = attribute.Type;
-            existingAttribute.Privacity = attribute.Privacity;
-            existingAttribute.RelatedClass = attribute.RelatedClass;
-            existingAttribute.RelatedClassId = existingAttribute.RelatedClass.Id;
+        existingAttribute.Name = attribute.Name;
+        existingAttribute.TypeId = attribute.TypeId;
+        existingAttribute.Type = attribute.Type;
+        existingAttribute.Privacity = attribute.Privacity;
+        existingAttribute.RelatedClass = attribute.RelatedClass;
+        existingAttribute.RelatedClassId = existingAttribute.RelatedClass.Id;
 
-            _context.SimAttributes.Update(existingAttribute);
-            _context.SaveChanges();
+        _context.SimAttributes.Update(existingAttribute);
+        _context.SaveChanges();
 
-            return existingAttribute;
-        }
-        catch(Exception ex)
-        {
-            throw new DataAccessException("Data base problem", ex);
-        }
+        return existingAttribute;
     }
 }
