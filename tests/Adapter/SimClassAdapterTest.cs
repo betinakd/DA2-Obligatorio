@@ -1,4 +1,6 @@
+using Adapter;
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Enums;
 using IBussinesLogic;
@@ -119,7 +121,7 @@ public class SimClassAdapterTest
 
         var exception = Assert.ThrowsException<InvalidAttribute>(() =>
             _simClassAdapter?.UpdateSimClass(request));
-        Assert.AreEqual("Name cannot be null or empty.", exception.Message);
+        Assert.AreEqual("Name cannot be empty or contain invalid characters.", exception.Message);
     }
 
     [TestMethod]
@@ -203,5 +205,27 @@ public class SimClassAdapterTest
         Assert.AreEqual($"Any class with the specified {simClassId} id exists.", exception.Message);
 
         _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldThrowInUseException_WhenServiceThrowsInUseValueLogic()
+    {
+        var request = new SimClassRequest
+        {
+            Name = "TestClass",
+            State = SimModelsAccesibility.Normal,
+            BaseClassId = Guid.NewGuid()
+        };
+
+        _mockSimClassService!
+            .Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            .Throws(new InUseValueLogic("Class is already in use."));
+
+        var exception = Assert.ThrowsException<InUseException>(() =>
+            _simClassAdapter!.CreateSimClass(request));
+
+        Assert.AreEqual("Class is already in use.", exception.Message);
+
+        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
     }
 }

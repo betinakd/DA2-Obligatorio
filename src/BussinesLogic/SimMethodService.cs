@@ -1,5 +1,6 @@
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using IBussinesLogic;
 using IDataAccess;
 
@@ -42,9 +43,22 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Sim class does not exist.");
         }
 
+        var simClass = _simClassDA.GetSimClassById(idClass);
+
         if(_simMethodDA.ExistsMethodInClass(idClass, method))
         {
             throw new InUseValueLogic("Method with same firm is already in the specified class.");
+        }
+
+        if(method.Accesibility == SimAccesibility.Abstract && simClass.State != SimAccesibility.Abstract && _simClassDA.InUseByOther(idClass))
+        {
+            throw new InUseValueLogic("Abstract method cannot be added because the class it is already in use and cannot change to abstract.");
+        }
+
+        if(method.Accesibility == SimAccesibility.Abstract)
+        {
+            simClass.State = SimAccesibility.Abstract;
+            _simClassDA.UpdateSimClass(simClass);
         }
 
         return _simMethodDA.CreateMethod(idClass, method);

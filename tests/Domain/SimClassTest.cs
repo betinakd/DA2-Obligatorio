@@ -117,4 +117,89 @@ public class SimClassTest
         simClass.DeleteAttribute(simAttribute);
         simClass.DeleteAttribute(simAttribute);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetName_ShouldThrowException_WhenNameIsInvalid()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "Invalid Name!";
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetName_ShouldThrowException_WhenNameContainsOnlyNumbers()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "123456";
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetName_ShouldThrowException_WhenNameIsReservedWord()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "class";
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetBaseClass_ShouldThrowException_WhenAbstractMethodsAreNotImplemented()
+    {
+        var baseClass = new SimClass
+        {
+            Name = "AbstractBaseClass",
+            State = SimAccesibility.Abstract,
+            Methods =
+        [
+            new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
+            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+        ]
+        };
+
+        var derivedClass = new SimClass
+        {
+            Name = "DerivedClass",
+            State = SimAccesibility.Normal,
+            Methods =
+        [
+            new SimMethod { Name = "ConcreteMethod", Accesibility = SimAccesibility.Normal }
+        ]
+        };
+
+        derivedClass.BaseClass = baseClass;
+    }
+
+    [TestMethod]
+    public void Methods_ShouldSetStateToAbstract_WhenListContainsAbstractMethod()
+    {
+        var simClass = new SimClass
+        {
+            Methods =
+        [
+            new SimMethod { Name = "ConcreteMethod", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "AbstractMethod", Accesibility = SimAccesibility.Abstract }
+        ]
+        };
+
+        Assert.AreEqual(SimAccesibility.Abstract, simClass.State);
+    }
+
+    [TestMethod]
+    public void Methods_ShouldNotChangeState_WhenListDoesNotContainAbstractMethod()
+    {
+        var simClass = new SimClass
+        {
+            Methods =
+        [
+            new SimMethod { Name = "ConcreteMethod1", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "ConcreteMethod2", Accesibility = SimAccesibility.Normal }
+        ]
+        };
+
+        Assert.AreEqual(SimAccesibility.Normal, simClass.State);
+    }
 }

@@ -20,7 +20,7 @@ public class SyntaxisValidation
 
     public static bool ReservedWords(string word)
     {
-        string[] reservedWords = ["class", "public", "private", "protected", "internal", "void", "static", "string", "int", "bool"];
+        string[] reservedWords = ["class", "public", "private", "protected", "internal", "void", "static", "var"];
         return reservedWords.Contains(word.ToLower());
     }
 }

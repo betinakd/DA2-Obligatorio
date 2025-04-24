@@ -1,10 +1,8 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Filters;
 
 namespace WebApi.Controllers;
 
-[ExceptionFilter]
 [ApiController]
 [Route("api/v1/invocations")]
 public class InvocationsMethodController(IMethodAdapter invocationAdapter) : ControllerBase
