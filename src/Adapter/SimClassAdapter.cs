@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
 using IAdapter;
@@ -6,6 +7,7 @@ using IBussinesLogic;
 using Models.Request;
 using Models.Response;
 
+namespace Adapter;
 public class SimClassAdapter(ISimClassService simClassService)
     : ISimClassAdapter
 {
@@ -26,8 +28,15 @@ public class SimClassAdapter(ISimClassService simClassService)
 
     public CreatedSimClassResponse CreateSimClass(SimClassRequest request)
     {
-        var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
-        return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = request.State } };
+        try
+        {
+            var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
+            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = request.State } };
+        }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseException(ex.Message);
+        }
     }
 
     public UpdateSimClassResponse UpdateSimClass(UpdateSimClassRequest request)
