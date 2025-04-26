@@ -194,19 +194,31 @@ public class SimAttributeDataAccessTest
     public void InUseByOther_ShouldReturnTrue_WhenAttributeIsUsed()
     {
         var attributeId = Guid.NewGuid();
+        var invocationId = Guid.NewGuid();
+
+        // Crear la signature
+        var signature = new Signature { Name = "Test Signature", Parameters = [new ParameterSignature { TypeId = attributeId }] };
+
+        // Crear invocación primero con ID fijo
         var invocation = new Invocation
         {
-            Id = Guid.NewGuid(),
-            Parameters =
-            [
-                new Parameter { TypeId = attributeId }
-            ]
+            Id = invocationId,
+            Signature = signature
         };
+
+        var reference = new ReferenceAttribute
+        {
+            Reference = new SimAttribute() { Id = attributeId, Name = "attri" },
+            RelatedInvocationId = invocationId,
+            RelatedInvocation = invocation
+        };
+
+        invocation.Reference = reference;
 
         _context!.Invocations.Add(invocation);
         _context.SaveChanges();
 
-        var result = _simAttributeDataAccess!.InUseByOther(attributeId);
+        var result = _simAttributeDataAccess.InUseByOther(attributeId);
         Assert.IsTrue(result);
     }
 }

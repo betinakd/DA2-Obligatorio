@@ -3,16 +3,18 @@ using Domain;
 using Domain.Exceptions;
 using IAdapter;
 using IBussinesLogic;
+using Models.Enums;
 using Models.Request;
 using Models.Response;
 
 namespace Adapter;
 
-public class MethodAdapter(IMethodService methodService, ISimClassService simClassService)
+public class MethodAdapter(IMethodService methodService, ISimClassService simClassService, ISimAttributeService simAttributeService)
     : IMethodAdapter
 {
     private readonly IMethodService _methodService = methodService;
     private readonly ISimClassService _simClassService = simClassService;
+    private readonly ISimAttributeService _simAttributeService = simAttributeService;
 
     public MethodResponse GetMethod(Guid id)
     {
@@ -195,34 +197,61 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var method = _methodService.GetMethodById(idMethod);
+            Reference reference = null; // Declare with base type Reference
+            switch(invocation.TypeReference)
+            {
+                case TypeReference.This:
+                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    break;
+
+                case TypeReference.Base:
+                    reference = new ReferenceBase() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    break;
+
+                case TypeReference.Attribute:
+                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
+                    reference = new ReferenceAttribute() { Reference = attribute };
+                    break;
+
+                case TypeReference.Parameter:
+                    var parameter = _methodService.GetParameterById(invocation.IdReference);
+                    reference = new ReferenceParameter() { Reference = parameter };
+                    break;
+
+                case TypeReference.LocalVariable:
+                    var variable = _methodService.GetVariableById(invocation.IdReference);
+                    reference = new ReferenceVariable() { Reference = variable };
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Unsupported type reference.");
+            }
 
             var newInvocation = new Invocation
             {
                 Id = Guid.NewGuid(),
-                MethodName = method.Name,
-                ReferenceId = invocation.IdReference,
-                RelatedMethod = method
+                Reference = reference,
+                Signature = new Signature() { Name = invocation.MethodName },
+                RelatedMethod = method,
+                RelatedMethodId = method.Id
             };
+
             var parametersResponses = new List<ParameterResponse>();
             foreach(var parameter in invocation.Parameters)
             {
-                var newParameter = new Parameter()
+                var newParameter = new ParameterSignature()
                 {
-                    Id = Guid.NewGuid(),
                     Name = parameter.Name,
                     Type = _simClassService.GetSimClassById(parameter.ClassTypeId),
-                    RelatedMethod = _methodService.GetMethodById(idMethod)
                 };
 
                 var newParameterResponse = new ParameterResponse()
                 {
-                    Id = newParameter.Id,
                     Name = newParameter.Name,
-                    MethodId = idMethod,
                     ClassTypeId = newParameter.Type.Id
                 };
 
-                newInvocation.Parameters.Add(newParameter);
+                newInvocation.Signature.Parameters.Add(newParameter);
                 parametersResponses.Add(newParameterResponse);
             }
 
@@ -234,8 +263,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 InvocationResponse = new InvocationResponse
                 {
                     Id = newInvocation.Id,
-                    IdReference = newInvocation.ReferenceId,
-                    MethodName = newInvocation.MethodName,
+                    IdReference = newInvocation.Reference.Id,
+                    MethodName = newInvocation.Signature.Name,
                     Parameters = parametersResponses,
                 }
             };
@@ -253,16 +282,15 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var invocation = _methodService.GetInvocationById(id);
 
             var parameters = new List<ParameterResponse>();
-            if(invocation.Parameters != null)
+            if(invocation.Signature.Parameters != null)
             {
-                foreach(var parameter in invocation.Parameters)
+                foreach(var parameter in invocation.Signature.Parameters)
                 {
                     parameters.Add(new ParameterResponse
                     {
                         Id = parameter.Id,
                         Name = parameter.Name,
-                        MethodId = parameter.RelatedMethod.Id,
-                        ClassTypeId = parameter.Type.Id
+                        ClassTypeId = parameter.TypeId
                     });
                 }
             }
@@ -270,8 +298,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             return new InvocationResponse
             {
                 Id = invocation.Id,
-                IdReference = invocation.ReferenceId,
-                MethodName = invocation.MethodName,
+                IdReference = invocation.Reference.GetSimClass().Id,
+                MethodName = invocation.Signature.Name,
                 Parameters = parameters
             };
         }

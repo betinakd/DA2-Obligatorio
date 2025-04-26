@@ -38,8 +38,8 @@ public class ReferenceAttributeTest
             Name = "TestMethod",
             Parameters =
             [
-                new Parameter { Name = "param1" },
-                new Parameter { Name = "param2" }
+                new ParameterSignature { Name = "param1" },
+                new ParameterSignature { Name = "param2" }
             ]
         };
 
