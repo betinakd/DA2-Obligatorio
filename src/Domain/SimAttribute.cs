@@ -10,8 +10,8 @@ public class SimAttribute
     private string _name = string.Empty;
     public Guid? TypeId { get; set; }
     public SimClass? Type { get; set; }
-    public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
-    public required SimClass RelatedClass { get; set; }
+    public SimPrivacity? Privacity { get; set; } = SimPrivacity.Public;
+    public SimClass? RelatedClass { get; set; }
     public Guid? RelatedClassId { get; set; }
     public string Name
     {
