@@ -64,4 +64,14 @@ public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimCla
 
         return _simAttributeDA.UpdateAttribute(attributeId, attribute);
     }
+
+    public SimAttribute GetSimAttribute(Guid attributeId)
+    {
+        if(!_simAttributeDA.ExistAttributeById(attributeId))
+        {
+            throw new NonExistentValueLogic("Attribute does not exist.");
+        }
+
+        return _simAttributeDA.GetSimAttribute(attributeId);
+    }
 }

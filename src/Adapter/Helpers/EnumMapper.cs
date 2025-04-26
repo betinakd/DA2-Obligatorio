@@ -3,14 +3,14 @@ using Models.Enums;
 
 public static class EnumMapper
 {
-    public static SimModelsPrivacity MapToModelPrivacity(SimPrivacity privacity)
+    public static SimModelsPrivacity MapToModelPrivacity(SimPrivacity? privacity)
     {
-        return (SimModelsPrivacity)(int)privacity;
+        return privacity.HasValue ? (SimModelsPrivacity)(int)privacity.Value : default;
     }
 
-    public static SimModelsAccesibility MapToModelAccesibility(SimAccesibility accesibility)
+    public static SimModelsAccesibility MapToModelAccesibility(SimAccesibility? accesibility)
     {
-        return (SimModelsAccesibility)(int)accesibility;
+        return accesibility.HasValue ? (SimModelsAccesibility)(int)accesibility.Value : default;
     }
 
     public static SimPrivacity MapToDomainPrivacity(SimModelsPrivacity privacity)

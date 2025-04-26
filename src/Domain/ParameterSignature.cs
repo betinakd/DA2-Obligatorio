@@ -1,18 +1,16 @@
-using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Validations;
 
 namespace Domain;
 
-public class SimAttribute
+public class ParameterSignature
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
-    public Guid? TypeId { get; set; }
     public SimClass? Type { get; set; }
-    public SimPrivacity? Privacity { get; set; } = SimPrivacity.Public;
-    public SimClass? RelatedClass { get; set; }
-    public Guid? RelatedClassId { get; set; }
+    public Guid? TypeId { get; set; }
+    public Guid? SignatureId { get; set; }
+
     public string Name
     {
         get => _name;

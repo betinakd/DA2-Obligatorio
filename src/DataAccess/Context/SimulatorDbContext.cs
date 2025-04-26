@@ -13,6 +13,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<LocalVariable> LocalVariables { get; set; }
     public DbSet<Invocation> Invocations { get; set; }
 
+    public DbSet<Reference> References { get; set; }
+    public DbSet<Signature> Signatures { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         Configuration(modelBuilder);
@@ -111,6 +114,28 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .WithMany(m => m.Invocations)
                     .HasForeignKey(i => i.RelatedMethodId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Invocation>()
+            .HasOne(m => m.Reference)
+            .WithOne(r => r.RelatedInvocation)
+            .HasForeignKey<Reference>(r => r.RelatedInvocationId);
+
+        modelBuilder.Entity<Invocation>()
+            .HasOne(m => m.Signature)
+            .WithOne(r => r.RelatedInvocation)
+            .HasForeignKey<Signature>(r => r.RelatedInvocationId);
+
+        modelBuilder.Entity<Reference>()
+                    .ToTable("References")
+                    .HasDiscriminator<string>("ReferenceType")
+                    .HasValue<ReferenceThis>("This")
+                    .HasValue<ReferenceBase>("Base")
+                    .HasValue<ReferenceAttribute>("Attribute")
+                    .HasValue<ReferenceParameter>("Parameter")
+                    .HasValue<ReferenceVariable>("Variable");
+
+        modelBuilder.Entity<Reference>()
+            .HasKey(r => r.Id);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)

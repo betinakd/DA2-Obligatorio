@@ -25,9 +25,9 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public bool InUseByOther(Guid attributeId)
     {
-        return _context.Invocations
-                .Any(invocation => invocation.Parameters
-                .Any(parameter => parameter.TypeId == attributeId));
+        return _context.References
+            .OfType<ReferenceAttribute>()
+            .Any(r => r.Reference.Id == attributeId);
     }
 
     public bool ExistAttributeById(Guid attributeId)
@@ -57,5 +57,11 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
         _context.SaveChanges();
 
         return existingAttribute;
+    }
+
+    public SimAttribute GetSimAttribute(Guid attributeId)
+    {
+        var attribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        return attribute;
     }
 }

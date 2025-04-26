@@ -84,11 +84,13 @@ public class SimMethodDataAccessTest
     {
         var referenceId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
+        var reference = new ReferenceThis { Reference = new SimClass() { Id = referenceId } };
+        var signature = new Signature { Name = "TestSignature", Parameters = [] };
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            ReferenceId = referenceId,
-            MethodName = "Test",
+            Reference = reference,
+            Signature = signature,
             RelatedMethodId = methodId,
             RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
         };
@@ -99,7 +101,6 @@ public class SimMethodDataAccessTest
         Assert.IsNotNull(invocationInDb);
         Assert.AreEqual(invocation.RelatedMethodId, invocationInDb.RelatedMethodId);
         Assert.AreEqual(invocation.Id, result.Id);
-        Assert.AreEqual(invocation.ReferenceId, invocationInDb.ReferenceId);
     }
 
     [TestMethod]
@@ -146,11 +147,13 @@ public class SimMethodDataAccessTest
     {
         var invocationId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
+
+        var signature = new Signature { Name = "TestSignature", Parameters = [] };
         var invocation = new Invocation
         {
             Id = invocationId,
             RelatedMethodId = methodId,
-            MethodName = "TestInvocation"
+            Signature = signature
         };
         _context.Invocations.Add(invocation);
         _context.SaveChanges();
@@ -346,10 +349,14 @@ public class SimMethodDataAccessTest
     public void GetInvocationById_ReturnsInvocation_WhenExists()
     {
         var invocationId = Guid.NewGuid();
+        var signature = new Signature()
+        {
+            Name = "TestInvocation"
+        };
         var invocation = new Invocation
         {
             Id = invocationId,
-            MethodName = "TestInvocation"
+            Signature = signature
         };
         _context.Invocations.Add(invocation);
         _context.SaveChanges();
@@ -358,7 +365,7 @@ public class SimMethodDataAccessTest
 
         Assert.IsNotNull(result);
         Assert.AreEqual(invocationId, result.Id);
-        Assert.AreEqual("TestInvocation", result.MethodName);
+        Assert.AreEqual("TestInvocation", result.Signature.Name);
     }
 
     [TestMethod]

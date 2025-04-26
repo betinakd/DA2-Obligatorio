@@ -182,11 +182,12 @@ public class SimClassDataAccessTest
     {
         var referenceId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
+        var signature = new Signature { Name = "Test", Parameters = [] };
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            ReferenceId = referenceId,
-            MethodName = "Test",
+            Signature = signature,
+            Reference = new ReferenceThis() { Reference = new SimClass() { Id = referenceId, Name = "TestClass" } },
             RelatedMethodId = methodId,
             RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
         };

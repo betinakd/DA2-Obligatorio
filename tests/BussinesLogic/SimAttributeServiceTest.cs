@@ -265,4 +265,43 @@ public class SimAttributeServiceTest
         Assert.AreEqual(attribute.Type, result.Type);
         Assert.AreEqual(attribute.Privacity, result.Privacity);
     }
+
+    [TestMethod]
+    public void GetSimAttribute_ShouldReturnAttribute_WhenAttributeExists()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Privacity = SimPrivacity.Public
+        };
+
+        _mockSimAttributeDataAccess!.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
+        _mockSimAttributeDataAccess.Setup(da => da.GetSimAttribute(attributeId)).Returns(attribute);
+
+        var result = _simAttributeService!.GetSimAttribute(attributeId);
+
+        _mockSimAttributeDataAccess.Verify(da => da.ExistAttributeById(attributeId), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.GetSimAttribute(attributeId), Times.Once);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(attributeId, result.Id);
+        Assert.AreEqual("TestAttribute", result.Name);
+        Assert.AreEqual(SimPrivacity.Public, result.Privacity);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void GetSimAttribute_ShouldThrowException_WhenAttributeDoesNotExist()
+    {
+        var attributeId = Guid.NewGuid();
+
+        _mockSimAttributeDataAccess!.Setup(da => da.ExistAttributeById(attributeId)).Returns(false);
+
+        _simAttributeService!.GetSimAttribute(attributeId);
+    }
 }

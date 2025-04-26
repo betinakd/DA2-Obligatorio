@@ -202,4 +202,94 @@ public class SimClassTest
 
         Assert.AreEqual(SimAccesibility.Normal, simClass.State);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetBaseClass_ThrowsException_WhenBaseClassIsNull()
+    {
+        var simClass = new SimClass
+        {
+            Name = "DerivedClass"
+        };
+
+        simClass.BaseClass = null;
+    }
+
+    [TestMethod]
+    public void SetBaseClass_ShouldSetBaseClass_WhenBaseClassIsValidNormal()
+    {
+        var baseClass = new SimClass
+        {
+            Name = "NormalBaseClass",
+            State = SimAccesibility.Normal
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "DerivedClass"
+        };
+
+        simClass.BaseClass = baseClass;
+
+        Assert.AreEqual(baseClass, simClass.BaseClass);
+        Assert.AreEqual(baseClass.Id, simClass.BaseClass.Id);
+    }
+
+    [TestMethod]
+    public void SetBaseClass_ShouldSetBaseClass_WhenDerivedClassImplementsAllAbstractMethods()
+    {
+        var baseClass = new SimClass
+        {
+            Name = "AbstractBaseClass",
+            State = SimAccesibility.Abstract,
+            Methods =
+            [
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+            ]
+        };
+
+        var derivedClass = new SimClass
+        {
+            Name = "DerivedClass",
+            Methods =
+            [
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal },
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal }
+            ]
+        };
+
+        derivedClass.BaseClass = baseClass;
+
+        Assert.AreEqual(baseClass, derivedClass.BaseClass);
+    }
+
+    [TestMethod]
+    public void SetBaseClass_ShouldSetBaseClass_WhenBothClassesAreAbstract()
+    {
+        var baseClass = new SimClass
+        {
+            Name = "AbstractBaseClass",
+            State = SimAccesibility.Abstract,
+            Methods =
+            [
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+            ]
+        };
+
+        var derivedClass = new SimClass
+        {
+            Name = "AbstractDerivedClass",
+            State = SimAccesibility.Abstract,
+            Methods =
+            [
+                new SimMethod { Name = "NewAbstractMethod", Accesibility = SimAccesibility.Abstract }
+            ]
+        };
+
+        derivedClass.BaseClass = baseClass;
+
+        Assert.AreEqual(baseClass, derivedClass.BaseClass);
+    }
 }
