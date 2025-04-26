@@ -221,4 +221,38 @@ public class SimAttributeDataAccessTest
         var result = _simAttributeDataAccess.InUseByOther(attributeId);
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public void GetSimAttribute_ShouldReturnAttribute_WhenAttributeExists()
+    {
+        var relatedClassId = Guid.NewGuid();
+        var relatedClass = new SimClass
+        {
+            Id = relatedClassId,
+            Name = "Test Class"
+        };
+        _context.SimClasses.Add(relatedClass);
+
+        var attributeId = Guid.NewGuid();
+        var attributeName = "Test Attribute";
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = attributeName,
+            RelatedClass = relatedClass,
+            RelatedClassId = relatedClassId,
+            Type = relatedClass,
+            TypeId = relatedClassId
+        };
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        var result = _simAttributeDataAccess.GetSimAttribute(attributeId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(attributeId, result.Id);
+        Assert.AreEqual(attributeName, result.Name);
+        Assert.AreEqual(relatedClassId, result.RelatedClassId);
+        Assert.AreEqual(relatedClassId, result.TypeId);
+    }
 }
