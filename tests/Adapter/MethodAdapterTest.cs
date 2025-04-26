@@ -536,4 +536,270 @@ public class MethodAdapterTest
 
         _methodAdapter!.GetInvocation(invocationId);
     }
+
+    [TestMethod]
+    public void CreateInvocation_WithBaseReference_ShouldReturnCreatedInvocationResponse()
+    {
+        var methodId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var simClass = new SimClass { Id = classTypeId, Name = "int" };
+        var baseClass = new SimClass { Id = referenceId, Name = "BaseClass" };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = referenceId,
+            TypeReference = TypeReference.Base,
+            MethodName = "BaseMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId)).Returns(baseClass);
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+
+        var result = _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+
+        _mockMethodService.Verify();
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.MethodName.Should().Be("BaseMethod");
+        result.InvocationResponse.Parameters.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithAttributeReference_ShouldReturnCreatedInvocationResponse()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var simClass = new SimClass { Id = classTypeId, Name = "int" };
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            Type = simClass
+        };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = attributeId,
+            TypeReference = TypeReference.Attribute,
+            MethodName = "AttrMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockAttributeService!.Setup(s => s.GetSimAttribute(attributeId)).Returns(attribute);
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+
+        var result = _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+
+        _mockMethodService.Verify();
+
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.MethodName.Should().Be("AttrMethod");
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithParameterReference_ShouldReturnCreatedInvocationResponse()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var simClass = new SimClass { Id = classTypeId, Name = "int" };
+        var parameter = new Parameter
+        {
+            Id = parameterId,
+            Name = "TestParam",
+            Type = simClass
+        };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = parameterId,
+            TypeReference = TypeReference.Parameter,
+            MethodName = "ParamMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockMethodService.Setup(s => s.GetParameterById(parameterId)).Returns(parameter);
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+
+        var result = _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+
+        _mockMethodService.Verify();
+
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.MethodName.Should().Be("ParamMethod");
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithLocalVariableReference_ShouldReturnCreatedInvocationResponse()
+    {
+        var methodId = Guid.NewGuid();
+        var variableId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var simClass = new SimClass { Id = classTypeId, Name = "string" };
+        var variable = new LocalVariable
+        {
+            Id = variableId,
+            Name = "TestVar",
+            Type = simClass
+        };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = variableId,
+            TypeReference = TypeReference.LocalVariable,
+            MethodName = "VarMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockMethodService.Setup(s => s.GetVariableById(variableId)).Returns(variable);
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+
+        var result = _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+
+        _mockMethodService.Verify();
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.MethodName.Should().Be("VarMethod");
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithMultipleParameters_ShouldReturnCreatedInvocationResponse()
+    {
+        var methodId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+        var intTypeId = Guid.NewGuid();
+        var stringTypeId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var intType = new SimClass { Id = intTypeId, Name = "int" };
+        var stringType = new SimClass { Id = stringTypeId, Name = "string" };
+        var referenceClass = new SimClass { Id = referenceId, Name = "TestClass" };
+
+        var parameters = new List<ParameterRequest>
+    {
+        new ParameterRequest { Name = "param1", ClassTypeId = intTypeId },
+        new ParameterRequest { Name = "param2", ClassTypeId = stringTypeId }
+    };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = referenceId,
+            TypeReference = TypeReference.This,
+            MethodName = "MultiParamMethod",
+            Parameters = parameters
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId)).Returns(referenceClass);
+        _mockSimClassService.Setup(s => s.GetSimClassById(intTypeId)).Returns(intType);
+        _mockSimClassService.Setup(s => s.GetSimClassById(stringTypeId)).Returns(stringType);
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+
+        var result = _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+
+        _mockMethodService.Verify();
+
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.MethodName.Should().Be("MultiParamMethod");
+        result.InvocationResponse.Parameters.Should().HaveCount(2);
+        result.InvocationResponse.Parameters[0].Name.Should().Be("param1");
+        result.InvocationResponse.Parameters[1].Name.Should().Be("param2");
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void CreateInvocation_WithInvalidTypeReference_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = referenceId,
+            TypeReference = (TypeReference)999,
+            MethodName = "InvalidMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+
+        _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+        _mockMethodService.Verify();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void CreateInvocation_WithInvalidSimClassService_ShouldThrowException()
+    {
+        // Arrange
+        var methodId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = referenceId,
+            TypeReference = TypeReference.This,
+            MethodName = "FailMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId))
+            .Throws(new Exception("SimClass service error"));
+
+        _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+        _mockMethodService.Verify();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void CreateInvocation_WithInvalidAttributeService_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = attributeId,
+            TypeReference = TypeReference.Attribute,
+            MethodName = "FailMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockAttributeService!.Setup(s => s.GetSimAttribute(attributeId))
+            .Throws(new Exception("Attribute service error"));
+
+        _methodAdapter!.CreateInvocation(methodId, invocationRequest);
+        _mockMethodService.Verify();
+    }
 }
