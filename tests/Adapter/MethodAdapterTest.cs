@@ -482,7 +482,6 @@ public class MethodAdapterTest
     [TestMethod]
     public void GetInvocation_ShouldReturnInvocationResponse_WhenValid()
     {
-        // Arrange
         var invocationId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
@@ -494,20 +493,20 @@ public class MethodAdapterTest
             Id = Guid.NewGuid(),
             Name = "param1",
             Type = simClass,
-            TypeId = classTypeId // Make sure TypeId is set correctly
+            TypeId = classTypeId
         };
 
-        var signature = new Signature() { Name = "TestMethod", Parameters = [parameter] };
         var reference = new ReferenceThis() { Reference = simClass };
 
         var invocation = new Invocation
         {
             Id = invocationId,
-            Signature = signature,
             RelatedMethod = method,
             RelatedMethodId = methodId,
             Reference = reference
         };
+        var signature = new Signature() { Name = "TestMethod", Parameters = [parameter], Id = Guid.NewGuid(), RelatedInvocationId = invocationId, RelatedInvocation = invocation };
+        invocation.Signature = signature;
 
         _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Returns(invocation);
 
@@ -756,7 +755,6 @@ public class MethodAdapterTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void CreateInvocation_WithInvalidSimClassService_ShouldThrowException()
     {
-        // Arrange
         var methodId = Guid.NewGuid();
         var referenceId = Guid.NewGuid();
 
