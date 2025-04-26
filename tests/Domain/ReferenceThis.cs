@@ -1,0 +1,40 @@
+using Domain;
+
+namespace Tests.Domain;
+
+[TestClass]
+public class ReferenceThisTest()
+{
+    [TestMethod]
+    public void TestGetSimClass_ShouldReturnReferenceProperty()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        var referenceThis = new ReferenceThis() { Reference = simClass };
+
+        var result = referenceThis.GetSimClass();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simClass, result);
+        Assert.AreEqual("TestClass", result.Name);
+    }
+
+    [TestMethod]
+    public void TestGetSignature_ShouldReturnThisSignatureFormat()
+    {
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            Parameters =
+        [
+            new Parameter { Name = "param1" },
+            new Parameter { Name = "param2" }
+        ]
+        };
+
+        var referenceThis = new ReferenceThis();
+
+        var result = referenceThis.GetSignature(signature);
+
+        Assert.AreEqual("this.TestMethod(param1, param2)", result);
+    }
+}
