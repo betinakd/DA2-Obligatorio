@@ -15,6 +15,11 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         SimClass objClass = objReal.GetSimClass();
         SimMethod? methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
 
+        if(methodToExecute == null)
+        {
+            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}";
+        }
+
         var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()";
 
         return result;
