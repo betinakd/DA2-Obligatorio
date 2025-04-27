@@ -9,31 +9,6 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 {
     private readonly SimulatorDbContext _context = context;
 
-    public bool ExecuteAbstractMethod(string methodName, List<Parameter> parameters, Guid idInstanceType, Guid idReferenceType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool FoundPrivateMethod(string methodName, List<Parameter> parameters, Guid idInstanceType, Guid idReferenceType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool FoundSealedMethod(string methodName, List<Parameter> parameters, Guid idInstanceType, Guid idReferenceType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public string GetExecution(string methodName, List<Parameter> parameters, Guid idInstanceType, Guid idReferenceType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool NotFoundMethodFirm(string methodName, List<Parameter> parameters, Guid idInstanceType, Guid idReferenceType)
-    {
-        throw new NotImplementedException();
-    }
-
     public SimMethod FindMethodInHierarchy(SimClass simClass, Signature signature)
     {
         if(simClass == null)
@@ -43,8 +18,15 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         var methods = _context.SimMethods
             .Include(m => m.Parameters)
-            .ThenInclude(p => p.Type)
-            .Where(m => m.RelatedClassId == simClass.Id && m.Name == signature.Name && (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected))
+                .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => i.Reference)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => i.Signature)
+                    .ThenInclude(s => s.Parameters)
+                        .ThenInclude(p => p.Type)
+            .Where(m => m.RelatedClassId == simClass.Id && m.Name == signature.Name &&
+                  (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected))
             .ToList();
 
         var method = methods.FirstOrDefault(m => m.MatchSignature(signature));
