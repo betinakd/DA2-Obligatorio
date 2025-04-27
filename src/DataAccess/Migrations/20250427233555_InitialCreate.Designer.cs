@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250427210719_InitialCreate")]
+    [Migration("20250427233555_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -363,12 +363,14 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Motor",
                             State = 2
                         },
                         new
                         {
                             Id = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Auto",
                             State = 2
                         },
@@ -382,12 +384,14 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Validador",
                             State = 2
                         },
                         new
                         {
                             Id = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Entrada",
                             State = 2
                         },
