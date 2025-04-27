@@ -268,7 +268,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = motorId,
-                ReturTypeId = voidTypeId
+                ReturTypeId = voidTypeId,
             },
             new SimMethod
             {
