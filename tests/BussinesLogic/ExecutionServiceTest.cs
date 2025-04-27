@@ -205,4 +205,39 @@ public class ExecutionServiceTest
 
         Assert.AreEqual(expectedOutput, result);
     }
+
+    [TestMethod]
+    public void ExecuteMethod_RecursiveCall_DetectsRecursion()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "Recursive" };
+        var methodId = Guid.NewGuid();
+        var signature = new Signature { Name = "RecursiveMethod", Parameters = [] };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "RecursiveMethod",
+            RelatedClass = simClass,
+            Invocations = []
+        };
+
+        var recursiveInvocation = new Invocation
+        {
+            Reference = new ReferenceThis { Reference = simClass },
+            Signature = signature
+        };
+        method.Invocations.Add(recursiveInvocation);
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetSignature(signature)).Returns("Recursive.RecursiveMethod()");
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature))
+            .Returns(method);
+
+        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
+
+        Assert.IsTrue(result.Contains("/* recursión */"));
+    }
 }
