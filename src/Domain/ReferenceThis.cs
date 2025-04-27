@@ -3,6 +3,7 @@ using Domain;
 public class ReferenceThis : Reference
 {
     public SimClass Reference { get; set; } = new SimClass();
+    public Guid ReferenceId { get; set; }
 
     public override string GetSignature(Signature method)
     {

@@ -38,7 +38,7 @@ public class ReferenceBaseTest()
 
         var result = referenceBase.GetSignature(signature);
 
-        Assert.AreEqual("this.TestMethod(param1, param2)", result);
+        Assert.AreEqual("base.TestMethod(param1, param2)", result);
     }
 
     [TestMethod]
