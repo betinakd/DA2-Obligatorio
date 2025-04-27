@@ -25,6 +25,7 @@ public class ExecutionAdapterTest
     [TestMethod]
     public void ExecuteMethodValidInputs_ShouldMapParametersAndCallExecutionService()
     {
+        // Arrange
         var instanceTypeId = Guid.NewGuid();
         var referenceTypeId = Guid.NewGuid();
         var param1TypeId = Guid.NewGuid();
@@ -37,28 +38,42 @@ public class ExecutionAdapterTest
             ReferenceTypeId = referenceTypeId,
             InstanceName = "Instance1",
             Parameters =
-        [
+            [
             new ParameterRequest { Name = "param1", ClassTypeId = param1TypeId },
-            new ParameterRequest { Name = "param2", ClassTypeId = param2TypeId }
-        ]
+                new ParameterRequest { Name = "param2", ClassTypeId = param2TypeId }
+            ]
         };
 
+        var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
+        var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
         var simClass1 = new SimClass { Id = param1TypeId, Name = "Type1" };
         var simClass2 = new SimClass { Id = param2TypeId, Name = "Type2" };
 
         _simClassService!
-            .Setup(s => s.GetSimClassById(param1TypeId)).Returns(simClass1);
+            .Setup(s => s.GetSimClassById(instanceTypeId))
+            .Returns(instanceTypeClass);
+
         _simClassService
-            .Setup(s => s.GetSimClassById(param2TypeId)).Returns(simClass2);
+            .Setup(s => s.GetSimClassById(referenceTypeId))
+            .Returns(referenceTypeClass);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(param1TypeId))
+            .Returns(simClass1);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(param2TypeId))
+            .Returns(simClass2);
 
         _mockExecutionService!
             .Setup(s => s.ExecuteMethod(
-                "TestMethod",
-                It.Is<List<Parameter>>(l =>
-                    l.Count == 2 &&
-                    l[0].Name == "param1" && l[0].Type == simClass1 &&
-                    l[1].Name == "param2" && l[1].Type == simClass2),
-                instanceTypeId, referenceTypeId, "Instance1"))
+                It.Is<Reference>(r => r is ReferenceThis &&
+                    ((ReferenceThis)r).Reference.Id == referenceTypeId),
+                It.Is<Reference>(r => r is ReferenceThis &&
+                    ((ReferenceThis)r).Reference.Id == instanceTypeId),
+                It.Is<Signature>(s => s.Name == "TestMethod" && s.Parameters.Count == 2),
+                It.IsAny<int>(),
+                It.IsAny<HashSet<Guid>>()))
             .Returns("expectedResult");
 
         var result = _executionAdapter!.ExecuteMethod(request);

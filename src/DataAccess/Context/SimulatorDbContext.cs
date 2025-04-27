@@ -16,6 +16,8 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Reference> References { get; set; }
     public DbSet<Signature> Signatures { get; set; }
 
+    public DbSet<ParameterSignature> ParameterSignatures { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         Configuration(modelBuilder);
@@ -136,6 +138,18 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
 
         modelBuilder.Entity<Reference>()
             .HasKey(r => r.Id);
+
+        modelBuilder.Entity<Signature>()
+            .HasMany<ParameterSignature>()
+            .WithOne()
+            .HasForeignKey(ps => ps.SignatureId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ParameterSignature>()
+            .HasOne(ps => ps.Type)
+            .WithMany()
+            .HasForeignKey(ps => ps.TypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)

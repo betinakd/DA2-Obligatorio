@@ -1,5 +1,4 @@
 using BussinesLogic;
-using BussinesLogic.Exceptions;
 using Domain;
 using IDataAccess;
 using Moq;
@@ -9,280 +8,236 @@ namespace Tests.BussinesLogic;
 [TestClass]
 public class ExecutionServiceTest
 {
-    private Mock<ISimClassDataAccess>? _mockSimClassDataAccess;
     private Mock<IExecutionDataAccess>? _mockExecuteDataAccess;
     private ExecutionService? _executionService;
 
     [TestInitialize]
     public void Initialize()
     {
-        _mockSimClassDataAccess = new Mock<ISimClassDataAccess>(MockBehavior.Strict);
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Strict);
-        _executionService = new ExecutionService(_mockSimClassDataAccess.Object, _mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NonExistentValueLogic))]
-    public void ExecuteMethod_ShouldThrow_WhenInstanceClassNotFound()
+    public void ExecuteMethod_BasicMethodWithoutInvocations_ReturnsFormattedOutput()
     {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = simClass,
+            Invocations = []
+        };
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
 
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(false);
-
-        _mockSimClassDataAccess!
-    .Setup(m => m.ExistSimClassById(idReferenceType))
-    .Returns(true);
-
-        _mockExecuteDataAccess!
-        .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-        .Returns(false);
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
 
         _mockExecuteDataAccess!
-    .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature))
+            .Returns(method);
 
-        _mockExecuteDataAccess!
-.Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-.Returns(false);
+        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        _mockExecuteDataAccess!
-    .Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
-
-        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
+        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NonExistentValueLogic))]
-    public void ExecuteMethod_ShouldThrow_WhenReferenceClassNotFound()
+    public void ExecuteMethod_MethodNotFound_ReturnsErrorMessage()
     {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "NonExistentMethod", Parameters = [] };
 
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(true);
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idReferenceType))
-            .Returns(false);
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
 
         _mockExecuteDataAccess!
-    .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature))
+            .Returns((SimMethod)null);
 
-        _mockExecuteDataAccess!
-        .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-        .Returns(false);
+        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        _mockExecuteDataAccess!
-.Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-.Returns(false);
-
-        _mockExecuteDataAccess!
-    .Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
-
-        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
+        Assert.AreEqual("Error: No se encontró el método NonExistentMethod en TestClass", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationLogic))]
-    public void ExecuteMethod_ShouldThrow_WhenMethodIsAbstract()
+    public void ExecuteMethod_NestedInvocations_FormatsProperly()
     {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
+        var notificadorClass = new SimClass { Id = Guid.NewGuid(), Name = "Notificador" };
+        var notificacionClass = new SimClass { Id = Guid.NewGuid(), Name = "Notificacion" };
+        var emailClass = new SimClass { Id = Guid.NewGuid(), Name = "Email", BaseClass = notificacionClass };
 
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(true);
+        var notificarMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "Notificar",
+            RelatedClass = notificadorClass,
+            RelatedClassId = notificadorClass.Id,
+            Invocations = []
+        };
 
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idReferenceType))
-            .Returns(true);
+        var enviarMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "Enviar",
+            RelatedClass = notificacionClass,
+            RelatedClassId = notificacionClass.Id,
+            Invocations = []
+        };
 
-        _mockExecuteDataAccess!
-            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(true);
+        var confirmarMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "Confirmar",
+            RelatedClass = notificacionClass,
+            RelatedClassId = notificacionClass.Id,
+            Invocations = []
+        };
 
-        _mockExecuteDataAccess!
-.Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-.Returns(false);
+        var enviarEmailMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "Enviar",
+            RelatedClass = emailClass,
+            RelatedClassId = emailClass.Id,
+            Invocations = []
+        };
 
-        _mockExecuteDataAccess!
-    .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
+        var avisoParam = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "aviso",
+            Type = notificacionClass,
+            TypeId = notificacionClass.Id
+        };
 
-        _mockExecuteDataAccess!
-.Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-.Returns(false);
+        var enviarSignature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "Enviar",
+            Parameters = []
+        };
 
-        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
+        var confirmarSignature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "Confirmar",
+            Parameters = []
+        };
+
+        var avisoRef = new ReferenceParameter { Reference = avisoParam };
+        var notificadorRef = new ReferenceThis { Reference = notificadorClass };
+
+        var otroAvisoAttr = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "otroAviso",
+            Type = emailClass,
+            TypeId = emailClass.Id,
+            RelatedClass = notificadorClass,
+            RelatedClassId = notificadorClass.Id
+        };
+        var otroAvisoRef = new ReferenceAttribute { Reference = otroAvisoAttr };
+
+        var mockAvisoRef = new Mock<Reference>();
+        mockAvisoRef.Setup(r => r.GetSimClass()).Returns(notificacionClass);
+        mockAvisoRef.Setup(r => r.GetSignature(enviarSignature)).Returns("Notificacion.Enviar()");
+        mockAvisoRef.Setup(r => r.GetSignature(confirmarSignature)).Returns("Notificacion.Confirmar()");
+
+        var mockNotificadorRef = new Mock<Reference>();
+        mockNotificadorRef.Setup(r => r.GetSimClass()).Returns(notificadorClass);
+        mockNotificadorRef.Setup(r => r.GetSignature(It.IsAny<Signature>())).Returns("Notificador.Notificar()");
+
+        var mockOtroAvisoRef = new Mock<Reference>();
+        mockOtroAvisoRef.Setup(r => r.GetSimClass()).Returns(emailClass);
+        mockOtroAvisoRef.Setup(r => r.GetSignature(enviarSignature)).Returns("Email.Enviar()");
+        mockOtroAvisoRef.Setup(r => r.GetSignature(confirmarSignature)).Returns("Email.Confirmar()");
+        _mockExecuteDataAccess
+            .Setup(m => m.FindMethodInHierarchy(It.IsAny<SimClass>(), It.Is<Signature>(s => s.Name == "Notificar")))
+            .Returns(notificarMethod);
+
+        _mockExecuteDataAccess
+            .Setup(m => m.FindMethodInHierarchy(It.IsAny<SimClass>(), It.Is<Signature>(s => s.Name == "Enviar")))
+            .Returns((SimClass c, Signature s) => c.Name == "Email" ? enviarEmailMethod : enviarMethod);
+
+        _mockExecuteDataAccess
+            .Setup(m => m.FindMethodInHierarchy(It.IsAny<SimClass>(), It.Is<Signature>(s => s.Name == "Confirmar")))
+            .Returns(confirmarMethod);
+
+        notificarMethod.Invocations =
+    [
+        new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Reference = mockAvisoRef.Object,
+            Signature = enviarSignature
+        },
+        new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Reference = mockAvisoRef.Object,
+            Signature = confirmarSignature
+        },
+        new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Reference = mockOtroAvisoRef.Object,
+            Signature = enviarSignature
+        },
+        new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Reference = mockOtroAvisoRef.Object,
+            Signature = confirmarSignature
+        },
+    ];
+
+        var notificarSignature = new Signature { Id = Guid.NewGuid(), Name = "Notificar" };
+        var result = _executionService.ExecuteMethod(mockNotificadorRef.Object, mockNotificadorRef.Object, notificarSignature);
+
+        var expectedOutput = "Notificador.Notificar() -> Notificador.Notificar()" +
+                            "    Notificacion.Enviar() -> Notificacion.Enviar()" +
+                            "    Notificacion.Confirmar() -> Notificacion.Confirmar()" +
+                            "    Email.Enviar() -> Email.Enviar()" +
+                            "    Email.Confirmar() -> Notificacion.Confirmar()";
+
+        Assert.AreEqual(expectedOutput, result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationLogic))]
-    public void ExecuteMethod_ShouldThrow_WhenMethodIsSealed()
+    public void ExecuteMethod_RecursiveCall_DetectsRecursion()
     {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "Recursive" };
+        var methodId = Guid.NewGuid();
+        var signature = new Signature { Name = "RecursiveMethod", Parameters = [] };
 
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(true);
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "RecursiveMethod",
+            RelatedClass = simClass,
+            Invocations = []
+        };
 
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idReferenceType))
-            .Returns(true);
+        var recursiveInvocation = new Invocation
+        {
+            Reference = new ReferenceThis { Reference = simClass },
+            Signature = signature
+        };
+        method.Invocations.Add(recursiveInvocation);
 
-        _mockExecuteDataAccess!
-            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(true);
-
-        _mockExecuteDataAccess!
-    .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetSignature(signature)).Returns("Recursive.RecursiveMethod()");
 
         _mockExecuteDataAccess!
-.Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-.Returns(false);
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature))
+            .Returns(method);
 
-        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
-    }
+        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-    [TestMethod]
-    [ExpectedException(typeof(InvalidOperationLogic))]
-    public void ExecuteMethod_ShouldThrow_WhenMethodIsPrivate()
-    {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(true);
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idReferenceType))
-            .Returns(true);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(true);
-
-        _mockExecuteDataAccess!
-    .Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-    .Returns(false);
-
-        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(NonExistentValueLogic))]
-    public void ExecuteMethod_ShouldThrow_WhenMethodNotFoundInClassOrBaseClasses()
-    {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(true);
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idReferenceType))
-            .Returns(true);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(true);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
-    }
-
-    [TestMethod]
-    public void ExecuteMethod_ShouldReturnResult_WhenAllChecksPass()
-    {
-        var methodName = "TestMethod";
-        var parameters = new List<Parameter>();
-        var idInstanceType = Guid.NewGuid();
-        var idReferenceType = Guid.NewGuid();
-        var instanceName = "TestInstance";
-        var expectedResult = "ExecutionResult";
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idInstanceType))
-            .Returns(true);
-
-        _mockSimClassDataAccess!
-            .Setup(m => m.ExistSimClassById(idReferenceType))
-            .Returns(true);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.NotFoundMethodFirm(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ExecuteAbstractMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundSealedMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FoundPrivateMethod(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(false);
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.GetExecution(methodName, parameters, idInstanceType, idReferenceType))
-            .Returns(expectedResult);
-
-        var result = _executionService!.ExecuteMethod(methodName, parameters, idInstanceType, idReferenceType, instanceName);
-
-        Assert.AreEqual(expectedResult, result);
+        Assert.IsTrue(result.Contains("/* recursión */"));
     }
 }
