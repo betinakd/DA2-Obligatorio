@@ -22,6 +22,15 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()";
 
+        foreach(var invocation in methodToExecute.Invocations)
+        {
+            Reference invocRef = invocation.Reference;
+            var isReferenceThis = invocation.Reference is ReferenceThis;
+            Reference invocObj = isReferenceThis ? objReal : invocation.Reference;
+
+            result += ExecuteMethod(invocRef, invocObj, invocation.Signature, level + 1, null);
+        }
+
         return result;
     }
 }
