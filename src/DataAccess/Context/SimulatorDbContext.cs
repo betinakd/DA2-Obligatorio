@@ -207,8 +207,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "void",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
-            }
-        );
+            });
 
         var motorId = Guid.Parse("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1");
         var autoId = Guid.Parse("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1");
@@ -239,14 +238,15 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = motorId,
                 Name = "Motor",
                 State = SimAccesibility.Normal,
+                BaseClassId = objectClassId,
             },
             new SimClass
             {
                 Id = autoId,
                 Name = "Auto",
                 State = SimAccesibility.Normal,
-            }
-        );
+                BaseClassId = objectClassId
+            });
 
         _ = modelBuilder.Entity<SimAttribute>().HasData(
             new SimAttribute
@@ -256,11 +256,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 TypeId = motorId,
                 RelatedClassId = autoId,
                 Privacity = SimPrivacity.Private,
-            }
-        );
+            });
 
         _ = modelBuilder.Entity<SimMethod>().HasData(
-
             new SimMethod
             {
                 Id = encenderId,
@@ -277,9 +275,8 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = motorId,
-                ReturTypeId = voidTypeId
+                ReturTypeId = voidTypeId,
             },
-
             new SimMethod
             {
                 Id = iniciarViajeId,
@@ -287,7 +284,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = autoId,
-                ReturTypeId = voidTypeId
+                ReturTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -296,56 +293,51 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = autoId,
-                ReturTypeId = voidTypeId
-            }
-        );
+                ReturTypeId = voidTypeId,
+            });
 
         _ = modelBuilder.Entity<Invocation>().HasData(
-
             new
             {
                 Id = invIniciarViajeEncenderId,
                 RelatedMethodId = iniciarViajeId,
                 SignatureId = firmaEncenderId,
-                ReferenceId = motorAutoReferenceId
+                ReferenceId = motorAutoReferenceId,
             },
             new
             {
                 Id = invIniciarViajeRecursiveId,
                 RelatedMethodId = iniciarViajeId,
                 SignatureId = firmaIniciarViajeId,
-                ReferenceId = thisAutoReferenceId
+                ReferenceId = thisAutoReferenceId,
             },
-
             new
             {
                 Id = invFinalizarViajeApagaId,
                 RelatedMethodId = finalizarViajeId,
                 SignatureId = firmaApagaId,
-                ReferenceId = motorAutoReference2Id
-            }
-        );
+                ReferenceId = motorAutoReference2Id,
+            });
 
         _ = modelBuilder.Entity<Signature>().HasData(
             new
             {
                 Id = firmaEncenderId,
                 Name = "Encender",
-                RelatedInvocationId = invIniciarViajeEncenderId
+                RelatedInvocationId = invIniciarViajeEncenderId,
             },
             new
             {
                 Id = firmaApagaId,
                 Name = "Apagar",
-                RelatedInvocationId = invFinalizarViajeApagaId
+                RelatedInvocationId = invFinalizarViajeApagaId,
             },
             new
             {
                 Id = firmaIniciarViajeId,
                 Name = "IniciarViaje",
-                RelatedInvocationId = invIniciarViajeRecursiveId
-            }
-        );
+                RelatedInvocationId = invIniciarViajeRecursiveId,
+            });
 
         _ = modelBuilder.Entity<ReferenceAttribute>().HasData(
             new
@@ -353,16 +345,15 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = motorAutoReferenceId,
                 ReferenceId = motorAutoAttributeId,
                 RelatedInvocationId = invIniciarViajeEncenderId,
-                ReferenceType = "Attribute"
+                ReferenceType = "Attribute",
             },
             new
             {
                 Id = motorAutoReference2Id,
                 ReferenceId = motorAutoAttributeId,
                 RelatedInvocationId = invIniciarViajeEncenderId,
-                ReferenceType = "Attribute"
-            }
-        );
+                ReferenceType = "Attribute",
+            });
 
         _ = modelBuilder.Entity<ReferenceThis>().HasData(
             new
@@ -370,9 +361,8 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = thisAutoReferenceId,
                 ReferenceId = autoId,
                 RelatedInvocationId = invIniciarViajeRecursiveId,
-                ReferenceType = "This"
-            }
-        );
+                ReferenceType = "This",
+            });
 
         _ = modelBuilder.Entity<ReferenceAttribute>().HasData(
             new
@@ -380,9 +370,8 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = thisAutoReference2Id,
                 ReferenceId = motorAutoAttributeId,
                 RelatedInvocationId = invFinalizarViajeApagaId,
-                ReferenceType = "Attribute"
-            }
-        );
+                ReferenceType = "Attribute",
+            });
 
         var boolTypeId = Guid.Parse("22223222-2222-2222-2222-222222222222");
 
@@ -393,8 +382,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "bool",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
-            }
-        );
+            });
 
         var validadorId = Guid.Parse("a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4");
         var entradaId = Guid.Parse("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4");
@@ -434,12 +422,14 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = validadorId,
                 Name = "Validador",
                 State = SimAccesibility.Normal,
+                BaseClassId = objectClassId
             },
             new SimClass
             {
                 Id = entradaId,
                 Name = "Entrada",
                 State = SimAccesibility.Normal,
+                BaseClassId = objectClassId,
             },
             new SimClass
             {
@@ -454,8 +444,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "EntradaTextoEspecial",
                 BaseClassId = entradaTextoId,
                 State = SimAccesibility.Sealed,
-            }
-        );
+            });
 
         _ = modelBuilder.Entity<SimAttribute>().HasData(
             new SimAttribute
@@ -465,11 +454,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 TypeId = entradaTextoEspecialId,
                 RelatedClassId = validadorId,
                 Privacity = SimPrivacity.Private,
-            }
-        );
+            });
 
         _ = modelBuilder.Entity<SimMethod>().HasData(
-
             new SimMethod
             {
                 Id = validarId,
@@ -477,7 +464,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = validadorId,
-                ReturTypeId = boolTypeId
+                ReturTypeId = boolTypeId,
             },
             new SimMethod
             {
@@ -486,7 +473,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaId,
-                ReturTypeId = boolTypeId
+                ReturTypeId = boolTypeId,
             },
             new SimMethod
             {
@@ -495,7 +482,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Protected,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaId,
-                ReturTypeId = voidTypeId
+                ReturTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -504,7 +491,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Protected,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaId,
-                ReturTypeId = voidTypeId
+                ReturTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -513,7 +500,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaTextoId,
-                ReturTypeId = boolTypeId
+                ReturTypeId = boolTypeId,
             },
             new SimMethod
             {
@@ -522,79 +509,76 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Sealed,
                 RelatedClassId = entradaTextoEspecialId,
-                ReturTypeId = boolTypeId
-            }
-        );
+                ReturTypeId = boolTypeId,
+            });
         _ = modelBuilder.Entity<Invocation>().HasData(
             new
             {
                 Id = invValidarInputEsValidoId,
                 RelatedMethodId = validarId,
                 SignatureId = firmaEsValidoId,
-                ReferenceId = inputReferenceId
+                ReferenceId = inputReferenceId,
             },
             new
             {
                 Id = invEntradaTextoEspecialBaseEsValidoId,
                 RelatedMethodId = esValidoEntradaTextoEspecialId,
                 SignatureId = firmaEsValidoBaseEspecialId,
-                ReferenceId = baseEntradaTextoEspecialReferenceId
+                ReferenceId = baseEntradaTextoEspecialReferenceId,
             },
             new
             {
                 Id = invEntradaTextoBaseEsValidoId,
                 RelatedMethodId = esValidoEntradaTextoId,
                 SignatureId = firmaEsValidoBaseTextoId,
-                ReferenceId = baseEntradaTextoReferenceId
+                ReferenceId = baseEntradaTextoReferenceId,
             },
             new
             {
                 Id = invEntradaTextoThisLimpiarId,
                 RelatedMethodId = esValidoEntradaTextoId,
                 SignatureId = firmaLimpiarId,
-                ReferenceId = thisEntradaTextoReferenceId
+                ReferenceId = thisEntradaTextoReferenceId,
             },
             new
             {
                 Id = invEntradaThisInicializarId,
                 RelatedMethodId = esValidoEntradaId,
                 SignatureId = firmaInicializarId,
-                ReferenceId = thisEntradaReferenceId
-            }
-        );
+                ReferenceId = thisEntradaReferenceId,
+            });
 
         _ = modelBuilder.Entity<Signature>().HasData(
             new
             {
                 Id = firmaEsValidoId,
                 Name = "EsValido",
-                RelatedInvocationId = invValidarInputEsValidoId
+                RelatedInvocationId = invValidarInputEsValidoId,
             },
             new
             {
                 Id = firmaLimpiarId,
                 Name = "Limpiar",
-                RelatedInvocationId = invEntradaTextoThisLimpiarId
+                RelatedInvocationId = invEntradaTextoThisLimpiarId,
             },
             new
             {
                 Id = firmaInicializarId,
                 Name = "Inicializar",
-                RelatedInvocationId = invEntradaThisInicializarId
+                RelatedInvocationId = invEntradaThisInicializarId,
             },
             new
             {
                 Id = firmaEsValidoBaseEspecialId,
                 Name = "EsValido",
-                RelatedInvocationId = invEntradaTextoEspecialBaseEsValidoId
+                RelatedInvocationId = invEntradaTextoEspecialBaseEsValidoId,
             },
             new
             {
                 Id = firmaEsValidoBaseTextoId,
                 Name = "EsValido",
-                RelatedInvocationId = invEntradaTextoBaseEsValidoId
-            }
-        );
+                RelatedInvocationId = invEntradaTextoBaseEsValidoId,
+            });
 
         _ = modelBuilder.Entity<ReferenceAttribute>().HasData(
             new
@@ -602,9 +586,8 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = inputReferenceId,
                 ReferenceId = inputAttributeId,
                 RelatedInvocationId = invValidarInputEsValidoId,
-                ReferenceType = "Attribute"
-            }
-        );
+                ReferenceType = "Attribute",
+            });
 
         _ = modelBuilder.Entity<ReferenceThis>().HasData(
             new
@@ -612,16 +595,15 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = thisEntradaReferenceId,
                 ReferenceId = entradaId,
                 RelatedInvocationId = invEntradaThisInicializarId,
-                ReferenceType = "This"
+                ReferenceType = "This",
             },
             new
             {
                 Id = thisEntradaTextoReferenceId,
                 ReferenceId = entradaTextoId,
                 RelatedInvocationId = invEntradaTextoThisLimpiarId,
-                ReferenceType = "This"
-            }
-        );
+                ReferenceType = "This",
+            });
 
         _ = modelBuilder.Entity<ReferenceBase>().HasData(
             new
@@ -629,15 +611,14 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = baseEntradaTextoReferenceId,
                 ReferenceId = entradaTextoId,
                 RelatedInvocationId = invEntradaTextoBaseEsValidoId,
-                ReferenceType = "Base"
+                ReferenceType = "Base",
             },
             new
             {
                 Id = baseEntradaTextoEspecialReferenceId,
                 ReferenceId = entradaTextoEspecialId,
                 RelatedInvocationId = invEntradaTextoEspecialBaseEsValidoId,
-                ReferenceType = "Base"
-            }
-        );
+                ReferenceType = "Base",
+            });
     }
 }
