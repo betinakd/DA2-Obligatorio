@@ -10,6 +10,7 @@ public class ParameterSignature
     public SimClass? Type { get; set; }
     public Guid? TypeId { get; set; }
     public Guid? SignatureId { get; set; }
+    public Signature? Signature { get; set; }
 
     public string Name
     {
