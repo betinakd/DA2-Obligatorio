@@ -43,4 +43,22 @@ public class ExecutionServiceTest
 
         Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()", result);
     }
+
+    [TestMethod]
+    public void ExecuteMethod_MethodNotFound_ReturnsErrorMessage()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "NonExistentMethod", Parameters = [] };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature))
+            .Returns((SimMethod)null);
+
+        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
+
+        Assert.AreEqual("Error: No se encontró el método NonExistentMethod en TestClass", result);
+    }
 }
