@@ -41,4 +41,11 @@ public class InvocationTest
     {
         invocation.Signature = null;
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetSignature_WithEmptyName_ThrowsSimClassInvalidAttribute()
+    {
+        invocation.Signature = new Signature { Name = string.Empty };
+    }
 }
