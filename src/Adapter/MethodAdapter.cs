@@ -291,6 +291,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             throw new InvalidAttributeAdapter("Error creating invocation: " + ex.Message);
         }
+        catch(InvalidAttributeDomain)
+        {
+            throw new InvalidAttributeAdapter("Error creating invocation: Invalid attribute domain.");
+        }
     }
 
     public InvocationResponse GetInvocation(Guid id)
