@@ -27,4 +27,11 @@ public class InvocationTest
     {
         invocation.Reference = null;
     }
+
+    [TestMethod]
+    public void SetReference_ToValidReference_SetsReference()
+    {
+        invocation.Reference = validReference;
+        Assert.AreEqual(validReference, invocation.Reference);
+    }
 }
