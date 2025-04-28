@@ -9,9 +9,10 @@ using Models.Response;
 
 namespace Adapter;
 
-public class MethodAdapter(IMethodService methodService, ISimClassService simClassService, ISimAttributeService simAttributeService)
+public class MethodAdapter(IMethodService methodService, ISimClassService simClassService, ISimAttributeService simAttributeService, IExecutionService executionService)
     : IMethodAdapter
 {
+    private readonly IExecutionService _executionService = executionService;
     private readonly IMethodService _methodService = methodService;
     private readonly ISimClassService _simClassService = simClassService;
     private readonly ISimAttributeService _simAttributeService = simAttributeService;
@@ -198,44 +199,11 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             var method = _methodService.GetMethodById(idMethod);
             Reference reference = null; // Declare with base type Reference
-            switch(invocation.TypeReference)
+            var signature = new Signature()
             {
-                case TypeReference.This:
-                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
-                    break;
-
-                case TypeReference.Base:
-                    reference = new ReferenceBase() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
-                    break;
-
-                case TypeReference.Attribute:
-                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
-                    reference = new ReferenceAttribute() { Reference = attribute };
-                    break;
-
-                case TypeReference.Parameter:
-                    var parameter = _methodService.GetParameterById(invocation.IdReference);
-                    reference = new ReferenceParameter() { Reference = parameter };
-                    break;
-
-                case TypeReference.LocalVariable:
-                    var variable = _methodService.GetVariableById(invocation.IdReference);
-                    reference = new ReferenceVariable() { Reference = variable };
-                    break;
-
-                default:
-                    throw new InvalidOperationException("Unsupported type reference.");
-            }
-
-            var newInvocation = new Invocation
-            {
-                Id = Guid.NewGuid(),
-                Reference = reference,
-                Signature = new Signature() { Name = invocation.MethodName },
-                RelatedMethod = method,
-                RelatedMethodId = method.Id
+                Name = invocation.MethodName,
+                Parameters = []
             };
-
             var parametersResponses = new List<ParameterResponse>();
             foreach(var parameter in invocation.Parameters)
             {
@@ -251,11 +219,54 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     ClassTypeId = newParameter.Type.Id
                 };
 
-                newInvocation.Signature.Parameters.Add(newParameter);
+                signature.Parameters.Add(newParameter);
                 parametersResponses.Add(newParameterResponse);
             }
 
-            _ = _methodService.AddInvocation(idMethod, newInvocation);
+            switch(invocation.TypeReference)
+            {
+                case TypeReference.This:
+                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.Base:
+                    reference = new ReferenceBase() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.Attribute:
+                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
+                    reference = new ReferenceAttribute() { Reference = attribute };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.Parameter:
+                    var parameter = _methodService.GetParameterById(invocation.IdReference);
+                    reference = new ReferenceParameter() { Reference = parameter };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.LocalVariable:
+                    var variable = _methodService.GetVariableById(invocation.IdReference);
+                    reference = new ReferenceVariable() { Reference = variable };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Unsupported type reference.");
+            }
+
+            var newInvocation = new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = reference,
+                Signature = signature,
+                RelatedMethod = method,
+                RelatedMethodId = method.Id
+            };
+
+            _methodService.AddInvocation(idMethod, newInvocation);
 
             return new CreatedInvocationResponse
             {
