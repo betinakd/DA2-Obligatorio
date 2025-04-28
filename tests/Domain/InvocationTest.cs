@@ -34,4 +34,11 @@ public class InvocationTest
         invocation.Reference = validReference;
         Assert.AreEqual(validReference, invocation.Reference);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetSignature_ToNull_ThrowsSimClassInvalidAttribute()
+    {
+        invocation.Signature = null;
+    }
 }
