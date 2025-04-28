@@ -1,3 +1,4 @@
+using BussinesLogic.Exceptions;
 using Domain;
 using IBussinesLogic;
 using IDataAccess;
@@ -45,5 +46,13 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         }
 
         return result;
+    }
+
+    public void ValidateMethodExistsInClass(SimClass classId, Signature methodName)
+    {
+        if(_executionDA.FindMethodInHierarchy(classId, methodName) == null)
+        {
+            throw new InvalidAttributeLogic($"Method '{methodName}' is not accessible from this context");
+        }
     }
 }
