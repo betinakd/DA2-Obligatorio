@@ -14,7 +14,8 @@ public class ReferenceVariable : Reference
 
     public override string GetSignatureWithClassName(Signature signature)
     {
-        throw new NotImplementedException();
+        var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
+        return Reference.Type.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
     public override SimClass GetSimClass()

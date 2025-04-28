@@ -49,4 +49,25 @@ public class ReferenceVariableTest
 
         Assert.AreEqual("Variable.TestMethod(param1, param2)", result);
     }
+
+    [TestMethod]
+    public void TestGetSignatureWithClassNameVariable_ShouldReturnCorrectFormat()
+    {
+        var signature = new Signature
+        {
+            Name = "MyMethod",
+            Parameters =
+            [
+                new ParameterSignature { Name = "x" },
+            new ParameterSignature { Name = "y" }
+            ]
+        };
+        var simClass = new SimClass { Name = "MyClass" };
+        var localVariable = new LocalVariable { Type = simClass, Name = "Variable" };
+        var referenceVariable = new ReferenceVariable { Reference = localVariable };
+
+        var result = referenceVariable.GetSignatureWithClassName(signature);
+
+        Assert.AreEqual("MyClass.MyMethod(x, y)", result);
+    }
 }
