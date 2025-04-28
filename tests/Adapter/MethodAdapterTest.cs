@@ -487,12 +487,12 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
     public void GetWrongInvocation_ShouldThrowInvalidOperationException()
     {
         var invocationId = Guid.NewGuid();
 
-        _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Throws(new InvalidAttributeDomain("error"));
+        _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Throws(new NonExistentValueLogic("error"));
 
         adapter!.GetInvocation(invocationId);
     }

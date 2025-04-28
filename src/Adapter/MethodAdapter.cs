@@ -327,9 +327,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Parameters = parameters
             };
         }
-        catch(InvalidAttributeDomain)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidOperationException("Invalid invocation ID.");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 }
