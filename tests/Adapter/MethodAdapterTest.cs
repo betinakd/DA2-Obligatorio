@@ -827,4 +827,26 @@ public class MethodAdapterTest
 
         adapter!.CreateInvocation(methodId, invocationRequest);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void CreateInvocation_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeDomainIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = referenceId,
+            TypeReference = TypeReference.Base,
+            MethodName = "InvalidMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(new SimMethod { Id = methodId, Name = "TestMethod" });
+        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId))
+            .Throws(new InvalidAttributeDomain("Invalid attribute domain error"));
+
+        adapter!.CreateInvocation(methodId, invocationRequest);
+    }
 }
