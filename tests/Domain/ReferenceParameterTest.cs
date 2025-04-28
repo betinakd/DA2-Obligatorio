@@ -42,7 +42,6 @@ public class ReferenceParameterTest
                 new ParameterSignature { Name = "param2" }
             ]
         };
-
         var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Type = new SimClass { Name = "TestClass" }, Name = "Param" } };
 
         var result = referenceParameter.GetSignature(signature);
