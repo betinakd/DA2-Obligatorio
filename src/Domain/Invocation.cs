@@ -44,6 +44,20 @@ public class Invocation()
 
     public Guid? SignatureId { get; set; }
 
-    public Guid? RelatedMethodId { get; set; }
+    private Guid? _relatedMethodId;
+    public Guid? RelatedMethodId
+    {
+        get => _relatedMethodId;
+        set
+        {
+            if(value == null)
+            {
+                throw new SimClassInvalidAttribute("Related method ID cannot be null or empty.");
+            }
+
+            _relatedMethodId = null;
+        }
+    }
+
     public SimMethod? RelatedMethod { get; set; }
 }
