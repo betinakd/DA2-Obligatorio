@@ -145,4 +145,12 @@ public class ExecutionDataAccessTest
 
         result.Should().BeNull("Private methods should not be found during inheritance lookup");
     }
+
+    [TestMethod]
+    public void TestFindMethodInHierarchy_ReturnsNull_WhenSimClassIsNull()
+    {
+        var signature = new Signature { Name = "AnyMethod" };
+        var result = _executionDataAccess.FindMethodInHierarchy(null, signature);
+        result.Should().BeNull();
+    }
 }
