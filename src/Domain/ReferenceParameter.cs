@@ -12,6 +12,12 @@ public class ReferenceParameter : Reference
         return Reference.Name + "." + method.Name + "(" + simParams + ")";
     }
 
+    public override string GetSignatureWithClassName(Signature signature)
+    {
+        var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
+        return Reference.Type.Name + "." + signature.Name + "(" + simParams + ")";
+    }
+
     public override SimClass GetSimClass()
     {
         if(Reference.Type == null)

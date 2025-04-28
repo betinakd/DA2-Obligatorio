@@ -156,4 +156,28 @@ public class SimMethodTest
 
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    public void GetMethodSignature_ReturnsCorrectFormat()
+    {
+        var method = new SimMethod
+        {
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "MyClass" },
+            Name = "MyMethod"
+        };
+
+        var signature = new Signature
+        {
+            Name = "MyMethod",
+            Parameters =
+            [
+                new ParameterSignature { Name = "a" },
+                new ParameterSignature { Name = "b" }
+            ]
+        };
+
+        var result = method.GetMethodSignature(signature);
+
+        Assert.AreEqual("MyClass.MyMethod(a, b)", result);
+    }
 }

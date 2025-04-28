@@ -34,14 +34,14 @@ public class ExecutionServiceTest
         var mockRef = new Mock<Reference>();
         mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
         mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
-
+        mockRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.TestMethod()");
         _mockExecuteDataAccess!
             .Setup(m => m.FindMethodInHierarchy(simClass, signature))
             .Returns(method);
 
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()", result);
+        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
     }
 
     [TestMethod]
@@ -59,7 +59,7 @@ public class ExecutionServiceTest
 
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        Assert.AreEqual("Error: No se encontró el método NonExistentMethod en TestClass", result);
+        Assert.AreEqual("Error: No se encontró el método NonExistentMethod en TestClass\n", result);
     }
 
     [TestMethod]
@@ -143,17 +143,23 @@ public class ExecutionServiceTest
 
         var mockAvisoRef = new Mock<Reference>();
         mockAvisoRef.Setup(r => r.GetSimClass()).Returns(notificacionClass);
-        mockAvisoRef.Setup(r => r.GetSignature(enviarSignature)).Returns("Notificacion.Enviar()");
-        mockAvisoRef.Setup(r => r.GetSignature(confirmarSignature)).Returns("Notificacion.Confirmar()");
+        mockAvisoRef.Setup(r => r.GetSignature(It.Is<Signature>(s => s.Name == "Enviar"))).Returns("Notificacion.Enviar()");
+        mockAvisoRef.Setup(r => r.GetSignature(It.Is<Signature>(s => s.Name == "Confirmar"))).Returns("Notificacion.Confirmar()");
+        mockAvisoRef.Setup(r => r.GetSignatureWithClassName(It.Is<Signature>(s => s.Name == "Enviar"))).Returns("Notificacion.Enviar()");
+        mockAvisoRef.Setup(r => r.GetSignatureWithClassName(It.Is<Signature>(s => s.Name == "Confirmar"))).Returns("Notificacion.Confirmar()");
 
         var mockNotificadorRef = new Mock<Reference>();
         mockNotificadorRef.Setup(r => r.GetSimClass()).Returns(notificadorClass);
         mockNotificadorRef.Setup(r => r.GetSignature(It.IsAny<Signature>())).Returns("Notificador.Notificar()");
+        mockNotificadorRef.Setup(r => r.GetSignatureWithClassName(It.Is<Signature>(s => s.Name == "Notificar"))).Returns("Notificador.Notificar()");
 
         var mockOtroAvisoRef = new Mock<Reference>();
         mockOtroAvisoRef.Setup(r => r.GetSimClass()).Returns(emailClass);
-        mockOtroAvisoRef.Setup(r => r.GetSignature(enviarSignature)).Returns("Email.Enviar()");
-        mockOtroAvisoRef.Setup(r => r.GetSignature(confirmarSignature)).Returns("Email.Confirmar()");
+        mockOtroAvisoRef.Setup(r => r.GetSignature(It.Is<Signature>(s => s.Name == "Enviar"))).Returns("Email.Enviar()");
+        mockOtroAvisoRef.Setup(r => r.GetSignature(It.Is<Signature>(s => s.Name == "Confirmar"))).Returns("Email.Confirmar()");
+        mockOtroAvisoRef.Setup(r => r.GetSignatureWithClassName(It.Is<Signature>(s => s.Name == "Enviar"))).Returns("Email.Enviar()");
+        mockOtroAvisoRef.Setup(r => r.GetSignatureWithClassName(It.Is<Signature>(s => s.Name == "Confirmar"))).Returns("Email.Confirmar()");
+
         _mockExecuteDataAccess
             .Setup(m => m.FindMethodInHierarchy(It.IsAny<SimClass>(), It.Is<Signature>(s => s.Name == "Notificar")))
             .Returns(notificarMethod);
@@ -167,41 +173,41 @@ public class ExecutionServiceTest
             .Returns(confirmarMethod);
 
         notificarMethod.Invocations =
-    [
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockAvisoRef.Object,
-            Signature = enviarSignature
-        },
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockAvisoRef.Object,
-            Signature = confirmarSignature
-        },
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockOtroAvisoRef.Object,
-            Signature = enviarSignature
-        },
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockOtroAvisoRef.Object,
-            Signature = confirmarSignature
-        },
-    ];
+        [
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockAvisoRef.Object,
+                Signature = enviarSignature
+            },
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockAvisoRef.Object,
+                Signature = confirmarSignature
+            },
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockOtroAvisoRef.Object,
+                Signature = enviarSignature
+            },
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockOtroAvisoRef.Object,
+                Signature = confirmarSignature
+            },
+        ];
 
         var notificarSignature = new Signature { Id = Guid.NewGuid(), Name = "Notificar" };
         var result = _executionService.ExecuteMethod(mockNotificadorRef.Object, mockNotificadorRef.Object, notificarSignature);
 
-        var expectedOutput = "Notificador.Notificar() -> Notificador.Notificar()" +
-                            "    Notificacion.Enviar() -> Notificacion.Enviar()" +
-                            "    Notificacion.Confirmar() -> Notificacion.Confirmar()" +
-                            "    Email.Enviar() -> Email.Enviar()" +
-                            "    Email.Confirmar() -> Notificacion.Confirmar()";
+        var expectedOutput = "Notificador.Notificar() -> Notificador.Notificar()\n" +
+                            "    Notificacion.Enviar() -> Notificacion.Enviar()\n" +
+                            "    Notificacion.Confirmar() -> Notificacion.Confirmar()\n" +
+                            "    Email.Enviar() -> Email.Enviar()\n" +
+                            "    Email.Confirmar() -> Notificacion.Confirmar()\n";
 
         Assert.AreEqual(expectedOutput, result);
     }
@@ -239,5 +245,32 @@ public class ExecutionServiceTest
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
         Assert.IsTrue(result.Contains("/* recursión */"));
+    }
+
+    [TestMethod]
+    public void ExecuteMethod_LevelZero_UsesGetSignatureWithClassName()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = simClass,
+            Invocations = []
+        };
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.TestMethod()");
+        mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature))
+            .Returns(method);
+
+        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
+
+        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
     }
 }

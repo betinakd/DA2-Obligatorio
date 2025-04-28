@@ -18,15 +18,20 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         if(methodToExecute == null)
         {
-            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}";
+            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}\n";
         }
 
         if(visited.Contains(methodToExecute.Id))
         {
-            return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name} /* recursión */";
+            return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)} /* recursión */";
         }
 
-        var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()";
+        var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
+
+        if(level == 0)
+        {
+            result = $"{identation}{reference.GetSignatureWithClassName(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
+        }
 
         visited.Add(methodToExecute.Id);
 
