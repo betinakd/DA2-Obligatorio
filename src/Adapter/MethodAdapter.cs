@@ -264,9 +264,11 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             {
                 Id = Guid.NewGuid(),
                 Reference = reference,
+                ReferenceId = reference.Id,
                 Signature = signature,
                 RelatedMethod = method,
-                RelatedMethodId = method.Id
+                RelatedMethodId = method.Id,
+                SignatureId = signature.Id
             };
 
             _methodService.AddInvocation(idMethod, newInvocation);
@@ -291,9 +293,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             throw new InvalidAttributeAdapter("Error creating invocation: " + ex.Message);
         }
-        catch(InvalidAttributeDomain)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttributeAdapter("Error creating invocation: Invalid attribute domain.");
+            throw new InvalidAttributeAdapter("Error creating invocation: Invalid attribute domain." + ex.Message);
         }
     }
 
