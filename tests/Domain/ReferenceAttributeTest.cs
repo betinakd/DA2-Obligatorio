@@ -49,4 +49,25 @@ public class ReferenceAttributeTest
 
         Assert.AreEqual("Atri.TestMethod(param1, param2)", result);
     }
+
+    [TestMethod]
+    public void TestGetSignatureWithClassName_ShouldReturnCorrectFormat()
+    {
+        var signature = new Signature
+        {
+            Name = "MyMethod",
+            Parameters =
+            [
+                new ParameterSignature { Name = "x" },
+            new ParameterSignature { Name = "y" }
+            ]
+        };
+        var simClass = new SimClass { Name = "MyClass" };
+        var attribute = new SimAttribute { Type = simClass, Name = "Attr" };
+        var reference = new ReferenceAttribute { Reference = attribute };
+
+        var result = reference.GetSignatureWithClassName(signature);
+
+        Assert.AreEqual("MyClass.MyMethod(x, y)", result);
+    }
 }
