@@ -38,7 +38,7 @@ public class Invocation()
                 throw new SimClassInvalidAttribute("Method name in signature cannot be empty.");
             }
 
-            _signature = null;
+            _signature = value;
         }
     }
 
