@@ -48,4 +48,11 @@ public class InvocationTest
     {
         invocation.Signature = new Signature { Name = string.Empty };
     }
+
+    [TestMethod]
+    public void SetSignature_ToValidSignature_SetsSignature()
+    {
+        invocation.Signature = validSignature;
+        Assert.AreEqual(validSignature, invocation.Signature);
+    }
 }
