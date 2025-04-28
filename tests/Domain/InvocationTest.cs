@@ -55,4 +55,11 @@ public class InvocationTest
         invocation.Signature = validSignature;
         Assert.AreEqual(validSignature, invocation.Signature);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetRelatedMethodId_ToNull_ThrowsSimClassInvalidAttribute()
+    {
+        invocation.RelatedMethodId = null;
+    }
 }
