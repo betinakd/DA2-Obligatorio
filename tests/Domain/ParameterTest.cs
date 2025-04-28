@@ -19,7 +19,7 @@ public class ParameterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateParameterWithEmptyOrWhiteSpace_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new Parameter()
@@ -30,7 +30,7 @@ public class ParameterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateAParameterWithInvalidCharacters_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new Parameter()
@@ -41,7 +41,7 @@ public class ParameterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateParameterWithOnlyNumbers_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new Parameter()
@@ -52,7 +52,7 @@ public class ParameterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateParameterWithReservedWords_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new Parameter()

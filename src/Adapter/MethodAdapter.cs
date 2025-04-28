@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
 using IAdapter;
@@ -32,7 +33,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ReturnTypeId = method.ReturnType.Id
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(InvalidAttributeDomain)
         {
             throw new InvalidOperationException("Invalid method ID.");
         }
@@ -71,9 +72,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 }
             };
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 
@@ -83,7 +84,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             _methodService.DeleteMethod(id);
         }
-        catch(SimClassInvalidAttribute)
+        catch(InvalidAttributeDomain)
         {
             throw new InvalidOperationException("Invalid method ID.");
         }
@@ -102,7 +103,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ClassTypeId = variable.Type.Id
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(InvalidAttributeDomain)
         {
             throw new InvalidOperationException("Invalid variable ID.");
         }
@@ -135,9 +136,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             };
             return response;
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 
@@ -154,7 +155,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ClassTypeId = parameter.Type.Id
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(InvalidAttributeDomain)
         {
             throw new InvalidOperationException("Invalid parameter ID.");
         }
@@ -187,9 +188,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             };
             return response;
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 
@@ -204,7 +205,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Name = invocation.MethodName,
                 Parameters = []
             };
+
             var parametersResponses = new List<ParameterResponse>();
+
             foreach(var parameter in invocation.Parameters)
             {
                 var newParameter = new ParameterSignature()
@@ -280,9 +283,13 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 }
             };
         }
-        catch(Exception ex)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidOperationException("Error creating invocation: " + ex.Message);
+            throw new NonExistentValueAdapter("Error creating invocation: " + ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter("Error creating invocation: " + ex.Message);
         }
     }
 
@@ -314,7 +321,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Parameters = parameters
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(InvalidAttributeDomain)
         {
             throw new InvalidOperationException("Invalid invocation ID.");
         }

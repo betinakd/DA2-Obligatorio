@@ -57,7 +57,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         }
         catch(Exception ex)
         {
-            throw new ObjectNotFoundException(ex.Message);
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -96,7 +96,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         }
         catch(Exception ex)
         {
-            throw new ObjectNotFoundException(ex.Message);
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 }

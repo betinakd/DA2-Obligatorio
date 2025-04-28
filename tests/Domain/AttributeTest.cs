@@ -27,7 +27,7 @@ public class AttributeTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateAttributeWithEmptyOrWhiteSpace_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new SimAttribute()
@@ -40,7 +40,7 @@ public class AttributeTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateAttributeWithInvalidCharacters_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new SimAttribute()
@@ -53,7 +53,7 @@ public class AttributeTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateAttributeWithOnlyNumbers_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new SimAttribute()
@@ -66,7 +66,7 @@ public class AttributeTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateAttributeWithReservedWords_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new SimAttribute()

@@ -47,7 +47,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         }
         catch(Exception ex)
         {
-            throw new InvalidExecutionException(ex.Message);
+            throw new InvalidExecutionAdapter(ex.Message);
         }
     }
 }

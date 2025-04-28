@@ -35,7 +35,7 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
             _simClassDA.CreateSimClass(simClass);
             return simClass;
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
             throw new InvalidAttributeLogic(ex.Message);
         }

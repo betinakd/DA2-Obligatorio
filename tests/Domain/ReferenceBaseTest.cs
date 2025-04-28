@@ -42,7 +42,7 @@ public class ReferenceBaseTest()
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void TestGetSimClass_ShouldThrowExceptionWhenBaseClassIsNull()
     {
         var simClass = new SimClass { Name = "TestClass" };

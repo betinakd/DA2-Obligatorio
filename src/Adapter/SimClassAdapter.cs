@@ -35,7 +35,7 @@ public class SimClassAdapter(ISimClassService simClassService)
         }
         catch(InUseValueLogic ex)
         {
-            throw new InUseException(ex.Message);
+            throw new InUseValueAdapter(ex.Message);
         }
     }
 
@@ -46,9 +46,9 @@ public class SimClassAdapter(ISimClassService simClassService)
             var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name, State = EnumMapper.MapToDomainAccesibility(request.State) });
             return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = request.State } };
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 
@@ -60,7 +60,7 @@ public class SimClassAdapter(ISimClassService simClassService)
         }
         catch(Exception)
         {
-            throw new ObjectNotFoundException($"Any class with the specified {id} id exists.");
+            throw new NonExistentValueAdapter($"Any class with the specified {id} id exists.");
         }
     }
 
@@ -80,7 +80,7 @@ public class SimClassAdapter(ISimClassService simClassService)
         }
         catch(Exception)
         {
-            throw new ObjectNotFoundException("SimClass not found");
+            throw new NonExistentValueAdapter("SimClass not found");
         }
     }
 }

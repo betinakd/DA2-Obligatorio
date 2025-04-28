@@ -1,5 +1,6 @@
 using Adapter;
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Enums;
 using Domain.Exceptions;
@@ -68,7 +69,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void CreateParameter_ShouldThrowInvalidAttribute_WhenSimClassInvalidAttributeIsThrown()
     {
         var methodId = Guid.NewGuid();
@@ -82,7 +83,7 @@ public class MethodAdapterTest
 
         var mockSimClassService = new Mock<ISimClassService>();
         var mockMethodService = new Mock<IMethodService>();
-        mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Throws(new SimClassInvalidAttribute("SimClass error"));
+        mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Throws(new InvalidAttributeDomain("SimClass error"));
 
         var adapter = new MethodAdapter(mockMethodService.Object, mockSimClassService.Object, _mockAttributeService.Object, _mockExecutionService.Object);
 
@@ -136,7 +137,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void CreateVariable_ShouldThrowInvalidAttribute_WhenSimClassInvalidAttributeIsThrown()
     {
         var methodId = Guid.NewGuid();
@@ -150,7 +151,7 @@ public class MethodAdapterTest
 
         _mockSimClassService!
             .Setup(s => s.GetSimClassById(classTypeId))
-            .Throws(new SimClassInvalidAttribute("SimClass error"));
+            .Throws(new InvalidAttributeDomain("SimClass error"));
 
         adapter!.CreateVariable(methodId, request);
     }
@@ -189,7 +190,7 @@ public class MethodAdapterTest
     {
         var parameterId = Guid.NewGuid();
 
-        _mockMethodService.Setup(s => s.GetParameterById(parameterId)).Throws(new SimClassInvalidAttribute("error"));
+        _mockMethodService.Setup(s => s.GetParameterById(parameterId)).Throws(new InvalidAttributeDomain("error"));
 
         adapter.GetParameter(parameterId);
     }
@@ -228,7 +229,7 @@ public class MethodAdapterTest
     {
         var variableId = Guid.NewGuid();
 
-        _mockMethodService.Setup(s => s.GetVariableById(variableId)).Throws(new SimClassInvalidAttribute("error"));
+        _mockMethodService.Setup(s => s.GetVariableById(variableId)).Throws(new InvalidAttributeDomain("error"));
 
         adapter.GetVariable(variableId);
     }
@@ -269,7 +270,7 @@ public class MethodAdapterTest
     {
         var methodId = Guid.NewGuid();
 
-        _mockMethodService.Setup(s => s.GetMethodById(methodId)).Throws(new SimClassInvalidAttribute("error"));
+        _mockMethodService.Setup(s => s.GetMethodById(methodId)).Throws(new InvalidAttributeDomain("error"));
 
         adapter.GetMethod(methodId);
     }
@@ -320,7 +321,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void CreateMethod_ShouldThrowInvalidAttribute_WhenSimClassInvalidAttributeIsThrown()
     {
         var idClass = Guid.NewGuid();
@@ -334,7 +335,7 @@ public class MethodAdapterTest
             ReturnTypeId = returnTypeId
         };
 
-        _mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Throws(new SimClassInvalidAttribute("SimClass error"));
+        _mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Throws(new InvalidAttributeDomain("SimClass error"));
 
         adapter.CreateMethod(idClass, methodRequest);
     }
@@ -357,7 +358,7 @@ public class MethodAdapterTest
     {
         var methodId = Guid.NewGuid();
 
-        _mockMethodService.Setup(s => s.DeleteMethod(methodId)).Throws(new SimClassInvalidAttribute("error"));
+        _mockMethodService.Setup(s => s.DeleteMethod(methodId)).Throws(new InvalidAttributeDomain("error"));
 
         adapter.DeleteMethod(methodId);
     }
@@ -413,7 +414,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateWrongInvocation_ShouldThrowInvalidOperationException()
     {
         var methodId = Guid.NewGuid();
@@ -434,7 +435,7 @@ public class MethodAdapterTest
             Parameters = [parameterRequest]
         };
 
-        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Throws(new Exception("error"));
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Throws(new NonExistentValueLogic("error"));
 
         adapter!.CreateInvocation(methodId, invocationRequest);
     }
@@ -491,7 +492,7 @@ public class MethodAdapterTest
     {
         var invocationId = Guid.NewGuid();
 
-        _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Throws(new SimClassInvalidAttribute("error"));
+        _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Throws(new InvalidAttributeDomain("error"));
 
         adapter!.GetInvocation(invocationId);
     }
@@ -753,7 +754,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateInvocation_WithInvalidSimClassService_ShouldThrowException()
     {
         var methodId = Guid.NewGuid();
@@ -771,7 +772,7 @@ public class MethodAdapterTest
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId))
-            .Throws(new Exception("SimClass service error"));
+            .Throws(new NonExistentValueLogic("SimClass service error"));
 
         adapter!.CreateInvocation(methodId, invocationRequest);
 
@@ -780,7 +781,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateInvocation_WithInvalidAttributeService_ShouldThrowException()
     {
         var methodId = Guid.NewGuid();
@@ -798,7 +799,7 @@ public class MethodAdapterTest
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockAttributeService!.Setup(s => s.GetSimAttribute(attributeId))
-            .Throws(new Exception("Attribute service error"));
+            .Throws(new NonExistentValueLogic("Attribute service error"));
 
         adapter!.CreateInvocation(methodId, invocationRequest);
         _mockMethodService.VerifyAll();

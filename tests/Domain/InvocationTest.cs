@@ -22,7 +22,7 @@ public class InvocationTest
 
     // Reference property tests
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetReference_ToNull_ThrowsSimClassInvalidAttribute()
     {
         invocation.Reference = null;
@@ -36,14 +36,14 @@ public class InvocationTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetSignature_ToNull_ThrowsSimClassInvalidAttribute()
     {
         invocation.Signature = null;
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetSignature_WithEmptyName_ThrowsSimClassInvalidAttribute()
     {
         invocation.Signature = new Signature { Name = string.Empty };
@@ -57,14 +57,14 @@ public class InvocationTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetRelatedMethodId_ToNull_ThrowsSimClassInvalidAttribute()
     {
         invocation.RelatedMethodId = null;
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetRelatedMethodId_ToEmptyGuid_ThrowsSimClassInvalidAttribute()
     {
         invocation.RelatedMethodId = Guid.Empty;

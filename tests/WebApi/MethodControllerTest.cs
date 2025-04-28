@@ -123,14 +123,14 @@ public class MethodControllerTest
         };
         _mockmethodAdapter
             .Setup(m => m.CreateVariable(methodId, request))
-            .Throws(new InvalidAttribute("Local varible information cant be empty"));
+            .Throws(new InvalidAttributeAdapter("Local varible information cant be empty"));
 
         IActionResult result;
         try
         {
             result = _attributeController?.CreateVariables(request, methodId);
         }
-        catch(InvalidAttribute ex)
+        catch(InvalidAttributeAdapter ex)
         {
             // Simula el comportamiento del filtro
             result = new BadRequestObjectResult(new { Message = ex.Message });
@@ -164,14 +164,14 @@ public class MethodControllerTest
         };
         _mockmethodAdapter
             .Setup(m => m.CreateParameter(methodId, request))
-            .Throws(new InvalidAttribute("Parameter information cant be empty"));
+            .Throws(new InvalidAttributeAdapter("Parameter information cant be empty"));
 
         IActionResult result;
         try
         {
             result = _attributeController.CreateParameter(request, methodId);
         }
-        catch(InvalidAttribute ex)
+        catch(InvalidAttributeAdapter ex)
         {
             // Simula el comportamiento del filtro
             result = new BadRequestObjectResult(new { Message = ex.Message });

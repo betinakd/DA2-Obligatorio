@@ -8,7 +8,7 @@ namespace Tests.Domain;
 public class SimClassTest
 {
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetBaseClass_ThrowsException_WhenBaseClassIsSealed()
     {
         var baseClass = new SimClass
@@ -48,7 +48,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void AddAttributeWithRepetedNameClass_ShouldThrowSimClassInvalidAttribute()
     {
         var simClass = new SimClass()
@@ -97,7 +97,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidOperation))]
+    [ExpectedException(typeof(InvalidOperationDomain))]
     public void DeleteInexistentAttribute_ShouldThrowException()
     {
         var simClass = new SimClass()
@@ -119,7 +119,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetName_ShouldThrowException_WhenNameIsInvalid()
     {
         var simClass = new SimClass();
@@ -128,7 +128,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetName_ShouldThrowException_WhenNameContainsOnlyNumbers()
     {
         var simClass = new SimClass();
@@ -137,7 +137,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetName_ShouldThrowException_WhenNameIsReservedWord()
     {
         var simClass = new SimClass();
@@ -146,7 +146,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetBaseClass_ShouldThrowException_WhenAbstractMethodsAreNotImplemented()
     {
         var baseClass = new SimClass
@@ -204,7 +204,7 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetBaseClass_ThrowsException_WhenBaseClassIsNull()
     {
         var simClass = new SimClass
