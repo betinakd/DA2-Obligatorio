@@ -38,6 +38,6 @@ public class SimMethod
     public string GetMethodSignature(Signature signature)
     {
         var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
-        return Name + "." + signature.Name + "(" + simParams + ")";
+        return RelatedClass.Name + "." + signature.Name + "(" + simParams + ")";
     }
 }

@@ -271,6 +271,6 @@ public class ExecutionServiceTest
 
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        Assert.IsTrue(result.StartsWith("TestClass.TestMethod() -> TestClass.TestMethod()"));
+        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
     }
 }

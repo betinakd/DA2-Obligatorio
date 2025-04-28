@@ -162,6 +162,7 @@ public class SimMethodTest
     {
         var method = new SimMethod
         {
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "MyClass" },
             Name = "MyMethod"
         };
 
@@ -177,6 +178,6 @@ public class SimMethodTest
 
         var result = method.GetMethodSignature(signature);
 
-        Assert.AreEqual("MyMethod.MyMethod(a, b)", result);
+        Assert.AreEqual("MyClass.MyMethod(a, b)", result);
     }
 }
