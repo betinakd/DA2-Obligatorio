@@ -16,7 +16,7 @@ public class Invocation()
                 throw new SimClassInvalidAttribute("Reference cannot be null.");
             }
 
-            _reference = null;
+            _reference = value;
         }
     }
 
