@@ -34,4 +34,10 @@ public class SimMethod
 
         return true;
     }
+
+    public string GetMethodSignature(Signature signature)
+    {
+        var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
+        return Name + "." + signature.Name + "(" + simParams + ")";
+    }
 }

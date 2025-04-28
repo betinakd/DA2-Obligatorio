@@ -60,7 +60,7 @@ public class ReferenceBaseTest()
             Parameters =
             [
                 new ParameterSignature { Name = "x" },
-            new ParameterSignature { Name = "y" }
+                new ParameterSignature { Name = "y" }
             ]
         };
         var baseClass = new SimClass { Name = "BaseClass" };

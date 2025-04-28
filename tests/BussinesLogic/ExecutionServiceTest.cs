@@ -175,30 +175,30 @@ public class ExecutionServiceTest
         notificarMethod.Invocations =
         [
             new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockAvisoRef.Object,
-            Signature = enviarSignature
-        },
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockAvisoRef.Object,
-            Signature = confirmarSignature
-        },
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockOtroAvisoRef.Object,
-            Signature = enviarSignature
-        },
-        new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Reference = mockOtroAvisoRef.Object,
-            Signature = confirmarSignature
-        },
-    ];
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockAvisoRef.Object,
+                Signature = enviarSignature
+            },
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockAvisoRef.Object,
+                Signature = confirmarSignature
+            },
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockOtroAvisoRef.Object,
+                Signature = enviarSignature
+            },
+            new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = mockOtroAvisoRef.Object,
+                Signature = confirmarSignature
+            },
+        ];
 
         var notificarSignature = new Signature { Id = Guid.NewGuid(), Name = "Notificar" };
         var result = _executionService.ExecuteMethod(mockNotificadorRef.Object, mockNotificadorRef.Object, notificarSignature);

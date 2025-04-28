@@ -59,7 +59,7 @@ public class ReferenceVariableTest
             Parameters =
             [
                 new ParameterSignature { Name = "x" },
-            new ParameterSignature { Name = "y" }
+                new ParameterSignature { Name = "y" }
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
