@@ -41,7 +41,7 @@ public class ExecutionServiceTest
 
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()", result);
+        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
     }
 
     [TestMethod]
@@ -59,7 +59,7 @@ public class ExecutionServiceTest
 
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        Assert.AreEqual("Error: No se encontró el método NonExistentMethod en TestClass", result);
+        Assert.AreEqual("Error: No se encontró el método NonExistentMethod en TestClass\n", result);
     }
 
     [TestMethod]
@@ -197,11 +197,11 @@ public class ExecutionServiceTest
         var notificarSignature = new Signature { Id = Guid.NewGuid(), Name = "Notificar" };
         var result = _executionService.ExecuteMethod(mockNotificadorRef.Object, mockNotificadorRef.Object, notificarSignature);
 
-        var expectedOutput = "Notificador.Notificar() -> Notificador.Notificar()" +
-                            "    Notificacion.Enviar() -> Notificacion.Enviar()" +
-                            "    Notificacion.Confirmar() -> Notificacion.Confirmar()" +
-                            "    Email.Enviar() -> Email.Enviar()" +
-                            "    Email.Confirmar() -> Notificacion.Confirmar()";
+        var expectedOutput = "Notificador.Notificar() -> Notificador.Notificar()\n" +
+                            "    Notificacion.Enviar() -> Notificacion.Enviar()\n" +
+                            "    Notificacion.Confirmar() -> Notificacion.Confirmar()\n" +
+                            "    Email.Enviar() -> Email.Enviar()\n" +
+                            "    Email.Confirmar() -> Notificacion.Confirmar()\n";
 
         Assert.AreEqual(expectedOutput, result);
     }

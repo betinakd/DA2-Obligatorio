@@ -18,7 +18,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         if(methodToExecute == null)
         {
-            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}";
+            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}\n";
         }
 
         if(visited.Contains(methodToExecute.Id))
@@ -26,7 +26,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
             return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name} /* recursión */";
         }
 
-        var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()";
+        var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()\n";
 
         visited.Add(methodToExecute.Id);
 
