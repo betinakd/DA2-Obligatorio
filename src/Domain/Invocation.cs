@@ -22,7 +22,20 @@ public class Invocation()
 
     public Guid? ReferenceId { get; set; }
 
-    public Signature Signature { get; set; } = new Signature();
+    private Signature _signature = new Signature();
+    public Signature Signature
+    {
+        get => _signature;
+        set
+        {
+            if(value == null)
+            {
+                throw new SimClassInvalidAttribute("Signature cannot be null.");
+            }
+
+            _signature = null;
+        }
+    }
 
     public Guid? SignatureId { get; set; }
 
