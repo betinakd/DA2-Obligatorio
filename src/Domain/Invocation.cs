@@ -33,6 +33,11 @@ public class Invocation()
                 throw new SimClassInvalidAttribute("Signature cannot be null.");
             }
 
+            if(string.IsNullOrWhiteSpace(value.Name))
+            {
+                throw new SimClassInvalidAttribute("Method name in signature cannot be empty.");
+            }
+
             _signature = null;
         }
     }
