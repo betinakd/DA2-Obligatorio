@@ -69,4 +69,11 @@ public class InvocationTest
     {
         invocation.RelatedMethodId = Guid.Empty;
     }
+
+    [TestMethod]
+    public void SetRelatedMethodId_ToValidGuid_SetsRelatedMethodId()
+    {
+        invocation.RelatedMethodId = validMethodId;
+        Assert.AreEqual(validMethodId, invocation.RelatedMethodId);
+    }
 }
