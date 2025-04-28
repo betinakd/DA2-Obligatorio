@@ -10,7 +10,7 @@ public class ReferenceAttributeTest
     public void TestGetSimClass_ShouldReturnAttributeType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var attribute = new SimAttribute { Type = simClass };
+        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
         var referenceAttribute = new ReferenceAttribute { Reference = attribute };
 
         var result = referenceAttribute.GetSimClass();
@@ -42,11 +42,11 @@ public class ReferenceAttributeTest
                 new ParameterSignature { Name = "param2" }
             ]
         };
+        var simClass = new SimClass { Name = "TestClass" };
+        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
+        var reference = new ReferenceAttribute { Reference = attribute };
+        var result = reference.GetSignature(signature);
 
-        var referenceAttribute = new ReferenceAttribute();
-
-        var result = referenceAttribute.GetSignature(signature);
-
-        Assert.AreEqual("this.TestMethod(param1, param2)", result);
+        Assert.AreEqual("Atri.TestMethod(param1, param2)", result);
     }
 }

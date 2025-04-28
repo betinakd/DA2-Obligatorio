@@ -6,6 +6,5 @@ public abstract class Reference
     public Guid RelatedInvocationId { get; set; }
 
     public abstract SimClass GetSimClass();
-
     public abstract string GetSignature(Signature signature);
 }

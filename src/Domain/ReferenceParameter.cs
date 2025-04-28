@@ -4,11 +4,12 @@ using Domain.Exceptions;
 public class ReferenceParameter : Reference
 {
     public Parameter Reference { get; set; } = new Parameter();
+    public Guid ReferenceId { get; set; }
 
     public override string GetSignature(Signature method)
     {
         var simParams = string.Join(", ", method.Parameters.Select(p => p.Name));
-        return "this" + "." + method.Name + "(" + simParams + ")";
+        return Reference.Name + "." + method.Name + "(" + simParams + ")";
     }
 
     public override SimClass GetSimClass()

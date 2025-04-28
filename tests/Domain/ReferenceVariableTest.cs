@@ -10,7 +10,7 @@ public class ReferenceVariableTest
     public void TestGetSimClass_ShouldReturnParameterType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var localVariable = new LocalVariable { Type = simClass };
+        var localVariable = new LocalVariable { Type = simClass, Name = "Variable" };
         var referencelocalVariable = new ReferenceVariable { Reference = localVariable };
 
         var result = referencelocalVariable.GetSimClass();
@@ -43,10 +43,10 @@ public class ReferenceVariableTest
             ]
         };
 
-        var referenceVariable = new ReferenceVariable { Reference = null };
+        var referenceVariable = new ReferenceVariable() { Reference = new LocalVariable { Type = new SimClass { Name = "TestClass" }, Name = "Variable" } };
 
         var result = referenceVariable.GetSignature(signature);
 
-        Assert.AreEqual("this.TestMethod(param1, param2)", result);
+        Assert.AreEqual("Variable.TestMethod(param1, param2)", result);
     }
 }
