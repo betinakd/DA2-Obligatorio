@@ -55,7 +55,7 @@ public class Invocation()
                 throw new SimClassInvalidAttribute("Related method ID cannot be null or empty.");
             }
 
-            _relatedMethodId = null;
+            _relatedMethodId = value;
         }
     }
 
