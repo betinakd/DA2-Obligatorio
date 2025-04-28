@@ -43,7 +43,7 @@ public class ReferenceVariableTest
             ]
         };
 
-        var referenceVariable = new ReferenceVariable { Reference = null };
+        var referenceVariable = new ReferenceVariable() { Reference = new LocalVariable { Type = new SimClass { Name = "TestClass" }, Name = "Variable" } };
 
         var result = referenceVariable.GetSignature(signature);
 

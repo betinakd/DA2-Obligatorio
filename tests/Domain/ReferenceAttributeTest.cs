@@ -42,10 +42,10 @@ public class ReferenceAttributeTest
                 new ParameterSignature { Name = "param2" }
             ]
         };
-
-        var referenceAttribute = new ReferenceAttribute();
-
-        var result = referenceAttribute.GetSignature(signature);
+        var simClass = new SimClass { Name = "TestClass" };
+        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
+        var reference = new ReferenceAttribute { Reference = attribute };
+        var result = reference.GetSignature(signature);
 
         Assert.AreEqual("Atri.TestMethod(param1, param2)", result);
     }

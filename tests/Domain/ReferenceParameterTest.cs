@@ -10,7 +10,7 @@ public class ReferenceParameterTest
     public void TestGetSimClass_ShouldReturnParameterType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var parameter = new Parameter { Type = simClass , Name = "Param"};
+        var parameter = new Parameter { Type = simClass, Name = "Param" };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var result = referenceParameter.GetSimClass();
@@ -43,7 +43,7 @@ public class ReferenceParameterTest
             ]
         };
 
-        var referenceParameter = new ReferenceParameter();
+        var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Type = new SimClass { Name = "TestClass" }, Name = "Param" } };
 
         var result = referenceParameter.GetSignature(signature);
 
