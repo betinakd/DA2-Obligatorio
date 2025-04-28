@@ -28,6 +28,11 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()\n";
 
+        if(level == 0)
+        {
+            result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.RelatedClass.Name}.{methodToExecute.Name}()\n";
+        }
+
         visited.Add(methodToExecute.Id);
 
         foreach(var invocation in methodToExecute.Invocations)

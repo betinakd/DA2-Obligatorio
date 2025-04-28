@@ -12,6 +12,11 @@ public class ReferenceBase : Reference
         return "base" + "." + method.Name + "(" + simParams + ")";
     }
 
+    public override string GetSignatureWithClassName(Signature signature)
+    {
+        throw new NotImplementedException();
+    }
+
     public override SimClass GetSimClass()
     {
         if(Reference.BaseClass == null)
