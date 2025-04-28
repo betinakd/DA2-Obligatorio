@@ -62,4 +62,11 @@ public class InvocationTest
     {
         invocation.RelatedMethodId = null;
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    public void SetRelatedMethodId_ToEmptyGuid_ThrowsSimClassInvalidAttribute()
+    {
+        invocation.RelatedMethodId = Guid.Empty;
+    }
 }
