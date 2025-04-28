@@ -50,7 +50,7 @@ public class Invocation()
         get => _relatedMethodId;
         set
         {
-            if(value == null)
+            if(value == null || value == Guid.Empty)
             {
                 throw new SimClassInvalidAttribute("Related method ID cannot be null or empty.");
             }
