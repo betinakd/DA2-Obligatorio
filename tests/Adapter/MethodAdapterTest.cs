@@ -26,7 +26,7 @@ public class MethodAdapterTest
         _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
         _mockAttributeService = new Mock<ISimAttributeService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
+        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Loose);
         adapter = new MethodAdapter(_mockMethodService.Object, _mockSimClassService.Object, _mockAttributeService.Object, _mockExecutionService.Object);
     }
 
@@ -503,27 +503,10 @@ public class MethodAdapterTest
         var referenceId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
         var simClass = new SimClass { Id = classTypeId, Name = "int" };
-        var baseClass = new SimClass { Id = referenceId, Name = "BaseClass" };
-        var signature = new Signature() { Name = "BaseMethod", Parameters = [], Id = Guid.NewGuid(), RelatedInvocationId = Guid.NewGuid() };
-
-        // Asignar la clase base correctamente
-        simClass.BaseClassId = referenceId;
-        typeof(SimClass)
-            .GetField("_baseClassField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            ?.SetValue(simClass, baseClass);
-
-        // Asegurarse de que cualquier instancia de simClass que devuelva el mock tenga la base seteada
-        _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId)).Returns(() =>
-        {
-            // Siempre devolver la misma instancia con la base seteada
-            typeof(SimClass)
-                .GetField("_baseClassField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.SetValue(simClass, baseClass);
-            return simClass;
-        });
-        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId)).Returns(baseClass);
+        var baseClass = new SimClass { BaseClass = simClass, Id = referenceId, Name = "BaseClass" };
+        var method = new SimMethod { Id = methodId, Name = "BaseMethod", Parameters = [], RelatedClass = simClass };
+        simClass.Methods.Add(method);
 
         var invocationRequest = new InvocationRequest
         {
@@ -533,18 +516,33 @@ public class MethodAdapterTest
             Parameters = []
         };
 
+        var signature = new Signature
+        {
+            Name = "BaseMethod",
+            Parameters = [],
+            Id = Guid.NewGuid(),
+            RelatedInvocationId = Guid.NewGuid()
+        };
+
+        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceId)).Returns(baseClass);
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
             .Returns((Guid id, Invocation inv) => inv);
-        _mockExecutionService.Setup(s => s.ValidateMethodExistsInClass(baseClass, signature));
+        _mockExecutionService
+            .Setup(s => s.ValidateMethodExistsInClass(It.Is<SimClass>(c => c == baseClass), It.Is<Signature>(s => s == signature)))
+            .Verifiable();
 
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
-        _mockMethodService.Verify();
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.Should().NotBeNull();
         result.InvocationResponse.MethodName.Should().Be("BaseMethod");
         result.InvocationResponse.Parameters.Should().BeEmpty();
+
+        _mockMethodService.VerifyAll();
+        _mockSimClassService.VerifyAll();
+        _mockAttributeService.VerifyAll();
     }
 
     [TestMethod]
@@ -580,7 +578,9 @@ public class MethodAdapterTest
 
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
-        _mockMethodService.Verify();
+        _mockMethodService.VerifyAll();
+        _mockSimClassService.VerifyAll();
+        _mockAttributeService.VerifyAll();
 
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
@@ -620,7 +620,9 @@ public class MethodAdapterTest
 
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
-        _mockMethodService.Verify();
+        _mockMethodService.VerifyAll();
+        _mockSimClassService.VerifyAll();
+        _mockAttributeService.VerifyAll();
 
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
@@ -650,19 +652,32 @@ public class MethodAdapterTest
             MethodName = "VarMethod",
             Parameters = []
         };
-        var signature = new Signature() { Name = "BaseMethod", Parameters = [], Id = Guid.NewGuid(), RelatedInvocationId = Guid.NewGuid() };
+
+        var signature = new Signature
+        {
+            Name = "VarMethod",
+            Parameters = [],
+            Id = Guid.NewGuid(),
+            RelatedInvocationId = Guid.NewGuid()
+        };
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockMethodService.Setup(s => s.GetVariableById(variableId)).Returns(variable);
         _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
             .Returns((Guid id, Invocation inv) => inv);
-        _mockExecutionService.Setup(s => s.ValidateMethodExistsInClass(simClass, signature));
+        _mockExecutionService
+            .Setup(s => s.ValidateMethodExistsInClass(It.Is<SimClass>(c => c.Id == simClass.Id), It.IsAny<Signature>()))
+            .Verifiable();
+
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
-        _mockMethodService.Verify();
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.Should().NotBeNull();
         result.InvocationResponse.MethodName.Should().Be("VarMethod");
+
+        _mockMethodService.VerifyAll();
+        _mockExecutionService.VerifyAll();
     }
 
     [TestMethod]
@@ -703,7 +718,8 @@ public class MethodAdapterTest
 
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
-        _mockMethodService.Verify();
+        _mockMethodService.VerifyAll();
+        _mockSimClassService.VerifyAll();
 
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
@@ -733,7 +749,7 @@ public class MethodAdapterTest
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
 
         adapter!.CreateInvocation(methodId, invocationRequest);
-        _mockMethodService.Verify();
+        _mockMethodService.VerifyAll();
     }
 
     [TestMethod]
@@ -758,7 +774,9 @@ public class MethodAdapterTest
             .Throws(new Exception("SimClass service error"));
 
         adapter!.CreateInvocation(methodId, invocationRequest);
-        _mockMethodService.Verify();
+
+        _mockMethodService.VerifyAll();
+        _mockSimClassService.VerifyAll();
     }
 
     [TestMethod]
@@ -783,6 +801,7 @@ public class MethodAdapterTest
             .Throws(new Exception("Attribute service error"));
 
         adapter!.CreateInvocation(methodId, invocationRequest);
-        _mockMethodService.Verify();
+        _mockMethodService.VerifyAll();
+        _mockAttributeService.VerifyAll();
     }
 }

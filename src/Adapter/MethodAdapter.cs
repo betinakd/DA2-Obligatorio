@@ -198,7 +198,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var method = _methodService.GetMethodById(idMethod);
-            Reference reference = null; // Declare with base type Reference
+            Reference reference = null;
             var signature = new Signature()
             {
                 Name = invocation.MethodName,
