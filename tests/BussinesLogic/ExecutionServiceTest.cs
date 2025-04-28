@@ -276,7 +276,7 @@ public class ExecutionServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeLogic))]
+    [ExpectedException(typeof(NonExistentValueLogic))]
     public void ValidateMethodExistsInClass_MethodDoesNotExist_Throws()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };

@@ -257,7 +257,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 default:
-                    throw new InvalidOperationException("Unsupported type reference.");
+                    throw new InvalidAttributeAdapter($"Unsupported type reference : {invocation.TypeReference}.");
             }
 
             var newInvocation = new Invocation

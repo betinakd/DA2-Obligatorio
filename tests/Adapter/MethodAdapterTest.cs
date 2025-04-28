@@ -731,7 +731,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void CreateInvocation_WithInvalidTypeReference_ShouldThrowException()
     {
         var methodId = Guid.NewGuid();
@@ -804,5 +804,27 @@ public class MethodAdapterTest
         adapter!.CreateInvocation(methodId, invocationRequest);
         _mockMethodService.VerifyAll();
         _mockAttributeService.VerifyAll();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void CreateInvocation_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = referenceId,
+            TypeReference = TypeReference.Attribute,
+            MethodName = "InvalidMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(new SimMethod { Id = methodId, Name = "TestMethod" });
+        _mockAttributeService!.Setup(s => s.GetSimAttribute(referenceId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute error"));
+
+        adapter!.CreateInvocation(methodId, invocationRequest);
     }
 }

@@ -52,7 +52,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
     {
         if(_executionDA.FindMethodInHierarchy(classId, methodName) == null)
         {
-            throw new InvalidAttributeLogic($"Method '{methodName}' is not accessible from this context");
+            throw new NonExistentValueLogic($"Method '{methodName}' is not accessible from this context");
         }
     }
 }
