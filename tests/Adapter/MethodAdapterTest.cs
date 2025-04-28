@@ -185,7 +185,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void GetParameter_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
     {
         var parameterId = Guid.NewGuid();
@@ -224,7 +224,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void GetVariable_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
     {
         var variableId = Guid.NewGuid();
@@ -265,7 +265,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void GetMethod_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
     {
         var methodId = Guid.NewGuid();
@@ -353,7 +353,7 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void DeleteMethod_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
     {
         var methodId = Guid.NewGuid();

@@ -35,7 +35,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
         catch(InvalidAttributeDomain)
         {
-            throw new InvalidOperationException("Invalid method ID.");
+            throw new InvalidAttributeAdapter("Invalid method ID.");
         }
     }
 
@@ -86,7 +86,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
         catch(InvalidAttributeDomain)
         {
-            throw new InvalidOperationException("Invalid method ID.");
+            throw new InvalidAttributeAdapter("Invalid method ID.");
         }
     }
 
@@ -105,7 +105,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
         catch(InvalidAttributeDomain)
         {
-            throw new InvalidOperationException("Invalid variable ID.");
+            throw new InvalidAttributeAdapter("Invalid variable ID.");
         }
     }
 
@@ -157,7 +157,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
         catch(InvalidAttributeDomain)
         {
-            throw new InvalidOperationException("Invalid parameter ID.");
+            throw new InvalidAttributeAdapter("Invalid parameter ID.");
         }
     }
 
