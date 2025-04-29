@@ -40,4 +40,38 @@ public class SimMethod
         var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
         return RelatedClass.Name + "." + signature.Name + "(" + simParams + ")";
     }
+
+    public override bool Equals(object? obj)
+    {
+        if(obj is not SimMethod otherMethod)
+        {
+            return false;
+        }
+
+        if(Name != otherMethod.Name || Parameters.Count != otherMethod.Parameters.Count)
+        {
+            return false;
+        }
+
+        foreach(var parameter in Parameters)
+        {
+            var parameterMatched = false;
+            foreach(var otherParam in otherMethod.Parameters)
+            {
+                var typeIdsMatch = parameter.TypeId == otherParam.TypeId;
+                if(typeIdsMatch)
+                {
+                    parameterMatched = true;
+                    break;
+                }
+            }
+
+            if(!parameterMatched)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
