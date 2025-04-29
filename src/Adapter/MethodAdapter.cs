@@ -103,9 +103,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ClassTypeId = variable.Type.Id
             };
         }
-        catch(InvalidAttributeDomain)
+        catch(NonExistentValueLogic)
         {
-            throw new InvalidAttributeAdapter("Invalid variable ID.");
+            throw new NonExistentValueAdapter("Invalid variable ID.");
         }
     }
 
