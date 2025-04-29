@@ -96,6 +96,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             throw new NonExistentValueAdapter(ex.Message);
         }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
     }
 
     public VariableResponse GetVariable(Guid id)
