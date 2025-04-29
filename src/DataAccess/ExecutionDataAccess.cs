@@ -71,6 +71,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(c => c.Methods)
             .ThenInclude(m => m.Invocations)
             .ThenInclude(a => a.Signature)
+            .ThenInclude(r => r.Parameters)
             .Where(c => c.BaseClassId == baseClassId)
             .ToList();
 
@@ -82,5 +83,15 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         }
 
         return allInheritors;
+    }
+
+    public bool MethodIsInUseByInheriting(SimMethod simMethod)
+    {
+        if(simMethod.RelatedClassId == null)
+        {
+            return false;
+        }
+
+        return false;
     }
 }
