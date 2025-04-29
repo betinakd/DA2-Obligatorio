@@ -925,4 +925,25 @@ public class MethodAdapterTest
         adapter!.CreateVariable(methodId, variableRequest);
         _mockSimClassService.VerifyAll();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
+    public void CreateVariable_ShouldThrowNonExistentValueAdapter_WhenNonExistentValueLogicIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var variableRequest = new VariableRequest
+        {
+            Name = "NonExistentVariable",
+            ClassTypeId = classTypeId
+        };
+
+        _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
+            .Throws(new NonExistentValueLogic("Class type does not exist"));
+
+        adapter!.CreateVariable(methodId, variableRequest);
+
+        _mockSimClassService.VerifyAll();
+    }
 }

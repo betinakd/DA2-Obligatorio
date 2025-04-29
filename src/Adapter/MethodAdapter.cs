@@ -144,6 +144,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
     }
 
     public ParameterResponse GetParameter(Guid id)
