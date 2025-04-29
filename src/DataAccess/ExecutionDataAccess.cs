@@ -87,9 +87,21 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
     public bool MethodIsInUseByInheriting(SimMethod simMethod)
     {
-        if(simMethod.RelatedClassId == null)
+        var inheritingClasses = GetAllInheritingClasses(simMethod.RelatedClassId);
+
+        foreach(var simClass in inheritingClasses)
         {
-            return false;
+            foreach(var method in simClass.Methods)
+            {
+                var matchingInvocations = method.Invocations
+                    .Where(invocation => simMethod.MatchSignature(invocation.Signature))
+                    .ToList();
+
+                if(matchingInvocations.Any())
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
