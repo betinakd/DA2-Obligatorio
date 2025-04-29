@@ -33,9 +33,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ReturnTypeId = method.ReturnType.Id
             };
         }
-        catch(InvalidAttributeDomain)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidAttributeAdapter("Invalid method ID.");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
