@@ -243,4 +243,40 @@ public class MethodControllerTest
         Assert.IsNull(createdResult?.RouteValues["id"]);
         Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
+
+    [TestMethod]
+    public void CreateParameter_WithNullResponse_ShouldReturnCreatedWithNullId()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterRequest = new ParameterRequest { MethodId = methodId, Name = "testParameter", ClassTypeId = Guid.NewGuid() };
+        CreatedParameterResponse? nullResponse = null;
+
+        _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns((CreatedParameterResponse?)null);
+
+        var result = _attributeController?.CreateParameter(parameterRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateParameter(methodId, parameterRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNull(createdResult?.RouteValues["id"]);
+        Assert.AreEqual(nullResponse, createdResult?.Value);
+    }
+
+    [TestMethod]
+    public void CreateParameter_WithNullParameter_ShouldReturnCreatedWithNullId()
+    {
+        var methodId = Guid.NewGuid();
+        var parameterRequest = new ParameterRequest { MethodId = methodId, Name = "testParameter", ClassTypeId = Guid.NewGuid() };
+        var expectedResponse = new CreatedParameterResponse { Message = "Parameter created successfully", Parameter = null };
+
+        _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateParameter(parameterRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateParameter(methodId, parameterRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNull(createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
+    }
 }
