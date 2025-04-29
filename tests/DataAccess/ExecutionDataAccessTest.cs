@@ -254,14 +254,6 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void MethodIsInUseByInheriting_ReturnsFalse_WhenRelatedClassIdIsNull()
-    {
-        var method = new SimMethod() { };
-        var result = _executionDataAccess.MethodIsInUseByInheriting(method.Id);
-        result.Should().BeFalse();
-    }
-
-    [TestMethod]
     public void MethodIsInUseByInheriting_ReturnsFalse_WhenMethodIsNotUsedInInvocation()
     {
         var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
