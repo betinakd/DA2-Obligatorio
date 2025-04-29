@@ -304,4 +304,56 @@ public class ExecutionDataAccessTest
 
         result.Should().BeFalse();
     }
+
+    [TestMethod]
+    public void MethodIsInUseByInheriting_ReturnsTrue_WhenMethodIsUsedInInvocation()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var baseMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass
+        };
+        _context.SimMethods.Add(baseMethod);
+        _context.SaveChanges();
+
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            RelatedMethodId = baseMethod.Id,
+            RelatedMethod = baseMethod
+        };
+
+        var childMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildMethod",
+            RelatedClassId = childClass.Id,
+            RelatedClass = childClass,
+            Invocations = [invocation]
+        };
+        childClass.Methods.Add(childMethod);
+        _context.SimMethods.Add(childMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod);
+
+        result.Should().BeTrue();
+    }
 }
