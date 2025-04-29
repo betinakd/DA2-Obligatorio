@@ -167,7 +167,37 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void GetClassesInheritingMethod_ReturnsIndirectInheritors()
+    public void GetAllInheritingClasses_ReturnsDirectInheritors()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass1 = new SimClass
+        {
+            Name = "ChildClass1",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        var childClass2 = new SimClass
+        {
+            Name = "ChildClass2",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.AddRange(childClass1, childClass2);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(baseClass.Id);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+        result.Should().Contain(c => c.Name == "ChildClass1");
+        result.Should().Contain(c => c.Name == "ChildClass2");
+    }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsIndirectInheritors()
     {
         var baseClass = new SimClass { Name = "BaseClass" };
         _context.SimClasses.Add(baseClass);
@@ -191,19 +221,35 @@ public class ExecutionDataAccessTest
         _context.SimClasses.Add(grandChildClass);
         _context.SaveChanges();
 
-        var method = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = baseClass.Id,
-            RelatedClass = baseClass
-        };
-        _context.SimMethods.Add(method);
-        _context.SaveChanges();
-
-        var result = _executionDataAccess.GetClassesInheritingMethod(method);
+        var result = _executionDataAccess.GetAllInheritingClasses(baseClass.Id);
 
         result.Should().NotBeNull();
-        result.Should().HaveCount(1);
+        result.Should().HaveCount(2);
         result.Should().Contain(c => c.Name == "ChildClass");
+        result.Should().Contain(c => c.Name == "GrandChildClass");
+    }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsEmpty_WhenNoInheritors()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(baseClass.Id);
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsEmpty_WhenBaseClassDoesNotExist()
+    {
+        var nonExistentBaseClassId = Guid.NewGuid();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(nonExistentBaseClassId);
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
     }
 }

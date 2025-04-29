@@ -65,14 +65,22 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         return FindMethodInHierarchy(baseClass, signature);
     }
 
-    public List<SimClass> GetClassesInheritingMethod(SimMethod method)
+    public List<SimClass> GetAllInheritingClasses(Guid baseClassId)
     {
-        var baseClassId = method.RelatedClass.Id;
-
-        var inheritingClasses = _context.SimClasses
+        var directInheritors = _context.SimClasses
+            .Include(c => c.Methods)
+            .ThenInclude(m => m.Invocations)
+            .ThenInclude(a => a.Signature)
             .Where(c => c.BaseClassId == baseClassId)
             .ToList();
 
-        return inheritingClasses;
+        var allInheritors = new List<SimClass>(directInheritors);
+
+        foreach(var inheritor in directInheritors)
+        {
+            allInheritors.AddRange(GetAllInheritingClasses(inheritor.Id));
+        }
+
+        return allInheritors;
     }
 }
