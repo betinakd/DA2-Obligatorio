@@ -353,14 +353,16 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeAdapter))]
-    public void DeleteMethod_ShouldThrowInvalidOperationException_WhenSimClassInvalidAttributeIsThrown()
+    [ExpectedException(typeof(NonExistentValueAdapter))]
+    public void DeleteMethod_ShouldThrowNonExistentValueAdapter_WhenNonExistentValueLogic()
     {
         var methodId = Guid.NewGuid();
 
-        _mockMethodService.Setup(s => s.DeleteMethod(methodId)).Throws(new InvalidAttributeDomain("error"));
+        _mockMethodService.Setup(s => s.DeleteMethod(methodId)).Throws(new NonExistentValueLogic("error"));
 
         adapter.DeleteMethod(methodId);
+
+        _mockMethodService.VerifyAll();
     }
 
     [TestMethod]

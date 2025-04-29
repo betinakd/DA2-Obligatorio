@@ -84,9 +84,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             _methodService.DeleteMethod(id);
         }
-        catch(InvalidAttributeDomain)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidAttributeAdapter("Invalid method ID.");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
