@@ -85,8 +85,9 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         return allInheritors;
     }
 
-    public bool MethodIsInUseByInheriting(SimMethod simMethod)
+    public bool MethodIsInUseByInheriting(Guid methodId)
     {
+        var simMethod = _context.SimMethods.FirstOrDefault(m => m.Id == methodId);
         var inheritingClasses = GetAllInheritingClasses(simMethod.RelatedClassId);
 
         foreach(var simClass in inheritingClasses)

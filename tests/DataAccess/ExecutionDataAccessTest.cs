@@ -257,7 +257,7 @@ public class ExecutionDataAccessTest
     public void MethodIsInUseByInheriting_ReturnsFalse_WhenRelatedClassIdIsNull()
     {
         var method = new SimMethod() { };
-        var result = _executionDataAccess.MethodIsInUseByInheriting(method);
+        var result = _executionDataAccess.MethodIsInUseByInheriting(method.Id);
         result.Should().BeFalse();
     }
 
@@ -300,7 +300,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod);
+        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
 
         result.Should().BeFalse();
     }
@@ -352,7 +352,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod);
+        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
 
         result.Should().BeTrue();
     }
