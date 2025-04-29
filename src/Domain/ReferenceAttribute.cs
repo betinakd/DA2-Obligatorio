@@ -22,7 +22,7 @@ public class ReferenceAttribute : Reference
     {
         if(Reference.Type == null)
         {
-            throw new SimClassInvalidAttribute("Reference type cannot be null.");
+            throw new InvalidAttributeDomain("Reference type cannot be null.");
         }
 
         return Reference.Type;

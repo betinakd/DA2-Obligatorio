@@ -19,7 +19,7 @@ public class LocalVariableTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateLocalVariableWithEmptyOrWhiteSpace_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new LocalVariable()
@@ -30,7 +30,7 @@ public class LocalVariableTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateALocalVariableWithInvalidCharacters_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new LocalVariable()
@@ -41,7 +41,7 @@ public class LocalVariableTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateLocalVariableWithOnlyNumbers_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new LocalVariable()
@@ -52,7 +52,7 @@ public class LocalVariableTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateLocalVariableWithReservedWords_ShouldThrowSimClassInvalidAttribute()
     {
         _ = new LocalVariable()

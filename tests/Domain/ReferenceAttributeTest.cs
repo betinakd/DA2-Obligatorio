@@ -21,7 +21,7 @@ public class ReferenceAttributeTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void TestGetSimClass_ShouldThrowExceptionWhenTypeIsNull()
     {
         var attribute = new SimAttribute();

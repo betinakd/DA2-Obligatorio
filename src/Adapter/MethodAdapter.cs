@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
 using IAdapter;
@@ -9,9 +10,10 @@ using Models.Response;
 
 namespace Adapter;
 
-public class MethodAdapter(IMethodService methodService, ISimClassService simClassService, ISimAttributeService simAttributeService)
+public class MethodAdapter(IMethodService methodService, ISimClassService simClassService, ISimAttributeService simAttributeService, IExecutionService executionService)
     : IMethodAdapter
 {
+    private readonly IExecutionService _executionService = executionService;
     private readonly IMethodService _methodService = methodService;
     private readonly ISimClassService _simClassService = simClassService;
     private readonly ISimAttributeService _simAttributeService = simAttributeService;
@@ -31,9 +33,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ReturnTypeId = method.ReturnType.Id
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidOperationException("Invalid method ID.");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -70,9 +72,17 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 }
             };
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -82,9 +92,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             _methodService.DeleteMethod(id);
         }
-        catch(SimClassInvalidAttribute)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidOperationException("Invalid method ID.");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -101,9 +111,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ClassTypeId = variable.Type.Id
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(NonExistentValueLogic)
         {
-            throw new InvalidOperationException("Invalid variable ID.");
+            throw new NonExistentValueAdapter("Invalid variable ID.");
         }
     }
 
@@ -134,9 +144,17 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             };
             return response;
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -153,9 +171,13 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ClassTypeId = parameter.Type.Id
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(InvalidAttributeDomain)
         {
-            throw new InvalidOperationException("Invalid parameter ID.");
+            throw new InvalidAttributeAdapter("Invalid parameter ID.");
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -186,9 +208,17 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             };
             return response;
         }
-        catch(SimClassInvalidAttribute ex)
+        catch(InvalidAttributeDomain ex)
         {
-            throw new InvalidAttribute(ex.Message);
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -197,46 +227,15 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var method = _methodService.GetMethodById(idMethod);
-            Reference reference = null; // Declare with base type Reference
-            switch(invocation.TypeReference)
+            Reference reference = null;
+            var signature = new Signature()
             {
-                case TypeReference.This:
-                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
-                    break;
-
-                case TypeReference.Base:
-                    reference = new ReferenceBase() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
-                    break;
-
-                case TypeReference.Attribute:
-                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
-                    reference = new ReferenceAttribute() { Reference = attribute };
-                    break;
-
-                case TypeReference.Parameter:
-                    var parameter = _methodService.GetParameterById(invocation.IdReference);
-                    reference = new ReferenceParameter() { Reference = parameter };
-                    break;
-
-                case TypeReference.LocalVariable:
-                    var variable = _methodService.GetVariableById(invocation.IdReference);
-                    reference = new ReferenceVariable() { Reference = variable };
-                    break;
-
-                default:
-                    throw new InvalidOperationException("Unsupported type reference.");
-            }
-
-            var newInvocation = new Invocation
-            {
-                Id = Guid.NewGuid(),
-                Reference = reference,
-                Signature = new Signature() { Name = invocation.MethodName },
-                RelatedMethod = method,
-                RelatedMethodId = method.Id
+                Name = invocation.MethodName,
+                Parameters = []
             };
 
             var parametersResponses = new List<ParameterResponse>();
+
             foreach(var parameter in invocation.Parameters)
             {
                 var newParameter = new ParameterSignature()
@@ -251,11 +250,56 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     ClassTypeId = newParameter.Type.Id
                 };
 
-                newInvocation.Signature.Parameters.Add(newParameter);
+                signature.Parameters.Add(newParameter);
                 parametersResponses.Add(newParameterResponse);
             }
 
-            _ = _methodService.AddInvocation(idMethod, newInvocation);
+            switch(invocation.TypeReference)
+            {
+                case TypeReference.This:
+                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.Base:
+                    reference = new ReferenceBase() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.Attribute:
+                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
+                    reference = new ReferenceAttribute() { Reference = attribute };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.Parameter:
+                    var parameter = _methodService.GetParameterById(invocation.IdReference);
+                    reference = new ReferenceParameter() { Reference = parameter };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                case TypeReference.LocalVariable:
+                    var variable = _methodService.GetVariableById(invocation.IdReference);
+                    reference = new ReferenceVariable() { Reference = variable };
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    break;
+
+                default:
+                    throw new InvalidAttributeAdapter($"Unsupported type reference : {invocation.TypeReference}.");
+            }
+
+            var newInvocation = new Invocation
+            {
+                Id = Guid.NewGuid(),
+                Reference = reference,
+                ReferenceId = reference.Id,
+                Signature = signature,
+                RelatedMethod = method,
+                RelatedMethodId = method.Id,
+                SignatureId = signature.Id
+            };
+
+            _methodService.AddInvocation(idMethod, newInvocation);
 
             return new CreatedInvocationResponse
             {
@@ -269,9 +313,17 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 }
             };
         }
-        catch(Exception ex)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidOperationException("Error creating invocation: " + ex.Message);
+            throw new NonExistentValueAdapter("Error creating invocation: " + ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter("Error creating invocation: " + ex.Message);
+        }
+        catch(InvalidAttributeDomain ex)
+        {
+            throw new InvalidAttributeAdapter("Error creating invocation: Invalid attribute domain." + ex.Message);
         }
     }
 
@@ -303,9 +355,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Parameters = parameters
             };
         }
-        catch(SimClassInvalidAttribute)
+        catch(NonExistentValueLogic ex)
         {
-            throw new InvalidOperationException("Invalid invocation ID.");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 }

@@ -85,7 +85,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
-        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>())).Throws(new SimClassInvalidAttribute("Invalid attribute"));
+        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>())).Throws(new InvalidAttributeDomain("Invalid attribute"));
 
         Assert.ThrowsException<InvalidAttributeLogic>(() =>
             _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId));

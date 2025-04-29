@@ -27,7 +27,7 @@ public class ParameterSignatureTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void Name_ShouldThrowException_WhenNameIsEmpty()
     {
         var parameter = new ParameterSignature();
@@ -36,7 +36,7 @@ public class ParameterSignatureTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void Name_ShouldThrowException_WhenNameContainsInvalidCharacters()
     {
         var parameter = new ParameterSignature();
@@ -45,7 +45,7 @@ public class ParameterSignatureTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void Name_ShouldThrowException_WhenNameContainsOnlyNumbers()
     {
         var parameter = new ParameterSignature();
@@ -54,7 +54,7 @@ public class ParameterSignatureTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void Name_ShouldThrowException_WhenNameIsReservedWord()
     {
         var parameter = new ParameterSignature();

@@ -22,7 +22,7 @@ public class ReferenceBase : Reference
     {
         if(Reference.BaseClass == null)
         {
-            throw new SimClassInvalidAttribute("Base Class is null.");
+            throw new InvalidAttributeDomain("Base Class is null.");
         }
 
         return Reference.BaseClass;

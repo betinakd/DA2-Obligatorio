@@ -105,7 +105,7 @@ public class AttributeAdapterTest
     }
 
     [TestMethod]
-    public void UpdateAttribute_WhenServiceThrowsException_ThrowsObjectNotFoundException()
+    public void UpdateAttribute_WhenServiceThrowsException_ThrowsNonExistentValueAdapter()
     {
         var attributeId = Guid.NewGuid();
         var relatedClassId = Guid.NewGuid();
@@ -125,7 +125,7 @@ public class AttributeAdapterTest
             .Setup(s => s.GetSimClassById(relatedClassId))
             .Throws(new Exception(exceptionMessage));
 
-        var ex = Assert.ThrowsException<ObjectNotFoundException>(() =>
+        var ex = Assert.ThrowsException<NonExistentValueAdapter>(() =>
             _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest));
 
         Assert.AreEqual(exceptionMessage, ex.Message);
@@ -186,7 +186,7 @@ public class AttributeAdapterTest
     }
 
     [TestMethod]
-    public void CreateAttribute_WhenServiceThrowsException_ThrowsObjectNotFoundException()
+    public void CreateAttribute_WhenServiceThrowsException_ThrowsNonExistentValueAdapter()
     {
         var attributeId = Guid.NewGuid();
         var relatedClassId = Guid.NewGuid();
@@ -207,7 +207,7 @@ public class AttributeAdapterTest
             .Setup(s => s.GetSimClassById(relatedClassId))
             .Throws(new Exception(exceptionMessage));
 
-        var ex = Assert.ThrowsException<ObjectNotFoundException>(() =>
+        var ex = Assert.ThrowsException<NonExistentValueAdapter>(() =>
             _simAttributeAdapter!.CreateAttribute(relatedClassId, attributeRequest));
 
         Assert.AreEqual(exceptionMessage, ex.Message);

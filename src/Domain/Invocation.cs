@@ -13,7 +13,7 @@ public class Invocation()
         {
             if(value == null)
             {
-                throw new SimClassInvalidAttribute("Reference cannot be null.");
+                throw new InvalidAttributeDomain("Reference cannot be null.");
             }
 
             _reference = value;
@@ -30,12 +30,12 @@ public class Invocation()
         {
             if(value == null)
             {
-                throw new SimClassInvalidAttribute("Signature cannot be null.");
+                throw new InvalidAttributeDomain("Signature cannot be null.");
             }
 
             if(string.IsNullOrWhiteSpace(value.Name))
             {
-                throw new SimClassInvalidAttribute("Method name in signature cannot be empty.");
+                throw new InvalidAttributeDomain("Method name in signature cannot be empty.");
             }
 
             _signature = value;
@@ -52,7 +52,7 @@ public class Invocation()
         {
             if(value == null || value == Guid.Empty)
             {
-                throw new SimClassInvalidAttribute("Related method ID cannot be null or empty.");
+                throw new InvalidAttributeDomain("Related method ID cannot be null or empty.");
             }
 
             _relatedMethodId = value;

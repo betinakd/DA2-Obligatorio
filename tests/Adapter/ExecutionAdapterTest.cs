@@ -102,7 +102,7 @@ public class ExecutionAdapterTest
             .Setup(s => s.GetSimClassById(It.IsAny<Guid>()))
             .Throws(new Exception("SimClass error"));
 
-        Assert.ThrowsException<InvalidExecutionException>(() =>
+        Assert.ThrowsException<InvalidExecutionAdapter>(() =>
         {
             _executionAdapter!.ExecuteMethod(request);
         });

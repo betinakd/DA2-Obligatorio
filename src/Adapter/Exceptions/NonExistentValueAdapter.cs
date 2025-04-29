@@ -1,6 +1,6 @@
 namespace Adapter.Exceptions;
 
-public class ObjectNotFoundException(string message)
+public class NonExistentValueAdapter(string message)
     : Exception(message)
 {
 }

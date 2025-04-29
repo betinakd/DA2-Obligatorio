@@ -35,7 +35,7 @@ public class ExceptionFilterTests
     [TestMethod]
     public void OnException_InvalidAttribute_ReturnsBadRequestResult()
     {
-        var exceptionContext = CreateExceptionContext(new InvalidAttribute("Invalid attribute error"));
+        var exceptionContext = CreateExceptionContext(new InvalidAttributeAdapter("Invalid attribute error"));
 
         _exceptionFilter!.OnException(exceptionContext);
 
@@ -45,7 +45,7 @@ public class ExceptionFilterTests
     [TestMethod]
     public void OnException_ObjectNotFoundException_ReturnsNotFoundResult()
     {
-        var exceptionContext = CreateExceptionContext(new ObjectNotFoundException("Object not found"));
+        var exceptionContext = CreateExceptionContext(new NonExistentValueAdapter("Object not found"));
 
         _exceptionFilter!.OnException(exceptionContext);
 
@@ -55,7 +55,7 @@ public class ExceptionFilterTests
     [TestMethod]
     public void OnException_InvalidExecutionException_ReturnsBadRequestResult()
     {
-        var exceptionContext = CreateExceptionContext(new InvalidExecutionException("Invalid execution"));
+        var exceptionContext = CreateExceptionContext(new InvalidExecutionAdapter("Invalid execution"));
 
         _exceptionFilter!.OnException(exceptionContext);
 

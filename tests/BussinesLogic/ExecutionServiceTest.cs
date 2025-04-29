@@ -1,4 +1,5 @@
 using BussinesLogic;
+using BussinesLogic.Exceptions;
 using Domain;
 using IDataAccess;
 using Moq;
@@ -272,5 +273,17 @@ public class ExecutionServiceTest
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
         Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void ValidateMethodExistsInClass_MethodDoesNotExist_Throws()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "MissingMethod", Parameters = [] };
+
+        _mockExecuteDataAccess.Setup(m => m.FindMethodInHierarchy(simClass, signature)).Returns((SimMethod?)null);
+
+        _executionService.ValidateMethodExistsInClass(simClass, signature);
     }
 }

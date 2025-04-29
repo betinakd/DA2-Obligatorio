@@ -38,17 +38,17 @@ public class SimClass
         {
             if(!SyntaxisValidation.IsValidName(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be empty or contain invalid characters.");
+                throw new InvalidAttributeDomain("Name cannot be empty or contain invalid characters.");
             }
 
             if(SyntaxisValidation.OnlyNumbers(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot contain only numbers.");
+                throw new InvalidAttributeDomain("Name cannot contain only numbers.");
             }
 
             if(SyntaxisValidation.ReservedWords(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be a reserved word.");
+                throw new InvalidAttributeDomain("Name cannot be a reserved word.");
             }
 
             _name = value;
@@ -62,7 +62,7 @@ public class SimClass
         {
             if(value == null || value?.State == SimAccesibility.Sealed)
             {
-                throw new SimClassInvalidAttribute("Cannot set as base a sealed or null Class.");
+                throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
             }
 
             if(value?.State == SimAccesibility.Abstract && State != SimAccesibility.Abstract)
@@ -72,7 +72,7 @@ public class SimClass
 
                 if(missingMethods.Any())
                 {
-                    throw new SimClassInvalidAttribute($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+                    throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
                 }
             }
 
@@ -84,7 +84,7 @@ public class SimClass
     {
         if(Attributes.Any(a => a.Name == attribute.Name))
         {
-            throw new SimClassInvalidAttribute("This Class already has an attribute with the same name.");
+            throw new InvalidAttributeDomain("This Class already has an attribute with the same name.");
         }
 
         Attributes.Add(attribute);
@@ -95,7 +95,7 @@ public class SimClass
         var numberDeleted = Attributes.RemoveAll(a => a.Name == attribute.Name);
         if(numberDeleted == 0)
         {
-            throw new SimClassInvalidOperation("No attribute was deleted, it may not exist.");
+            throw new InvalidOperationDomain("No attribute was deleted, it may not exist.");
         }
     }
 }

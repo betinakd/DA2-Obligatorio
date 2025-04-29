@@ -21,7 +21,7 @@ public class ReferenceVariableTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void TestGetSimClass_ShouldThrowExceptionWhenTypeIsNull()
     {
         var localVariable = new LocalVariable();

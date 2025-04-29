@@ -21,7 +21,7 @@ public class ReferenceParameterTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(SimClassInvalidAttribute))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void TestGetSimClass_ShouldThrowExceptionWhenTypeIsNull()
     {
         var parameter = new Parameter();

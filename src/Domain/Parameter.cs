@@ -19,17 +19,17 @@ public class Parameter
         {
             if(!SyntaxisValidation.IsValidName(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be empty or contain invalid characters.");
+                throw new InvalidAttributeDomain("Name cannot be empty or contain invalid characters.");
             }
 
             if(SyntaxisValidation.OnlyNumbers(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be only numbers.");
+                throw new InvalidAttributeDomain("Name cannot be only numbers.");
             }
 
             if(SyntaxisValidation.ReservedWords(value))
             {
-                throw new SimClassInvalidAttribute("Name cannot be a reserved word.");
+                throw new InvalidAttributeDomain("Name cannot be a reserved word.");
             }
 
             _name = value;

@@ -10,7 +10,7 @@ public sealed class ExceptionFilter : IExceptionFilter
     private readonly Dictionary<Type, Func<Exception, IActionResult>> _errorFactories = new()
 {
     {
-        typeof(InvalidAttribute),
+        typeof(InvalidAttributeAdapter),
         ex => new ObjectResult(new ErrorResponse
         {
             InnerCode = 1,
@@ -21,7 +21,7 @@ public sealed class ExceptionFilter : IExceptionFilter
         }
     },
     {
-        typeof(ObjectNotFoundException),
+        typeof(NonExistentValueAdapter),
         ex => new ObjectResult(new ErrorResponse
         {
             InnerCode = 2,
@@ -32,7 +32,7 @@ public sealed class ExceptionFilter : IExceptionFilter
         }
     },
     {
-        typeof(InvalidExecutionException),
+        typeof(InvalidExecutionAdapter),
         ex => new ObjectResult(new ErrorResponse
         {
             InnerCode = 3,
