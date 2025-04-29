@@ -261,4 +261,43 @@ public class SimClassDataAccessTest
         Assert.IsTrue(result.Any(c => c.Name == "Class 1"));
         Assert.IsTrue(result.Any(c => c.Name == "Class 2"));
     }
+
+    [TestMethod]
+    public void InUseByOther_WithMatchingReferenceId_ShouldReturnTrue()
+    {
+        var id = Guid.NewGuid();
+        var reference = new ReferenceThis { Reference = new SimClass { Id = id, Name = "Test Class" } };
+        _context.References.Add(reference);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.InUseByOther(id);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void InUseByOther_WithNonMatchingReferenceId_ShouldReturnFalse()
+    {
+        var id = Guid.NewGuid();
+        var reference = new ReferenceThis { Reference = new SimClass { Id = Guid.NewGuid(), Name = "Test Class" } };
+        _context.References.Add(reference);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.InUseByOther(id);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void InUseByOther_WithNullReference_ShouldReturnFalse()
+    {
+        var id = Guid.NewGuid();
+        var reference = new ReferenceThis { Reference = null }; // Simula un caso donde Reference es null
+        _context.References.Add(reference);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.InUseByOther(id);
+
+        Assert.IsFalse(result);
+    }
 }
