@@ -279,4 +279,40 @@ public class MethodControllerTest
         Assert.IsNull(createdResult?.RouteValues["id"]);
         Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
+
+    [TestMethod]
+    public void CreateVariable_WithNullResponse_ShouldReturnCreatedWithNullId()
+    {
+        var methodId = Guid.NewGuid();
+        var variableRequest = new VariableRequest { MethodId = methodId, Name = "testVariable", ClassTypeId = Guid.NewGuid() };
+        CreatedVariableResponse? nullResponse = null;
+
+        _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns((CreatedVariableResponse?)null);
+
+        var result = _attributeController?.CreateVariables(variableRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateVariable(methodId, variableRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNull(createdResult?.RouteValues["id"]);
+        Assert.AreEqual(nullResponse, createdResult?.Value);
+    }
+
+    [TestMethod]
+    public void CreateVariable_WithNullVariable_ShouldReturnCreatedWithNullId()
+    {
+        var methodId = Guid.NewGuid();
+        var variableRequest = new VariableRequest { MethodId = methodId, Name = "testVariable", ClassTypeId = Guid.NewGuid() };
+        var expectedResponse = new CreatedVariableResponse { Message = "Variable created successfully", Variable = null };
+
+        _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateVariables(variableRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateVariable(methodId, variableRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNull(createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
+    }
 }
