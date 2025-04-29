@@ -252,4 +252,12 @@ public class ExecutionDataAccessTest
         result.Should().NotBeNull();
         result.Should().BeEmpty();
     }
+
+    [TestMethod]
+    public void MethodIsInUseByInheriting_ReturnsFalse_WhenRelatedClassIdIsNull()
+    {
+        var method = new SimMethod() { };
+        var result = _executionDataAccess.MethodIsInUseByInheriting(method);
+        result.Should().BeFalse();
+    }
 }
