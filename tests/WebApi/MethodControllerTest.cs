@@ -173,7 +173,6 @@ public class MethodControllerTest
         }
         catch(InvalidAttributeAdapter ex)
         {
-            // Simula el comportamiento del filtro
             result = new BadRequestObjectResult(new { Message = ex.Message });
         }
 
@@ -188,5 +187,60 @@ public class MethodControllerTest
         var actualMessage = ((dynamic)value).Message;
 
         Assert.AreEqual(expectedMessage, actualMessage);
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithValidResponse_ShouldReturnCreated()
+    {
+        var methodId = Guid.NewGuid();
+        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parameters = [] };
+        var invocationResponse = new InvocationResponse { Id = Guid.NewGuid() };
+        var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = invocationResponse };
+
+        _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateInvocation(invocationRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateInvocation(methodId, invocationRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.AreEqual(expectedResponse.InvocationResponse.Id, createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithNullResponse_ShouldReturnCreatedWithNullId()
+    {
+        var methodId = Guid.NewGuid();
+        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parameters = [] };
+        CreatedInvocationResponse? nullResponse = null;
+
+        _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns((CreatedInvocationResponse?)null);
+
+        var result = _attributeController?.CreateInvocation(invocationRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateInvocation(methodId, invocationRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNull(createdResult?.RouteValues["id"]);
+        Assert.AreEqual(nullResponse, createdResult?.Value);
+    }
+
+    [TestMethod]
+    public void CreateInvocation_WithNullInvocationResponse_ShouldReturnCreatedWithNullId()
+    {
+        var methodId = Guid.NewGuid();
+        var invocationRequest = new InvocationRequest { IdReference = methodId, MethodName = "testInvocation", Parameters = [] };
+        var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = null };
+
+        _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns(expectedResponse);
+
+        var result = _attributeController?.CreateInvocation(invocationRequest, methodId);
+
+        _mockmethodAdapter?.Verify(m => m.CreateInvocation(methodId, invocationRequest), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNull(createdResult?.RouteValues["id"]);
+        Assert.AreEqual(expectedResponse, createdResult?.Value);
     }
 }
