@@ -192,6 +192,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
     }
 
     public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest invocation)
