@@ -948,4 +948,29 @@ public class MethodAdapterTest
 
         _mockSimClassService.VerifyAll();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void CreateMethod_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicIsThrown()
+    {
+        var idClass = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var methodRequest = new MethodRequest
+        {
+            Name = "InvalidMethod",
+            Privacity = SimModelsPrivacity.Public,
+            Accesibility = SimModelsAccesibility.Normal,
+            ReturnTypeId = returnTypeId
+        };
+
+        _mockSimClassService!.Setup(s => s.GetSimClassById(idClass))
+            .Returns(new SimClass { Id = idClass, Name = "TestClass" });
+
+        _mockSimClassService.Setup(s => s.GetSimClassById(returnTypeId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute logic error"));
+
+        adapter!.CreateMethod(idClass, methodRequest);
+        _mockSimClassService.VerifyAll();
+    }
 }
