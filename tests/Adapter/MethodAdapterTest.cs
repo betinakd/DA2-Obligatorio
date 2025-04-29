@@ -905,4 +905,24 @@ public class MethodAdapterTest
 
         _mockMethodService.VerifyAll();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void CreateVariable_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+        var classTypeId = Guid.NewGuid();
+
+        var variableRequest = new VariableRequest
+        {
+            Name = "InvalidVariable",
+            ClassTypeId = classTypeId
+        };
+
+        _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute logic error"));
+
+        adapter!.CreateVariable(methodId, variableRequest);
+        _mockSimClassService.VerifyAll();
+    }
 }
