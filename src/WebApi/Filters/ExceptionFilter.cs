@@ -42,6 +42,17 @@ public sealed class ExceptionFilter : IExceptionFilter
             StatusCode = (int)HttpStatusCode.BadRequest
         }
     },
+    {
+        typeof(InUseValueAdapter),
+        ex => new ObjectResult(new ErrorResponse
+        {
+            InnerCode = 4,
+            Message = ex.Message
+        })
+        {
+            StatusCode = (int)HttpStatusCode.Conflict
+        }
+    }
 };
 
     public void OnException(ExceptionContext context)

@@ -12,6 +12,8 @@ public class SimMethodServiceTest
 {
     private Mock<ISimMethodDataAccess>? _mockSimMethodDataAccess;
     private Mock<ISimClassDataAccess>? _mockSimClassDataAccess;
+    private Mock<IExecutionDataAccess>? _mockExectuionDataAccess;
+
     private SimMethodService? _simMethodService;
 
     [TestInitialize]
@@ -19,7 +21,8 @@ public class SimMethodServiceTest
     {
         _mockSimMethodDataAccess = new Mock<ISimMethodDataAccess>(MockBehavior.Strict);
         _mockSimClassDataAccess = new Mock<ISimClassDataAccess>(MockBehavior.Strict);
-        _simMethodService = new SimMethodService(_mockSimMethodDataAccess.Object, _mockSimClassDataAccess.Object);
+        _mockExectuionDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Strict);
+        _simMethodService = new SimMethodService(_mockSimMethodDataAccess.Object, _mockSimClassDataAccess.Object, _mockExectuionDataAccess.Object);
     }
 
     [TestMethod]
@@ -459,6 +462,10 @@ public class SimMethodServiceTest
             .Setup(m => m.DeleteMethod(methodId))
             .Verifiable();
 
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsInUseByInheriting(methodId))
+            .Returns(false);
+
         _simMethodService!.DeleteMethod(methodId);
 
         _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
@@ -607,5 +614,22 @@ public class SimMethodServiceTest
         _simMethodService!.AddMethod(idClass, method);
 
         _mockSimMethodDataAccess.Verify(m => m.CreateMethod(idClass, method), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_ShouldThrowException_WhenMethodIsInUseByInheritingClasses()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsInUseByInheriting(methodId))
+            .Returns(true);
+
+        _simMethodService!.DeleteMethod(methodId);
     }
 }

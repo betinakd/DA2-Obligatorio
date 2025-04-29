@@ -6,10 +6,11 @@ using IDataAccess;
 
 namespace BussinesLogic;
 
-public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAccess simClassDA) : IMethodService
+public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAccess simClassDA, IExecutionDataAccess executionDA) : IMethodService
 {
     private readonly ISimMethodDataAccess _simMethodDA = simMethodDA;
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
+    private readonly IExecutionDataAccess _executionDA = executionDA;
 
     public Invocation AddInvocation(Guid idMethod, Invocation newInvocation)
     {
@@ -84,6 +85,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         if(!_simMethodDA.ExistMethodById(id))
         {
             throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        if(_executionDA.MethodIsInUseByInheriting(id))
+        {
+            throw new InUseValueLogic("Method cannot be deleted because it is in use by inheriting classes.");
         }
 
         _simMethodDA.DeleteMethod(id);

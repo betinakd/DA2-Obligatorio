@@ -8,7 +8,7 @@ public class SimMethod
     public string Name { get; set; } = string.Empty;
     public Guid? ReturTypeId { get; set; }
     public SimClass? ReturnType { get; set; } = null!;
-    public Guid? RelatedClassId { get; set; }
+    public Guid RelatedClassId { get; set; }
 
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }

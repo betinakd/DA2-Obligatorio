@@ -996,4 +996,18 @@ public class MethodAdapterTest
         adapter!.CreateMethod(idClass, methodRequest);
         _mockSimClassService.VerifyAll();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueAdapter))]
+    public void DeleteMethod_ShouldThrowInUseValueAdapter_WhenInUseValueLogicIsThrown()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockMethodService!
+            .Setup(s => s.DeleteMethod(methodId))
+            .Throws(new InUseValueLogic("Method is in use"));
+
+        adapter!.DeleteMethod(methodId);
+        _mockMethodService.VerifyAll();
+    }
 }

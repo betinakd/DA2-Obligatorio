@@ -165,4 +165,187 @@ public class ExecutionDataAccessTest
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
         result.Should().BeNull();
     }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsDirectInheritors()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass1 = new SimClass
+        {
+            Name = "ChildClass1",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        var childClass2 = new SimClass
+        {
+            Name = "ChildClass2",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.AddRange(childClass1, childClass2);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(baseClass.Id);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+        result.Should().Contain(c => c.Name == "ChildClass1");
+        result.Should().Contain(c => c.Name == "ChildClass2");
+    }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsIndirectInheritors()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var grandChildClass = new SimClass
+        {
+            Name = "GrandChildClass",
+            BaseClassId = childClass.Id,
+            BaseClass = childClass
+        };
+        _context.SimClasses.Add(grandChildClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(baseClass.Id);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+        result.Should().Contain(c => c.Name == "ChildClass");
+        result.Should().Contain(c => c.Name == "GrandChildClass");
+    }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsEmpty_WhenNoInheritors()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(baseClass.Id);
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void GetAllInheritingClasses_ReturnsEmpty_WhenBaseClassDoesNotExist()
+    {
+        var nonExistentBaseClassId = Guid.NewGuid();
+
+        var result = _executionDataAccess.GetAllInheritingClasses(nonExistentBaseClassId);
+
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    [TestMethod]
+    public void MethodIsInUseByInheriting_ReturnsFalse_WhenMethodIsNotUsedInInvocation()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var baseMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass
+        };
+        _context.SimMethods.Add(baseMethod);
+        _context.SaveChanges();
+
+        var childMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildMethod",
+            RelatedClassId = childClass.Id,
+            RelatedClass = childClass,
+            Invocations = []
+        };
+        childClass.Methods.Add(childMethod);
+        _context.SimMethods.Add(childMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void MethodIsInUseByInheriting_ReturnsTrue_WhenMethodIsUsedInInvocation()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var baseMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass
+        };
+        _context.SimMethods.Add(baseMethod);
+        _context.SaveChanges();
+
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            RelatedMethodId = baseMethod.Id,
+            RelatedMethod = baseMethod
+        };
+
+        var childMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildMethod",
+            RelatedClassId = childClass.Id,
+            RelatedClass = childClass,
+            Invocations = [invocation]
+        };
+        childClass.Methods.Add(childMethod);
+        _context.SimMethods.Add(childMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+
+        result.Should().BeTrue();
+    }
 }
