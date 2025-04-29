@@ -165,4 +165,45 @@ public class ExecutionDataAccessTest
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
         result.Should().BeNull();
     }
+
+    [TestMethod]
+    public void GetClassesInheritingMethod_ReturnsIndirectInheritors()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var grandChildClass = new SimClass
+        {
+            Name = "GrandChildClass",
+            BaseClassId = childClass.Id,
+            BaseClass = childClass
+        };
+        _context.SimClasses.Add(grandChildClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass
+        };
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.GetClassesInheritingMethod(method);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(1);
+        result.Should().Contain(c => c.Name == "ChildClass");
+    }
 }
