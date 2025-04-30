@@ -26,6 +26,7 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+builder.Services.AddResponseCaching();
 
 var app = builder.Build();
 
