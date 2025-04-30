@@ -56,15 +56,15 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Abstract method cannot be added because the class it is already in use and cannot change to abstract.");
         }
 
+        if(_executionDA.MethodIsOverridingSealed(idClass, method))
+        {
+            throw new InUseValueLogic("Method cannot be added because it overrides a sealed method in base class.");
+        }
+
         if(method.Accesibility == SimAccesibility.Abstract)
         {
             simClass.State = SimAccesibility.Abstract;
             _simClassDA.UpdateSimClass(simClass);
-        }
-
-        if(_executionDA.MethodIsOverridingSealed(idClass, method))
-        {
-            throw new InUseValueLogic("Method cannot be added because it overrides a sealed method in base class.");
         }
 
         return _simMethodDA.CreateMethod(idClass, method);
