@@ -8,4 +8,5 @@ public interface IExecutionDataAccess
     public bool MethodIsInUseByInheritingInvocations(Guid methodId);
 
     public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0);
+    public bool MethodIsOverridingSealed(Guid idClass, SimMethod method);
 }

@@ -62,6 +62,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             _simClassDA.UpdateSimClass(simClass);
         }
 
+        if(_executionDA.MethodIsOverridingSealed(idClass, method))
+        {
+            throw new InUseValueLogic("Method cannot be added because it overrides a sealed method in base class.");
+        }
+
         return _simMethodDA.CreateMethod(idClass, method);
     }
 

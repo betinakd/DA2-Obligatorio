@@ -144,7 +144,9 @@ public class SimMethodServiceTest
         _mockSimClassDataAccess!
             .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
             .Verifiable();
-
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsOverridingSealed(classId, method))
+            .Returns(false);
         var result = _simMethodService!.AddMethod(classId, method);
 
         Assert.AreEqual(expectedMethod, result);
@@ -538,7 +540,9 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess!
             .Setup(m => m.CreateMethod(idClass, method))
             .Returns(method);
-
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsOverridingSealed(idClass, method))
+            .Returns(false);
         _simMethodService!.AddMethod(idClass, method);
 
         Assert.AreEqual(SimAccesibility.Abstract, simClass.State);
@@ -572,7 +576,9 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess!
             .Setup(m => m.CreateMethod(idClass, method))
             .Returns(method);
-
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsOverridingSealed(idClass, method))
+            .Returns(false);
         _simMethodService!.AddMethod(idClass, method);
 
         _mockSimMethodDataAccess.Verify(m => m.CreateMethod(idClass, method), Times.Once);
@@ -606,7 +612,9 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess!
             .Setup(m => m.CreateMethod(idClass, method))
             .Returns(method);
-
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsOverridingSealed(idClass, method))
+            .Returns(false);
         _mockSimClassDataAccess!
             .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
             .Verifiable();
@@ -631,5 +639,46 @@ public class SimMethodServiceTest
             .Returns(true);
 
         _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddMethod_ShouldThrowException_WhenMethodOverridesSealed()
+    {
+        var classId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "OverrideMethod",
+            Parameters = []
+        };
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "ChildClass",
+            State = SimAccesibility.Normal,
+            BaseClassId = Guid.NewGuid()
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ExistSimClassById(classId))
+            .Returns(true);
+
+        _mockSimClassDataAccess
+            .Setup(m => m.GetSimClassById(classId))
+            .Returns(simClass);
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistsMethodInClass(classId, method))
+            .Returns(false);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsOverridingSealed(classId, method))
+            .Returns(true);
+
+        _simMethodService!.AddMethod(classId, method);
+
+        _mockExectuionDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once);
     }
 }
