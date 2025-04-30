@@ -87,7 +87,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
-        if(_executionDA.MethodIsInUseByInheriting(id))
+        if(_executionDA.MethodIsInUseByInheritingInvocations(id))
         {
             throw new InUseValueLogic("Method cannot be deleted because it is in use by inheriting classes.");
         }

@@ -463,7 +463,7 @@ public class SimMethodServiceTest
             .Verifiable();
 
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsInUseByInheriting(methodId))
+            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
             .Returns(false);
 
         _simMethodService!.DeleteMethod(methodId);
@@ -627,7 +627,7 @@ public class SimMethodServiceTest
             .Returns(true);
 
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsInUseByInheriting(methodId))
+            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
             .Returns(true);
 
         _simMethodService!.DeleteMethod(methodId);

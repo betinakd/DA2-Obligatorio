@@ -105,7 +105,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
         foreach(var method in simClass.Methods)
         {
-            if(_executionDataAccess.MethodIsInUseByInheriting(method.Id))
+            if(_executionDataAccess.MethodIsInUseByInheritingInvocations(method.Id))
             {
                 throw new InUseValueLogic("Method is in use by invocations and cannot be updated.");
             }

@@ -292,7 +292,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeFalse();
     }
@@ -346,7 +346,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeTrue();
     }
@@ -399,7 +399,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeFalse();
     }
@@ -452,7 +452,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeTrue();
     }
@@ -505,7 +505,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeTrue();
     }
@@ -549,7 +549,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(ownerMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeTrue();
     }
@@ -593,7 +593,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(ownerMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeTrue("Public methods in owner class should be considered in use by inheriting");
     }
@@ -646,7 +646,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(childMethod);
         _context.SaveChanges();
 
-        var result = _executionDataAccess.MethodIsInUseByInheriting(baseMethod.Id);
+        var result = _executionDataAccess.MethodIsInUseByInheritingInvocations(baseMethod.Id);
 
         result.Should().BeFalse();
     }
@@ -838,5 +838,280 @@ public class ExecutionDataAccessTest
         var result = _executionDataAccess.ClassInheritAttribute(childClass.Id, attribute.Id);
 
         result.Should().BeTrue("Should find public attribute in the grandparent class");
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_ReturnsFalse_WhenClassDoesNotExist()
+    {
+        // Arrange
+        var nonExistentClassId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Parameters = []
+        };
+
+        var result = _executionDataAccess.MethodIsOverridingSealed(nonExistentClassId, method);
+
+        result.Should().BeFalse("Should return false when class does not exist");
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_ReturnsFalse_WhenNoSealedMethodExists()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var regularMethod = new SimMethod
+        {
+            Name = "RegularMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Accesibility = SimAccesibility.Normal
+        };
+        simClass.Methods.Add(regularMethod);
+        _context.SimMethods.Add(regularMethod);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "RegularMethod",
+            Parameters = []
+        };
+
+        var result = _executionDataAccess.MethodIsOverridingSealed(simClass.Id, methodToCheck);
+
+        result.Should().BeFalse("Should return false when no sealed method exists with same signature");
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_ReturnsTrue_WhenSealedMethodExistsInSameClass()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var intType = new SimClass { Name = "int" };
+        _context.SimClasses.Add(intType);
+        _context.SaveChanges();
+
+        var parameter = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var sealedMethod = new SimMethod
+        {
+            Name = "SealedMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Accesibility = SimAccesibility.Sealed,
+            Parameters = [parameter]
+        };
+        parameter.RelatedMethodId = sealedMethod.Id;
+        parameter.RelatedMethod = sealedMethod;
+
+        simClass.Methods.Add(sealedMethod);
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var paramToCheck = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "SealedMethod",
+            Parameters = [paramToCheck]
+        };
+
+        var result = _executionDataAccess.MethodIsOverridingSealed(simClass.Id, methodToCheck);
+
+        result.Should().BeTrue("Should return true when a sealed method exists with the same signature");
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_ReturnsTrue_WhenSealedMethodExistsInBaseClass()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var intType = new SimClass { Name = "int" };
+        _context.SimClasses.Add(intType);
+        _context.SaveChanges();
+
+        var parameter = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var sealedMethod = new SimMethod
+        {
+            Name = "SealedMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            Accesibility = SimAccesibility.Sealed,
+            Parameters = [parameter]
+        };
+        parameter.RelatedMethodId = sealedMethod.Id;
+        parameter.RelatedMethod = sealedMethod;
+
+        baseClass.Methods.Add(sealedMethod);
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var paramToCheck = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "SealedMethod",
+            Parameters = [paramToCheck]
+        };
+
+        var result = _executionDataAccess.MethodIsOverridingSealed(childClass.Id, methodToCheck);
+
+        result.Should().BeTrue("Should return true when a sealed method exists in base class with the same signature");
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_ReturnsTrue_WhenSealedMethodExistsInGrandparentClass()
+    {
+        var grandparentClass = new SimClass { Name = "GrandparentClass" };
+        _context.SimClasses.Add(grandparentClass);
+        _context.SaveChanges();
+
+        var parentClass = new SimClass
+        {
+            Name = "ParentClass",
+            BaseClassId = grandparentClass.Id,
+            BaseClass = grandparentClass
+        };
+        _context.SimClasses.Add(parentClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = parentClass.Id,
+            BaseClass = parentClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var intType = new SimClass { Name = "int" };
+        _context.SimClasses.Add(intType);
+        _context.SaveChanges();
+
+        var parameter = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var sealedMethod = new SimMethod
+        {
+            Name = "SealedMethod",
+            RelatedClassId = grandparentClass.Id,
+            RelatedClass = grandparentClass,
+            Accesibility = SimAccesibility.Sealed,
+            Parameters = [parameter]
+        };
+        parameter.RelatedMethodId = sealedMethod.Id;
+        parameter.RelatedMethod = sealedMethod;
+
+        grandparentClass.Methods.Add(sealedMethod);
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var paramToCheck = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "SealedMethod",
+            Parameters = [paramToCheck]
+        };
+
+        var result = _executionDataAccess.MethodIsOverridingSealed(childClass.Id, methodToCheck);
+
+        result.Should().BeTrue("Should return true when a sealed method exists in grandparent class with the same signature");
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_ReturnsFalse_WhenMethodSignatureDiffers()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var intType = new SimClass { Name = "int" };
+        var stringType = new SimClass { Name = "string" };
+        _context.SimClasses.AddRange(intType, stringType);
+        _context.SaveChanges();
+
+        var parameter = new Parameter
+        {
+            Name = "param1",
+            TypeId = intType.Id,
+            Type = intType
+        };
+
+        var sealedMethod = new SimMethod
+        {
+            Name = "SealedMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            Accesibility = SimAccesibility.Sealed,
+            Parameters = [parameter]
+        };
+        parameter.RelatedMethodId = sealedMethod.Id;
+        parameter.RelatedMethod = sealedMethod;
+
+        baseClass.Methods.Add(sealedMethod);
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var paramToCheck = new Parameter
+        {
+            Name = "param1",
+            TypeId = stringType.Id,
+            Type = stringType
+        };
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "SealedMethod",
+            Parameters = [paramToCheck]
+        };
+
+        var result = _executionDataAccess.MethodIsOverridingSealed(baseClass.Id, methodToCheck);
+
+        result.Should().BeFalse("Should return false when method signature differs (different parameter type)");
     }
 }

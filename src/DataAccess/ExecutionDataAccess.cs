@@ -87,7 +87,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         return allInheritors;
     }
 
-    public bool MethodIsInUseByInheriting(Guid methodId)
+    public bool MethodIsInUseByInheritingInvocations(Guid methodId)
     {
         var simMethod = _context.SimMethods.FirstOrDefault(m => m.Id == methodId);
         var ownerSimClass = _context.SimClasses.FirstOrDefault(c => c.Id == simMethod.RelatedClassId);
@@ -161,5 +161,34 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         }
 
         return false;
+    }
+
+    public bool MethodIsOverridingSealed(Guid idClass, SimMethod method)
+    {
+        var ownerClass = _context.SimClasses
+            .Include(c => c.Methods)
+            .ThenInclude(m => m.Parameters)
+            .ThenInclude(p => p.Type)
+            .FirstOrDefault(c => c.Id == idClass);
+
+        if(ownerClass == null)
+        {
+            return false;
+        }
+
+        foreach(var simMethod in ownerClass.Methods)
+        {
+            if(simMethod.Accesibility == SimAccesibility.Sealed && simMethod.Equals(method))
+            {
+                return true;
+            }
+        }
+
+        if(!ownerClass.BaseClassId.HasValue)
+        {
+            return false;
+        }
+
+        return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, method);
     }
 }

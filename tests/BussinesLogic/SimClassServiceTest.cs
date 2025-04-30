@@ -386,13 +386,13 @@ public class SimClassServiceTest
 
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(false);
-        _mockExecutionDataAccess.Setup(da => da.MethodIsInUseByInheriting(methodId)).Returns(true);
+        _mockExecutionDataAccess.Setup(da => da.MethodIsInUseByInheritingInvocations(methodId)).Returns(true);
 
         var exception = Assert.ThrowsException<InUseValueLogic>(() =>
             _simClassService.InUseByOther(simClassId));
 
         Assert.AreEqual("Method is in use by invocations and cannot be updated.", exception.Message);
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
-        _mockExecutionDataAccess.Verify(da => da.MethodIsInUseByInheriting(methodId), Times.Once);
+        _mockExecutionDataAccess.Verify(da => da.MethodIsInUseByInheritingInvocations(methodId), Times.Once);
     }
 }
