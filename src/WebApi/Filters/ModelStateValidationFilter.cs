@@ -1,6 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
+[ExcludeFromCodeCoverage]
 public class ModelStateValidationFilter : IActionFilter
 {
     public void OnActionExecuting(ActionExecutingContext context)
@@ -23,5 +24,7 @@ public class ModelStateValidationFilter : IActionFilter
         }
     }
 
-    public void OnActionExecuted(ActionExecutedContext context) { }
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+    }
 }
