@@ -55,4 +55,12 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
             throw new NonExistentValueLogic($"Method '{methodName.Name}' is not accessible from this context");
         }
     }
+
+    public void ClassInheritAttribute(Guid idClass, Guid idAttribute)
+    {
+        if(!_executionDA.ClassInheritAttribute(idClass, idAttribute))
+        {
+            throw new NonExistentValueLogic("Attribute not reacheable from method.");
+        }
+    }
 }
