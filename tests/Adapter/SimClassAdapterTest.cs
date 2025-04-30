@@ -58,7 +58,7 @@ public class SimClassAdapterTest
             Name = "ValidClass",
             IsAbstract = false,
             IsSealed = false,
-            BaseClassId = Guid.NewGuid(),
+            IdBaseClass = Guid.NewGuid().ToString(),
             State = SimModelsAccesibility.Normal
         };
 
@@ -196,7 +196,7 @@ public class SimClassAdapterTest
         {
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
-            BaseClassId = Guid.NewGuid()
+            IdBaseClass = Guid.NewGuid().ToString()
         };
 
         _mockSimClassService!
@@ -285,7 +285,7 @@ public class SimClassAdapterTest
         {
             Name = "Invalid-Name-With-Chars",
             State = SimModelsAccesibility.Normal,
-            BaseClassId = Guid.NewGuid()
+            IdBaseClass = Guid.NewGuid().ToString()
         };
 
         _mockSimClassService!
@@ -296,6 +296,26 @@ public class SimClassAdapterTest
             _simClassAdapter!.CreateSimClass(request));
 
         Assert.AreEqual("Name contains invalid characters.", exception.Message);
+
+        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
+    public void CreateSimClass_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
+    {
+        var request = new SimClassRequest
+        {
+            Name = "TestClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = Guid.NewGuid().ToString()
+        };
+
+        _mockSimClassService!
+            .Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            .Throws(new NonExistentValueLogic("Base class not found."));
+
+        _simClassAdapter!.CreateSimClass(request);
 
         _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
     }

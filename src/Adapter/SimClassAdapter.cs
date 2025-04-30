@@ -31,7 +31,7 @@ public class SimClassAdapter(ISimClassService simClassService)
         try
         {
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
-            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = request.State } };
+            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State } };
         }
         catch(InUseValueLogic ex)
         {
@@ -40,6 +40,10 @@ public class SimClassAdapter(ISimClassService simClassService)
         catch(InvalidAttributeLogic ex)
         {
             throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic)
+        {
+            throw new NonExistentValueAdapter("Base class not found.");
         }
     }
 
