@@ -88,14 +88,38 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     public bool MethodIsInUseByInheriting(Guid methodId)
     {
         var simMethod = _context.SimMethods.FirstOrDefault(m => m.Id == methodId);
+        var ownerSimClass = _context.SimClasses.FirstOrDefault(c => c.Id == simMethod.RelatedClassId);
         var inheritingClasses = GetAllInheritingClasses(simMethod.RelatedClassId);
+
+        var ownerClass = _context.SimClasses
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(a => a.Signature)
+                        .ThenInclude(r => r.Parameters)
+            .FirstOrDefault(c => c.Id == simMethod.RelatedClassId);
+
+        if(ownerClass != null)
+        {
+            foreach(var method in ownerClass.Methods)
+            {
+                var matchingInvocations = method.Invocations
+                    .Where(invocation => simMethod.MatchSignature(invocation.Signature))
+                    .ToList();
+
+                if(matchingInvocations.Any())
+                {
+                    return true;
+                }
+            }
+        }
 
         foreach(var simClass in inheritingClasses)
         {
             foreach(var method in simClass.Methods)
             {
                 var matchingInvocations = method.Invocations
-                    .Where(invocation => simMethod.MatchSignature(invocation.Signature))
+                    .Where(invocation => simMethod.MatchSignature(invocation.Signature) &&
+                    (simMethod.Privacity == SimPrivacity.Public || simMethod.Privacity == SimPrivacity.Protected))
                     .ToList();
 
                 if(matchingInvocations.Any())
