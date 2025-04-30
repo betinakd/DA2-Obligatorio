@@ -1,5 +1,6 @@
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using IBussinesLogic;
 using IDataAccess;
 
@@ -17,9 +18,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         SimClass objClass = objReal.GetSimClass();
         SimMethod? methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
 
-        if(methodToExecute == null)
+        if(methodToExecute == null || (methodToExecute.Accesibility == SimAccesibility.Abstract && (objReal is ReferenceThis || objReal is ReferenceBase)))
         {
-            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}\n";
+            throw new InvalidOperationLogic("Method not executable from reference.");
         }
 
         if(visited.Contains(methodToExecute.Id))
