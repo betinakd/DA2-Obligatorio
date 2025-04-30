@@ -650,4 +650,193 @@ public class ExecutionDataAccessTest
 
         result.Should().BeFalse();
     }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsFalse_WhenClassDoesNotExist()
+    {
+        var nonExistentClassId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        var result = _executionDataAccess.ClassInheritAttribute(nonExistentClassId, attributeId);
+
+        result.Should().BeFalse("Should return false when class does not exist");
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsTrue_WhenAttributeFoundInOriginalClass()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClassId = simClass.Id,
+            Privacity = SimPrivacity.Private // Privacidad no importa en nivel 0
+        };
+        simClass.Attributes.Add(attribute);
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.ClassInheritAttribute(simClass.Id, attribute.Id);
+
+        result.Should().BeTrue("Should find attribute in the original class");
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsTrue_WhenPublicAttributeFoundInBaseClass()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClassId = baseClass.Id,
+            Privacity = SimPrivacity.Public // Atributo público en la clase base
+        };
+        baseClass.Attributes.Add(attribute);
+        _context.SimAttributes.Add(attribute);
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.ClassInheritAttribute(childClass.Id, attribute.Id);
+
+        result.Should().BeTrue("Should find public attribute in the base class");
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsTrue_WhenProtectedAttributeFoundInBaseClass()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClassId = baseClass.Id,
+            Privacity = SimPrivacity.Protected // Atributo protegido en la clase base
+        };
+        baseClass.Attributes.Add(attribute);
+        _context.SimAttributes.Add(attribute);
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.ClassInheritAttribute(childClass.Id, attribute.Id);
+
+        result.Should().BeTrue("Should find protected attribute in the base class");
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsFalse_WhenPrivateAttributeFoundInBaseClass()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClassId = baseClass.Id,
+            Privacity = SimPrivacity.Private // Atributo privado en la clase base
+        };
+        baseClass.Attributes.Add(attribute);
+        _context.SimAttributes.Add(attribute);
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.ClassInheritAttribute(childClass.Id, attribute.Id);
+
+        result.Should().BeFalse("Should not find private attribute in the base class");
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsFalse_WhenAttributeNotFoundInHierarchy()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var nonExistentAttributeId = Guid.NewGuid();
+
+        var result = _executionDataAccess.ClassInheritAttribute(childClass.Id, nonExistentAttributeId);
+
+        result.Should().BeFalse("Should return false when attribute not found in hierarchy");
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_ReturnsTrue_WhenAttributeFoundInGrandparentClass()
+    {
+        var grandparentClass = new SimClass { Id = Guid.NewGuid(), Name = "GrandparentClass" };
+        _context.SimClasses.Add(grandparentClass);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClassId = grandparentClass.Id,
+            Privacity = SimPrivacity.Public
+        };
+        grandparentClass.Attributes.Add(attribute);
+        _context.SimAttributes.Add(attribute);
+
+        var parentClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ParentClass",
+            BaseClassId = grandparentClass.Id,
+            BaseClass = grandparentClass
+        };
+        _context.SimClasses.Add(parentClass);
+
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = parentClass.Id,
+            BaseClass = parentClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.ClassInheritAttribute(childClass.Id, attribute.Id);
+
+        result.Should().BeTrue("Should find public attribute in the grandparent class");
+    }
 }

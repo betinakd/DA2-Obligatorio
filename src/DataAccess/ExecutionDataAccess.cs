@@ -131,4 +131,33 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         return false;
     }
+
+    public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0)
+    {
+        var currentClass = _context.SimClasses
+            .Include(c => c.Attributes)
+            .FirstOrDefault(c => c.Id == classId);
+
+        if(currentClass == null)
+        {
+            return false;
+        }
+
+        if(currentClass.Attributes.Any(a => a.Id == attributeId) && level == 0)
+        {
+            return true;
+        }
+
+        if(currentClass.Attributes.Any(a => a.Id == attributeId && (a.Privacity == SimPrivacity.Public || a.Privacity == SimPrivacity.Protected)) && level != 0)
+        {
+            return true;
+        }
+
+        if(currentClass.BaseClassId.HasValue)
+        {
+            return ClassInheritAttribute(currentClass.BaseClassId.Value, attributeId, level + 1);
+        }
+
+        return false;
+    }
 }
