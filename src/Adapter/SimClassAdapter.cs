@@ -37,6 +37,10 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             throw new InUseValueAdapter(ex.Message);
         }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
     }
 
     public UpdateSimClassResponse UpdateSimClass(UpdateSimClassRequest request)
@@ -50,6 +54,14 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
     }
 
     public void DeleteSimClass(Guid id)
@@ -58,9 +70,13 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             _simClassService.DeleteSimClass(id);
         }
-        catch(Exception)
+        catch(NonExistentValueLogic ex)
         {
-            throw new NonExistentValueAdapter($"Any class with the specified {id} id exists.");
+            throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
         }
     }
 
@@ -78,9 +94,9 @@ public class SimClassAdapter(ISimClassService simClassService)
             };
             return simClassResponse;
         }
-        catch(Exception)
+        catch(NonExistentValueLogic ex)
         {
-            throw new NonExistentValueAdapter("SimClass not found");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 }

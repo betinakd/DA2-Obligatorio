@@ -55,7 +55,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
 
-        Assert.ThrowsException<DuplicateValueLogic>(() =>
+        Assert.ThrowsException<InUseValueLogic>(() =>
             _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId));
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);

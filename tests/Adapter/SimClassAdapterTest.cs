@@ -125,31 +125,13 @@ public class SimClassAdapterTest
     }
 
     [TestMethod]
-    public void DeleteNonExistentClass_ShouldThrowNonExistentValueAdapter()
-    {
-        var simClassId = Guid.NewGuid();
-        var simClasses = new List<SimClass>();
-
-        _mockSimClassService
-            ?.Setup(service => service.DeleteSimClass(simClassId))
-            .Throws(new Exception());
-
-        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
-            _simClassAdapter?.DeleteSimClass(simClassId));
-
-        Assert.AreEqual($"Any class with the specified {simClassId} id exists.", exception.Message);
-
-        _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
-    }
-
-    [TestMethod]
     public void GetNonExistentClass_ShouldThrowNonExistentValueAdapter()
     {
         var simClassId = Guid.NewGuid();
         var simClass = new SimClass() { Id = simClassId, Name = "Name" };
         var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal, Message = "Class not found" };
         _mockSimClassService
-            ?.Setup(service => service.GetSimClassById(simClassId)).Throws(new Exception());
+            ?.Setup(service => service.GetSimClassById(simClassId)).Throws(new NonExistentValueLogic("Class not found."));
 
         var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
             _simClassAdapter?.GetSimClassInfo(simClassId));
@@ -197,12 +179,12 @@ public class SimClassAdapterTest
 
         _mockSimClassService
             ?.Setup(service => service.DeleteSimClass(simClassId))
-            .Throws(new Exception());
+            .Throws(new NonExistentValueLogic("Class does not exist."));
 
         var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
             _simClassAdapter?.DeleteSimClass(simClassId));
 
-        Assert.AreEqual($"Any class with the specified {simClassId} id exists.", exception.Message);
+        Assert.AreEqual("Class does not exist.", exception.Message);
 
         _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
     }
@@ -225,6 +207,95 @@ public class SimClassAdapterTest
             _simClassAdapter!.CreateSimClass(request));
 
         Assert.AreEqual("Class is already in use.", exception.Message);
+
+        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInUseValueAdapter_WhenServiceThrowsInUseValueLogic()
+    {
+        var simClassId = Guid.NewGuid();
+        var request = new UpdateSimClassRequest
+        {
+            Id = simClassId,
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal
+        };
+
+        _mockSimClassService!
+            .Setup(service => service.UpdateSimClass(It.Is<SimClass>(s =>
+                s.Id == request.Id &&
+                s.Name == request.Name)))
+            .Throws(new InUseValueLogic("Class is in use and cannot be updated."));
+
+        var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
+            _simClassAdapter!.UpdateSimClass(request));
+
+        Assert.AreEqual("Class is in use and cannot be updated.", exception.Message);
+
+        _mockSimClassService.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
+    {
+        var simClassId = Guid.NewGuid();
+        var request = new UpdateSimClassRequest
+        {
+            Id = simClassId,
+            Name = "NonExistentClass",
+            State = SimModelsAccesibility.Normal
+        };
+
+        _mockSimClassService!
+            .Setup(service => service.UpdateSimClass(It.Is<SimClass>(s =>
+                s.Id == request.Id &&
+                s.Name == request.Name)))
+            .Throws(new NonExistentValueLogic("Class not found."));
+
+        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
+            _simClassAdapter!.UpdateSimClass(request));
+
+        Assert.AreEqual("Class not found.", exception.Message);
+
+        _mockSimClassService.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldThrowInUseValueAdapter_WhenClassIsInUse()
+    {
+        var simClassId = Guid.NewGuid();
+
+        _mockSimClassService
+            ?.Setup(service => service.DeleteSimClass(simClassId))
+            .Throws(new InUseValueLogic("Class is in use and cannot be deleted."));
+
+        var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
+            _simClassAdapter?.DeleteSimClass(simClassId));
+
+        Assert.AreEqual("Class is in use and cannot be deleted.", exception.Message);
+
+        _mockSimClassService?.Verify(service => service.DeleteSimClass(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_ShouldThrowInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
+    {
+        var request = new SimClassRequest
+        {
+            Name = "Invalid-Name-With-Chars",
+            State = SimModelsAccesibility.Normal,
+            BaseClassId = Guid.NewGuid()
+        };
+
+        _mockSimClassService!
+            .Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            .Throws(new InvalidAttributeLogic("Name contains invalid characters."));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter!.CreateSimClass(request));
+
+        Assert.AreEqual("Name contains invalid characters.", exception.Message);
 
         _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
     }
