@@ -74,4 +74,9 @@ public class SimMethod
 
         return true;
     }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
+    }
 }

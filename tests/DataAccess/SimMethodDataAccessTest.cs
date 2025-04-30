@@ -487,4 +487,30 @@ public class SimMethodDataAccessTest
 
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public void InUseByOther_WithNullReference_HandlesCorrectly()
+    {
+        var dbContextOptions = new DbContextOptionsBuilder<SimulatorDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDB_" + Guid.NewGuid().ToString())
+            .Options;
+
+        using var context = new SimulatorDbContext(dbContextOptions);
+        var testId = Guid.NewGuid();
+
+        var nullReference = new ReferenceThis
+        {
+            Id = Guid.NewGuid(),
+            Reference = null
+        };
+
+        context.References.Add(nullReference);
+        context.SaveChanges();
+
+        var dataAccess = new SimClassDataAccess(context);
+
+        var result = dataAccess.InUseByOther(testId);
+
+        Assert.IsFalse(result, "Cuando Reference es null, no debería considerarse en uso");
+    }
 }

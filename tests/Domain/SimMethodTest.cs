@@ -219,7 +219,7 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters = [
                 new Parameter { Name = "param1", TypeId = typeId },
-            new Parameter { Name = "param2", TypeId = typeId }
+                new Parameter { Name = "param2", TypeId = typeId }
             ]
         };
 
