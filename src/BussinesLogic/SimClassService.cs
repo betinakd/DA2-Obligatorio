@@ -7,9 +7,12 @@ using IDataAccess;
 
 namespace BussinesLogic;
 
-public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
+public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAccess simAttributeDA, IExecutionDataAccess executionDataAccess) : ISimClassService
 {
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
+    private readonly ISimAttributeDataAccess _simAttributeDA = simAttributeDA;
+    private readonly IExecutionDataAccess _executionDataAccess = executionDataAccess;
+
     public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId)
     {
         if(_simClassDA.ExistSimClassName(name))
@@ -48,10 +51,7 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
             throw new NonExistentValueLogic("SimClass not found.");
         }
 
-        if(_simClassDA.InUseByOther(id))
-        {
-            throw new InUseValueLogic("SimClass is in use and cannot be updated.");
-        }
+        InUseByOther(id);
 
         _simClassDA.DeleteSimClass(id);
     }
@@ -80,12 +80,37 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
             throw new NonExistentValueLogic("SimClass not found.");
         }
 
-        if(_simClassDA.InUseByOther(simClass.Id))
-        {
-            throw new InUseValueLogic("SimClass is in use and cannot be updated.");
-        }
+        InUseByOther(simClass.Id);
 
         _simClassDA.UpdateSimClass(simClass);
         return simClass;
+    }
+
+    public bool InUseByOther(Guid simClassiId)
+    {
+        var simClass = _simClassDA.GetSimClassById(simClassiId);
+
+        if(_simClassDA.InUseByOther(simClassiId))
+        {
+            throw new InUseValueLogic("SimClass is in use as type or baseClass in others entities and cannot be updated.");
+        }
+
+        foreach(var attribute in simClass.Attributes)
+        {
+            if(_simAttributeDA.InUseByOther(attribute.Id))
+            {
+                throw new InUseValueLogic("An attribute is in used as reference by an invocation and cannot be updated.");
+            }
+        }
+
+        foreach(var method in simClass.Methods)
+        {
+            if(_executionDataAccess.MethodIsInUseByInheriting(method.Id))
+            {
+                throw new InUseValueLogic("Method is in use by invocations and cannot be updated.");
+            }
+        }
+
+        return true;
     }
 }

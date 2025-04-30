@@ -6,7 +6,7 @@ public class SimMethod
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
-    public Guid? ReturTypeId { get; set; }
+    public Guid? ReturnTypeId { get; set; }
     public SimClass? ReturnType { get; set; } = null!;
     public Guid RelatedClassId { get; set; }
 
