@@ -52,17 +52,6 @@ public sealed class ExceptionFilter : IExceptionFilter
         {
             StatusCode = (int)HttpStatusCode.Conflict
         }
-    },
-        {
-        typeof(Exception),
-        ex => new ObjectResult(new ErrorResponse
-        {
-            InnerCode = 5,
-            Message = ex.Message
-        })
-        {
-            StatusCode = (int)HttpStatusCode.InternalServerError
-        }
     }
 };
 
