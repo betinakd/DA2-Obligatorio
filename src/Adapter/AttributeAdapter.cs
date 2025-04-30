@@ -1,5 +1,7 @@
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -18,9 +20,13 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         {
             _simAttributeService.DeleteAttribute(attributeId);
         }
-        catch(Exception ex)
+        catch(InUseValueLogic ex)
         {
-            throw new InvalidOperationException(ex.Message);
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 
@@ -55,9 +61,21 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
 
             return response;
         }
-        catch(Exception ex)
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
         {
             throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeDomain ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 
@@ -94,9 +112,17 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
 
             return response;
         }
-        catch(Exception ex)
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
         {
             throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InvalidAttributeDomain ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 }
