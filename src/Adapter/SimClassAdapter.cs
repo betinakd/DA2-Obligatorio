@@ -31,11 +31,19 @@ public class SimClassAdapter(ISimClassService simClassService)
         try
         {
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
-            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = request.State } };
+            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State } };
         }
         catch(InUseValueLogic ex)
         {
             throw new InUseValueAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic)
+        {
+            throw new NonExistentValueAdapter("Base class not found.");
         }
     }
 
@@ -50,6 +58,14 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
     }
 
     public void DeleteSimClass(Guid id)
@@ -58,9 +74,13 @@ public class SimClassAdapter(ISimClassService simClassService)
         {
             _simClassService.DeleteSimClass(id);
         }
-        catch(Exception)
+        catch(NonExistentValueLogic ex)
         {
-            throw new NonExistentValueAdapter($"Any class with the specified {id} id exists.");
+            throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
         }
     }
 
@@ -78,9 +98,9 @@ public class SimClassAdapter(ISimClassService simClassService)
             };
             return simClassResponse;
         }
-        catch(Exception)
+        catch(NonExistentValueLogic ex)
         {
-            throw new NonExistentValueAdapter("SimClass not found");
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 }

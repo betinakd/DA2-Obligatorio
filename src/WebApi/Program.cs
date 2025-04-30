@@ -3,8 +3,13 @@ using ServiceFactory;
 using WebApi.Filters;
 var builder = WebApplication.CreateBuilder(args);
 
-// web services
-builder.Services.AddControllers(options => options.Filters.Add<ExceptionFilter>()).ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+    options.Filters.Add<ModelStateValidationFilter>();
+})
+.ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -26,6 +31,7 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+builder.Services.AddResponseCaching();
 
 var app = builder.Build();
 

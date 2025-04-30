@@ -95,7 +95,7 @@ public class SimClassControllerTest
             Name = "InvalidClass",
             IsAbstract = false,
             IsSealed = true,
-            BaseClassId = simClass.Id
+            IdBaseClass = simClass.Id.ToString()
         };
 
         _mockSimClassAdapter

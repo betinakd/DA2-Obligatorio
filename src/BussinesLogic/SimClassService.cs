@@ -14,7 +14,7 @@ public class SimClassService(ISimClassDataAccess simClassDA) : ISimClassService
     {
         if(_simClassDA.ExistSimClassName(name))
         {
-            throw new DuplicateValueLogic("SimClass name already exists.");
+            throw new InUseValueLogic("SimClass name already exists.");
         }
 
         if(!_simClassDA.ExistSimClassById(baseClassId))

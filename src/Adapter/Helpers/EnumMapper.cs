@@ -13,12 +13,12 @@ public static class EnumMapper
         return accesibility.HasValue ? (SimModelsAccesibility)(int)accesibility.Value : default;
     }
 
-    public static SimPrivacity MapToDomainPrivacity(SimModelsPrivacity privacity)
+    public static SimPrivacity MapToDomainPrivacity(SimModelsPrivacity? privacity)
     {
         return (SimPrivacity)(int)privacity;
     }
 
-    public static SimAccesibility MapToDomainAccesibility(SimModelsAccesibility accesibility)
+    public static SimAccesibility MapToDomainAccesibility(SimModelsAccesibility? accesibility)
     {
         return (SimAccesibility)(int)accesibility;
     }
