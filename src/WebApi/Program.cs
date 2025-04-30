@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ServiceFactory;
 using WebApi.Filters;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // web services

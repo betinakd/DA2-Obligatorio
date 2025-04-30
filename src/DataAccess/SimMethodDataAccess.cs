@@ -1,6 +1,7 @@
 using DataAccess.Context;
 using Domain;
 using IDataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
@@ -63,15 +64,18 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public bool ExistsMethodInClass(Guid idClass, SimMethod method)
     {
-        return _context.SimMethods
-            .Where(m => m.RelatedClassId == idClass && m.Name == method.Name)
-            .AsEnumerable()
-            .Any(m =>
-                m.Parameters.Count == method.Parameters.Count &&
-                m.Parameters.All(p =>
-                    method.Parameters.Any(mp =>
-                        mp.Name == p.Name &&
-                        mp.TypeId == p.TypeId)));
+        var methodsClass = _context.SimMethods
+            .Include(m => m.Parameters)
+                .ThenInclude(p => p.Type)
+            .Where(a => a.RelatedClassId == idClass)
+            .ToList();
+        var result = false;
+        foreach(var methodC in methodsClass)
+        {
+            result = result || methodC.Equals(method);
+        }
+
+        return result;
     }
 
     public bool ExistVariableById(Guid id)
