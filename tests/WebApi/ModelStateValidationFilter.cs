@@ -20,15 +20,13 @@ public class ModelStateValidationFilterTest
             new DefaultHttpContext(),
             new Microsoft.AspNetCore.Routing.RouteData(),
             new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor(),
-            modelState
-        );
+            modelState);
 
         var context = new ActionExecutingContext(
             actionContext,
             [],
             new Dictionary<string, object>(),
-            null
-        );
+            null);
 
         filter.OnActionExecuting(context);
 
