@@ -9,7 +9,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 {
     private readonly SimulatorDbContext _context = context;
 
-    public SimMethod FindMethodInHierarchy(SimClass simClass, Signature signature)
+    public SimMethod FindMethodInHierarchy(SimClass simClass, Signature signature, int level = 0)
     {
         if(simClass == null)
         {
@@ -37,9 +37,11 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 .ThenInclude(i => i.Signature)
                     .ThenInclude(s => s.Parameters)
                         .ThenInclude(p => p.Type)
-            .Where(m => m.RelatedClassId == simClass.Id && m.Name == signature.Name &&
-                  (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected))
-            .ToList();
+                            .Where(m =>
+                                m.RelatedClassId == simClass.Id &&
+                                m.Name == signature.Name &&
+                                (level == 0 || m.Privacity == SimPrivacity.Public
+                                || m.Privacity == SimPrivacity.Protected)).ToList();
 
         var method = methods.FirstOrDefault(m => m.MatchSignature(signature));
 
@@ -62,7 +64,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return null;
         }
 
-        return FindMethodInHierarchy(baseClass, signature);
+        return FindMethodInHierarchy(baseClass, signature, level + 1);
     }
 
     public List<SimClass> GetAllInheritingClasses(Guid baseClassId)
