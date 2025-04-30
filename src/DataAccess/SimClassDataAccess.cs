@@ -47,7 +47,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
     public bool InUseByOther(Guid id)
     {
         var baseClass = _context.SimClasses.Any(c => c.BaseClassId == id);
-        var attribute = _context.SimAttributes.Any(c => c.RelatedClassId == id || c.TypeId == id);
+        var attribute = _context.SimAttributes.Any(c => c.TypeId == id);
         var method = _context.SimMethods.Any(c => c.RelatedClassId == id);
         var parameter = _context.Parameters.Any(c => c.TypeId == id);
         var localVar = _context.LocalVariables.Any(c => c.TypeId == id);
