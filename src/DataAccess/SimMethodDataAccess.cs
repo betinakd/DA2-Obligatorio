@@ -89,7 +89,15 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Invocation GetInvocationById(Guid id)
     {
-        return _context.Invocations.FirstOrDefault(i => i.Id == id);
+        var invocation = _context.Invocations
+            .Where(i => i.Id == id)
+            .Include(i => i.Reference)
+            .Include(i => i.Signature)
+                .ThenInclude(s => s.Parameters)
+                    .ThenInclude(p => p.Type)
+            .Include(i => i.RelatedMethod)
+            .FirstOrDefault();
+        return invocation;
     }
 
     public SimMethod GetMethodById(Guid id)
