@@ -129,4 +129,25 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
             throw new InvalidAttributeAdapter(ex.Message);
         }
     }
+
+    public AttributeResponse GetAttribute(Guid id)
+    {
+        try
+        {
+            var attribute = _simAttributeService.GetSimAttribute(id);
+
+            return new AttributeResponse()
+            {
+                Id = attribute.Id,
+                Name = attribute.Name,
+                Privacity = EnumMapper.MapToModelPrivacity(attribute.Privacity),
+                RelatedClassId = attribute.RelatedClassId,
+                TypeId = attribute.TypeId
+            };
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
+    }
 }
