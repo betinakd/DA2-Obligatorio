@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddServices(connectionString);
 
-// Add Swagger services
+// Add Swagger services  
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
