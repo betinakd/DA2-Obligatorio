@@ -24,7 +24,7 @@ public class AttributeController(IAttributeAdapter simClassAdapter) : Controller
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetAttributeId")]
     public IActionResult GetAttribute(Guid id)
     {
         var attribute = _simAttributeAdapter.GetAttribute(id);

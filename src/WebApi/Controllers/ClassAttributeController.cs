@@ -14,6 +14,6 @@ public class ClassAttributeController(IAttributeAdapter simClassAdapter) : Contr
     public IActionResult CreateAttribute(Guid id, [FromBody] AttributeRequest attribute)
     {
         var result = _simAttributeAdapter.CreateAttribute(id, attribute);
-        return Ok(result);
+        return CreatedAtRoute("GetAttributeId", new { id = result.Id }, result);
     }
 }

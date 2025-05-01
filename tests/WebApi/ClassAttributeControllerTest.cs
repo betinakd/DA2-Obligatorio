@@ -22,7 +22,7 @@ public class ClassAttributeControllerTest
     }
 
     [TestMethod]
-    public void CreatedClassAttributeControllerWithCorrectId_ShouldThrowOk()
+    public void CreateAttribute_ReturnsCreatedAtRouteResult()
     {
         var id = Guid.NewGuid();
         var request = new AttributeRequest()
@@ -33,22 +33,33 @@ public class ClassAttributeControllerTest
             Privacity = SimModelsPrivacity.Public,
             IdRelatedClass = Guid.NewGuid().ToString()
         };
-        var expectedResponse = new AttributeResponse()
+
+        var expectedResponse = new CreatedAttributeResponse()
         {
             Id = id,
-            Name = "DummyAttribute",
-            TypeId = Guid.NewGuid(),
-            Privacity = SimModelsPrivacity.Public,
-            RelatedClassId = Guid.NewGuid()
+            Message = "Attribute was created successfully",
+            Attribute = new AttributeResponse()
+            {
+                Id = id,
+                Name = "DummyAttribute",
+                TypeId = Guid.NewGuid(),
+                Privacity = SimModelsPrivacity.Public,
+                RelatedClassId = Guid.NewGuid()
+            }
         };
-        var expectedCreatedResponse = new CreatedAttributeResponse() { Message = "Attribute was created successfully", Attribute = expectedResponse };
-        _mockAttributeAdapter?.Setup(a => a.CreateAttribute(id, request)).Returns(expectedCreatedResponse);
 
-        var result = _attributeController?.CreateAttribute(id, request);
-        _mockAttributeAdapter?.Verify(a => a.CreateAttribute(id, request), Times.Once);
+        _mockAttributeAdapter!
+            .Setup(a => a.CreateAttribute(id, request))
+            .Returns(expectedResponse);
 
-        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-        var okResult = result as OkObjectResult;
-        Assert.IsNotNull(okResult);
+        var result = _attributeController!.CreateAttribute(id, request);
+
+        _mockAttributeAdapter.Verify(a => a.CreateAttribute(id, request), Times.Once);
+        var createdResult = result as CreatedAtRouteResult;
+        Assert.IsNotNull(createdResult, "El resultado no es un CreatedAtRouteResult");
+        Assert.AreEqual("GetAttributeId", createdResult.RouteName, "El nombre de la ruta no coincide");
+        Assert.IsTrue(createdResult.RouteValues.ContainsKey("id"), "La ruta no contiene 'id'");
+        Assert.AreEqual(expectedResponse.Id, createdResult.RouteValues["id"], "El id de la ruta no coincide con el esperado");
+        Assert.AreEqual(expectedResponse, createdResult.Value, "El valor retornado no coincide con el esperado");
     }
 }

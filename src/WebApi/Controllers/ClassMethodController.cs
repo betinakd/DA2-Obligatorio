@@ -14,6 +14,6 @@ public class ClassMethodController(IMethodAdapter methodAdapter) : ControllerBas
     public IActionResult CreateMethod(Guid id, [FromBody] MethodRequest methodRequest)
     {
         var response = _simMethodAdapter.CreateMethod(id, methodRequest);
-        return CreatedAtRoute("GetMethodId", new { id = response.Id }, response);
+        return CreatedAtRoute("GetMethodId", new { id = response.MethodResponse.Id }, response);
     }
 }
