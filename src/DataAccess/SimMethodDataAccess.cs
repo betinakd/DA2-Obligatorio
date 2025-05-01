@@ -134,7 +134,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public LocalVariable GetVariableById(Guid id)
     {
-        return _context.LocalVariables.FirstOrDefault(v => v.Id == id);
+        var variable = _context.LocalVariables
+            .Where(v => v.Id == id)
+            .Include(v => v.Type)
+            .Include(v => v.RelatedMethod)
+            .FirstOrDefault();
+        return variable;
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
