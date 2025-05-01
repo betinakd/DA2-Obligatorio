@@ -1,6 +1,7 @@
 using DataAccess.Context;
 using Domain;
 using IDataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
@@ -44,24 +45,18 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public SimAttribute UpdateAttribute(Guid attributeId, SimAttribute attribute)
     {
-        var existingAttribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
-
-        existingAttribute.Name = attribute.Name;
-        existingAttribute.TypeId = attribute.TypeId;
-        existingAttribute.Type = attribute.Type;
-        existingAttribute.Privacity = attribute.Privacity;
-        existingAttribute.RelatedClass = attribute.RelatedClass;
-        existingAttribute.RelatedClassId = existingAttribute.RelatedClass.Id;
-
-        _context.SimAttributes.Update(existingAttribute);
+        DeleteAttribute(attributeId);
+        _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
 
-        return existingAttribute;
+        return attribute;
     }
 
     public SimAttribute GetSimAttribute(Guid attributeId)
     {
-        var attribute = _context.SimAttributes.FirstOrDefault(a => a.Id == attributeId);
+        var attribute = _context.SimAttributes
+            .Include(a => a.Type)
+            .FirstOrDefault(a => a.Id == attributeId);
         return attribute;
     }
 }

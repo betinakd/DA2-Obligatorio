@@ -51,9 +51,11 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Id = Guid.NewGuid(),
                 Name = method.Name,
                 RelatedClass = classOwner,
+                RelatedClassId = classOwner.Id,
                 Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
                 Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
-                ReturnType = returnType
+                ReturnType = returnType,
+                ReturnTypeId = returnType.Id
             };
 
             var createdMethod = _methodService.AddMethod(idClass, newMethod);
@@ -133,6 +135,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Name = variable.Name,
                 Type = type,
                 RelatedMethod = method,
+                RelatedMethodId = idMethod
             };
             var newAttribute = _methodService.AddLocalVariable(idMethod, localVariable);
             var response = new CreatedVariableResponse
@@ -197,6 +200,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Name = parameter.Name,
                 Type = type,
                 RelatedMethod = method,
+                RelatedMethodId = idMethod,
+                TypeId = type.Id
             };
             var newAttribute = _methodService.AddMethodParameter(idMethod, parameterMethod);
             var response = new CreatedParameterResponse
@@ -242,10 +247,12 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
             foreach(var parameter in invocation.Parameters)
             {
+                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
                 var newParameter = new ParameterSignature()
                 {
                     Name = parameter.Name,
-                    Type = _simClassService.GetSimClassById(parameter.ClassTypeId),
+                    Type = type,
+                    TypeId = type.Id,
                 };
 
                 var newParameterResponse = new ParameterResponse()
@@ -333,7 +340,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 InvocationResponse = new InvocationResponse
                 {
                     Id = newInvocation.Id,
-                    IdReference = newInvocation.Reference.Id,
+                    IdReference = newInvocation.Reference.GetReferenceId(),
                     MethodName = newInvocation.Signature.Name,
                     Parameters = parametersResponses,
                 }
@@ -376,7 +383,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             return new InvocationResponse
             {
                 Id = invocation.Id,
-                IdReference = invocation.Reference.GetSimClass().Id,
+                IdReference = invocation.Reference.GetReferenceId(),
                 MethodName = invocation.Signature.Name,
                 Parameters = parameters
             };

@@ -131,7 +131,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
         var typeAttribute = _context.SimAttributes.Any(a => a.TypeId == id && a.RelatedClassId != id);
         var typeParameter = _context.Parameters.Any(p => p.TypeId == id);
         var typeLocalVar = _context.LocalVariables.Any(v => v.TypeId == id);
-        var parameter = _context.Parameters.Any(p => p.TypeId == id);
+        var parameter = _context.ParameterSignatures.Any(p => p.TypeId == id);
         var method = _context.SimMethods.Any(m => m.ReturnTypeId == id);
 
         var referenceThis = _context.References

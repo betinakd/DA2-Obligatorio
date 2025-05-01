@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Models.Enums;
 
 namespace Models.Request;
+[ExcludeFromCodeCoverage]
 public class AttributeRequestCreateClass()
 {
     [Required(ErrorMessage = "Name is required.")]

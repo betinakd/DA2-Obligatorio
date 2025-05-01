@@ -27,4 +27,9 @@ public class ReferenceVariable : Reference
 
         return Reference.Type;
     }
+
+    public override Guid GetReferenceId()
+    {
+        return Reference.Id;
+    }
 }

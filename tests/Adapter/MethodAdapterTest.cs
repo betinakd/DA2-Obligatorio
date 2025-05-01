@@ -394,18 +394,19 @@ public class MethodAdapterTest
     }
 
     [TestMethod]
-    public void GetInvocation_ShouldReturnInvocationResponse_WhenValid()
+    public void GetInvocation_ShouldReturnInvocationResponse_WhenValid_New()
     {
         var invocationId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var simClass = new SimClass { Id = classTypeId, Name = "int" };
-        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var simClass = new SimClass { Id = classTypeId, Name = "CustomType" };
+        var method = new SimMethod { Id = methodId, Name = "CustomMethod" };
+        var parameterId = Guid.NewGuid();
         var parameter = new ParameterSignature
         {
-            Id = Guid.NewGuid(),
-            Name = "param1",
+            Id = parameterId,
+            Name = "customParam",
             Type = simClass,
             TypeId = classTypeId
         };
@@ -419,8 +420,14 @@ public class MethodAdapterTest
             RelatedMethodId = methodId,
             Reference = reference
         };
-        var signature = new Signature() { Name = "TestMethod", Parameters = [parameter], Id = Guid.NewGuid(), RelatedInvocationId = invocationId, RelatedInvocation = invocation };
-        invocation.Signature = signature;
+
+        invocation.Signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "CustomMethod",
+            Parameters = [parameter],
+            RelatedInvocation = invocation
+        };
 
         _mockMethodService!.Setup(s => s.GetInvocationById(invocationId)).Returns(invocation);
 
@@ -429,13 +436,11 @@ public class MethodAdapterTest
         _mockMethodService.Verify(s => s.GetInvocationById(invocationId), Times.Once);
         result.Should().NotBeNull();
         result.Id.Should().Be(invocationId);
-        result.MethodName.Should().Be("TestMethod");
-
+        result.MethodName.Should().Be("CustomMethod");
         result.IdReference.Should().Be(classTypeId);
-
         result.Parameters.Should().HaveCount(1);
         result.Parameters[0].Id.Should().Be(parameter.Id);
-        result.Parameters[0].Name.Should().Be("param1");
+        result.Parameters[0].Name.Should().Be("customParam");
         result.Parameters[0].ClassTypeId.Should().Be(classTypeId);
     }
 
