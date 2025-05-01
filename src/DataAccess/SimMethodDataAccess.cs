@@ -124,7 +124,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Parameter GetParameterById(Guid id)
     {
-        return _context.Parameters.FirstOrDefault(p => p.Id == id);
+        var parameter = _context.Parameters
+            .Where(p => p.Id == id)
+            .Include(p => p.Type)
+            .Include(p => p.RelatedMethod)
+            .FirstOrDefault();
+        return parameter;
     }
 
     public LocalVariable GetVariableById(Guid id)
