@@ -47,9 +47,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = relatedClassId,
-            TypeId = typeId,
-            Id = attributeId
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
@@ -101,9 +100,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = relatedClassId,
-            TypeId = typeId,
-            Id = attributeId
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
@@ -183,7 +181,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            TypeId = typeId
+            IdType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -214,7 +212,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            TypeId = typeId
+            IdType = typeId.ToString()
         };
 
         _mockSimClassService!
@@ -235,7 +233,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            TypeId = typeId
+            IdType = typeId.ToString(),
+            IdRelatedClass = classId.ToString()
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -266,8 +265,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = relatedClassId,
-            TypeId = typeId
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = relatedClassId };
@@ -298,8 +297,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = relatedClassId,
-            TypeId = typeId
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString()
         };
 
         _mockSimClassService!
@@ -313,7 +312,6 @@ public class AttributeAdapterTest
     [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void UpdateAttribute_ThrowsInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
     {
-        // Arrange
         var attributeId = Guid.NewGuid();
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
@@ -322,8 +320,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = relatedClassId,
-            TypeId = typeId
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = relatedClassId };
@@ -346,7 +344,6 @@ public class AttributeAdapterTest
     [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void UpdateAttribute_ThrowsInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeDomain()
     {
-        // Arrange
         var attributeId = Guid.NewGuid();
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
@@ -355,8 +352,8 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = relatedClassId,
-            TypeId = typeId
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = relatedClassId };

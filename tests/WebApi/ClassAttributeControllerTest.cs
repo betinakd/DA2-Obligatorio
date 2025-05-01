@@ -29,9 +29,9 @@ public class ClassAttributeControllerTest
         {
             Id = id,
             Name = "DummyAttribute",
-            TypeId = Guid.NewGuid(),
+            IdType = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,
-            RelatedClassId = Guid.NewGuid()
+            IdRelatedClass = Guid.NewGuid().ToString()
         };
         var expectedResponse = new AttributeResponse()
         {
