@@ -424,17 +424,17 @@ namespace DataAccess.Migrations
                     b.Property<int>("Privacity")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("RelatedClassId")
+                    b.Property<Guid>("RelatedClassId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReturTypeId")
+                    b.Property<Guid?>("ReturnTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RelatedClassId");
 
-                    b.HasIndex("ReturTypeId");
+                    b.HasIndex("ReturnTypeId");
 
                     b.ToTable("SimMethods");
 
@@ -446,7 +446,7 @@ namespace DataAccess.Migrations
                             Name = "Encender",
                             Privacity = 2,
                             RelatedClassId = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            ReturTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -455,7 +455,7 @@ namespace DataAccess.Migrations
                             Name = "Apagar",
                             Privacity = 2,
                             RelatedClassId = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            ReturTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -464,7 +464,7 @@ namespace DataAccess.Migrations
                             Name = "IniciarViaje",
                             Privacity = 2,
                             RelatedClassId = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
-                            ReturTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -473,7 +473,7 @@ namespace DataAccess.Migrations
                             Name = "FinalizarViaje",
                             Privacity = 2,
                             RelatedClassId = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
-                            ReturTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -482,7 +482,7 @@ namespace DataAccess.Migrations
                             Name = "Validar",
                             Privacity = 2,
                             RelatedClassId = new Guid("a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4"),
-                            ReturTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -491,7 +491,7 @@ namespace DataAccess.Migrations
                             Name = "EsValido",
                             Privacity = 2,
                             RelatedClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            ReturTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -500,7 +500,7 @@ namespace DataAccess.Migrations
                             Name = "Limpiar",
                             Privacity = 1,
                             RelatedClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            ReturTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -509,7 +509,7 @@ namespace DataAccess.Migrations
                             Name = "Inicializar",
                             Privacity = 1,
                             RelatedClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            ReturTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -518,7 +518,7 @@ namespace DataAccess.Migrations
                             Name = "EsValido",
                             Privacity = 2,
                             RelatedClassId = new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4"),
-                            ReturTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
                         },
                         new
                         {
@@ -527,7 +527,7 @@ namespace DataAccess.Migrations
                             Name = "EsValido",
                             Privacity = 2,
                             RelatedClassId = new Guid("d4d2d4d4-d4d4-d4d4-d4d4-d4d4d4d4d4d4"),
-                            ReturTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
                         });
                 });
 
@@ -795,11 +795,12 @@ namespace DataAccess.Migrations
                     b.HasOne("Domain.SimClass", "RelatedClass")
                         .WithMany("Methods")
                         .HasForeignKey("RelatedClassId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.SimClass", "ReturnType")
                         .WithMany()
-                        .HasForeignKey("ReturTypeId")
+                        .HasForeignKey("ReturnTypeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("RelatedClass");

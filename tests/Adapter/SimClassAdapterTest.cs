@@ -82,7 +82,7 @@ public class SimClassAdapterTest
     {
         var simClassId = Guid.NewGuid();
         var simClass = new SimClass() { Id = simClassId, Name = "Name" };
-        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal, Message = "Class not found" };
+        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal };
         _mockSimClassService
             ?.Setup(service => service.GetSimClassById(simClassId)).Throws(new NonExistentValueLogic("Class not found."));
 
@@ -96,7 +96,7 @@ public class SimClassAdapterTest
     {
         var simClassId = Guid.NewGuid();
         var simClass = new SimClass { Id = simClassId, Name = "ExistingClass" };
-        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal, Message = "Class found" };
+        var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal };
 
         _mockSimClassService
             ?.Setup(service => service.GetSimClassById(simClassId))
