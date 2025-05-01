@@ -5,6 +5,7 @@ using FluentAssertions;
 using IAdapter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Enums;
 using Models.Request;
 using Models.Response;
 using Moq;
@@ -31,7 +32,7 @@ public class SimClassControllerTest
         var classes = new List<SimClassResponse>
     {
         new SimClassResponse() { Id = Guid.NewGuid(), Name = "ClassA" },
-        new SimClassResponse() { Id = Guid.NewGuid(), Name = "ClassB" }
+        new SimClassResponse() { Id = Guid.NewGuid(), Name = "ClassB" },
     };
 
         _mockSimClassAdapter?.Setup(x => x.GetAllSimClasses()).Returns(classes);
@@ -60,7 +61,7 @@ public class SimClassControllerTest
         var expectedResponse = new CreatedSimClassResponse
         {
             Message = "Class created successfully",
-            SimClass = simClassResponse
+            SimClass = simClassResponse,
         };
 
         _mockSimClassAdapter
@@ -93,9 +94,8 @@ public class SimClassControllerTest
         var request = new SimClassRequest
         {
             Name = "InvalidClass",
-            IsAbstract = false,
-            IsSealed = true,
-            IdBaseClass = simClass.Id.ToString()
+            State = (Models.Enums.SimModelsAccesibility?)SimAccesibility.Sealed,
+            IdBaseClass = simClass.Id.ToString(),
         };
 
         _mockSimClassAdapter
@@ -107,30 +107,52 @@ public class SimClassControllerTest
     }
 
     [TestMethod]
-    public void UpdateClassCorrectly_ShouldReturnOK()
+    public void UpdateSimClass_WithValidRequest_ShouldReturnOkWithUpdatedClass()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassA" };
-        var simClassRequest = new UpdateSimClassRequest { Name = "ClassB", Id = simClass.Id };
-        var updatedSimClass = new SimClass() { Name = "ClassB", Id = simClass.Id };
-        var expectedResponse = new UpdateSimClassResponse
+        var classId = Guid.NewGuid();
+
+        var updateRequest = new SimClassRequestCreateClass
         {
-            Id = simClass.Id,
-            Message = "Class Updated correctly",
-            SimClass = new SimClassResponse() { Id = updatedSimClass.Id, Message = "Class Updated Correctly", Name = updatedSimClass.Name },
+            Id = classId,
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = Guid.NewGuid().ToString(),
+            Methods = [],
+            Attributes = []
         };
 
-        _mockSimClassAdapter
-            ?.Setup(x => x.UpdateSimClass(simClassRequest))
+        var expectedResponse = new UpdateSimClassResponse
+        {
+            Id = classId,
+            Message = "Class updated successfully",
+            SimClass = new SimClassResponse()
+            {
+                Id = classId,
+                Name = "UpdatedClass",
+                State = SimModelsAccesibility.Normal
+            }
+        };
+
+        _mockSimClassAdapter!
+            .Setup(adapter => adapter.UpdateSimClass(updateRequest, classId))
             .Returns(expectedResponse);
 
-        var result = _simClassController?.UpdateSimClass(simClassRequest);
+        var result = _simClassController!.UpdateSimClass(updateRequest);
 
-        _mockSimClassAdapter?.VerifyAll();
+        _mockSimClassAdapter.Verify(adapter => adapter.UpdateSimClass(updateRequest, classId), Times.Once);
 
         Assert.IsNotNull(result);
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
-        Assert.AreEqual(expectedResponse, okResult.Value);
+        Assert.AreEqual(200, okResult!.StatusCode);
+
+        var responseValue = okResult.Value as UpdateSimClassResponse;
+        Assert.IsNotNull(responseValue);
+        Assert.AreEqual(expectedResponse.Id, responseValue!.Id);
+        Assert.AreEqual(expectedResponse.Message, responseValue.Message);
+        Assert.AreEqual(expectedResponse.SimClass.Id, responseValue.SimClass!.Id);
+        Assert.AreEqual(expectedResponse.SimClass.Name, responseValue.SimClass.Name);
+        Assert.AreEqual(expectedResponse.SimClass.State, responseValue.SimClass.State);
     }
 
     [TestMethod]
@@ -165,7 +187,7 @@ public class SimClassControllerTest
         {
             result = new NotFoundObjectResult(new
             {
-                Message = ex.Message
+                Message = ex.Message,
             });
         }
 

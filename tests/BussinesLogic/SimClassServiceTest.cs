@@ -12,13 +12,21 @@ namespace Tests.BussinesLogic;
 public class SimClassServiceTest
 {
     private Mock<ISimClassDataAccess>? _mockSimClassDataAccess;
+    private Mock<ISimAttributeDataAccess>? _mockSimAttributeDataAccess;
+    private Mock<IExecutionDataAccess>? _mockExecutionDataAccess;
     private SimClassService? _simClassService;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockSimClassDataAccess = new Mock<ISimClassDataAccess>(MockBehavior.Strict);
-        _simClassService = new SimClassService(_mockSimClassDataAccess.Object);
+        _mockSimAttributeDataAccess = new Mock<ISimAttributeDataAccess>(MockBehavior.Strict);
+        _mockExecutionDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Strict);
+
+        _simClassService = new SimClassService(
+            _mockSimClassDataAccess.Object,
+            _mockSimAttributeDataAccess.Object,
+            _mockExecutionDataAccess.Object);
     }
 
     [TestMethod]
@@ -127,7 +135,17 @@ public class SimClassServiceTest
     public void DeleteSimClass_ShouldDelete_WhenSimClassExistsAndNotInUse()
     {
         var simClassId = Guid.NewGuid();
+
+        var simClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "TestClass",
+            Attributes = [],
+            Methods = []
+        };
+
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(false);
         _mockSimClassDataAccess.Setup(da => da.DeleteSimClass(simClassId));
 
@@ -200,13 +218,24 @@ public class SimClassServiceTest
     [TestMethod]
     public void UpdateSimClass_ShouldUpdateAndReturnSimClass_WhenExists()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "UpdatedClass" };
+        var simClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "UpdatedClass",
+            Attributes = [],
+            Methods = []
+        };
+
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClass.Id)).Returns(true);
-        _mockSimClassDataAccess.Setup(da => da.UpdateSimClass(simClass));
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass); // Agregar esta configuración
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClass.Id)).Returns(false);
+        _mockSimClassDataAccess.Setup(da => da.UpdateSimClass(simClass));
+
         var result = _simClassService.UpdateSimClass(simClass);
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClass.Id), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClass.Id), Times.Once); // Verificar que se llamó
+        _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(simClass), Times.Once);
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -227,14 +256,23 @@ public class SimClassServiceTest
     [TestMethod]
     public void UpdateSimClass_ShouldThrowInUseValueLogic_WhenSimClassIsInUse()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var simClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestClass",
+            Attributes = [],
+            Methods = []
+        };
+
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClass.Id)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClass.Id)).Returns(true);
 
         Assert.ThrowsException<InUseValueLogic>(() =>
             _simClassService.UpdateSimClass(simClass));
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClass.Id), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(It.IsAny<SimClass>()), Times.Never);
     }
@@ -243,14 +281,118 @@ public class SimClassServiceTest
     public void DeleteSimClass_ShouldThrowInUseValueLogic_WhenSimClassIsInUse()
     {
         var simClassId = Guid.NewGuid();
+
+        var simClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "TestClass",
+            Attributes = [],
+            Methods = []
+        };
+
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(true);
 
         Assert.ThrowsException<InUseValueLogic>(() =>
             _simClassService.DeleteSimClass(simClassId));
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.DeleteSimClass(It.IsAny<Guid>()), Times.Never);
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldReturnTrue_WhenNothingIsInUse()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "TestClass",
+            Attributes = [],
+            Methods = []
+        };
+
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(false);
+
+        var result = _simClassService.InUseByOther(simClassId);
+
+        Assert.IsTrue(result);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldThrowInUseValueLogic_WhenSimClassIsInUse()
+    {
+        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass { Id = simClassId, Name = "TestClass" };
+
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(true);
+
+        var exception = Assert.ThrowsException<InUseValueLogic>(() =>
+            _simClassService.InUseByOther(simClassId));
+
+        Assert.AreEqual("SimClass is in use as type or baseClass in others entities and cannot be updated.", exception.Message);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldThrowInUseValueLogic_WhenAttributeIsInUse()
+    {
+        var simClassId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        var attribute = new SimAttribute { Id = attributeId, Name = "TestAttribute" };
+        var simClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "TestClass",
+            Attributes = [attribute],
+            Methods = []
+        };
+
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(false);
+        _mockSimAttributeDataAccess.Setup(da => da.InUseByOther(attributeId)).Returns(true);
+
+        var exception = Assert.ThrowsException<InUseValueLogic>(() =>
+            _simClassService.InUseByOther(simClassId));
+
+        Assert.AreEqual("An attribute is in used as reference by an invocation and cannot be updated.", exception.Message);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
+        _mockSimAttributeDataAccess.Verify(da => da.InUseByOther(attributeId), Times.Once);
+    }
+
+    [TestMethod]
+    public void InUseByOther_ShouldThrowInUseValueLogic_WhenMethodIsInUse()
+    {
+        var simClassId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var simClass = new SimClass
+        {
+            Id = simClassId,
+            Name = "TestClass",
+            Attributes = [],
+            Methods = [method]
+        };
+
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClassId)).Returns(false);
+        _mockExecutionDataAccess.Setup(da => da.MethodIsInUseByInheritingInvocations(methodId)).Returns(true);
+
+        var exception = Assert.ThrowsException<InUseValueLogic>(() =>
+            _simClassService.InUseByOther(simClassId));
+
+        Assert.AreEqual("Method is in use by invocations and cannot be updated.", exception.Message);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClassId), Times.Once);
+        _mockExecutionDataAccess.Verify(da => da.MethodIsInUseByInheritingInvocations(methodId), Times.Once);
     }
 }

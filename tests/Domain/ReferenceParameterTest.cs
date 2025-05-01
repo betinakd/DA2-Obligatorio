@@ -69,4 +69,22 @@ public class ReferenceParameterTest
 
         Assert.AreEqual("MyClass.MyMethod(x, y)", result);
     }
+
+    [TestMethod]
+    public void TestGetReferenceId_ShouldReturnParameterId()
+    {
+        // Arrange
+        var expectedId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = expectedId,
+            Name = "Param",
+            Type = new SimClass { Name = "TestClass" }
+        };
+        var referenceParameter = new ReferenceParameter { Reference = parameter };
+
+        var actualId = referenceParameter.GetReferenceId();
+
+        Assert.AreEqual(expectedId, actualId);
+    }
 }

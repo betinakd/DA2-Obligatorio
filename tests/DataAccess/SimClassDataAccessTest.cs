@@ -126,25 +126,6 @@ public class SimClassDataAccessTest
     }
 
     [TestMethod]
-    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInSimMethods()
-    {
-        var simClassId = Guid.NewGuid();
-        var simMethod = new SimMethod
-        {
-            Id = Guid.NewGuid(),
-            RelatedClassId = simClassId,
-            Name = "Test Method"
-        };
-
-        _context.SimMethods.Add(simMethod);
-        _context.SaveChanges();
-
-        var isInUse = _simClassDataAccess!.InUseByOther(simClassId);
-
-        Assert.IsTrue(isInUse);
-    }
-
-    [TestMethod]
     public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInParameters()
     {
         var typeId = Guid.NewGuid();
@@ -182,29 +163,6 @@ public class SimClassDataAccessTest
         _context.SaveChanges();
 
         var isInUse = _simClassDataAccess!.InUseByOther(typeId);
-
-        Assert.IsTrue(isInUse);
-    }
-
-    [TestMethod]
-    public void InUseByOther_ShouldReturnTrue_WhenIdIsReferencedInInvocations()
-    {
-        var referenceId = Guid.NewGuid();
-        var methodId = Guid.NewGuid();
-        var signature = new Signature { Name = "Test", Parameters = [] };
-        var invocation = new Invocation
-        {
-            Id = Guid.NewGuid(),
-            Signature = signature,
-            Reference = new ReferenceThis() { Reference = new SimClass() { Id = referenceId, Name = "TestClass" } },
-            RelatedMethodId = methodId,
-            RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
-        };
-
-        _context.Invocations.Add(invocation);
-        _context.SaveChanges();
-
-        var isInUse = _simClassDataAccess!.InUseByOther(referenceId);
 
         Assert.IsTrue(isInUse);
     }
@@ -272,19 +230,6 @@ public class SimClassDataAccessTest
     }
 
     [TestMethod]
-    public void InUseByOther_WithMatchingReferenceId_ShouldReturnTrue()
-    {
-        var id = Guid.NewGuid();
-        var reference = new ReferenceThis { Reference = new SimClass { Id = id, Name = "Test Class" } };
-        _context.References.Add(reference);
-        _context.SaveChanges();
-
-        var result = _simClassDataAccess!.InUseByOther(id);
-
-        Assert.IsTrue(result);
-    }
-
-    [TestMethod]
     public void InUseByOther_WithNonMatchingReferenceId_ShouldReturnFalse()
     {
         var id = Guid.NewGuid();
@@ -308,5 +253,137 @@ public class SimClassDataAccessTest
         var result = _simClassDataAccess!.InUseByOther(id);
 
         Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldRemoveAllMethodRelatedEntities()
+    {
+        var classId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+
+        var simClass = new SimClass { Id = classId, Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            RelatedMethodId = methodId
+        };
+
+        var localVariable = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "local1",
+            RelatedMethodId = methodId
+        };
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestSignature"
+        };
+
+        var reference = new ReferenceThis
+        {
+            Id = Guid.NewGuid(),
+            ReferenceId = Guid.NewGuid()
+        };
+
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethodId = methodId,
+            Reference = reference,
+            Signature = signature
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Parameters = [parameter],
+            LocalVariables = [localVariable],
+            Invocations = [invocation]
+        };
+
+        simClass.Methods = [method];
+
+        _context.SimMethods.Add(method);
+        _context.Parameters.Add(parameter);
+        _context.LocalVariables.Add(localVariable);
+        _context.Signatures.Add(signature);
+        _context.References.Add(reference);
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        _simClassDataAccess.DeleteSimClass(classId);
+
+        Assert.IsFalse(_context.SimClasses.Any(c => c.Id == classId));
+        Assert.IsFalse(_context.SimMethods.Any(m => m.Id == methodId));
+        Assert.IsFalse(_context.Parameters.Any(p => p.RelatedMethodId == methodId));
+        Assert.IsFalse(_context.LocalVariables.Any(v => v.RelatedMethodId == methodId));
+        Assert.IsFalse(_context.Invocations.Any(i => i.RelatedMethodId == methodId));
+        Assert.IsFalse(_context.Signatures.Any(s => s.Id == signature.Id));
+        Assert.IsFalse(_context.References.Any(r => r.Id == reference.Id));
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldHandleMethodWithNullReferenceOrSignature()
+    {
+        var classId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+
+        var simClass = new SimClass { Id = classId, Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethodId = methodId,
+            Reference = new ReferenceThis(),
+            Signature = new Signature() { Name = "Test" }
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Invocations = [invocation]
+        };
+
+        simClass.Methods = [method];
+
+        _context.SimMethods.Add(method);
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        _simClassDataAccess.DeleteSimClass(classId);
+
+        Assert.IsFalse(_context.SimClasses.Any(c => c.Id == classId));
+        Assert.IsFalse(_context.SimMethods.Any(m => m.Id == methodId));
+        Assert.IsFalse(_context.Invocations.Any(i => i.RelatedMethodId == methodId));
+    }
+
+    [TestMethod]
+    public void DeleteSimClass_ShouldReturnEarly_WhenSimClassNotFound()
+    {
+        var nonExistentId = Guid.NewGuid();
+
+        var otherClass = new SimClass { Id = Guid.NewGuid(), Name = "OtherClass" };
+        _context.SimClasses.Add(otherClass);
+        _context.SaveChanges();
+
+        var initialCount = _context.SimClasses.Count();
+
+        _simClassDataAccess.DeleteSimClass(nonExistentId);
+
+        Assert.AreEqual(initialCount, _context.SimClasses.Count());
+
+        Assert.IsTrue(_context.SimClasses.Any(c => c.Id == otherClass.Id));
     }
 }

@@ -21,4 +21,9 @@ public class ReferenceThis : Reference
     {
         return Reference;
     }
+
+    public override Guid GetReferenceId()
+    {
+        return Reference.Id;
+    }
 }

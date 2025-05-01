@@ -79,23 +79,4 @@ public class SimClass
             _baseClassField = value;
         }
     }
-
-    public void AddAttribute(SimAttribute attribute)
-    {
-        if(Attributes.Any(a => a.Name == attribute.Name))
-        {
-            throw new InvalidAttributeDomain("This Class already has an attribute with the same name.");
-        }
-
-        Attributes.Add(attribute);
-    }
-
-    public void DeleteAttribute(SimAttribute attribute)
-    {
-        var numberDeleted = Attributes.RemoveAll(a => a.Name == attribute.Name);
-        if(numberDeleted == 0)
-        {
-            throw new InvalidOperationDomain("No attribute was deleted, it may not exist.");
-        }
-    }
 }

@@ -72,7 +72,11 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         var result = false;
         foreach(var methodC in methodsClass)
         {
-            result = result || methodC.Equals(method);
+            if(methodC.Equals(method))
+            {
+                result = true;
+                break;
+            }
         }
 
         return result;

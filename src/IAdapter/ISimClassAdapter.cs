@@ -7,7 +7,7 @@ public interface ISimClassAdapter
 {
     IList<SimClassResponse> GetAllSimClasses();
     CreatedSimClassResponse CreateSimClass(SimClassRequest request);
-    UpdateSimClassResponse UpdateSimClass(UpdateSimClassRequest request);
+    UpdateSimClassResponse UpdateSimClass(SimClassRequestCreateClass request, Guid idSimClass);
     void DeleteSimClass(Guid id);
     SimClassResponse GetSimClassInfo(Guid classId);
 }

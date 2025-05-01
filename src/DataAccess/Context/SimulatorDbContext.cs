@@ -102,7 +102,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         _ = modelBuilder.Entity<SimMethod>()
                     .HasOne(m => m.ReturnType)
                     .WithMany()
-                    .HasForeignKey(m => m.ReturTypeId)
+                    .HasForeignKey(m => m.ReturnTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<SimAttribute>()
@@ -266,7 +266,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = motorId,
-                ReturTypeId = voidTypeId,
+                ReturnTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -275,7 +275,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = motorId,
-                ReturTypeId = voidTypeId,
+                ReturnTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -284,7 +284,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = autoId,
-                ReturTypeId = voidTypeId,
+                ReturnTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -293,7 +293,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = autoId,
-                ReturTypeId = voidTypeId,
+                ReturnTypeId = voidTypeId,
             });
 
         _ = modelBuilder.Entity<Invocation>().HasData(
@@ -464,7 +464,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = validadorId,
-                ReturTypeId = boolTypeId,
+                ReturnTypeId = boolTypeId,
             },
             new SimMethod
             {
@@ -473,7 +473,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaId,
-                ReturTypeId = boolTypeId,
+                ReturnTypeId = boolTypeId,
             },
             new SimMethod
             {
@@ -482,7 +482,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Protected,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaId,
-                ReturTypeId = voidTypeId,
+                ReturnTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -491,7 +491,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Protected,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaId,
-                ReturTypeId = voidTypeId,
+                ReturnTypeId = voidTypeId,
             },
             new SimMethod
             {
@@ -500,7 +500,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Normal,
                 RelatedClassId = entradaTextoId,
-                ReturTypeId = boolTypeId,
+                ReturnTypeId = boolTypeId,
             },
             new SimMethod
             {
@@ -509,7 +509,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Privacity = SimPrivacity.Public,
                 Accesibility = SimAccesibility.Sealed,
                 RelatedClassId = entradaTextoEspecialId,
-                ReturTypeId = boolTypeId,
+                ReturnTypeId = boolTypeId,
             });
         _ = modelBuilder.Entity<Invocation>().HasData(
             new

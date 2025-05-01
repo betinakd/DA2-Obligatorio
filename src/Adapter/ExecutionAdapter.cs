@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using IAdapter;
 using IBussinesLogic;
@@ -45,7 +46,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
 
             return _executionService.ExecuteMethod(reference, objToCreate, signature);
         }
-        catch(Exception ex)
+        catch(InvalidOperationLogic ex)
         {
             throw new InvalidExecutionAdapter(ex.Message);
         }

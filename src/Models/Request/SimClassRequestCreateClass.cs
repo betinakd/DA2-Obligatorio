@@ -6,7 +6,7 @@ using Models.Enums;
 namespace Models.Request;
 
 [ExcludeFromCodeCoverage]
-public class SimClassRequest()
+public class SimClassRequestCreateClass()
 {
     public Guid Id { get; set; }
 
@@ -22,4 +22,6 @@ public class SimClassRequest()
 
     [Required(ErrorMessage = "IdBaseClass is required.")]
     public string IdBaseClass { get; set; } = string.Empty;
+    public List<MethodRequestCreateClass> Methods { get; set; } = [];
+    public List<AttributeRequestCreateClass> Attributes { get; set; } = [];
 }

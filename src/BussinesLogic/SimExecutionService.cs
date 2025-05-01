@@ -1,5 +1,6 @@
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using IBussinesLogic;
 using IDataAccess;
 
@@ -17,9 +18,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         SimClass objClass = objReal.GetSimClass();
         SimMethod? methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
 
-        if(methodToExecute == null)
+        if(methodToExecute == null || (methodToExecute.Accesibility == SimAccesibility.Abstract && (objReal is ReferenceThis || objReal is ReferenceBase)))
         {
-            return $"Error: No se encontró el método {signature.Name} en {objClass.Name}\n";
+            throw new InvalidOperationLogic("Method not executable from reference.");
         }
 
         if(visited.Contains(methodToExecute.Id))
@@ -52,7 +53,20 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
     {
         if(_executionDA.FindMethodInHierarchy(classId, methodName) == null)
         {
-            throw new NonExistentValueLogic($"Method '{methodName}' is not accessible from this context");
+            throw new NonExistentValueLogic($"Method '{methodName.Name}' is not accessible from this context");
         }
+    }
+
+    public void ClassInheritAttribute(Guid idClass, Guid idAttribute)
+    {
+        if(!_executionDA.ClassInheritAttribute(idClass, idAttribute))
+        {
+            throw new NonExistentValueLogic("Attribute not reacheable from method.");
+        }
+    }
+
+    public void MethodIsOverridingSealed(Guid idClass, SimMethod method)
+    {
+        _executionDA.MethodIsOverridingSealed(idClass, method);
     }
 }

@@ -70,4 +70,16 @@ public class ReferenceAttributeTest
 
         Assert.AreEqual("MyClass.MyMethod(x, y)", result);
     }
+
+    [TestMethod]
+    public void TestGetReferenceId_ShouldReturnReferenceId()
+    {
+        var expectedId = Guid.NewGuid();
+        var attribute = new SimAttribute { Id = expectedId, Name = "Attr" };
+        var reference = new ReferenceAttribute { Reference = attribute };
+
+        var actualId = reference.GetReferenceId();
+
+        Assert.AreEqual(expectedId, actualId);
+    }
 }

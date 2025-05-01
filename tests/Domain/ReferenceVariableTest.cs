@@ -70,4 +70,21 @@ public class ReferenceVariableTest
 
         Assert.AreEqual("MyClass.MyMethod(x, y)", result);
     }
+
+    [TestMethod]
+    public void TestGetReferenceId_ShouldReturnVariableId()
+    {
+        var expectedId = Guid.NewGuid();
+        var localVariable = new LocalVariable
+        {
+            Id = expectedId,
+            Name = "Variable",
+            Type = new SimClass { Name = "TestClass" }
+        };
+        var referenceVariable = new ReferenceVariable { Reference = localVariable };
+
+        var actualId = referenceVariable.GetReferenceId();
+
+        Assert.AreEqual(expectedId, actualId);
+    }
 }

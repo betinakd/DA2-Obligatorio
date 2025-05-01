@@ -27,4 +27,9 @@ public class ReferenceBase : Reference
 
         return Reference.BaseClass;
     }
+
+    public override Guid GetReferenceId()
+    {
+        return Reference.Id;
+    }
 }

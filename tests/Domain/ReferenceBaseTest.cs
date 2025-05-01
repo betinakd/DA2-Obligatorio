@@ -71,4 +71,24 @@ public class ReferenceBaseTest()
 
         Assert.AreEqual("BaseClass.MyMethod(x, y)", result);
     }
+
+    [TestMethod]
+    public void TestGetReferenceId_ShouldReturnBaseClassId()
+    {
+        var expectedId = Guid.NewGuid();
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        var simClass = new SimClass
+        {
+            Id = expectedId,
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+
+        var referenceBase = new ReferenceBase { Reference = simClass };
+
+        var actualId = referenceBase.GetReferenceId();
+
+        Assert.AreEqual(expectedId, actualId);
+    }
 }

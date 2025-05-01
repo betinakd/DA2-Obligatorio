@@ -1,5 +1,6 @@
 using Adapter;
 using Adapter.Exceptions;
+using BussinesLogic.Exceptions;
 using Domain;
 using IBussinesLogic;
 using Models.Request;
@@ -100,7 +101,7 @@ public class ExecutionAdapterTest
 
         _simClassService!
             .Setup(s => s.GetSimClassById(It.IsAny<Guid>()))
-            .Throws(new Exception("SimClass error"));
+            .Throws(new InvalidOperationLogic("SimClass error"));
 
         Assert.ThrowsException<InvalidExecutionAdapter>(() =>
         {
