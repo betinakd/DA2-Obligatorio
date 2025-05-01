@@ -22,7 +22,6 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
             Id = c.Id,
             Name = c.Name,
             State = EnumMapper.MapToModelAccesibility(c.State),
-            Message = "Class retrieved successfully"
         }).ToList();
         return responses;
     }
@@ -32,7 +31,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         try
         {
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
-            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State } };
+            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
         }
         catch(InUseValueLogic ex)
         {
@@ -159,9 +158,9 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
             var simClassResponse = new SimClassResponse()
             {
                 Id = simClass.Id,
-                Message = "Class retrieved successfully",
                 Name = simClass.Name,
-                State = EnumMapper.MapToModelAccesibility(simClass.State)
+                State = EnumMapper.MapToModelAccesibility(simClass.State),
+                IdBaseClass = simClass.BaseClassId
             };
             return simClassResponse;
         }

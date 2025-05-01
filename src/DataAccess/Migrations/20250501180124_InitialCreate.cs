@@ -66,8 +66,8 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReturTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RelatedClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReturnTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RelatedClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Privacity = table.Column<int>(type: "int", nullable: false),
                     Accesibility = table.Column<int>(type: "int", nullable: false)
                 },
@@ -81,8 +81,8 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SimMethods_SimClasses_ReturTypeId",
-                        column: x => x.ReturTypeId,
+                        name: "FK_SimMethods_SimClasses_ReturnTypeId",
+                        column: x => x.ReturnTypeId,
                         principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -294,7 +294,7 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "SimMethods",
-                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturTypeId" },
+                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturnTypeId" },
                 values: new object[,]
                 {
                     { new Guid("c1c1c1c1-c1c1-c1c1-c1c1-c1c1c1c1c1c1"), 2, "Encender", 2, new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"), new Guid("22222222-2222-2222-2222-222222222222") },
@@ -347,7 +347,7 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "SimMethods",
-                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturTypeId" },
+                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturnTypeId" },
                 values: new object[] { new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"), 2, "EsValido", 2, new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4"), new Guid("22223222-2222-2222-2222-222222222222") });
 
             migrationBuilder.InsertData(
@@ -382,7 +382,7 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "SimMethods",
-                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturTypeId" },
+                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturnTypeId" },
                 values: new object[] { new Guid("b2b5b5b5-b5b5-b5b5-b5b5-b5b5b5b5b5b5"), 0, "EsValido", 2, new Guid("d4d2d4d4-d4d4-d4d4-d4d4-d4d4d4d4d4d4"), new Guid("22223222-2222-2222-2222-222222222222") });
 
             migrationBuilder.InsertData(
@@ -514,9 +514,9 @@ namespace DataAccess.Migrations
                 column: "RelatedClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SimMethods_ReturTypeId",
+                name: "IX_SimMethods_ReturnTypeId",
                 table: "SimMethods",
-                column: "ReturTypeId");
+                column: "ReturnTypeId");
         }
 
         /// <inheritdoc />

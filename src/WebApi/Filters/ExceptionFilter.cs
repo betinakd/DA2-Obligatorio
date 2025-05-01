@@ -52,19 +52,34 @@ public sealed class ExceptionFilter : IExceptionFilter
         {
             StatusCode = (int)HttpStatusCode.Conflict
         }
+    },
+        {
+        typeof(Exception),
+        ex => new ObjectResult(new ErrorResponse
+        {
+            InnerCode = 7,
+            Message = ex.Message
+        })
+        {
+            StatusCode = (int)HttpStatusCode.InternalServerError
+        }
     }
 };
 
     public void OnException(ExceptionContext context)
     {
-        var factory = _errorFactories.GetValueOrDefault(context.Exception.GetType());
+        var exceptionType = context.Exception.GetType();
+        var factory = _errorFactories
+            .Where(kvp => kvp.Key.IsAssignableFrom(exceptionType))
+            .Select(kvp => kvp.Value)
+            .FirstOrDefault();
 
         if(factory == null)
         {
             context.Result = new ObjectResult(new ErrorResponse
             {
                 InnerCode = 6,
-                Message = "There was an error when processing the request"
+                Message = context.Exception.Message
             })
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError

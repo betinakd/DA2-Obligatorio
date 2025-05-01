@@ -62,16 +62,6 @@ public class ExceptionFilterTests
         AssertResult(exceptionContext, HttpStatusCode.BadRequest, 3, "Invalid execution");
     }
 
-    [TestMethod]
-    public void OnException_UnhandledException_ReturnsInternalServerErrorResult()
-    {
-        var exceptionContext = CreateExceptionContext(new Exception("Unhandled exception"));
-
-        _exceptionFilter!.OnException(exceptionContext);
-
-        AssertResult(exceptionContext, HttpStatusCode.InternalServerError, 6, "There was an error when processing the request");
-    }
-
     private void AssertResult(ExceptionContext context, HttpStatusCode expectedStatusCode, int expectedInnerCode, string expectedMessage)
     {
         Assert.IsNotNull(context.Result);

@@ -32,8 +32,9 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             {
                 Id = Guid.NewGuid(),
                 Name = name,
+                State = simAccesibility,
                 BaseClass = baseClass,
-                State = simAccesibility
+                BaseClassId = baseClass.Id
             };
             _simClassDA.CreateSimClass(simClass);
             return simClass;

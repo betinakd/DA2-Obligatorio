@@ -20,6 +20,6 @@ public class SimClassRequest()
     [JsonIgnore]
     public Guid BaseClassId => Guid.TryParse(IdBaseClass, out var guid) ? guid : Guid.Empty;
 
-    [Required(ErrorMessage = "IdBaseClass is required.")]
+    [Required(ErrorMessage = "IdBaseClass is required and Guid format.")]
     public string IdBaseClass { get; set; } = string.Empty;
 }
