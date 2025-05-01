@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Models.Enums;
 
 namespace Models.Response;
-
+[ExcludeFromCodeCoverage]
 public class MethodResponse()
 {
     public Guid? Id { get; set; }

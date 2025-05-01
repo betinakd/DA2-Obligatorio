@@ -89,22 +89,65 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Invocation GetInvocationById(Guid id)
     {
-        return _context.Invocations.FirstOrDefault(i => i.Id == id);
+        var invocation = _context.Invocations
+            .Where(i => i.Id == id)
+            .Include(i => i.Reference)
+            .Include(i => i.Signature)
+                .ThenInclude(s => s.Parameters)
+                    .ThenInclude(p => p.Type)
+            .Include(i => i.RelatedMethod)
+            .FirstOrDefault();
+        return invocation;
     }
 
     public SimMethod GetMethodById(Guid id)
     {
-        return _context.SimMethods.FirstOrDefault(m => m.Id == id);
+        var method = _context.SimMethods
+            .Where(m => m.Id == id)
+            .Include(a => a.RelatedClass)
+            .Include(b => b.ReturnType)
+            .Include(m => m.Parameters)
+                .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
+                    .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
+                    .ThenInclude(v => v.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
+                    .ThenInclude(a => a.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
+                    .ThenInclude(c => c.BaseClass)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => i.Signature)
+                    .ThenInclude(s => s.Parameters)
+                        .ThenInclude(p => p.Type)
+            .FirstOrDefault();
+        return method;
     }
 
     public Parameter GetParameterById(Guid id)
     {
-        return _context.Parameters.FirstOrDefault(p => p.Id == id);
+        var parameter = _context.Parameters
+            .Where(p => p.Id == id)
+            .Include(p => p.Type)
+            .Include(p => p.RelatedMethod)
+            .FirstOrDefault();
+        return parameter;
     }
 
     public LocalVariable GetVariableById(Guid id)
     {
-        return _context.LocalVariables.FirstOrDefault(v => v.Id == id);
+        var variable = _context.LocalVariables
+            .Where(v => v.Id == id)
+            .Include(v => v.Type)
+            .Include(v => v.RelatedMethod)
+            .FirstOrDefault();
+        return variable;
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)

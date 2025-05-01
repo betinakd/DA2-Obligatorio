@@ -64,4 +64,85 @@ public class AttributeControllerTest
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
     }
+
+    [TestMethod]
+    public void GetAttributeControllerWithValidId_ShouldReturnOkResultWithAttribute()
+    {
+        // Arrange
+        var idToGet = Guid.NewGuid();
+        var expectedAttribute = new AttributeResponse()
+        {
+            Id = idToGet,
+            Name = "TestAttribute",
+            TypeId = Guid.NewGuid(),
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            RelatedClassId = Guid.NewGuid()
+        };
+
+        _mockAttributeAdapter?.Setup(a => a.GetAttribute(idToGet)).Returns(expectedAttribute);
+
+        // Act
+        var result = _attributeController?.GetAttribute(idToGet);
+
+        // Assert
+        _mockAttributeAdapter?.Verify(a => a.GetAttribute(idToGet), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(expectedAttribute, okResult.Value);
+    }
+
+    [TestMethod]
+    public void GetAttributeControllerWithNonExistingId_ShouldReturnOkResultWithNull()
+    {
+        var idToGet = Guid.NewGuid();
+        _mockAttributeAdapter?.Setup(a => a.GetAttribute(idToGet)).Returns((AttributeResponse?)null);
+
+        var result = _attributeController?.GetAttribute(idToGet);
+
+        _mockAttributeAdapter?.Verify(a => a.GetAttribute(idToGet), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.IsNull(okResult.Value);
+    }
+
+    [TestMethod]
+    public void GetAttributeController_ReturnsOkObjectResult_WhenAttributeFound()
+    {
+        var id = Guid.NewGuid();
+        var expectedAttribute = new AttributeResponse
+        {
+            Id = id,
+            Name = "Test Attribute",
+            TypeId = Guid.NewGuid(),
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            RelatedClassId = Guid.NewGuid()
+        };
+
+        _mockAttributeAdapter?.Setup(a => a.GetAttribute(id)).Returns(expectedAttribute);
+
+        var result = _attributeController?.GetAttribute(id);
+
+        _mockAttributeAdapter?.Verify(a => a.GetAttribute(id), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(expectedAttribute, okResult.Value);
+    }
+
+    [TestMethod]
+    public void GetAttributeController_ReturnsOkObjectResult_WithNull_WhenAttributeNotFound()
+    {
+        var id = Guid.NewGuid();
+        _mockAttributeAdapter?.Setup(a => a.GetAttribute(id)).Returns((AttributeResponse?)null);
+
+        var result = _attributeController?.GetAttribute(id);
+
+        _mockAttributeAdapter?.Verify(a => a.GetAttribute(id), Times.Once);
+        Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.IsNull(okResult.Value);
+    }
 }

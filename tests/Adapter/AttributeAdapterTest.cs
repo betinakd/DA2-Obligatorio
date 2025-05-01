@@ -371,4 +371,43 @@ public class AttributeAdapterTest
 
         _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
     }
+
+    [TestMethod]
+    public void GetAttribute_ReturnsCorrectResponse_WhenAttributeExists()
+    {
+        var id = Guid.NewGuid();
+        var simAttribute = new SimAttribute
+        {
+            Id = id,
+            Name = "TestAttribute",
+            Privacity = SimPrivacity.Public,
+            RelatedClassId = Guid.NewGuid(),
+            TypeId = Guid.NewGuid()
+        };
+
+        _mockSimAttributeService!
+            .Setup(s => s.GetSimAttribute(id))
+            .Returns(simAttribute);
+
+        var result = _simAttributeAdapter!.GetAttribute(id);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simAttribute.Id, result.Id);
+        Assert.AreEqual(simAttribute.Name, result.Name);
+        Assert.AreEqual(EnumMapper.MapToModelPrivacity(simAttribute.Privacity), result.Privacity);
+        Assert.AreEqual(simAttribute.RelatedClassId, result.RelatedClassId);
+        Assert.AreEqual(simAttribute.TypeId, result.TypeId);
+    }
+
+    [TestMethod]
+    public void GetAttribute_ThrowsNonExistentValueAdapter_WhenAttributeDoesNotExist()
+    {
+        var id = Guid.NewGuid();
+        _mockSimAttributeService!
+            .Setup(s => s.GetSimAttribute(id))
+            .Throws(new NonExistentValueLogic("Attribute not found"));
+
+        var ex = Assert.ThrowsException<NonExistentValueAdapter>(() => _simAttributeAdapter!.GetAttribute(id));
+        Assert.AreEqual("Attribute not found", ex.Message);
+    }
 }

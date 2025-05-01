@@ -7,10 +7,10 @@ public class AttributeResponse()
 {
     public Guid? Id { get; set; }
     public string? Name { get; set; }
-    public Guid TypeId { get; set; }
+    public Guid? TypeId { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsPrivacity Privacity { get; set; }
 
-    public Guid RelatedClassId { get; set; }
+    public Guid? RelatedClassId { get; set; }
 }
