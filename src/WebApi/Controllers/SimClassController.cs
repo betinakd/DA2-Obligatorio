@@ -25,9 +25,9 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     }
 
     [HttpPut]
-    public IActionResult UpdateSimClass([FromBody] UpdateSimClassRequest updateClass)
+    public IActionResult UpdateSimClass([FromBody] SimClassRequestCreateClass updateClass)
     {
-        var simClassResponse = _simClassAdapter.UpdateSimClass(updateClass);
+        var simClassResponse = _simClassAdapter.UpdateSimClass(updateClass, updateClass.Id);
         return Ok(simClassResponse);
     }
 

@@ -3,6 +3,7 @@ using Adapter.Exceptions;
 using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Enums;
+using Domain.Exceptions;
 using IBussinesLogic;
 using Models.Enums;
 using Models.Request;
@@ -15,13 +16,15 @@ namespace Tests.Adapter;
 public class SimClassAdapterTest
 {
     private Mock<ISimClassService>? _mockSimClassService;
+    private Mock<IExecutionService>? _mockExecutionService;
     private SimClassAdapter? _simClassAdapter;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object);
+        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
     }
 
     [TestMethod]
@@ -56,8 +59,6 @@ public class SimClassAdapterTest
         var request = new SimClassRequest
         {
             Name = "ValidClass",
-            IsAbstract = false,
-            IsSealed = false,
             IdBaseClass = Guid.NewGuid().ToString(),
             State = SimModelsAccesibility.Normal
         };
@@ -74,54 +75,6 @@ public class SimClassAdapterTest
         Assert.AreEqual(simClass.Name, result.SimClass?.Name);
 
         _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
-    }
-
-    [TestMethod]
-    public void UpdateSimClassCorrectly_ShouldReturnSimClassResponse()
-    {
-        var simClassId = Guid.NewGuid();
-        var request = new UpdateSimClassRequest
-        {
-            Id = simClassId,
-            Name = "UpdatedClass"
-        };
-
-        var expectedSimClass = new SimClass { Id = simClassId, Name = "UpdatedClass" };
-        var expectedResult = new UpdateSimClassResponse
-        {
-            Message = "Class updated successfully",
-            SimClass = new SimClassResponse()
-            {
-                Id = expectedSimClass.Id,
-                Message = "Class updated Successfully",
-                Name = expectedSimClass.Name,
-                State = SimModelsAccesibility.Abstract
-            }
-        };
-
-        _mockSimClassService
-            ?.Setup(service => service.UpdateSimClass(It.Is<SimClass>(s => s.Id == request.Id && s.Name == request.Name)))
-            .Returns(expectedSimClass);
-
-        var result = _simClassAdapter?.UpdateSimClass(request);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(expectedResult.Message, result?.Message);
-        Assert.AreEqual(expectedSimClass.Id, result?.SimClass?.Id);
-        Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
-        Assert.AreEqual(expectedSimClass.Name, result?.SimClass?.Name);
-
-        _mockSimClassService?.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-    }
-
-    [TestMethod]
-    public void UpdateSimClass_ShouldThrowInvalidAttribute_WhenSimClassIsEmpty()
-    {
-        var request = new UpdateSimClassRequest() { Name = " " };
-
-        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
-            _simClassAdapter?.UpdateSimClass(request));
-        Assert.AreEqual("Name cannot be empty or contain invalid characters.", exception.Message);
     }
 
     [TestMethod]
@@ -212,56 +165,6 @@ public class SimClassAdapterTest
     }
 
     [TestMethod]
-    public void UpdateSimClass_ShouldThrowInUseValueAdapter_WhenServiceThrowsInUseValueLogic()
-    {
-        var simClassId = Guid.NewGuid();
-        var request = new UpdateSimClassRequest
-        {
-            Id = simClassId,
-            Name = "UpdatedClass",
-            State = SimModelsAccesibility.Normal
-        };
-
-        _mockSimClassService!
-            .Setup(service => service.UpdateSimClass(It.Is<SimClass>(s =>
-                s.Id == request.Id &&
-                s.Name == request.Name)))
-            .Throws(new InUseValueLogic("Class is in use and cannot be updated."));
-
-        var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
-            _simClassAdapter!.UpdateSimClass(request));
-
-        Assert.AreEqual("Class is in use and cannot be updated.", exception.Message);
-
-        _mockSimClassService.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-    }
-
-    [TestMethod]
-    public void UpdateSimClass_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
-    {
-        var simClassId = Guid.NewGuid();
-        var request = new UpdateSimClassRequest
-        {
-            Id = simClassId,
-            Name = "NonExistentClass",
-            State = SimModelsAccesibility.Normal
-        };
-
-        _mockSimClassService!
-            .Setup(service => service.UpdateSimClass(It.Is<SimClass>(s =>
-                s.Id == request.Id &&
-                s.Name == request.Name)))
-            .Throws(new NonExistentValueLogic("Class not found."));
-
-        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
-            _simClassAdapter!.UpdateSimClass(request));
-
-        Assert.AreEqual("Class not found.", exception.Message);
-
-        _mockSimClassService.Verify(service => service.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-    }
-
-    [TestMethod]
     public void DeleteSimClass_ShouldThrowInUseValueAdapter_WhenClassIsInUse()
     {
         var simClassId = Guid.NewGuid();
@@ -318,5 +221,174 @@ public class SimClassAdapterTest
         _simClassAdapter!.CreateSimClass(request);
 
         _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldReturnResponse_WhenValidData()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var request = new SimClassRequestCreateClass
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Attributes =
+        [
+            new()
+            {
+                Name = "TestAttribute",
+                Privacity = SimModelsPrivacity.Public,
+                IdClassType = typeId.ToString()
+            }
+
+        ],
+            Methods =
+        [
+            new()
+            {
+                Name = "TestMethod",
+                Accesibility = SimModelsAccesibility.Normal,
+                Privacity = SimModelsPrivacity.Public,
+                IdReturnType = returnTypeId.ToString(),
+                Parameters =
+                [
+                    new()
+                    {
+                        Name = "param1",
+                        IdClassType = typeId.ToString()
+                    }
+
+                ]
+            }
+
+        ]
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        var returnType = new SimClass { Id = returnTypeId, Name = "ReturnType" };
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(typeId))
+            .Returns(typeClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(returnTypeId))
+            .Returns(returnType);
+
+        _mockExecutionService!
+            .Setup(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()))
+            .Verifiable();
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Returns((SimClass sc) => sc);
+
+        var result = _simClassAdapter!.UpdateSimClass(request, classId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(classId, result.Id);
+        Assert.AreEqual("Class updated successfully", result.Message);
+
+        _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(typeId), Times.Exactly(2)); // Una vez para atributo y otra para parámetro
+        _mockSimClassService.Verify(s => s.GetSimClassById(returnTypeId), Times.Once);
+        _mockExecutionService.Verify(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()), Times.Once);
+        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowNonExistentValueAdapter_WhenSimpleNonExistentValueLogic()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+
+        var request = new SimClassRequestCreateClass
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = []
+        };
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Throws(new NonExistentValueLogic("Base class not found"));
+
+        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
+            _simClassAdapter!.UpdateSimClass(request, classId));
+
+        Assert.AreEqual("Base class not found", exception.Message);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInUseValueAdapter_WhenSimpleInUseValueLogic()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+
+        var request = new SimClassRequestCreateClass
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = []
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Throws(new InUseValueLogic("Class in use"));
+
+        var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
+            _simClassAdapter!.UpdateSimClass(request, classId));
+
+        Assert.AreEqual("Class in use", exception.Message);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInvalidAttributeAdapter_WhenSimpleInvalidAttributeDomain()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+
+        var request = new SimClassRequestCreateClass
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = []
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Throws(new InvalidAttributeDomain("Invalid attribute"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter!.UpdateSimClass(request, classId));
+
+        Assert.AreEqual("Invalid attribute", exception.Message);
     }
 }

@@ -64,4 +64,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
             throw new NonExistentValueLogic("Attribute not reacheable from method.");
         }
     }
+
+    public void MethodIsOverridingSealed(Guid idClass, SimMethod method)
+    {
+        _executionDA.MethodIsOverridingSealed(idClass, method);
+    }
 }

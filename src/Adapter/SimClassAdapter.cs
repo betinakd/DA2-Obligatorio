@@ -8,10 +8,11 @@ using Models.Request;
 using Models.Response;
 
 namespace Adapter;
-public class SimClassAdapter(ISimClassService simClassService)
+public class SimClassAdapter(ISimClassService simClassService, IExecutionService executionService)
     : ISimClassAdapter
 {
     private readonly ISimClassService _simClassService = simClassService;
+    private readonly IExecutionService _executionService = executionService;
 
     public IList<SimClassResponse> GetAllSimClasses()
     {
@@ -47,12 +48,78 @@ public class SimClassAdapter(ISimClassService simClassService)
         }
     }
 
-    public UpdateSimClassResponse UpdateSimClass(UpdateSimClassRequest request)
+    public UpdateSimClassResponse UpdateSimClass(SimClassRequestCreateClass request, Guid idSimClass)
     {
         try
         {
-            var simClass = _simClassService.UpdateSimClass(new SimClass { Id = request.Id, Name = request.Name, State = EnumMapper.MapToDomainAccesibility(request.State) });
-            return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = request.State } };
+            var baseClass = _simClassService.GetSimClassById(request.BaseClassId);
+            var methodsNewClass = new List<SimMethod>();
+            var attributesNewClas = new List<SimAttribute>();
+            var classToUpdate = new SimClass()
+            {
+                Id = idSimClass,
+                Name = request.Name,
+                State = EnumMapper.MapToDomainAccesibility(request.State),
+                BaseClass = baseClass,
+                BaseClassId = baseClass.Id
+            };
+
+            foreach(var atri in request.Attributes)
+            {
+                var typeClass = _simClassService.GetSimClassById(atri.ClassTypeId);
+                var newAttribute = new SimAttribute()
+                {
+                    Name = atri.Name,
+                    Privacity = EnumMapper.MapToDomainPrivacity(atri.Privacity),
+                    RelatedClassId = idSimClass,
+                    RelatedClass = classToUpdate,
+                    Type = typeClass,
+                    TypeId = typeClass.Id
+                };
+                attributesNewClas.Add(newAttribute);
+            }
+
+            foreach(var method in request.Methods)
+            {
+                var newMethod = new SimMethod()
+                {
+                    Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
+                    Name = method.Name,
+                    ReturnType = _simClassService.GetSimClassById(method.ReturnTypeId),
+                    Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
+                    RelatedClassId = idSimClass,
+                    ReturnTypeId = method.ReturnTypeId,
+                    RelatedClass = classToUpdate,
+                };
+
+                var parametersNewClass = new List<Parameter>();
+
+                foreach(var param in method.Parameters)
+                {
+                    var parameterType = _simClassService.GetSimClassById(param.ClassTypeId);
+                    var newParam = new Parameter()
+                    {
+                        Name = param.Name,
+                        Type = parameterType,
+                        TypeId = param.ClassTypeId,
+                        RelatedMethod = newMethod,
+                        RelatedMethodId = newMethod.Id
+                    };
+
+                    parametersNewClass.Add(newParam);
+                }
+
+                _executionService.MethodIsOverridingSealed(idSimClass, newMethod);
+                newMethod.Parameters = parametersNewClass;
+                methodsNewClass.Add(newMethod);
+            }
+
+            classToUpdate.Attributes = attributesNewClas;
+            classToUpdate.Methods = methodsNewClass;
+
+            _simClassService.UpdateSimClass(classToUpdate);
+
+            return new UpdateSimClassResponse() { Id = classToUpdate.Id, Message = "Class updated successfully" };
         }
         catch(InvalidAttributeDomain ex)
         {
