@@ -27,7 +27,7 @@ public class ClassMethodControllerTest
         var id = Guid.NewGuid();
         var classId = Guid.NewGuid();
         var methodRequest = new MethodRequest() { Id = id, Name = "Test Method", Accesibility = SimModelsAccesibility.Normal, Privacity = SimModelsPrivacity.Public, IdClassOwner = classId };
-        var expectedResponse = new CreatedMethodResponse() { Id = id, Message = "Method created successfully", MethodResponse = new MethodResponse() { Id = id, Accesibility = SimModelsAccesibility.Normal, IdClassOwner = classId, Privacity = SimModelsPrivacity.Public, Name = "Test Method" } };
+        var expectedResponse = new CreatedMethodResponse() { Message = "Method created successfully", MethodResponse = new MethodResponse() { Id = id, Accesibility = SimModelsAccesibility.Normal, IdClassOwner = classId, Privacity = SimModelsPrivacity.Public, Name = "Test Method" } };
         _mockmethodAdapter?.Setup(m => m.CreateMethod(classId, methodRequest)).Returns(expectedResponse);
 
         var result = _attributeController?.CreateMethod(classId, methodRequest);
