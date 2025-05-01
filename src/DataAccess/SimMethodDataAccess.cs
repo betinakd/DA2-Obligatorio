@@ -94,7 +94,32 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public SimMethod GetMethodById(Guid id)
     {
-        return _context.SimMethods.FirstOrDefault(m => m.Id == id);
+        var method = _context.SimMethods
+            .Where(m => m.Id == id)
+            .Include(a => a.RelatedClass)
+            .Include(b => b.ReturnType)
+            .Include(m => m.Parameters)
+                .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
+                    .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
+                    .ThenInclude(v => v.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
+                    .ThenInclude(a => a.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
+                    .ThenInclude(c => c.BaseClass)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => i.Signature)
+                    .ThenInclude(s => s.Parameters)
+                        .ThenInclude(p => p.Type)
+            .FirstOrDefault();
+        return method;
     }
 
     public Parameter GetParameterById(Guid id)
