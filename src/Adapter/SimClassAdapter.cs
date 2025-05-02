@@ -17,15 +17,9 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
 
     public IList<SimClassResponse> GetAllSimClasses()
     {
-        var classes = _simClassService.GetAllSimClasses();
-        var responses = classes.Select(c => new SimClassResponse()
-        {
-            Id = c.Id,
-            Name = c.Name,
-            IdBaseClass = c.BaseClassId,
-            State = EnumMapper.MapToModelAccesibility(c.State),
-        }).ToList();
-        return responses;
+        return _simClassService.GetAllSimClasses()
+            .Select(SimClassResponseMapper.MapToSimClassResponse)
+            .ToList();
     }
 
     public CreatedSimClassResponse CreateSimClass(SimClassRequestUpdate request)

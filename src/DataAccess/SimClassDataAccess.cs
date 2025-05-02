@@ -81,7 +81,41 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public IList<SimClass> GetAllSimClasses()
     {
-        return _context.SimClasses.ToList();
+        return _context.SimClasses
+            .Include(c => c.BaseClass)
+            .Include(c => c.Attributes)
+                .ThenInclude(a => a.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Parameters)
+                    .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.LocalVariables)
+                    .ThenInclude(v => v.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => i.Signature)
+                        .ThenInclude(s => s.Parameters)
+                            .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
+                        .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
+                        .ThenInclude(v => v.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
+                        .ThenInclude(a => a.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
+                        .ThenInclude(c => c.BaseClass)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
+            .ToList();
     }
 
     public SimClass GetSimClassById(Guid id)
