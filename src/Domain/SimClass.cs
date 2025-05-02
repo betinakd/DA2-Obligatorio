@@ -27,7 +27,7 @@ public class SimClass
     public Guid? BaseClassId { get; set; }
 
     private SimClass? _baseClassField = null;
-    public SimAccesibility State { get; set; }
+    public SimAccesibility State { get; set; } = SimAccesibility.Normal;
 
     public List<SimAttribute> Attributes { get; set; } = [];
 
