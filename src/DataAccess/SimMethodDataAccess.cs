@@ -152,11 +152,11 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
     {
-        return _context.Parameters.Any(p => p.RelatedMethodId == methodId && p.Name == parameter.Name);
+        return _context.Parameters.Any(p => p.RelatedMethodId == methodId && p.Name.ToLower() == parameter.Name.ToLower());
     }
 
     public bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable)
     {
-        return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name == localVariable.Name);
+        return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name.ToLower() == localVariable.Name.ToLower());
     }
 }
