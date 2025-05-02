@@ -82,25 +82,70 @@ public class SimMethodDataAccessTest
     [TestMethod]
     public void CreateInvocation_ShouldAddInvocationToDatabase()
     {
-        var referenceId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
-        var reference = new ReferenceThis { Reference = new SimClass() { Id = referenceId } };
-        var signature = new Signature { Name = "TestSignature", Parameters = [] };
+        var referenceId = Guid.NewGuid();
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass"
+        };
+        _context.SimClasses.Add(simClass);
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Invocations = []
+        };
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var reference = new ReferenceThis
+        {
+            Id = Guid.NewGuid(),
+            Reference = simClass,
+            ReferenceId = classId,
+        };
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestSignature",
+            Parameters = []
+        };
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
             Reference = reference,
             Signature = signature,
-            RelatedMethodId = methodId,
-            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
+            RelatedMethodId = methodId
         };
 
         var result = _simMethodDataAccess.CreateInvocation(methodId, invocation);
 
-        var invocationInDb = _context.Invocations.FirstOrDefault(i => i.Id == invocation.Id);
+        var invocationInDb = _context.Invocations
+            .Include(i => i.Reference)
+            .Include(i => i.Signature)
+            .FirstOrDefault(i => i.Id == invocation.Id);
+
         Assert.IsNotNull(invocationInDb);
-        Assert.AreEqual(invocation.RelatedMethodId, invocationInDb.RelatedMethodId);
         Assert.AreEqual(invocation.Id, result.Id);
+        Assert.AreEqual(methodId, invocationInDb.RelatedMethodId);
+        Assert.AreEqual(0, invocationInDb.Index);
+        Assert.IsNotNull(invocationInDb.Reference);
+        Assert.IsNotNull(invocationInDb.Signature);
+        Assert.AreEqual("TestSignature", invocationInDb.Signature.Name);
+
+        var updatedMethod = _context.SimMethods
+            .Include(m => m.Invocations)
+            .FirstOrDefault(m => m.Id == methodId);
+
+        Assert.IsNotNull(updatedMethod);
+        Assert.AreEqual(2, updatedMethod.Invocations.Count);
+        Assert.AreEqual(invocation.Id, updatedMethod.Invocations.First().Id);
     }
 
     [TestMethod]

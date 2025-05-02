@@ -209,7 +209,8 @@ namespace DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RelatedMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    RelatedMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Index = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {

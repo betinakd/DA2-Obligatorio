@@ -25,8 +25,24 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Invocation CreateInvocation(Guid idMethod, Invocation newInvocation)
     {
+        var method = _context.SimMethods
+            .Include(m => m.Invocations)
+            .FirstOrDefault(m => m.Id == idMethod);
+
+        if(method == null)
+        {
+            throw new ArgumentException($"Method with ID {idMethod} not found");
+        }
+
+        newInvocation.Index = method.Invocations.Count;
+        newInvocation.RelatedMethodId = method.Id;
+
         _context.Invocations.Add(newInvocation);
+
+        method.Invocations.Add(newInvocation);
+
         _context.SaveChanges();
+
         return newInvocation;
     }
 

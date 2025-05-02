@@ -59,5 +59,6 @@ public class Invocation()
         }
     }
 
+    public int Index { get; set; } = 0;
     public SimMethod? RelatedMethod { get; set; }
 }

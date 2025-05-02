@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250502063948_InitialCreate")]
+    [Migration("20250502213223_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,6 +53,11 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<Guid?>("ReferenceId")
                         .HasColumnType("uniqueidentifier");
@@ -557,7 +562,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ReferenceAttribute", b =>
+            modelBuilder.Entity("Domain.ReferenceAttribute", b =>
                 {
                     b.HasBaseType("Domain.Reference");
 
@@ -599,7 +604,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ReferenceBase", b =>
+            modelBuilder.Entity("Domain.ReferenceBase", b =>
                 {
                     b.HasBaseType("Domain.Reference");
 
@@ -633,7 +638,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ReferenceParameter", b =>
+            modelBuilder.Entity("Domain.ReferenceParameter", b =>
                 {
                     b.HasBaseType("Domain.Reference");
 
@@ -651,7 +656,7 @@ namespace DataAccess.Migrations
                     b.HasDiscriminator().HasValue("Parameter");
                 });
 
-            modelBuilder.Entity("ReferenceThis", b =>
+            modelBuilder.Entity("Domain.ReferenceThis", b =>
                 {
                     b.HasBaseType("Domain.Reference");
 
@@ -692,7 +697,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ReferenceVariable", b =>
+            modelBuilder.Entity("Domain.ReferenceVariable", b =>
                 {
                     b.HasBaseType("Domain.Reference");
 
@@ -834,7 +839,7 @@ namespace DataAccess.Migrations
                     b.Navigation("ReturnType");
                 });
 
-            modelBuilder.Entity("ReferenceAttribute", b =>
+            modelBuilder.Entity("Domain.ReferenceAttribute", b =>
                 {
                     b.HasOne("Domain.SimAttribute", "Reference")
                         .WithMany()
@@ -845,7 +850,7 @@ namespace DataAccess.Migrations
                     b.Navigation("Reference");
                 });
 
-            modelBuilder.Entity("ReferenceBase", b =>
+            modelBuilder.Entity("Domain.ReferenceBase", b =>
                 {
                     b.HasOne("Domain.SimClass", "Reference")
                         .WithMany()
@@ -856,7 +861,7 @@ namespace DataAccess.Migrations
                     b.Navigation("Reference");
                 });
 
-            modelBuilder.Entity("ReferenceParameter", b =>
+            modelBuilder.Entity("Domain.ReferenceParameter", b =>
                 {
                     b.HasOne("Domain.Parameter", "Reference")
                         .WithMany()
@@ -867,7 +872,7 @@ namespace DataAccess.Migrations
                     b.Navigation("Reference");
                 });
 
-            modelBuilder.Entity("ReferenceThis", b =>
+            modelBuilder.Entity("Domain.ReferenceThis", b =>
                 {
                     b.HasOne("Domain.SimClass", "Reference")
                         .WithMany()
@@ -878,7 +883,7 @@ namespace DataAccess.Migrations
                     b.Navigation("Reference");
                 });
 
-            modelBuilder.Entity("ReferenceVariable", b =>
+            modelBuilder.Entity("Domain.ReferenceVariable", b =>
                 {
                     b.HasOne("Domain.LocalVariable", "Reference")
                         .WithMany()
