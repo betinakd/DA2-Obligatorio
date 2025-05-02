@@ -18,8 +18,24 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
     {
+        var method = _context.SimMethods
+            .Include(m => m.Parameters)
+            .FirstOrDefault(m => m.Id == methodId);
+
+        if(method == null)
+        {
+            throw new ArgumentException($"Method with ID {methodId} not found");
+        }
+
+        parameter.Index = method.Parameters.Count;
+        parameter.RelatedMethodId = method.Id;
+
         _context.Parameters.Add(parameter);
+
+        method.Parameters.Add(parameter);
+
         _context.SaveChanges();
+
         return parameter;
     }
 

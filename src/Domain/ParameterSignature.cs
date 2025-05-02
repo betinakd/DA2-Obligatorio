@@ -11,6 +11,7 @@ public class ParameterSignature
     public Guid? TypeId { get; set; }
     public Guid? SignatureId { get; set; }
     public Signature? Signature { get; set; }
+    public int Index { get; set; }
 
     public string Name
     {

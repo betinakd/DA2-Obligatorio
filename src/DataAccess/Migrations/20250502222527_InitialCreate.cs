@@ -135,6 +135,7 @@ namespace DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RelatedMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Index = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -255,6 +256,7 @@ namespace DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Index = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -324,12 +326,13 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Invocations",
+                columns: new[] { "Id", "Index", "ReferenceId", "RelatedMethodId", "SignatureId" },
+                values: new object[] { new Guid("c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2"), 1, new Guid("c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3"), new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"), new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3") });
+
+            migrationBuilder.InsertData(
+                table: "Invocations",
                 columns: new[] { "Id", "ReferenceId", "RelatedMethodId", "SignatureId" },
-                values: new object[,]
-                {
-                    { new Guid("c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2"), new Guid("c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3"), new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"), new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3") },
-                    { new Guid("d2d6d6d6-d6d6-d6d6-d6d6-d6d6d6d6d6d6"), new Guid("c2c7c7c7-c7c7-c7c7-c7c7-c7c7c7c7c7c7"), new Guid("f4f2f4f4-f4f4-f4f4-f4f4-f4f4f4f4f4f4"), new Guid("a2a7a7a7-a7a7-a7a7-a7a7-a7a7a7a7a7a7") }
-                });
+                values: new object[] { new Guid("d2d6d6d6-d6d6-d6d6-d6d6-d6d6d6d6d6d6"), new Guid("c2c7c7c7-c7c7-c7c7-c7c7-c7c7c7c7c7c7"), new Guid("f4f2f4f4-f4f4-f4f4-f4f4-f4f4f4f4f4f4"), new Guid("a2a7a7a7-a7a7-a7a7-a7a7-a7a7a7a7a7a7") });
 
             migrationBuilder.InsertData(
                 table: "References",
@@ -371,9 +374,16 @@ namespace DataAccess.Migrations
                 values: new object[,]
                 {
                     { new Guid("b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2"), new Guid("b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3"), new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"), new Guid("e2e2e2e2-e2e2-e2e2-e2e2-e2e2e2e2e2e2") },
-                    { new Guid("b2b6b6b6-b6b6-b6b6-b6b6-b6b6b6b6b6b6"), new Guid("e2e7e7e7-e7e7-e7e7-e7e7-e7e7e7e7e7e7"), new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"), new Guid("f6f3f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6") },
-                    { new Guid("c2c6c6c6-c6c6-c6c6-c6c6-c6c6c6c6c6c6"), new Guid("d2d7d7d7-d7d7-d7d7-d7d7-d7d7d7d7d7d7"), new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"), new Guid("f6f2f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6") },
-                    { new Guid("d2d2d2d2-d2d2-d2d2-d2d2-d2d2d2d2d2d2"), new Guid("b8b8b8b8-b8b8-b8b8-b8b8-b8b8b8b8b8b3"), new Guid("f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1"), new Guid("f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2") }
+                    { new Guid("b2b6b6b6-b6b6-b6b6-b6b6-b6b6b6b6b6b6"), new Guid("e2e7e7e7-e7e7-e7e7-e7e7-e7e7e7e7e7e7"), new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"), new Guid("f6f3f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Invocations",
+                columns: new[] { "Id", "Index", "ReferenceId", "RelatedMethodId", "SignatureId" },
+                values: new object[,]
+                {
+                    { new Guid("c2c6c6c6-c6c6-c6c6-c6c6-c6c6c6c6c6c6"), 1, new Guid("d2d7d7d7-d7d7-d7d7-d7d7-d7d7d7d7d7d7"), new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"), new Guid("f6f2f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6") },
+                    { new Guid("d2d2d2d2-d2d2-d2d2-d2d2-d2d2d2d2d2d2"), 1, new Guid("b8b8b8b8-b8b8-b8b8-b8b8-b8b8b8b8b8b3"), new Guid("f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1"), new Guid("f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2") }
                 });
 
             migrationBuilder.InsertData(

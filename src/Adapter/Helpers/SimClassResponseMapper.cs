@@ -18,6 +18,7 @@ public static class SimClassResponseMapper
             Methods = domainClass.Methods.Select(m => new MethodResponse
             {
                 Id = m.Id,
+                IdClassOwner = m.RelatedClassId,
                 Name = m.Name,
                 ReturnTypeId = m.ReturnTypeId,
                 Privacity = EnumMapper.MapToModelPrivacity(m.Privacity),

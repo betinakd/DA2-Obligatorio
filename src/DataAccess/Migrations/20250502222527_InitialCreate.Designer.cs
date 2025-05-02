@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250502213223_InitialCreate")]
+    [Migration("20250502222527_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -82,6 +82,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2"),
+                            Index = 0,
                             ReferenceId = new Guid("b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3"),
                             RelatedMethodId = new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"),
                             SignatureId = new Guid("e2e2e2e2-e2e2-e2e2-e2e2-e2e2e2e2e2e2")
@@ -89,6 +90,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2"),
+                            Index = 1,
                             ReferenceId = new Guid("c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3"),
                             RelatedMethodId = new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"),
                             SignatureId = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3")
@@ -96,6 +98,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("d2d2d2d2-d2d2-d2d2-d2d2-d2d2d2d2d2d2"),
+                            Index = 1,
                             ReferenceId = new Guid("b8b8b8b8-b8b8-b8b8-b8b8-b8b8b8b8b8b3"),
                             RelatedMethodId = new Guid("f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1"),
                             SignatureId = new Guid("f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2")
@@ -103,6 +106,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("f2f5f5f5-f5f5-f5f5-f5f5-f5f5f5f5f5f5"),
+                            Index = 0,
                             ReferenceId = new Guid("b7b2b7b7-b7b7-b7b7-b7b7-b7b7b7b7b7b7"),
                             RelatedMethodId = new Guid("e4e2e4e4-e4e4-e4e4-e4e4-e4e4e4e4e4e4"),
                             SignatureId = new Guid("e6e2e6e6-e6e6-e6e6-e6e6-e6e6e6e6e6e6")
@@ -110,6 +114,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("a2a6a6a6-a6a6-a6a6-a6a6-a6a6a6a6a6a6"),
+                            Index = 0,
                             ReferenceId = new Guid("f2f7f7f7-f7f7-f7f7-f7f7-f7f7f7f7f7f7"),
                             RelatedMethodId = new Guid("b2b5b5b5-b5b5-b5b5-b5b5-b5b5b5b5b5b5"),
                             SignatureId = new Guid("e6e3e6e6-e6e6-e6e6-e6e6-e6e6e6e6e6e6")
@@ -117,6 +122,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("b2b6b6b6-b6b6-b6b6-b6b6-b6b6b6b6b6b6"),
+                            Index = 0,
                             ReferenceId = new Guid("e2e7e7e7-e7e7-e7e7-e7e7-e7e7e7e7e7e7"),
                             RelatedMethodId = new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"),
                             SignatureId = new Guid("f6f3f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6")
@@ -124,6 +130,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("c2c6c6c6-c6c6-c6c6-c6c6-c6c6c6c6c6c6"),
+                            Index = 1,
                             ReferenceId = new Guid("d2d7d7d7-d7d7-d7d7-d7d7-d7d7d7d7d7d7"),
                             RelatedMethodId = new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"),
                             SignatureId = new Guid("f6f2f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6")
@@ -131,6 +138,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("d2d6d6d6-d6d6-d6d6-d6d6-d6d6d6d6d6d6"),
+                            Index = 0,
                             ReferenceId = new Guid("c2c7c7c7-c7c7-c7c7-c7c7-c7c7c7c7c7c7"),
                             RelatedMethodId = new Guid("f4f2f4f4-f4f4-f4f4-f4f4-f4f4f4f4f4f4"),
                             SignatureId = new Guid("a2a7a7a7-a7a7-a7a7-a7a7-a7a7a7a7a7a7")
@@ -168,6 +176,11 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -192,6 +205,11 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Name")
                         .IsRequired()

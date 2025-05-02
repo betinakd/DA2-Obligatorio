@@ -192,6 +192,14 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         _ = modelBuilder.Entity<Invocation>()
             .Property(i => i.Index)
             .HasDefaultValue(0);
+
+        _ = modelBuilder.Entity<Parameter>()
+            .Property(p => p.Index)
+            .HasDefaultValue(0);
+
+        _ = modelBuilder.Entity<ParameterSignature>()
+            .Property(p => p.Index)
+            .HasDefaultValue(0);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
