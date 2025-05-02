@@ -191,4 +191,10 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, method);
     }
+
+    public void SaveExecutionLog(ExecutionLog executionLog)
+    {
+        _context.ExecutionLogs.Add(executionLog);
+        _context.SaveChanges();
+    }
 }

@@ -69,4 +69,15 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
     {
         _executionDA.MethodIsOverridingSealed(idClass, method);
     }
+
+    public void SaveExecutionLog(string reference, string objCreate, string execution)
+    {
+        var executionLog = new ExecutionLog()
+        {
+            Execution = execution,
+            ObjectCreate = objCreate,
+            Reference = reference
+        };
+        _executionDA.SaveExecutionLog(executionLog);
+    }
 }
