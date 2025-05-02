@@ -14,5 +14,8 @@ public class MethodResponse()
     public SimModelsPrivacity Privacity { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsAccesibility Accesibility { get; set; }
-    public Guid ReturnTypeId { get; set; }
+    public Guid? ReturnTypeId { get; set; }
+    public List<ParameterResponse> Parameters { get; set; } = [];
+    public List<VariableResponse> Variables { get; set; } = [];
+    public List<InvocationResponse> Invocations { get; set; } = [];
 }

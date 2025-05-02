@@ -21,7 +21,7 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     {
         var createdClass = _simClassAdapter.CreateSimClass(newClass);
 
-        return CreatedAtAction(nameof(GetInfoClass), new { classId = createdClass.Id }, createdClass);
+        return CreatedAtAction(nameof(GetInfoClass), new { classId = createdClass.SimClass.Id }, createdClass);
     }
 
     [HttpPut]

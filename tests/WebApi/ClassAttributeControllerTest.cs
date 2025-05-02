@@ -36,7 +36,6 @@ public class ClassAttributeControllerTest
 
         var expectedResponse = new CreatedAttributeResponse()
         {
-            Id = id,
             Message = "Attribute was created successfully",
             Attribute = new AttributeResponse()
             {
@@ -57,9 +56,9 @@ public class ClassAttributeControllerTest
         _mockAttributeAdapter.Verify(a => a.CreateAttribute(id, request), Times.Once);
         var createdResult = result as CreatedAtRouteResult;
         Assert.IsNotNull(createdResult, "El resultado no es un CreatedAtRouteResult");
-        Assert.AreEqual("GetAttributeId", createdResult.RouteName, "El nombre de la ruta no coincide");
+        Assert.AreEqual("GetAttributeById", createdResult.RouteName, "El nombre de la ruta no coincide");
         Assert.IsTrue(createdResult.RouteValues.ContainsKey("id"), "La ruta no contiene 'id'");
-        Assert.AreEqual(expectedResponse.Id, createdResult.RouteValues["id"], "El id de la ruta no coincide con el esperado");
+        Assert.AreEqual(expectedResponse.Attribute.Id, createdResult.RouteValues["id"], "El id de la ruta no coincide con el esperado");
         Assert.AreEqual(expectedResponse, createdResult.Value, "El valor retornado no coincide con el esperado");
     }
 }
