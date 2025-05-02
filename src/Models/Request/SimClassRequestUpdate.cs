@@ -26,4 +26,6 @@ public class SimClassRequestUpdate()
 
     [Required(ErrorMessage = "IdBaseClass is required and Guid format.")]
     public string IdBaseClass { get; set; } = string.Empty;
+    public List<MethodRequest> Methods { get; set; } = [];
+    public List<AttributeRequest> Attributes { get; set; } = [];
 }
