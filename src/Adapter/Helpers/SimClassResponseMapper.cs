@@ -3,6 +3,7 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
 public static class SimClassResponseMapper
 {
@@ -25,7 +26,28 @@ public static class SimClassResponseMapper
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    ClassTypeId = p.TypeId
+                    ClassTypeId = p.TypeId,
+                    MethodId = p.RelatedMethodId
+                }).ToList(),
+                Variables = m.LocalVariables.Select(v => new VariableResponse
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    ClassTypeId = v.TypeId,
+                    MethodId = v.RelatedMethodId
+                }).ToList(),
+                Invocations = m.Invocations.Select(i => new InvocationResponse
+                {
+                    Id = i.Id,
+                    IdReference = i.Reference?.GetReferenceId() ?? i.ReferenceId ?? Guid.Empty,
+                    TypeReference = i.Reference?.GetReferenceTypeDescription(),
+                    MethodName = i.Signature?.Name,
+                    Parameters = i.Signature?.Parameters.Select(p => new ParameterResponse
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ClassTypeId = p.TypeId
+                    }).ToList() ?? []
                 }).ToList()
             }).ToList(),
             Attributes = domainClass.Attributes.Select(a => new AttributeResponse
