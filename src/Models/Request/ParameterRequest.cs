@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using Models.Enums;
 
 namespace Models.Request;
+
 [ExcludeFromCodeCoverage]
-public class AttributeRequestCreateClass()
+public class ParameterRequest()
 {
     [Required(ErrorMessage = "Name is required.")]
     public string? Name { get; set; }
@@ -15,7 +15,4 @@ public class AttributeRequestCreateClass()
 
     [Required(ErrorMessage = "IdClassType is required.")]
     public string IdClassType { get; set; } = string.Empty;
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public SimModelsPrivacity Privacity { get; set; }
 }

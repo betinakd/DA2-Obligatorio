@@ -54,7 +54,7 @@ public class MethodControllerTest
     public void CreateVariableCorrectly_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var variableRequest = new VariablesRequestCreateClass { Name = "testVariable", IdClassType = Guid.NewGuid().ToString() };
+        var variableRequest = new VariablesRequest { Name = "testVariable", IdClassType = Guid.NewGuid().ToString() };
         var variableResponse = new VariableResponse { Id = Guid.NewGuid(), Name = "test", MethodId = methodId, ClassTypeId = Guid.NewGuid() };
         var expectedResponse = new CreatedVariableResponse { Message = "Variable created successfully", Variable = variableResponse };
 
@@ -73,7 +73,7 @@ public class MethodControllerTest
     public void CreateParameterCorrectly_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var parameterRequest = new ParameterRequestCreateClass { Name = "testParameter", IdClassType = Guid.NewGuid().ToString() };
+        var parameterRequest = new ParameterRequest { Name = "testParameter", IdClassType = Guid.NewGuid().ToString() };
         var parameterResponse = new ParameterResponse { Id = Guid.NewGuid(), Name = "test", MethodId = methodId, ClassTypeId = Guid.NewGuid() };
         var expectedResponse = new CreatedParameterResponse { Message = "Parameter created successfully", Parameter = parameterResponse };
 
@@ -93,7 +93,7 @@ public class MethodControllerTest
     {
         var methodId = Guid.NewGuid();
 
-        var invocationRequest = new InvocationRequestCreateClass { MethodName = "testInvocation", Parameters = [] };
+        var invocationRequest = new InvocationRequest { MethodName = "testInvocation", Parameters = [] };
         var invocationResponse = new InvocationResponse { Id = Guid.NewGuid() };
         var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = invocationResponse };
 
@@ -115,7 +115,7 @@ public class MethodControllerTest
         var parameterName = " ";
         var parameterType = " ";
 
-        var request = new VariablesRequestCreateClass
+        var request = new VariablesRequest
         {
             Name = parameterName,
             IdClassType = " ",
@@ -155,7 +155,7 @@ public class MethodControllerTest
         var parameterName = " ";
         var parameterType = " ";
 
-        var request = new ParameterRequestCreateClass
+        var request = new ParameterRequest
         {
             Name = parameterName,
             IdClassType = Guid.Empty.ToString()
@@ -191,7 +191,7 @@ public class MethodControllerTest
     public void CreateInvocation_WithValidResponse_ShouldReturnCreated()
     {
         var methodId = Guid.NewGuid();
-        var invocationRequest = new InvocationRequestCreateClass { MethodName = "testInvocation", Parameters = [] };
+        var invocationRequest = new InvocationRequest { MethodName = "testInvocation", Parameters = [] };
         var invocationResponse = new InvocationResponse { Id = Guid.NewGuid() };
         var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = invocationResponse };
 
@@ -210,7 +210,7 @@ public class MethodControllerTest
     public void CreateInvocation_WithNullResponse_ShouldReturnCreatedWithNullId()
     {
         var methodId = Guid.NewGuid();
-        var invocationRequest = new InvocationRequestCreateClass { MethodName = "testInvocation", Parameters = [] };
+        var invocationRequest = new InvocationRequest { MethodName = "testInvocation", Parameters = [] };
         CreatedInvocationResponse? nullResponse = null;
 
         _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns((CreatedInvocationResponse?)null);
@@ -228,7 +228,7 @@ public class MethodControllerTest
     public void CreateInvocation_WithNullInvocationResponse_ShouldReturnCreatedWithNullId()
     {
         var methodId = Guid.NewGuid();
-        var invocationRequest = new InvocationRequestCreateClass { MethodName = "testInvocation", Parameters = [] };
+        var invocationRequest = new InvocationRequest { MethodName = "testInvocation", Parameters = [] };
         var expectedResponse = new CreatedInvocationResponse { Message = "Invocation created successfully", InvocationResponse = null };
 
         _mockmethodAdapter?.Setup(m => m.CreateInvocation(methodId, invocationRequest)).Returns(expectedResponse);
@@ -246,7 +246,7 @@ public class MethodControllerTest
     public void CreateParameter_WithNullResponse_ShouldReturnCreatedWithNullId()
     {
         var methodId = Guid.NewGuid();
-        var parameterRequest = new ParameterRequestCreateClass { IdClassType = Guid.NewGuid().ToString(), Name = "testParameter" };
+        var parameterRequest = new ParameterRequest { IdClassType = Guid.NewGuid().ToString(), Name = "testParameter" };
         CreatedParameterResponse? nullResponse = null;
 
         _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns((CreatedParameterResponse?)null);
@@ -264,7 +264,7 @@ public class MethodControllerTest
     public void CreateParameter_WithNullParameter_ShouldReturnCreatedWithNullId()
     {
         var methodId = Guid.NewGuid();
-        var parameterRequest = new ParameterRequestCreateClass { IdClassType = Guid.NewGuid().ToString(), Name = "testParameter" };
+        var parameterRequest = new ParameterRequest { IdClassType = Guid.NewGuid().ToString(), Name = "testParameter" };
         var expectedResponse = new CreatedParameterResponse { Message = "Parameter created successfully", Parameter = null };
 
         _mockmethodAdapter?.Setup(m => m.CreateParameter(methodId, parameterRequest)).Returns(expectedResponse);
@@ -282,7 +282,7 @@ public class MethodControllerTest
     public void CreateVariable_WithNullResponse_ShouldReturnCreatedWithNullId()
     {
         var methodId = Guid.NewGuid();
-        var variableRequest = new VariablesRequestCreateClass { Name = "testVariable", IdClassType = Guid.NewGuid().ToString() };
+        var variableRequest = new VariablesRequest { Name = "testVariable", IdClassType = Guid.NewGuid().ToString() };
         CreatedVariableResponse? nullResponse = null;
 
         _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns((CreatedVariableResponse?)null);
@@ -300,7 +300,7 @@ public class MethodControllerTest
     public void CreateVariable_WithNullVariable_ShouldReturnCreatedWithNullId()
     {
         var methodId = Guid.NewGuid();
-        var variableRequest = new VariablesRequestCreateClass { Name = "testVariable", IdClassType = Guid.NewGuid().ToString() };
+        var variableRequest = new VariablesRequest { Name = "testVariable", IdClassType = Guid.NewGuid().ToString() };
         var expectedResponse = new CreatedVariableResponse { Message = "Variable created successfully", Variable = null };
 
         _mockmethodAdapter?.Setup(m => m.CreateVariable(methodId, variableRequest)).Returns(expectedResponse);

@@ -6,7 +6,7 @@ using Models.Enums;
 namespace Models.Request;
 
 [ExcludeFromCodeCoverage]
-public class InvocationRequestCreateClass()
+public class InvocationRequest()
 {
     [JsonIgnore]
     public Guid ReferenceId => Guid.TryParse(IdReference, out var guid) ? guid : Guid.Empty;
@@ -14,7 +14,7 @@ public class InvocationRequestCreateClass()
     [Required(ErrorMessage = "IdReference is required and a Guid Type.")]
     public string IdReference { get; set; } = string.Empty;
     public string? MethodName { get; set; }
-    public List<ParameterRequestCreateClass>? Parameters { get; set; }
+    public List<ParameterRequest>? Parameters { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [Required(ErrorMessage = "TypeReference is required and their values should be: Base, This, LocalVariable, Attribute, Parameter.")]

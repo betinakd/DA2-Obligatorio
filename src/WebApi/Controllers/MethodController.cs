@@ -24,21 +24,21 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     }
 
     [HttpPost("{id}/variables")]
-    public IActionResult CreateVariables([FromBody] VariablesRequestCreateClass variable, Guid id)
+    public IActionResult CreateVariables([FromBody] VariablesRequest variable, Guid id)
     {
         var response = _simMethodAdapter.CreateVariable(id, variable);
         return CreatedAtRoute("GetVariableById", new { id = response?.Variable?.Id }, response);
     }
 
     [HttpPost("{id}/parameters")]
-    public IActionResult CreateParameter([FromBody] ParameterRequestCreateClass parameter, Guid id)
+    public IActionResult CreateParameter([FromBody] ParameterRequest parameter, Guid id)
     {
         var response = _simMethodAdapter.CreateParameter(id, parameter);
         return CreatedAtRoute("GetParameterById", new { id = response?.Parameter?.Id }, response);
     }
 
     [HttpPost("{id}/invocations")]
-    public IActionResult CreateInvocation([FromBody] InvocationRequestCreateClass invocationRequest, Guid id)
+    public IActionResult CreateInvocation([FromBody] InvocationRequest invocationRequest, Guid id)
     {
         var response = _simMethodAdapter.CreateInvocation(id, invocationRequest);
         return CreatedAtRoute("GetInvocationId", new { id = response?.InvocationResponse?.Id }, response);

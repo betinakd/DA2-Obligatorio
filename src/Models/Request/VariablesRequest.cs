@@ -1,11 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.Request;
-
-[ExcludeFromCodeCoverage]
-public class ParameterRequestCreateClass()
+public class VariablesRequest()
 {
     [Required(ErrorMessage = "Name is required.")]
     public string? Name { get; set; }

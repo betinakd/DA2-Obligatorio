@@ -6,7 +6,7 @@ using Models.Enums;
 namespace Models.Request;
 
 [ExcludeFromCodeCoverage]
-public class SimClassRequest()
+public class SimClassRequestUpdate()
 {
     public Guid Id { get; set; }
 

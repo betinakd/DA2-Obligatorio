@@ -37,7 +37,7 @@ public class AttributeControllerTest
     public void UpdateAttributeControllerWithCorrectBody_ShouldUpdateOk()
     {
         var idToUpdate = Guid.NewGuid();
-        var attributeToUpdate = new AttributeRequest()
+        var attributeToUpdate = new AttributeRequestUpdate()
         {
             Id = idToUpdate,
             Name = "UpdatedAttribute",

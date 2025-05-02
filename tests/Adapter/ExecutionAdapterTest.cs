@@ -38,8 +38,8 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceTypeId.ToString(),
             Parameters =
             [
-            new ParameterRequestCreateClass { Name = "param1", IdClassType = param1TypeId.ToString() },
-            new ParameterRequestCreateClass { Name = "param2", IdClassType = param2TypeId.ToString() }
+            new ParameterRequest { Name = "param1", IdClassType = param1TypeId.ToString() },
+                new ParameterRequest { Name = "param2", IdClassType = param2TypeId.ToString() }
             ]
         };
 
@@ -92,7 +92,7 @@ public class ExecutionAdapterTest
             IdReferenceType = Guid.NewGuid().ToString(),
             Parameters =
         [
-            new ParameterRequestCreateClass { Name = "param1", IdClassType = Guid.NewGuid().ToString() }
+            new ParameterRequest { Name = "param1", IdClassType = Guid.NewGuid().ToString() }
         ]
         };
 

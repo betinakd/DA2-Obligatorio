@@ -28,7 +28,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         return responses;
     }
 
-    public CreatedSimClassResponse CreateSimClass(SimClassRequest request)
+    public CreatedSimClassResponse CreateSimClass(SimClassRequestUpdate request)
     {
         try
         {
@@ -49,7 +49,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         }
     }
 
-    public UpdateSimClassResponse UpdateSimClass(SimClassRequestCreateClass request, Guid idSimClass)
+    public UpdateSimClassResponse UpdateSimClass(SimClassRequestCreate request, Guid idSimClass)
     {
         try
         {

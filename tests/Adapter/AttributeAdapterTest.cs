@@ -43,7 +43,7 @@ public class AttributeAdapterTest
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -97,7 +97,7 @@ public class AttributeAdapterTest
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -180,7 +180,7 @@ public class AttributeAdapterTest
         var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -211,7 +211,7 @@ public class AttributeAdapterTest
         var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -232,7 +232,7 @@ public class AttributeAdapterTest
         var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -264,7 +264,7 @@ public class AttributeAdapterTest
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -296,7 +296,7 @@ public class AttributeAdapterTest
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -319,7 +319,7 @@ public class AttributeAdapterTest
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
@@ -351,7 +351,7 @@ public class AttributeAdapterTest
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequest
+        var attributeRequest = new AttributeRequestUpdate
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,

@@ -6,7 +6,7 @@ using Models.Enums;
 namespace Models.Request;
 
 [ExcludeFromCodeCoverage]
-public class MethodRequestCreateClass()
+public class MethodRequest()
 {
     [Required(ErrorMessage = "Name is required.")]
     public string? Name { get; set; }
@@ -23,5 +23,5 @@ public class MethodRequestCreateClass()
 
     [Required(ErrorMessage = "IdReturnType is required.")]
     public string IdReturnType { get; set; } = string.Empty;
-    public List<ParameterRequestCreateClass> Parameters { get; set; } = [];
+    public List<ParameterRequest> Parameters { get; set; } = [];
 }

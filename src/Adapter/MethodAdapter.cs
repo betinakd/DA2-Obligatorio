@@ -32,7 +32,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequestCreateClass method)
+    public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method)
     {
         try
         {
@@ -102,7 +102,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedVariableResponse CreateVariable(Guid idMethod, VariablesRequestCreateClass variable)
+    public CreatedVariableResponse CreateVariable(Guid idMethod, VariablesRequest variable)
     {
         try
         {
@@ -161,7 +161,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequestCreateClass parameter)
+    public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
     {
         try
         {
@@ -204,7 +204,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequestCreateClass invocation)
+    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest invocation)
     {
         try
         {
@@ -216,7 +216,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Parameters = []
             };
 
-            var parametersResponses = new List<ParameterRequestCreateClass>();
+            var parametersResponses = new List<ParameterRequest>();
 
             foreach(var parameter in invocation.Parameters)
             {
@@ -228,7 +228,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     TypeId = type.Id,
                 };
 
-                var newParameterResponse = new ParameterRequestCreateClass()
+                var newParameterResponse = new ParameterRequest()
                 {
                     Name = newParameter.Name,
                     IdClassType = newParameter.Type.Id.ToString()

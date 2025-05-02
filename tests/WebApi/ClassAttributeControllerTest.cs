@@ -25,7 +25,7 @@ public class ClassAttributeControllerTest
     public void CreateAttribute_ReturnsCreatedAtRouteResult()
     {
         var id = Guid.NewGuid();
-        var request = new AttributeRequest()
+        var request = new AttributeRequestUpdate()
         {
             Id = id,
             Name = "DummyAttribute",

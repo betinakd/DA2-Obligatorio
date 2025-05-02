@@ -31,7 +31,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         }
     }
 
-    public UpdatedAttributeResponse UpdateAttribute(Guid attributeId, AttributeRequest attribute)
+    public UpdatedAttributeResponse UpdateAttribute(Guid attributeId, AttributeRequestUpdate attribute)
     {
         try
         {
@@ -75,7 +75,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         }
     }
 
-    public CreatedAttributeResponse CreateAttribute(Guid id, AttributeRequest attribute)
+    public CreatedAttributeResponse CreateAttribute(Guid id, AttributeRequestUpdate attribute)
     {
         try
         {

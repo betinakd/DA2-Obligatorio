@@ -6,8 +6,8 @@ namespace IAdapter;
 public interface ISimClassAdapter
 {
     IList<SimClassResponse> GetAllSimClasses();
-    CreatedSimClassResponse CreateSimClass(SimClassRequest request);
-    UpdateSimClassResponse UpdateSimClass(SimClassRequestCreateClass request, Guid idSimClass);
+    CreatedSimClassResponse CreateSimClass(SimClassRequestUpdate request);
+    UpdateSimClassResponse UpdateSimClass(SimClassRequestCreate request, Guid idSimClass);
     void DeleteSimClass(Guid id);
     SimClassResponse GetSimClassInfo(Guid classId);
 }

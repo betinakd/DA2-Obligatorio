@@ -18,7 +18,7 @@ public class AttributeController(IAttributeAdapter simClassAdapter) : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateAttribute(Guid id, [FromBody] AttributeRequest attribute)
+    public IActionResult UpdateAttribute(Guid id, [FromBody] AttributeRequestUpdate attribute)
     {
         var result = _simAttributeAdapter.UpdateAttribute(id, attribute);
         return Ok(result);
