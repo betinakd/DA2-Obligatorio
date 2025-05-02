@@ -56,7 +56,7 @@ public class SimClassControllerTest
     public void CreateClassCorrectly_ShouldReturnCreatedAtActionResultWithClass()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassC" };
-        var request = new SimClassRequestUpdate { Name = "ClassC" };
+        var request = new SimClassRequestCreate { Name = "ClassC" };
         var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name };
         var expectedResponse = new CreatedSimClassResponse
         {
@@ -91,7 +91,7 @@ public class SimClassControllerTest
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "InvalidClass" };
         simClass.State = SimAccesibility.Sealed;
 
-        var request = new SimClassRequestUpdate
+        var request = new SimClassRequestCreate
         {
             Name = "InvalidClass",
             State = (Models.Enums.SimModelsAccesibility?)SimAccesibility.Sealed,
@@ -111,9 +111,9 @@ public class SimClassControllerTest
     {
         var classId = Guid.NewGuid();
 
-        var updateRequest = new SimClassRequestCreate
+        var updateRequest = new SimClassRequestUpdate
         {
-            Id = classId,
+            Id = classId.ToString(),
             Name = "UpdatedClass",
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.NewGuid().ToString(),
