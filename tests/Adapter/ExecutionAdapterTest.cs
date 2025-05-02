@@ -26,7 +26,6 @@ public class ExecutionAdapterTest
     [TestMethod]
     public void ExecuteMethodValidInputs_ShouldMapParametersAndCallExecutionService()
     {
-        // Arrange
         var instanceTypeId = Guid.NewGuid();
         var referenceTypeId = Guid.NewGuid();
         var param1TypeId = Guid.NewGuid();
@@ -35,13 +34,12 @@ public class ExecutionAdapterTest
         var request = new MethodExecutionRequest
         {
             MethodName = "TestMethod",
-            InstanceTypeId = instanceTypeId,
-            ReferenceTypeId = referenceTypeId,
-            InstanceName = "Instance1",
+            IdInstanceType = instanceTypeId.ToString(),
+            IdReferenceType = referenceTypeId.ToString(),
             Parameters =
             [
-            new ParameterRequest { Name = "param1", ClassTypeId = param1TypeId },
-                new ParameterRequest { Name = "param2", ClassTypeId = param2TypeId }
+            new ParameterRequestCreateClass { Name = "param1", IdClassType = param1TypeId.ToString() },
+            new ParameterRequestCreateClass { Name = "param2", IdClassType = param2TypeId.ToString() }
             ]
         };
 
@@ -90,12 +88,11 @@ public class ExecutionAdapterTest
         var request = new MethodExecutionRequest
         {
             MethodName = "TestMethod",
-            InstanceTypeId = Guid.NewGuid(),
-            ReferenceTypeId = Guid.NewGuid(),
-            InstanceName = "Instance1",
+            IdInstanceType = Guid.NewGuid().ToString(),
+            IdReferenceType = Guid.NewGuid().ToString(),
             Parameters =
         [
-            new ParameterRequest { Name = "param1", ClassTypeId = Guid.NewGuid() }
+            new ParameterRequestCreateClass { Name = "param1", IdClassType = Guid.NewGuid().ToString() }
         ]
         };
 

@@ -32,7 +32,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequest method)
+    public CreatedMethodResponse CreateMethod(Guid idClass, MethodRequestCreateClass method)
     {
         try
         {
@@ -161,7 +161,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequest parameter)
+    public CreatedParameterResponse CreateParameter(Guid idMethod, ParameterRequestCreateClass parameter)
     {
         try
         {

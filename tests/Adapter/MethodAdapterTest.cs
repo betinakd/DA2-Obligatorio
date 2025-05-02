@@ -38,11 +38,10 @@ public class MethodAdapterTest
         var classTypeId = Guid.NewGuid();
         var parameterName = "ValidParameter";
 
-        var request = new ParameterRequest
+        var request = new ParameterRequestCreateClass
         {
-            MethodId = methodId,
             Name = parameterName,
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "int" };
@@ -74,11 +73,10 @@ public class MethodAdapterTest
     {
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
-        var request = new ParameterRequest
+        var request = new ParameterRequestCreateClass
         {
-            MethodId = methodId,
             Name = "Invalid",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         var mockSimClassService = new Mock<ISimClassService>();
@@ -285,12 +283,12 @@ public class MethodAdapterTest
         var returnTypeId = Guid.NewGuid();
         var methodName = "TestMethod";
 
-        var methodRequest = new MethodRequest
+        var methodRequest = new MethodRequestCreateClass
         {
             Name = methodName,
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         var classOwner = new SimClass { Id = idClass, Name = "TestClass" };
@@ -332,12 +330,12 @@ public class MethodAdapterTest
         var idClass = Guid.NewGuid();
         var returnTypeId = Guid.NewGuid();
 
-        var methodRequest = new MethodRequest
+        var methodRequest = new MethodRequestCreateClass
         {
             Name = "TestMethod",
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         _mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Throws(new InvalidAttributeDomain("SimClass error"));
@@ -688,10 +686,10 @@ public class MethodAdapterTest
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var parameterRequest = new ParameterRequest
+        var parameterRequest = new ParameterRequestCreateClass
         {
             Name = "InvalidParameter",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -708,10 +706,10 @@ public class MethodAdapterTest
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var parameterRequest = new ParameterRequest
+        var parameterRequest = new ParameterRequestCreateClass
         {
             Name = "NonExistentParameter",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -783,12 +781,12 @@ public class MethodAdapterTest
         var idClass = Guid.NewGuid();
         var returnTypeId = Guid.NewGuid();
 
-        var methodRequest = new MethodRequest
+        var methodRequest = new MethodRequestCreateClass
         {
             Name = "InvalidMethod",
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(idClass))
@@ -808,12 +806,12 @@ public class MethodAdapterTest
         var idClass = Guid.NewGuid();
         var returnTypeId = Guid.NewGuid();
 
-        var methodRequest = new MethodRequest
+        var methodRequest = new MethodRequestCreateClass
         {
             Name = "NonExistentMethod",
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(idClass))

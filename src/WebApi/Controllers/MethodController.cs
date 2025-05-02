@@ -31,7 +31,7 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     }
 
     [HttpPost("{id}/parameters")]
-    public IActionResult CreateParameter([FromBody] ParameterRequest parameter, Guid id)
+    public IActionResult CreateParameter([FromBody] ParameterRequestCreateClass parameter, Guid id)
     {
         var response = _simMethodAdapter.CreateParameter(id, parameter);
         return CreatedAtRoute("GetParameterById", new { id = response?.Parameter?.Id }, response);
