@@ -84,4 +84,14 @@ public class ExceptionFilterTests
 
         AssertResult(exceptionContext, HttpStatusCode.InternalServerError, 5, "Generic error occurred");
     }
+
+    [TestMethod]
+    public void OnException_InUseValueException_ReturnsConflictResult()
+    {
+        var exceptionContext = CreateExceptionContext(new InUseValueAdapter("Value already in use"));
+
+        _exceptionFilter!.OnException(exceptionContext);
+
+        AssertResult(exceptionContext, HttpStatusCode.Conflict, 4, "Value already in use");
+    }
 }
