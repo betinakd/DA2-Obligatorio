@@ -32,4 +32,9 @@ public class ReferenceAttribute : Reference
     {
         return Reference.Id;
     }
+
+    public override string GetReferenceTypeDescription()
+    {
+        return "Attribute";
+    }
 }

@@ -32,4 +32,9 @@ public class ReferenceVariable : Reference
     {
         return Reference.Id;
     }
+
+    public override string GetReferenceTypeDescription()
+    {
+        return "LocalVariable";
+    }
 }

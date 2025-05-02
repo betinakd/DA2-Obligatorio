@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using Adapter.Helpers;
 using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
@@ -135,15 +136,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         try
         {
             var attribute = _simAttributeService.GetSimAttribute(id);
-
-            return new AttributeResponse()
-            {
-                Id = attribute.Id,
-                Name = attribute.Name,
-                Privacity = EnumMapper.MapToModelPrivacity(attribute.Privacity),
-                RelatedClassId = attribute.RelatedClassId,
-                TypeId = attribute.TypeId
-            };
+            return AttributeResponseMapper.MapToAttributeResponse(attribute);
         }
         catch(NonExistentValueLogic ex)
         {

@@ -102,13 +102,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var variable = _methodService.GetVariableById(id);
-            return new VariableResponse
-            {
-                Id = variable.Id,
-                Name = variable.Name,
-                MethodId = variable.RelatedMethod.Id,
-                ClassTypeId = variable.Type.Id
-            };
+            return VariableResponseMapper.MapToVariableResponse(variable);
         }
         catch(NonExistentValueLogic)
         {
@@ -163,13 +157,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var parameter = _methodService.GetParameterById(id);
-            return new ParameterResponse
-            {
-                Id = parameter.Id,
-                Name = parameter.Name,
-                MethodId = parameter.RelatedMethod.Id,
-                ClassTypeId = parameter.Type.Id
-            };
+            return ParameterResponseMapper.MapToParameterResponse(parameter);
         }
         catch(InvalidAttributeDomain)
         {
@@ -358,28 +346,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var invocation = _methodService.GetInvocationById(id);
-
-            var parameters = new List<ParameterResponse>();
-            if(invocation.Signature.Parameters != null)
-            {
-                foreach(var parameter in invocation.Signature.Parameters)
-                {
-                    parameters.Add(new ParameterResponse
-                    {
-                        Id = parameter.Id,
-                        Name = parameter.Name,
-                        ClassTypeId = parameter.TypeId
-                    });
-                }
-            }
-
-            return new InvocationResponse
-            {
-                Id = invocation.Id,
-                IdReference = invocation.Reference.GetReferenceId(),
-                MethodName = invocation.Signature.Name,
-                Parameters = parameters
-            };
+            return InvocationResponseMapper.MapToInvocationResponse(invocation);
         }
         catch(NonExistentValueLogic ex)
         {

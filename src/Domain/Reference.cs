@@ -9,4 +9,6 @@ public abstract class Reference
     public abstract string GetSignature(Signature signature);
     public abstract string GetSignatureWithClassName(Signature signature);
     public abstract Guid GetReferenceId();
+
+    public abstract string GetReferenceTypeDescription();
 }

@@ -26,4 +26,9 @@ public class ReferenceThis : Reference
     {
         return Reference.Id;
     }
+
+    public override string GetReferenceTypeDescription()
+    {
+        return "This";
+    }
 }

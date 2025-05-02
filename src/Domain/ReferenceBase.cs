@@ -32,4 +32,9 @@ public class ReferenceBase : Reference
     {
         return Reference.Id;
     }
+
+    public override string GetReferenceTypeDescription()
+    {
+        return "Base";
+    }
 }
