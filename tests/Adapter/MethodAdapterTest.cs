@@ -244,11 +244,13 @@ public class MethodAdapterTest
         var method = new SimMethod
         {
             Id = methodId,
+            RelatedClassId = classOwnerId,
             Name = "TestMethod",
             RelatedClass = new SimClass { Id = classOwnerId, Name = "TestClass" },
             Privacity = SimPrivacity.Public,
             Accesibility = SimAccesibility.Normal,
-            ReturnType = new SimClass { Id = returnTypeId, Name = "int" }
+            ReturnType = new SimClass { Id = returnTypeId, Name = "int" },
+            ReturnTypeId = returnTypeId,
         };
 
         _mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);

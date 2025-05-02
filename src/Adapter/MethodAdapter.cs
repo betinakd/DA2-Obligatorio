@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using Adapter.Helpers;
 using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
@@ -23,15 +24,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var method = _methodService.GetMethodById(id);
-            return new MethodResponse
-            {
-                Id = method.Id,
-                Name = method.Name,
-                IdClassOwner = method.RelatedClass.Id,
-                Privacity = EnumMapper.MapToModelPrivacity(method.Privacity),
-                Accesibility = EnumMapper.MapToModelAccesibility(method.Accesibility),
-                ReturnTypeId = method.ReturnType.Id
-            };
+            return MethodResponseMapper.MapToMethodResponse(method);
         }
         catch(NonExistentValueLogic ex)
         {
