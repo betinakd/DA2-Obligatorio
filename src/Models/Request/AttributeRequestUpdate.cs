@@ -6,7 +6,11 @@ namespace Models.Request;
 
 public class AttributeRequestUpdate()
 {
-    public Guid Id { get; set; }
+    [Required(ErrorMessage = "Id is a Guid and it is required.")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public Guid IdAttribute => Guid.TryParse(Id, out var guid) ? guid : Guid.Empty;
 
     [Required(ErrorMessage = "Name is required.")]
     public string? Name { get; set; }

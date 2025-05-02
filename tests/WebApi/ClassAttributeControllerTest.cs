@@ -27,7 +27,7 @@ public class ClassAttributeControllerTest
         var id = Guid.NewGuid();
         var request = new AttributeRequestUpdate()
         {
-            Id = id,
+            Id = id.ToString(),
             Name = "DummyAttribute",
             IdType = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,

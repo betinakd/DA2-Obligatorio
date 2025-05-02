@@ -39,7 +39,7 @@ public class AttributeControllerTest
         var idToUpdate = Guid.NewGuid();
         var attributeToUpdate = new AttributeRequestUpdate()
         {
-            Id = idToUpdate,
+            Id = idToUpdate.ToString(),
             Name = "UpdatedAttribute",
             IdType = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,

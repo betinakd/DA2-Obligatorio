@@ -8,7 +8,7 @@ namespace Models.Request;
 [ExcludeFromCodeCoverage]
 public class SimClassRequestUpdate()
 {
-    public Guid Id { get; set; }
+    public Guid IdClass { get; set; }
 
     [Required(ErrorMessage = "Name is required.")]
     public string Name { get; set; } = string.Empty;
