@@ -8,4 +8,5 @@ public interface IExecutionService
     void ValidateMethodExistsInClass(SimClass classId, Signature methodName);
     public void ClassInheritAttribute(Guid idClass, Guid idAttribute);
     public void MethodIsOverridingSealed(Guid idClass, SimMethod method);
+    public void SaveExecutionLog(string reference, string objCreate, string execution);
 }
