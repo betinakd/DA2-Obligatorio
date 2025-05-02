@@ -1,4 +1,5 @@
 namespace Domain;
+
 public abstract class Reference
 {
     public Guid Id { get; set; } = Guid.NewGuid();

@@ -1,4 +1,4 @@
-using Domain;
+namespace Domain;
 
 public class ReferenceThis : Reference
 {

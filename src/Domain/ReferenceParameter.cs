@@ -1,5 +1,6 @@
-using Domain;
 using Domain.Exceptions;
+
+namespace Domain;
 
 public class ReferenceParameter : Reference
 {
