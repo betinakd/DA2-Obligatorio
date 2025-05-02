@@ -328,8 +328,7 @@ public class SimClassAdapterTest
                 sc.Name == request.Name &&
                 sc.BaseClassId == baseClassId &&
                 sc.Methods.Count == 1 &&
-                sc.Attributes.Count == 1
-            )))
+                sc.Attributes.Count == 1)))
             .Returns((SimClass sc) => sc);  // Return the input SimClass
 
         var result = _simClassAdapter.UpdateSimClass(request, classId);

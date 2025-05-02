@@ -97,7 +97,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                             .ThenInclude(p => p.Type)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => i.Reference) // Solo hasta acá
+                    .ThenInclude(i => i.Reference)
             .Include(c => c.BaseClass)
             .ToList();
 

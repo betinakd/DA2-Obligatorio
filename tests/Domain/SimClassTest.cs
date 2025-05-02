@@ -213,7 +213,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
-            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
             ]
         };
 
@@ -240,7 +240,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
-            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
             ]
         };
 
@@ -251,8 +251,8 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal },
-            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal },
-            new SimMethod { Name = "AdditionalMethod", Accesibility = SimAccesibility.Normal }
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal },
+                new SimMethod { Name = "AdditionalMethod", Accesibility = SimAccesibility.Normal }
             ]
         };
 
@@ -293,7 +293,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
-            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
             ]
         };
 

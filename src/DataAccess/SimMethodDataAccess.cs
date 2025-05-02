@@ -125,24 +125,41 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Parameters)
                 .ThenInclude(p => p.Type)
             .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
-                    .ThenInclude(p => p.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
-                    .ThenInclude(v => v.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
-                    .ThenInclude(a => a.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
-                    .ThenInclude(c => c.BaseClass)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
-            .Include(m => m.Invocations)
                 .ThenInclude(i => i.Signature)
                     .ThenInclude(s => s.Parameters)
                         .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => i.Reference)
             .FirstOrDefault();
+
+        if(method != null)
+        {
+            method.Parameters = method.Parameters.OrderBy(p => p.Name).ToList();
+            method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
+
+            foreach(var inv in method.Invocations)
+            {
+                switch(inv.Reference)
+                {
+                    case ReferenceParameter rp:
+                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                        break;
+                    case ReferenceVariable rv:
+                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                        break;
+                    case ReferenceAttribute ra:
+                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        break;
+                    case ReferenceBase rb:
+                        _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                        break;
+                    case ReferenceThis rt:
+                        _context.Entry(rt).Reference(r => r.Reference).Load();
+                        break;
+                }
+            }
+        }
+
         return method;
     }
 
