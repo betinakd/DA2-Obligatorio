@@ -41,6 +41,6 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     public IActionResult CreateInvocation([FromBody] InvocationRequest invocationRequest, Guid id)
     {
         var response = _simMethodAdapter.CreateInvocation(id, invocationRequest);
-        return CreatedAtRoute("GetInvocationId", new { id = response?.InvocationResponse?.Id }, response);
+        return CreatedAtRoute("GetInvocationById", new { id = response?.InvocationResponse?.Id }, response);
     }
 }

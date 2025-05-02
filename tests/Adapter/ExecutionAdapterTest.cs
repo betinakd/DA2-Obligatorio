@@ -75,6 +75,7 @@ public class ExecutionAdapterTest
                 It.IsAny<HashSet<Guid>>()))
             .Returns("expectedResult");
 
+        _mockExecutionService!.Setup(s => s.SaveExecutionLog("ReferenceType", "InstanceType", "expectedResult"));
         var result = _executionAdapter!.ExecuteMethod(request);
 
         Assert.AreEqual("expectedResult", result);
