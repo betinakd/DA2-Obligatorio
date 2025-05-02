@@ -33,7 +33,8 @@ public static class SimClassResponseMapper
                 Id = a.Id,
                 Name = a.Name,
                 TypeId = a.TypeId,
-                Privacity = EnumMapper.MapToModelPrivacity(a.Privacity)
+                Privacity = EnumMapper.MapToModelPrivacity(a.Privacity),
+                RelatedClassId = a.RelatedClassId
             }).ToList()
         };
     }
