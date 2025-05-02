@@ -51,14 +51,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
 
             var response = new UpdatedAttributeResponse()
             {
-                Attribute = new AttributeResponse()
-                {
-                    Id = attributeId,
-                    Name = attribute.Name,
-                    Privacity = attribute.Privacity,
-                    RelatedClassId = attribute.RelatedClassId,
-                    TypeId = attribute.TypeId
-                },
+                Attribute = AttributeResponseMapper.MapToAttributeResponse(updatedAttribute),
                 Message = "Attribute updated successfully."
             };
 
@@ -104,14 +97,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
 
             var response = new CreatedAttributeResponse()
             {
-                Attribute = new AttributeResponse()
-                {
-                    Id = createdAttribute.Id,
-                    Name = createdAttribute.Name,
-                    Privacity = EnumMapper.MapToModelPrivacity(createdAttribute.Privacity),
-                    RelatedClassId = createdAttribute.RelatedClass.Id,
-                    TypeId = createdAttribute.Type.Id
-                },
+                Attribute = AttributeResponseMapper.MapToAttributeResponse(createdAttribute),
                 Message = "Attribute created successfully."
             };
 

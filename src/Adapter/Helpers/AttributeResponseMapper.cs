@@ -18,7 +18,8 @@ public static class AttributeResponseMapper
             Id = domainAttribute.Id,
             Name = domainAttribute.Name,
             TypeId = domainAttribute.TypeId,
-            Privacity = EnumMapper.MapToModelPrivacity(domainAttribute.Privacity)
+            Privacity = EnumMapper.MapToModelPrivacity(domainAttribute.Privacity),
+            RelatedClassId = domainAttribute.RelatedClassId
         };
     }
 }

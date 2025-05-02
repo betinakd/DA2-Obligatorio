@@ -170,7 +170,9 @@ public class MethodAdapterTest
             Id = parameterId,
             Name = "param1",
             Type = simClass,
-            RelatedMethod = method
+            TypeId = classTypeId,
+            RelatedMethod = method,
+            RelatedMethodId = methodId
         };
 
         _mockMethodService.Setup(s => s.GetParameterById(parameterId)).Returns(parameter);
@@ -209,7 +211,9 @@ public class MethodAdapterTest
             Id = variableId,
             Name = "var1",
             Type = simClass,
-            RelatedMethod = method
+            TypeId = classTypeId,
+            RelatedMethod = method,
+            RelatedMethodId = methodId
         };
 
         _mockMethodService.Setup(s => s.GetVariableById(variableId)).Returns(variable);
@@ -301,9 +305,11 @@ public class MethodAdapterTest
             Id = Guid.NewGuid(),
             Name = methodName,
             RelatedClass = classOwner,
+            RelatedClassId = idClass,
             Privacity = SimPrivacity.Public,
             Accesibility = SimAccesibility.Normal,
-            ReturnType = returnType
+            ReturnType = returnType,
+            ReturnTypeId = returnTypeId
         };
 
         _mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Returns(classOwner);

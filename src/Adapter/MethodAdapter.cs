@@ -56,15 +56,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             return new CreatedMethodResponse
             {
                 Message = "Method created successfully",
-                MethodResponse = new MethodResponse
-                {
-                    Id = createdMethod.Id,
-                    Name = createdMethod.Name,
-                    IdClassOwner = createdMethod.RelatedClass.Id,
-                    Privacity = EnumMapper.MapToModelPrivacity(createdMethod.Privacity),
-                    Accesibility = EnumMapper.MapToModelAccesibility(createdMethod.Accesibility),
-                    ReturnTypeId = createdMethod.ReturnType.Id
-                }
+                MethodResponse = MethodResponseMapper.MapToMethodResponse(createdMethod)
             };
         }
         catch(InvalidAttributeDomain ex)
@@ -318,13 +310,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             return new CreatedInvocationResponse
             {
                 Message = "Invocation created successfully",
-                InvocationResponse = new InvocationResponse
-                {
-                    Id = newInvocation.Id,
-                    IdReference = newInvocation.Reference.GetReferenceId(),
-                    MethodName = newInvocation.Signature.Name,
-                    Parameters = parametersResponses,
-                }
+                InvocationResponse = InvocationResponseMapper.MapToInvocationResponse(newInvocation),
             };
         }
         catch(NonExistentValueLogic ex)

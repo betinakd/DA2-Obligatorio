@@ -60,6 +60,7 @@ public class AttributeAdapterTest
             Name = attributeRequest.Name,
             Privacity = SimPrivacity.Public,
             RelatedClass = relatedClass,
+            RelatedClassId = relatedClassId,
             Type = typeClass
         };
 
@@ -100,8 +101,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdRelatedClass = relatedClassId.ToString(),
-            IdType = typeId.ToString(),
+            IdType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
@@ -113,7 +113,9 @@ public class AttributeAdapterTest
             Name = attributeRequest.Name,
             Privacity = SimPrivacity.Public,
             RelatedClass = relatedClass,
-            Type = typeClass
+            RelatedClassId = relatedClassId,
+            Type = typeClass,
+            TypeId = typeId
         };
 
         _mockSimClassService!
@@ -134,11 +136,12 @@ public class AttributeAdapterTest
         _mockSimAttributeService.Verify(s => s.CreateAttribute(relatedClassId, It.IsAny<SimAttribute>()), Times.Once);
 
         Assert.IsNotNull(result);
+        Assert.IsNotNull(result.Attribute);
         Assert.AreEqual(attributeId, result.Attribute.Id);
-        Assert.AreEqual(attributeRequest.Name, result.Attribute.Name);
-        Assert.AreEqual(attributeRequest.Privacity, result.Attribute.Privacity);
-        Assert.AreEqual(attributeRequest.RelatedClassId, result.Attribute.RelatedClassId);
-        Assert.AreEqual(attributeRequest.TypeId, result.Attribute.TypeId);
+        Assert.AreEqual("TestAttribute", result.Attribute.Name);
+        Assert.AreEqual(Models.Enums.SimModelsPrivacity.Public, result.Attribute.Privacity);
+        Assert.AreEqual(relatedClassId, result.Attribute.RelatedClassId);
+        Assert.AreEqual(typeId, result.Attribute.TypeId);
         Assert.AreEqual("Attribute created successfully.", result.Message);
     }
 
@@ -376,13 +379,18 @@ public class AttributeAdapterTest
     public void GetAttribute_ReturnsCorrectResponse_WhenAttributeExists()
     {
         var id = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+
         var simAttribute = new SimAttribute
         {
             Id = id,
             Name = "TestAttribute",
             Privacity = SimPrivacity.Public,
-            RelatedClassId = Guid.NewGuid(),
-            TypeId = Guid.NewGuid()
+            Type = new SimClass { Id = typeId, Name = "string" },
+            TypeId = typeId,
+            RelatedClass = new SimClass { Id = relatedClassId, Name = "Owner" },
+            RelatedClassId = relatedClassId
         };
 
         _mockSimAttributeService!
@@ -392,11 +400,13 @@ public class AttributeAdapterTest
         var result = _simAttributeAdapter!.GetAttribute(id);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(simAttribute.Id, result.Id);
-        Assert.AreEqual(simAttribute.Name, result.Name);
-        Assert.AreEqual(EnumMapper.MapToModelPrivacity(simAttribute.Privacity), result.Privacity);
-        Assert.AreEqual(simAttribute.RelatedClassId, result.RelatedClassId);
-        Assert.AreEqual(simAttribute.TypeId, result.TypeId);
+        Assert.AreEqual(id, result.Id);
+        Assert.AreEqual("TestAttribute", result.Name);
+        Assert.AreEqual(Models.Enums.SimModelsPrivacity.Public, result.Privacity);
+        Assert.AreEqual(relatedClassId, result.RelatedClassId);
+        Assert.AreEqual(typeId, result.TypeId);
+
+        _mockSimAttributeService.Verify(s => s.GetSimAttribute(id), Times.Once);
     }
 
     [TestMethod]
