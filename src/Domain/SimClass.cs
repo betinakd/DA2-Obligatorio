@@ -7,15 +7,7 @@ namespace Domain;
 public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    private string _name = string.Empty;
-    public Guid? BaseClassId { get; set; }
-
-    private SimClass? _baseClassField = null;
-    public SimAccesibility State { get; set; } = SimAccesibility.Normal;
-
-    public List<SimAttribute> Attributes { get; set; } = [];
     private List<SimMethod> _methods = [];
-
     public List<SimMethod> Methods
     {
         get => _methods;
@@ -30,6 +22,14 @@ public class SimClass
             }
         }
     }
+
+    private string _name = string.Empty;
+    public Guid? BaseClassId { get; set; }
+
+    private SimClass? _baseClassField = null;
+    public SimAccesibility State { get; set; }
+
+    public List<SimAttribute> Attributes { get; set; } = [];
 
     public string Name
     {
@@ -65,18 +65,28 @@ public class SimClass
                 throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
             }
 
-            if(value?.State == SimAccesibility.Abstract && State != SimAccesibility.Abstract)
-            {
-                var abstractMethods = value.Methods.Where(m => m.Accesibility == SimAccesibility.Abstract).ToList();
-                var missingMethods = abstractMethods.Where(am => !Methods.Any(m => m.Name == am.Name)).ToList();
-
-                if(missingMethods.Any())
-                {
-                    throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
-                }
-            }
-
             _baseClassField = value;
         }
+    }
+
+    public void SetBaseClass(SimClass? value)
+    {
+        if(value == null || value?.State == SimAccesibility.Sealed)
+        {
+            throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
+        }
+
+        if(value?.State == SimAccesibility.Abstract && State != SimAccesibility.Abstract)
+        {
+            var abstractMethods = value.Methods.Where(m => m.Accesibility == SimAccesibility.Abstract).ToList();
+            var missingMethods = abstractMethods.Where(am => !Methods.Any(m => m.Name == am.Name)).ToList();
+
+            if(missingMethods.Any())
+            {
+                throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+            }
+        }
+
+        _baseClassField = value;
     }
 }

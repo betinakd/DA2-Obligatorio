@@ -4,9 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace Models.Request;
 [ExcludeFromCodeCoverage]
-public class MethodExecutionRequest()
+public class MethodExecutionRequest
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     [Required(ErrorMessage = "Name is required.")]
     public string MethodName { get; set; } = string.Empty;
 

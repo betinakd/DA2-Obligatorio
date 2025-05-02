@@ -55,8 +55,6 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                 Id = idSimClass,
                 Name = request.Name,
                 State = EnumMapper.MapToDomainAccesibility(request.State),
-                BaseClass = baseClass,
-                BaseClassId = baseClass.Id
             };
 
             foreach(var atri in request.Attributes)
@@ -111,10 +109,11 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
 
             classToUpdate.Attributes = attributesNewClas;
             classToUpdate.Methods = methodsNewClass;
-
+            classToUpdate.SetBaseClass(baseClass);
+            classToUpdate.BaseClassId = baseClass.Id;
             _simClassService.UpdateSimClass(classToUpdate);
 
-            return new UpdateSimClassResponse() { Message = "Class updated successfully" };
+            return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(classToUpdate) };
         }
         catch(InvalidAttributeDomain ex)
         {
