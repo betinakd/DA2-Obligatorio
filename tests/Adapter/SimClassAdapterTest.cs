@@ -56,7 +56,7 @@ public class SimClassAdapterTest
     public void CreateSimClass_ShouldReturnCreatedSimClassResponse_WhenValidRequest()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ValidClass" };
-        var request = new SimClassRequestUpdate
+        var request = new SimClassRequestCreate
         {
             Name = "ValidClass",
             IdBaseClass = Guid.NewGuid().ToString(),
@@ -145,7 +145,7 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldThrowInUseException_WhenServiceThrowsInUseValueLogic()
     {
-        var request = new SimClassRequestUpdate
+        var request = new SimClassRequestCreate
         {
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
@@ -184,7 +184,7 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldThrowInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
     {
-        var request = new SimClassRequestUpdate
+        var request = new SimClassRequestCreate
         {
             Name = "Invalid-Name-With-Chars",
             State = SimModelsAccesibility.Normal,
@@ -207,7 +207,7 @@ public class SimClassAdapterTest
     [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateSimClass_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
     {
-        var request = new SimClassRequestUpdate
+        var request = new SimClassRequestCreate
         {
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
@@ -231,7 +231,7 @@ public class SimClassAdapterTest
         var typeId = Guid.NewGuid();
         var returnTypeId = Guid.NewGuid();
 
-        var request = new SimClassRequestCreate
+        var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
             State = SimModelsAccesibility.Normal,
@@ -310,7 +310,7 @@ public class SimClassAdapterTest
         var classId = Guid.NewGuid();
         var baseClassId = Guid.NewGuid();
 
-        var request = new SimClassRequestCreate
+        var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
             State = SimModelsAccesibility.Normal,
@@ -335,7 +335,7 @@ public class SimClassAdapterTest
         var classId = Guid.NewGuid();
         var baseClassId = Guid.NewGuid();
 
-        var request = new SimClassRequestCreate
+        var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
             State = SimModelsAccesibility.Normal,
@@ -366,7 +366,7 @@ public class SimClassAdapterTest
         var classId = Guid.NewGuid();
         var baseClassId = Guid.NewGuid();
 
-        var request = new SimClassRequestCreate
+        var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
             State = SimModelsAccesibility.Normal,
