@@ -102,7 +102,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
+    public CreatedVariableResponse CreateVariable(Guid idMethod, VariablesRequestCreateClass variable)
     {
         try
         {
@@ -204,7 +204,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequest invocation)
+    public CreatedInvocationResponse CreateInvocation(Guid idMethod, InvocationRequestCreateClass invocation)
     {
         try
         {
@@ -216,7 +216,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Parameters = []
             };
 
-            var parametersResponses = new List<ParameterResponse>();
+            var parametersResponses = new List<ParameterRequestCreateClass>();
 
             foreach(var parameter in invocation.Parameters)
             {
@@ -228,10 +228,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     TypeId = type.Id,
                 };
 
-                var newParameterResponse = new ParameterResponse()
+                var newParameterResponse = new ParameterRequestCreateClass()
                 {
                     Name = newParameter.Name,
-                    ClassTypeId = newParameter.Type.Id
+                    IdClassType = newParameter.Type.Id.ToString()
                 };
 
                 signature.Parameters.Add(newParameter);
@@ -241,7 +241,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             switch(invocation.TypeReference)
             {
                 case TypeReference.This:
-                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.ReferenceId) };
                     if(method.RelatedClassId != reference.GetSimClass().Id)
                     {
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
@@ -251,7 +251,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 case TypeReference.Base:
-                    var simClass = _simClassService.GetSimClassById(invocation.IdReference);
+                    var simClass = _simClassService.GetSimClassById(invocation.ReferenceId);
                     reference = new ReferenceBase() { Reference = simClass };
                     if(method.RelatedClassId != simClass.Id)
                     {
@@ -262,14 +262,14 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 case TypeReference.Attribute:
-                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
+                    var attribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
                     _executionService.ClassInheritAttribute(method.RelatedClassId, attribute.Id);
                     reference = new ReferenceAttribute() { Reference = attribute };
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
                     break;
 
                 case TypeReference.Parameter:
-                    var parameter = _methodService.GetParameterById(invocation.IdReference);
+                    var parameter = _methodService.GetParameterById(invocation.ReferenceId);
                     reference = new ReferenceParameter() { Reference = parameter };
                     if(idMethod != parameter.RelatedMethodId)
                     {
@@ -280,7 +280,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 case TypeReference.LocalVariable:
-                    var variable = _methodService.GetVariableById(invocation.IdReference);
+                    var variable = _methodService.GetVariableById(invocation.ReferenceId);
                     reference = new ReferenceVariable() { Reference = variable };
                     if(idMethod != variable.RelatedMethodId)
                     {

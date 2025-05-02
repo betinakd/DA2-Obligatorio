@@ -24,7 +24,7 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     }
 
     [HttpPost("{id}/variables")]
-    public IActionResult CreateVariables([FromBody] VariableRequest variable, Guid id)
+    public IActionResult CreateVariables([FromBody] VariablesRequestCreateClass variable, Guid id)
     {
         var response = _simMethodAdapter.CreateVariable(id, variable);
         return CreatedAtRoute("GetVariableById", new { id = response?.Variable?.Id }, response);
@@ -38,7 +38,7 @@ public class MethodController(IMethodAdapter methodAdapter) : ControllerBase
     }
 
     [HttpPost("{id}/invocations")]
-    public IActionResult CreateInvocation([FromBody] InvocationRequest invocationRequest, Guid id)
+    public IActionResult CreateInvocation([FromBody] InvocationRequestCreateClass invocationRequest, Guid id)
     {
         var response = _simMethodAdapter.CreateInvocation(id, invocationRequest);
         return CreatedAtRoute("GetInvocationId", new { id = response?.InvocationResponse?.Id }, response);

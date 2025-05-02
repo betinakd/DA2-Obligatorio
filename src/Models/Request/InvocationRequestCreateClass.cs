@@ -8,7 +8,11 @@ namespace Models.Request;
 [ExcludeFromCodeCoverage]
 public class InvocationRequestCreateClass()
 {
-    public Guid IdReference { get; set; }
+    [JsonIgnore]
+    public Guid ReferenceId => Guid.TryParse(IdReference, out var guid) ? guid : Guid.Empty;
+
+    [Required(ErrorMessage = "IdReference is required and a Guid Type.")]
+    public string IdReference { get; set; } = string.Empty;
     public string? MethodName { get; set; }
     public List<ParameterRequestCreateClass>? Parameters { get; set; }
 
