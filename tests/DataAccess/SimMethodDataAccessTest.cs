@@ -14,12 +14,19 @@ public class SimMethodDataAccessTest
     [TestInitialize]
     public void Setup()
     {
+        // Generar nombre único para cada prueba
+        var databaseName = $"TestDB_{Guid.NewGuid()}";
+
         var options = new DbContextOptionsBuilder<SimulatorDbContext>()
-            .UseInMemoryDatabase(databaseName: "Simulator")
+            .UseInMemoryDatabase(databaseName: databaseName)
             .Options;
 
         _context = new SimulatorDbContext(options);
         _simMethodDataAccess = new SimMethodDataAccess(_context);
+
+        // Asegurarse de que la base de datos esté limpia
+        _context.Database.EnsureDeleted();
+        _context.Database.EnsureCreated();
     }
 
     [TestCleanup]
@@ -55,28 +62,72 @@ public class SimMethodDataAccessTest
     }
 
     [TestMethod]
-    public void AddMethodParameter_ShouldAddParameterToDatabase()
+    public void AddMethodParameter_ShouldAssignCorrectIndices()
     {
+        var classId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
-        var typeId = Guid.NewGuid();
-        var parameter = new Parameter
+        var type1Id = Guid.NewGuid();
+        var type2Id = Guid.NewGuid();
+        var type3Id = Guid.NewGuid();
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass"
+        };
+        _context.SimClasses.Add(simClass);
+
+        var type1 = new SimClass { Id = type1Id, Name = "IntType" };
+        var type2 = new SimClass { Id = type2Id, Name = "StringType" };
+        var type3 = new SimClass { Id = type3Id, Name = "BoolType" };
+        _context.SimClasses.Add(type1);
+        _context.SimClasses.Add(type2);
+        _context.SimClasses.Add(type3);
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Parameters = []
+        };
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var param1 = new Parameter
         {
             Id = Guid.NewGuid(),
-            Name = "TestParameter",
-            TypeId = typeId,
-            RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "TestType" },
-            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
+            Name = "param1",
+            TypeId = type1Id
         };
 
-        var result = _simMethodDataAccess.AddMethodParameter(methodId, parameter);
+        var param2 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param2",
+            TypeId = type2Id
+        };
 
-        var parameterInDb = _context.Parameters.FirstOrDefault(p => p.Id == parameter.Id);
-        Assert.IsNotNull(parameterInDb);
-        Assert.AreEqual(parameter.Name, parameterInDb.Name);
-        Assert.AreEqual(parameter.TypeId, parameterInDb.TypeId);
-        Assert.AreEqual(parameter.RelatedMethodId, parameterInDb.RelatedMethodId);
-        Assert.AreEqual(parameter.Id, result.Id);
+        var param3 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param3",
+            TypeId = type3Id
+        };
+
+        var result1 = _simMethodDataAccess.AddMethodParameter(methodId, param1);
+
+        var updatedMethod = _context.SimMethods
+            .Include(m => m.Parameters)
+            .ThenInclude(p => p.Type)
+            .FirstOrDefault(m => m.Id == methodId);
+        var paramsOrdered = updatedMethod.Parameters.OrderBy(p => p.Index).ToList();
+
+        Assert.AreEqual(0, result1.Index, "Primer parámetro debe tener índice 0");
+        Assert.IsNotNull(updatedMethod, "El método debe existir en la base de datos");
+        Assert.AreEqual("param1", paramsOrdered[0].Name, "El primer parámetro debe ser param1");
+        Assert.AreEqual(type1Id, paramsOrdered[0].TypeId, "El primer parámetro debe ser de tipo IntType");
     }
 
     [TestMethod]

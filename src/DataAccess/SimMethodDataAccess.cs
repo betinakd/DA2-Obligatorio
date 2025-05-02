@@ -129,6 +129,36 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                     .ThenInclude(p => p.Type)
             .Include(i => i.RelatedMethod)
             .FirstOrDefault();
+
+        if(invocation != null)
+        {
+            if(invocation.Signature?.Parameters != null)
+            {
+                invocation.Signature.Parameters = invocation.Signature.Parameters
+                    .OrderBy(p => p.Index)
+                    .ToList();
+            }
+
+            switch(invocation.Reference)
+            {
+                case ReferenceParameter rp:
+                    _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                    break;
+                case ReferenceVariable rv:
+                    _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                    break;
+                case ReferenceAttribute ra:
+                    _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                    break;
+                case ReferenceBase rb:
+                    _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                    break;
+                case ReferenceThis rt:
+                    _context.Entry(rt).Reference(r => r.Reference).Load();
+                    break;
+            }
+        }
+
         return invocation;
     }
 
@@ -150,11 +180,19 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
         if(method != null)
         {
-            method.Parameters = method.Parameters.OrderBy(p => p.Name).ToList();
+            method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
             method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
 
             foreach(var inv in method.Invocations)
             {
+                // Ordenar los parámetros de la firma de invocación por índice
+                if(inv.Signature?.Parameters != null)
+                {
+                    inv.Signature.Parameters = inv.Signature.Parameters
+                        .OrderBy(p => p.Index)
+                        .ToList();
+                }
+
                 switch(inv.Reference)
                 {
                     case ReferenceParameter rp:
