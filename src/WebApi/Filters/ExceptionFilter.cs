@@ -57,7 +57,7 @@ public sealed class ExceptionFilter : IExceptionFilter
         typeof(Exception),
         ex => new ObjectResult(new ErrorResponse
         {
-            InnerCode = 7,
+            InnerCode = 5,
             Message = ex.Message
         })
         {

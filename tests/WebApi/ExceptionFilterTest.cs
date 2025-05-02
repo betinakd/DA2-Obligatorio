@@ -74,4 +74,14 @@ public class ExceptionFilterTests
         Assert.AreEqual(expectedInnerCode, resultValue!.InnerCode);
         Assert.AreEqual(expectedMessage, resultValue.Message);
     }
+
+    [TestMethod]
+    public void OnException_GenericException_ReturnsInternalServerError()
+    {
+        var exceptionContext = CreateExceptionContext(new Exception("Generic error occurred"));
+
+        _exceptionFilter!.OnException(exceptionContext);
+
+        AssertResult(exceptionContext, HttpStatusCode.InternalServerError, 5, "Generic error occurred");
+    }
 }
