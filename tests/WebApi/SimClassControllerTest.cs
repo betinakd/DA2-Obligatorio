@@ -123,7 +123,6 @@ public class SimClassControllerTest
 
         var expectedResponse = new UpdateSimClassResponse
         {
-            Id = classId,
             Message = "Class updated successfully",
             SimClass = new SimClassResponse()
             {
@@ -148,7 +147,6 @@ public class SimClassControllerTest
 
         var responseValue = okResult.Value as UpdateSimClassResponse;
         Assert.IsNotNull(responseValue);
-        Assert.AreEqual(expectedResponse.Id, responseValue!.Id);
         Assert.AreEqual(expectedResponse.Message, responseValue.Message);
         Assert.AreEqual(expectedResponse.SimClass.Id, responseValue.SimClass!.Id);
         Assert.AreEqual(expectedResponse.SimClass.Name, responseValue.SimClass.Name);

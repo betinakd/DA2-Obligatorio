@@ -114,7 +114,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
 
             _simClassService.UpdateSimClass(classToUpdate);
 
-            return new UpdateSimClassResponse() { Id = classToUpdate.Id, Message = "Class updated successfully" };
+            return new UpdateSimClassResponse() { Message = "Class updated successfully" };
         }
         catch(InvalidAttributeDomain ex)
         {

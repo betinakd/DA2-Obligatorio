@@ -295,7 +295,6 @@ public class SimClassAdapterTest
         var result = _simClassAdapter!.UpdateSimClass(request, classId);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(classId, result.Id);
         Assert.AreEqual("Class updated successfully", result.Message);
 
         _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
