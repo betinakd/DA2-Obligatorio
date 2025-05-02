@@ -188,6 +188,18 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             .WithMany()
             .HasForeignKey(ps => ps.TypeId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<Invocation>()
+            .Property(i => i.Index)
+            .HasDefaultValue(0);
+
+        _ = modelBuilder.Entity<Parameter>()
+            .Property(p => p.Index)
+            .HasDefaultValue(0);
+
+        _ = modelBuilder.Entity<ParameterSignature>()
+            .Property(p => p.Index)
+            .HasDefaultValue(0);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
@@ -304,6 +316,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = iniciarViajeId,
                 SignatureId = firmaEncenderId,
                 ReferenceId = motorAutoReferenceId,
+                Index = 0
             },
             new
             {
@@ -311,6 +324,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = iniciarViajeId,
                 SignatureId = firmaIniciarViajeId,
                 ReferenceId = thisAutoReferenceId,
+                Index = 1
             },
             new
             {
@@ -318,6 +332,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = finalizarViajeId,
                 SignatureId = firmaApagaId,
                 ReferenceId = motorAutoReference2Id,
+                Index = 1
             });
 
         _ = modelBuilder.Entity<Signature>().HasData(
@@ -512,6 +527,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedClassId = entradaTextoEspecialId,
                 ReturnTypeId = boolTypeId,
             });
+
         _ = modelBuilder.Entity<Invocation>().HasData(
             new
             {
@@ -519,6 +535,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = validarId,
                 SignatureId = firmaEsValidoId,
                 ReferenceId = inputReferenceId,
+                Index = 0
             },
             new
             {
@@ -526,6 +543,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = esValidoEntradaTextoEspecialId,
                 SignatureId = firmaEsValidoBaseEspecialId,
                 ReferenceId = baseEntradaTextoEspecialReferenceId,
+                Index = 0
             },
             new
             {
@@ -533,6 +551,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = esValidoEntradaTextoId,
                 SignatureId = firmaEsValidoBaseTextoId,
                 ReferenceId = baseEntradaTextoReferenceId,
+                Index = 0
             },
             new
             {
@@ -540,6 +559,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = esValidoEntradaTextoId,
                 SignatureId = firmaLimpiarId,
                 ReferenceId = thisEntradaTextoReferenceId,
+                Index = 1
             },
             new
             {
@@ -547,6 +567,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 RelatedMethodId = esValidoEntradaId,
                 SignatureId = firmaInicializarId,
                 ReferenceId = thisEntradaReferenceId,
+                Index = 0
             });
 
         _ = modelBuilder.Entity<Signature>().HasData(

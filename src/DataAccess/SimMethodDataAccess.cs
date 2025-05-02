@@ -18,15 +18,47 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
     {
+        var method = _context.SimMethods
+            .Include(m => m.Parameters)
+            .FirstOrDefault(m => m.Id == methodId);
+
+        if(method == null)
+        {
+            throw new ArgumentException($"Method with ID {methodId} not found");
+        }
+
+        parameter.Index = method.Parameters.Count;
+        parameter.RelatedMethodId = method.Id;
+
         _context.Parameters.Add(parameter);
+
+        method.Parameters.Add(parameter);
+
         _context.SaveChanges();
+
         return parameter;
     }
 
     public Invocation CreateInvocation(Guid idMethod, Invocation newInvocation)
     {
+        var method = _context.SimMethods
+            .Include(m => m.Invocations)
+            .FirstOrDefault(m => m.Id == idMethod);
+
+        if(method == null)
+        {
+            throw new ArgumentException($"Method with ID {idMethod} not found");
+        }
+
+        newInvocation.Index = method.Invocations.Count;
+        newInvocation.RelatedMethodId = method.Id;
+
         _context.Invocations.Add(newInvocation);
+
+        method.Invocations.Add(newInvocation);
+
         _context.SaveChanges();
+
         return newInvocation;
     }
 
@@ -97,6 +129,36 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                     .ThenInclude(p => p.Type)
             .Include(i => i.RelatedMethod)
             .FirstOrDefault();
+
+        if(invocation != null)
+        {
+            if(invocation.Signature?.Parameters != null)
+            {
+                invocation.Signature.Parameters = invocation.Signature.Parameters
+                    .OrderBy(p => p.Index)
+                    .ToList();
+            }
+
+            switch(invocation.Reference)
+            {
+                case ReferenceParameter rp:
+                    _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                    break;
+                case ReferenceVariable rv:
+                    _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                    break;
+                case ReferenceAttribute ra:
+                    _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                    break;
+                case ReferenceBase rb:
+                    _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                    break;
+                case ReferenceThis rt:
+                    _context.Entry(rt).Reference(r => r.Reference).Load();
+                    break;
+            }
+        }
+
         return invocation;
     }
 
@@ -109,24 +171,49 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Parameters)
                 .ThenInclude(p => p.Type)
             .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
-                    .ThenInclude(p => p.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
-                    .ThenInclude(v => v.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
-                    .ThenInclude(a => a.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
-                    .ThenInclude(c => c.BaseClass)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
-            .Include(m => m.Invocations)
                 .ThenInclude(i => i.Signature)
                     .ThenInclude(s => s.Parameters)
                         .ThenInclude(p => p.Type)
+            .Include(m => m.Invocations)
+                .ThenInclude(i => i.Reference)
             .FirstOrDefault();
+
+        if(method != null)
+        {
+            method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
+            method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
+
+            foreach(var inv in method.Invocations)
+            {
+                // Ordenar los parámetros de la firma de invocación por índice
+                if(inv.Signature?.Parameters != null)
+                {
+                    inv.Signature.Parameters = inv.Signature.Parameters
+                        .OrderBy(p => p.Index)
+                        .ToList();
+                }
+
+                switch(inv.Reference)
+                {
+                    case ReferenceParameter rp:
+                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                        break;
+                    case ReferenceVariable rv:
+                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                        break;
+                    case ReferenceAttribute ra:
+                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        break;
+                    case ReferenceBase rb:
+                        _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                        break;
+                    case ReferenceThis rt:
+                        _context.Entry(rt).Reference(r => r.Reference).Load();
+                        break;
+                }
+            }
+        }
+
         return method;
     }
 

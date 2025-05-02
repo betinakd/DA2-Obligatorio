@@ -11,7 +11,7 @@ public class Parameter
     public Guid? TypeId { get; set; }
     public Guid? RelatedMethodId { get; set; }
     public SimMethod? RelatedMethod { get; set; }
-
+    public int Index { get; set; } = 0;
     public string Name
     {
         get => _name;

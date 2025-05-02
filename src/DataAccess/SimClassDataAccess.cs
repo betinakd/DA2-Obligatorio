@@ -81,8 +81,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public IList<SimClass> GetAllSimClasses()
     {
-        return _context.SimClasses
-            .Include(c => c.BaseClass)
+        var classes = _context.SimClasses
             .Include(c => c.Attributes)
                 .ThenInclude(a => a.Type)
             .Include(c => c.Methods)
@@ -98,63 +97,120 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                             .ThenInclude(p => p.Type)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
-                        .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
-                        .ThenInclude(v => v.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
-                        .ThenInclude(a => a.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
-                        .ThenInclude(c => c.BaseClass)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
+                    .ThenInclude(i => i.Reference)
+            .Include(c => c.BaseClass)
+            .AsSplitQuery()
             .ToList();
+
+        foreach(var simClass in classes)
+        {
+            simClass.Methods = simClass.Methods.OrderBy(m => m.Name).ToList();
+
+            foreach(var method in simClass.Methods)
+            {
+                method.Parameters = method.Parameters
+                    .OrderBy(p => p.Index)
+                    .ToList();
+
+                method.LocalVariables = method.LocalVariables
+                    .OrderBy(v => v.Name)
+                    .ToList();
+
+                method.Invocations = method.Invocations
+                    .OrderBy(i => i.Index)
+                    .ToList();
+
+                foreach(var inv in method.Invocations)
+                {
+                    if(inv.Signature?.Parameters != null)
+                    {
+                        inv.Signature.Parameters = inv.Signature.Parameters
+                            .OrderBy(p => p.Index)
+                            .ToList();
+                    }
+
+                    switch(inv.Reference)
+                    {
+                        case ReferenceParameter rp:
+                            _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                            break;
+                        case ReferenceVariable rv:
+                            _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                            break;
+                        case ReferenceAttribute ra:
+                            _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                            break;
+                        case ReferenceBase rb:
+                            _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                            break;
+                        case ReferenceThis rt:
+                            _context.Entry(rt).Reference(r => r.Reference).Load();
+                            break;
+                    }
+                }
+            }
+        }
+
+        return classes;
     }
 
     public SimClass GetSimClassById(Guid id)
     {
         var simClass = _context.SimClasses
+            .Where(c => c.Id == id)
             .Include(c => c.BaseClass)
-            .Include(c => c.Attributes)
-                .ThenInclude(a => a.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Parameters)
-                    .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.LocalVariables)
-                    .ThenInclude(v => v.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => i.Signature)
-                        .ThenInclude(s => s.Parameters)
-                            .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
-                        .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
-                        .ThenInclude(v => v.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
-                        .ThenInclude(a => a.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
-                        .ThenInclude(c => c.BaseClass)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
-            .FirstOrDefault(c => c.Id == id);
+            .Include(c => c.Attributes).ThenInclude(a => a.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.LocalVariables).ThenInclude(v => v.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
+            .AsSplitQuery()
+            .FirstOrDefault();
+
+        if(simClass == null)
+        {
+            return null;
+        }
+
+        foreach(var method in simClass.Methods)
+        {
+            method.Invocations = method.Invocations
+                .OrderBy(i => i.Index)
+                .ToList();
+
+            method.Parameters = method.Parameters
+                .OrderBy(p => p.Index)
+                .ToList();
+
+            foreach(var inv in method.Invocations)
+            {
+                if(inv.Signature?.Parameters != null)
+                {
+                    inv.Signature.Parameters = inv.Signature.Parameters
+                        .OrderBy(p => p.Index)
+                        .ToList();
+                }
+
+                switch(inv.Reference)
+                {
+                    case ReferenceParameter rp:
+                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                        break;
+                    case ReferenceVariable rv:
+                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                        break;
+                    case ReferenceAttribute ra:
+                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        break;
+                    case ReferenceBase rb:
+                        _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                        break;
+                    case ReferenceThis rt:
+                        _context.Entry(rt).Reference(r => r.Reference).Load();
+                        break;
+                }
+            }
+        }
 
         return simClass;
     }

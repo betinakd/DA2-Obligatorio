@@ -217,7 +217,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             };
 
             var parametersResponses = new List<ParameterRequest>();
-
+            var index = 0;
             foreach(var parameter in invocation.Parameters)
             {
                 var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
@@ -226,7 +226,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     Name = parameter.Name,
                     Type = type,
                     TypeId = type.Id,
+                    Index = index
                 };
+
+                index++;
 
                 var newParameterResponse = new ParameterRequest()
                 {
