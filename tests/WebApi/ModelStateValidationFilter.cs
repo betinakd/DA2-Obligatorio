@@ -38,7 +38,7 @@ public class ModelStateValidationFilterTest
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
 
-        Assert.AreEqual(5, root.GetProperty("innerCode").GetInt32());
+        Assert.AreEqual(7, root.GetProperty("innerCode").GetInt32());
         Assert.AreEqual("State is required and their values should be: Normal, Abstract, Sealed.", root.GetProperty("message").GetString());
     }
 }

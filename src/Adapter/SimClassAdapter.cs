@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using Adapter.Helpers;
 using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
@@ -16,22 +17,17 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
 
     public IList<SimClassResponse> GetAllSimClasses()
     {
-        var classes = _simClassService.GetAllSimClasses();
-        var responses = classes.Select(c => new SimClassResponse()
-        {
-            Id = c.Id,
-            Name = c.Name,
-            State = EnumMapper.MapToModelAccesibility(c.State),
-        }).ToList();
-        return responses;
+        return _simClassService.GetAllSimClasses()
+            .Select(SimClassResponseMapper.MapToSimClassResponse)
+            .ToList();
     }
 
-    public CreatedSimClassResponse CreateSimClass(SimClassRequest request)
+    public CreatedSimClassResponse CreateSimClass(SimClassRequestUpdate request)
     {
         try
         {
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
-            return new CreatedSimClassResponse() { Id = simClass.Id, Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
+            return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
         }
         catch(InUseValueLogic ex)
         {
@@ -47,7 +43,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         }
     }
 
-    public UpdateSimClassResponse UpdateSimClass(SimClassRequestCreateClass request, Guid idSimClass)
+    public UpdateSimClassResponse UpdateSimClass(SimClassRequestCreate request, Guid idSimClass)
     {
         try
         {
@@ -118,7 +114,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
 
             _simClassService.UpdateSimClass(classToUpdate);
 
-            return new UpdateSimClassResponse() { Id = classToUpdate.Id, Message = "Class updated successfully" };
+            return new UpdateSimClassResponse() { Message = "Class updated successfully" };
         }
         catch(InvalidAttributeDomain ex)
         {
@@ -155,14 +151,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         try
         {
             var simClass = _simClassService.GetSimClassById(classId);
-            var simClassResponse = new SimClassResponse()
-            {
-                Id = simClass.Id,
-                Name = simClass.Name,
-                State = EnumMapper.MapToModelAccesibility(simClass.State),
-                IdBaseClass = simClass.BaseClassId
-            };
-            return simClassResponse;
+            return SimClassResponseMapper.MapToSimClassResponse(simClass);
         }
         catch(NonExistentValueLogic ex)
         {

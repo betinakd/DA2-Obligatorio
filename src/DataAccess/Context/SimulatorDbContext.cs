@@ -17,6 +17,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Signature> Signatures { get; set; }
 
     public DbSet<ParameterSignature> ParameterSignatures { get; set; }
+    public DbSet<ExecutionLog> ExecutionLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

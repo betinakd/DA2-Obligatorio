@@ -40,9 +40,8 @@ public class MethodAdapterTest
 
         var request = new ParameterRequest
         {
-            MethodId = methodId,
             Name = parameterName,
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "int" };
@@ -76,9 +75,8 @@ public class MethodAdapterTest
         var classTypeId = Guid.NewGuid();
         var request = new ParameterRequest
         {
-            MethodId = methodId,
             Name = "Invalid",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         var mockSimClassService = new Mock<ISimClassService>();
@@ -97,25 +95,22 @@ public class MethodAdapterTest
         var classTypeId = Guid.NewGuid();
         var variableName = "ValidVariable";
 
-        var request = new VariableRequest
+        var request = new VariablesRequest
         {
-            MethodId = methodId,
             Name = variableName,
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "string" };
         var method = new SimMethod { Id = methodId, Name = "TestMethod" };
-        var localVariable = new LocalVariable
+        var localVariable = new VariablesRequest
         {
-            Id = Guid.NewGuid(),
             Name = variableName,
-            Type = simClass,
-            RelatedMethod = method
+            IdClassType = classTypeId.ToString()
         };
         var localVar = new LocalVariable
         {
-            Id = localVariable.Id,
+            Id = Guid.NewGuid(),
             Name = variableName,
             Type = simClass,
             RelatedMethod = method
@@ -142,11 +137,10 @@ public class MethodAdapterTest
     {
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
-        var request = new VariableRequest
+        var request = new VariablesRequest
         {
-            MethodId = methodId,
             Name = " ",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!
@@ -170,7 +164,9 @@ public class MethodAdapterTest
             Id = parameterId,
             Name = "param1",
             Type = simClass,
-            RelatedMethod = method
+            TypeId = classTypeId,
+            RelatedMethod = method,
+            RelatedMethodId = methodId
         };
 
         _mockMethodService.Setup(s => s.GetParameterById(parameterId)).Returns(parameter);
@@ -209,7 +205,9 @@ public class MethodAdapterTest
             Id = variableId,
             Name = "var1",
             Type = simClass,
-            RelatedMethod = method
+            TypeId = classTypeId,
+            RelatedMethod = method,
+            RelatedMethodId = methodId
         };
 
         _mockMethodService.Setup(s => s.GetVariableById(variableId)).Returns(variable);
@@ -244,11 +242,13 @@ public class MethodAdapterTest
         var method = new SimMethod
         {
             Id = methodId,
+            RelatedClassId = classOwnerId,
             Name = "TestMethod",
             RelatedClass = new SimClass { Id = classOwnerId, Name = "TestClass" },
             Privacity = SimPrivacity.Public,
             Accesibility = SimAccesibility.Normal,
-            ReturnType = new SimClass { Id = returnTypeId, Name = "int" }
+            ReturnType = new SimClass { Id = returnTypeId, Name = "int" },
+            ReturnTypeId = returnTypeId,
         };
 
         _mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
@@ -288,7 +288,7 @@ public class MethodAdapterTest
             Name = methodName,
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         var classOwner = new SimClass { Id = idClass, Name = "TestClass" };
@@ -299,9 +299,11 @@ public class MethodAdapterTest
             Id = Guid.NewGuid(),
             Name = methodName,
             RelatedClass = classOwner,
+            RelatedClassId = idClass,
             Privacity = SimPrivacity.Public,
             Accesibility = SimAccesibility.Normal,
-            ReturnType = returnType
+            ReturnType = returnType,
+            ReturnTypeId = returnTypeId
         };
 
         _mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Returns(classOwner);
@@ -333,7 +335,7 @@ public class MethodAdapterTest
             Name = "TestMethod",
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         _mockSimClassService.Setup(s => s.GetSimClassById(idClass)).Throws(new InvalidAttributeDomain("SimClass error"));
@@ -377,12 +379,12 @@ public class MethodAdapterTest
         var parameterRequest = new ParameterRequest
         {
             Name = parameterName,
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = Guid.NewGuid(),
+            IdReference = Guid.NewGuid().ToString(),
             TypeReference = TypeReference.This,
             MethodName = "TestMethod",
             Parameters = [parameterRequest]
@@ -473,7 +475,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = attributeId,
+            IdReference = attributeId.ToString(),
             TypeReference = TypeReference.Attribute,
             MethodName = "AttrMethod",
             Parameters = []
@@ -512,13 +514,13 @@ public class MethodAdapterTest
 
         var parameters = new List<ParameterRequest>
     {
-        new ParameterRequest { Name = "param1", ClassTypeId = intTypeId },
-        new ParameterRequest { Name = "param2", ClassTypeId = stringTypeId }
+        new ParameterRequest { Name = "param1", IdClassType = intTypeId.ToString() },
+        new ParameterRequest { Name = "param2",  IdClassType = stringTypeId.ToString() }
     };
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceId,
+            IdReference = referenceId.ToString(),
             TypeReference = TypeReference.This,
             MethodName = "MultiParamMethod",
             Parameters = parameters
@@ -566,7 +568,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceId,
+            IdReference = referenceId.ToString(),
             TypeReference = (TypeReference)999,
             MethodName = "InvalidMethod",
             Parameters = []
@@ -589,7 +591,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceId,
+            IdReference = referenceId.ToString(),
             TypeReference = TypeReference.This,
             MethodName = "FailMethod",
             Parameters = []
@@ -616,7 +618,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = attributeId,
+            IdReference = attributeId.ToString(),
             TypeReference = TypeReference.Attribute,
             MethodName = "FailMethod",
             Parameters = []
@@ -640,7 +642,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceId,
+            IdReference = referenceId.ToString(),
             TypeReference = TypeReference.Attribute,
             MethodName = "InvalidMethod",
             Parameters = []
@@ -662,7 +664,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceId,
+            IdReference = referenceId.ToString(),
             TypeReference = TypeReference.Base,
             MethodName = "InvalidMethod",
             Parameters = []
@@ -687,7 +689,7 @@ public class MethodAdapterTest
         var parameterRequest = new ParameterRequest
         {
             Name = "InvalidParameter",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -707,7 +709,7 @@ public class MethodAdapterTest
         var parameterRequest = new ParameterRequest
         {
             Name = "NonExistentParameter",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -738,10 +740,10 @@ public class MethodAdapterTest
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var variableRequest = new VariableRequest
+        var variableRequest = new VariablesRequest
         {
             Name = "InvalidVariable",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -758,10 +760,10 @@ public class MethodAdapterTest
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var variableRequest = new VariableRequest
+        var variableRequest = new VariablesRequest
         {
             Name = "NonExistentVariable",
-            ClassTypeId = classTypeId
+            IdClassType = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -784,7 +786,7 @@ public class MethodAdapterTest
             Name = "InvalidMethod",
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(idClass))
@@ -809,7 +811,7 @@ public class MethodAdapterTest
             Name = "NonExistentMethod",
             Privacity = SimModelsPrivacity.Public,
             Accesibility = SimModelsAccesibility.Normal,
-            ReturnTypeId = returnTypeId
+            IdReturnType = returnTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(idClass))
@@ -849,7 +851,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = classId,
+            IdReference = classId.ToString(),
             TypeReference = TypeReference.This,
             MethodName = "ThisMethod",
             Parameters = []
@@ -905,7 +907,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = classId,
+            IdReference = classId.ToString(),
             TypeReference = TypeReference.Base,
             MethodName = "BaseMethod",
             Parameters = []
@@ -947,7 +949,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = parameterId,
+            IdReference = parameterId.ToString(),
             TypeReference = TypeReference.Parameter,
             MethodName = "ParamMethod",
             Parameters = []
@@ -986,7 +988,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = variableId,
+            IdReference = variableId.ToString(),
             TypeReference = TypeReference.LocalVariable,
             MethodName = "VarMethod",
             Parameters = []
@@ -1024,7 +1026,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceClassId,
+            IdReference = referenceClassId.ToString(),
             TypeReference = TypeReference.This,
             MethodName = "ThisMethod",
             Parameters = []
@@ -1054,7 +1056,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = referenceClassId,
+            IdReference = referenceClassId.ToString(),
             TypeReference = TypeReference.Base,
             MethodName = "BaseMethod",
             Parameters = []
@@ -1086,7 +1088,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = parameterId,
+            IdReference = parameterId.ToString(),
             TypeReference = TypeReference.Parameter,
             MethodName = "ParamMethod",
             Parameters = []
@@ -1119,7 +1121,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = variableId,
+            IdReference = variableId.ToString(),
             TypeReference = TypeReference.LocalVariable,
             MethodName = "VarMethod",
             Parameters = []
@@ -1148,7 +1150,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = classId,
+            IdReference = classId.ToString(),
             TypeReference = TypeReference.This,
             MethodName = "NonExistentMethod",
             Parameters = []
@@ -1188,7 +1190,7 @@ public class MethodAdapterTest
 
         var invocationRequest = new InvocationRequest
         {
-            IdReference = attributeId,
+            IdReference = attributeId.ToString(),
             TypeReference = TypeReference.Attribute,
             MethodName = "AttributeMethod",
             Parameters = []

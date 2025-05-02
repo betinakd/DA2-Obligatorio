@@ -16,7 +16,7 @@ public class ModelStateValidationFilter : IActionFilter
             {
                 context.Result = new BadRequestObjectResult(new
                 {
-                    innerCode = 5,
+                    innerCode = 7,
                     message = firstError.ErrorMessage,
                 });
                 return;

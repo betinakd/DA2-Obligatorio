@@ -1114,4 +1114,24 @@ public class ExecutionDataAccessTest
 
         result.Should().BeFalse("Should return false when method signature differs (different parameter type)");
     }
+
+    [TestMethod]
+    public void SaveExecutionLog_ShouldSaveLogToDatabase()
+    {
+        var executionLog = new ExecutionLog
+        {
+            Id = Guid.NewGuid(),
+            Execution = "Test execution",
+            Reference = "Test reference",
+            ObjectCreate = "Test object creation"
+        };
+
+        _executionDataAccess!.SaveExecutionLog(executionLog);
+
+        var savedLog = _context!.ExecutionLogs.FirstOrDefault(l => l.Id == executionLog.Id);
+        savedLog.Should().NotBeNull("The execution log should be saved to the database");
+        savedLog!.Execution.Should().Be("Test execution");
+        savedLog.Reference.Should().Be("Test reference");
+        savedLog.ObjectCreate.Should().Be("Test object creation");
+    }
 }

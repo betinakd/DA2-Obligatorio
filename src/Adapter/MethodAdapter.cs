@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using Adapter.Helpers;
 using BussinesLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
@@ -23,15 +24,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var method = _methodService.GetMethodById(id);
-            return new MethodResponse
-            {
-                Id = method.Id,
-                Name = method.Name,
-                IdClassOwner = method.RelatedClass.Id,
-                Privacity = EnumMapper.MapToModelPrivacity(method.Privacity),
-                Accesibility = EnumMapper.MapToModelAccesibility(method.Accesibility),
-                ReturnTypeId = method.ReturnType.Id
-            };
+            return MethodResponseMapper.MapToMethodResponse(method);
         }
         catch(NonExistentValueLogic ex)
         {
@@ -63,15 +56,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             return new CreatedMethodResponse
             {
                 Message = "Method created successfully",
-                MethodResponse = new MethodResponse
-                {
-                    Id = createdMethod.Id,
-                    Name = createdMethod.Name,
-                    IdClassOwner = createdMethod.RelatedClass.Id,
-                    Privacity = EnumMapper.MapToModelPrivacity(createdMethod.Privacity),
-                    Accesibility = EnumMapper.MapToModelAccesibility(createdMethod.Accesibility),
-                    ReturnTypeId = createdMethod.ReturnType.Id
-                }
+                MethodResponse = MethodResponseMapper.MapToMethodResponse(createdMethod)
             };
         }
         catch(InvalidAttributeDomain ex)
@@ -109,13 +94,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var variable = _methodService.GetVariableById(id);
-            return new VariableResponse
-            {
-                Id = variable.Id,
-                Name = variable.Name,
-                MethodId = variable.RelatedMethod.Id,
-                ClassTypeId = variable.Type.Id
-            };
+            return VariableResponseMapper.MapToVariableResponse(variable);
         }
         catch(NonExistentValueLogic)
         {
@@ -123,7 +102,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         }
     }
 
-    public CreatedVariableResponse CreateVariable(Guid idMethod, VariableRequest variable)
+    public CreatedVariableResponse CreateVariable(Guid idMethod, VariablesRequest variable)
     {
         try
         {
@@ -170,13 +149,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var parameter = _methodService.GetParameterById(id);
-            return new ParameterResponse
-            {
-                Id = parameter.Id,
-                Name = parameter.Name,
-                MethodId = parameter.RelatedMethod.Id,
-                ClassTypeId = parameter.Type.Id
-            };
+            return ParameterResponseMapper.MapToParameterResponse(parameter);
         }
         catch(InvalidAttributeDomain)
         {
@@ -243,7 +216,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Parameters = []
             };
 
-            var parametersResponses = new List<ParameterResponse>();
+            var parametersResponses = new List<ParameterRequest>();
 
             foreach(var parameter in invocation.Parameters)
             {
@@ -255,10 +228,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     TypeId = type.Id,
                 };
 
-                var newParameterResponse = new ParameterResponse()
+                var newParameterResponse = new ParameterRequest()
                 {
                     Name = newParameter.Name,
-                    ClassTypeId = newParameter.Type.Id
+                    IdClassType = newParameter.Type.Id.ToString()
                 };
 
                 signature.Parameters.Add(newParameter);
@@ -268,7 +241,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             switch(invocation.TypeReference)
             {
                 case TypeReference.This:
-                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.IdReference) };
+                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.ReferenceId) };
                     if(method.RelatedClassId != reference.GetSimClass().Id)
                     {
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
@@ -278,7 +251,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 case TypeReference.Base:
-                    var simClass = _simClassService.GetSimClassById(invocation.IdReference);
+                    var simClass = _simClassService.GetSimClassById(invocation.ReferenceId);
                     reference = new ReferenceBase() { Reference = simClass };
                     if(method.RelatedClassId != simClass.Id)
                     {
@@ -289,14 +262,14 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 case TypeReference.Attribute:
-                    var attribute = _simAttributeService.GetSimAttribute(invocation.IdReference);
+                    var attribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
                     _executionService.ClassInheritAttribute(method.RelatedClassId, attribute.Id);
                     reference = new ReferenceAttribute() { Reference = attribute };
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
                     break;
 
                 case TypeReference.Parameter:
-                    var parameter = _methodService.GetParameterById(invocation.IdReference);
+                    var parameter = _methodService.GetParameterById(invocation.ReferenceId);
                     reference = new ReferenceParameter() { Reference = parameter };
                     if(idMethod != parameter.RelatedMethodId)
                     {
@@ -307,7 +280,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     break;
 
                 case TypeReference.LocalVariable:
-                    var variable = _methodService.GetVariableById(invocation.IdReference);
+                    var variable = _methodService.GetVariableById(invocation.ReferenceId);
                     reference = new ReferenceVariable() { Reference = variable };
                     if(idMethod != variable.RelatedMethodId)
                     {
@@ -337,13 +310,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             return new CreatedInvocationResponse
             {
                 Message = "Invocation created successfully",
-                InvocationResponse = new InvocationResponse
-                {
-                    Id = newInvocation.Id,
-                    IdReference = newInvocation.Reference.GetReferenceId(),
-                    MethodName = newInvocation.Signature.Name,
-                    Parameters = parametersResponses,
-                }
+                InvocationResponse = InvocationResponseMapper.MapToInvocationResponse(newInvocation),
             };
         }
         catch(NonExistentValueLogic ex)
@@ -365,28 +332,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var invocation = _methodService.GetInvocationById(id);
-
-            var parameters = new List<ParameterResponse>();
-            if(invocation.Signature.Parameters != null)
-            {
-                foreach(var parameter in invocation.Signature.Parameters)
-                {
-                    parameters.Add(new ParameterResponse
-                    {
-                        Id = parameter.Id,
-                        Name = parameter.Name,
-                        ClassTypeId = parameter.TypeId
-                    });
-                }
-            }
-
-            return new InvocationResponse
-            {
-                Id = invocation.Id,
-                IdReference = invocation.Reference.GetReferenceId(),
-                MethodName = invocation.Signature.Name,
-                Parameters = parameters
-            };
+            return InvocationResponseMapper.MapToInvocationResponse(invocation);
         }
         catch(NonExistentValueLogic ex)
         {

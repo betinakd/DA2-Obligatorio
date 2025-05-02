@@ -1,4 +1,4 @@
-using Domain;
+namespace Domain;
 
 public class ReferenceThis : Reference
 {
@@ -25,5 +25,10 @@ public class ReferenceThis : Reference
     public override Guid GetReferenceId()
     {
         return Reference.Id;
+    }
+
+    public override string GetReferenceTypeDescription()
+    {
+        return "This";
     }
 }

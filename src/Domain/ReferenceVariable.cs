@@ -1,5 +1,6 @@
-using Domain;
 using Domain.Exceptions;
+
+namespace Domain;
 
 public class ReferenceVariable : Reference
 {
@@ -31,5 +32,10 @@ public class ReferenceVariable : Reference
     public override Guid GetReferenceId()
     {
         return Reference.Id;
+    }
+
+    public override string GetReferenceTypeDescription()
+    {
+        return "LocalVariable";
     }
 }

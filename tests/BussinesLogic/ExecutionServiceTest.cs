@@ -284,4 +284,48 @@ public class ExecutionServiceTest
 
         Assert.AreEqual("Attribute not reacheable from method.", exception.Message);
     }
+
+    [TestMethod]
+    public void SaveExecutionLog_CreatesLogAndCallsDataAccess()
+    {
+        var reference = "TestClass";
+        var objCreate = "TestObject";
+        var execution = "Test execution trace";
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.SaveExecutionLog(It.Is<ExecutionLog>(log =>
+                log.Reference == reference &&
+                log.ObjectCreate == objCreate &&
+                log.Execution == execution)))
+            .Verifiable();
+
+        _executionService!.SaveExecutionLog(reference, objCreate, execution);
+
+        _mockExecuteDataAccess.Verify(m => m.SaveExecutionLog(It.Is<ExecutionLog>(log =>
+            log.Reference == reference &&
+            log.ObjectCreate == objCreate &&
+            log.Execution == execution)),
+            Times.Once());
+    }
+
+    [TestMethod]
+    public void MethodIsOverridingSealed_CallsDataAccess()
+    {
+        var classId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.MethodIsOverridingSealed(classId, method))
+            .Returns(false)
+            .Verifiable();
+
+        _executionService!.MethodIsOverridingSealed(classId, method);
+
+        _mockExecuteDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once());
+    }
 }

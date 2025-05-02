@@ -19,7 +19,7 @@ public class SimMethod
 
     public bool MatchSignature(Signature signature)
     {
-        if(Name != signature.Name || Parameters.Count != signature.Parameters.Count)
+        if(Name.ToLower() != signature.Name.ToLower() || Parameters.Count != signature.Parameters.Count)
         {
             return false;
         }
@@ -48,7 +48,7 @@ public class SimMethod
             return false;
         }
 
-        if(Name != otherMethod.Name || Parameters.Count != otherMethod.Parameters.Count)
+        if(Name.ToLower() != otherMethod.Name.ToLower() || Parameters.Count != otherMethod.Parameters.Count)
         {
             return false;
         }

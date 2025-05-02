@@ -34,17 +34,20 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
                 Parameters = parameters,
                 Name = request.MethodName
             };
-
+            var refer = _simClassService.GetSimClassById(request.ReferenceTypeId);
+            var obj = _simClassService.GetSimClassById(request.InstanceTypeId);
             var reference = new ReferenceThis()
             {
-                Reference = _simClassService.GetSimClassById(request.ReferenceTypeId)
+                Reference = refer
             };
             var objToCreate = new ReferenceThis()
             {
-                Reference = _simClassService.GetSimClassById(request.InstanceTypeId)
+                Reference = obj
             };
 
-            return _executionService.ExecuteMethod(reference, objToCreate, signature);
+            var execution = _executionService.ExecuteMethod(reference, objToCreate, signature);
+            _executionService.SaveExecutionLog(refer.Name, obj.Name, execution);
+            return execution;
         }
         catch(InvalidOperationLogic ex)
         {

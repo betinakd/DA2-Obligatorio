@@ -56,7 +56,7 @@ public class SimClassControllerTest
     public void CreateClassCorrectly_ShouldReturnCreatedAtActionResultWithClass()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ClassC" };
-        var request = new SimClassRequest { Name = "ClassC" };
+        var request = new SimClassRequestUpdate { Name = "ClassC" };
         var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name };
         var expectedResponse = new CreatedSimClassResponse
         {
@@ -91,7 +91,7 @@ public class SimClassControllerTest
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "InvalidClass" };
         simClass.State = SimAccesibility.Sealed;
 
-        var request = new SimClassRequest
+        var request = new SimClassRequestUpdate
         {
             Name = "InvalidClass",
             State = (Models.Enums.SimModelsAccesibility?)SimAccesibility.Sealed,
@@ -111,7 +111,7 @@ public class SimClassControllerTest
     {
         var classId = Guid.NewGuid();
 
-        var updateRequest = new SimClassRequestCreateClass
+        var updateRequest = new SimClassRequestCreate
         {
             Id = classId,
             Name = "UpdatedClass",
@@ -123,7 +123,6 @@ public class SimClassControllerTest
 
         var expectedResponse = new UpdateSimClassResponse
         {
-            Id = classId,
             Message = "Class updated successfully",
             SimClass = new SimClassResponse()
             {
@@ -148,7 +147,6 @@ public class SimClassControllerTest
 
         var responseValue = okResult.Value as UpdateSimClassResponse;
         Assert.IsNotNull(responseValue);
-        Assert.AreEqual(expectedResponse.Id, responseValue!.Id);
         Assert.AreEqual(expectedResponse.Message, responseValue.Message);
         Assert.AreEqual(expectedResponse.SimClass.Id, responseValue.SimClass!.Id);
         Assert.AreEqual(expectedResponse.SimClass.Name, responseValue.SimClass.Name);

@@ -11,4 +11,6 @@ public class SimClassResponse()
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsAccesibility State { get; set; }
+    public List<MethodResponse> Methods { get; set; } = [];
+    public List<AttributeResponse> Attributes { get; set; } = [];
 }

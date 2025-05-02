@@ -37,9 +37,9 @@ public class AttributeControllerTest
     public void UpdateAttributeControllerWithCorrectBody_ShouldUpdateOk()
     {
         var idToUpdate = Guid.NewGuid();
-        var attributeToUpdate = new AttributeRequest()
+        var attributeToUpdate = new AttributeRequestUpdate()
         {
-            Id = idToUpdate,
+            Id = idToUpdate.ToString(),
             Name = "UpdatedAttribute",
             IdType = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,

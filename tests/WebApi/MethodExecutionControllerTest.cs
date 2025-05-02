@@ -24,11 +24,10 @@ public class MethodExecutionControllerTest
     {
         var body = new MethodExecutionRequest()
         {
-            InstanceName = "Instance1",
-            InstanceTypeId = Guid.NewGuid(),
+            IdInstanceType = Guid.NewGuid().ToString(),
             MethodName = "TestMethod",
             Parameters = [],
-            ReferenceTypeId = Guid.NewGuid(),
+            IdReferenceType = Guid.NewGuid().ToString(),
         };
         var expectedResult = "Class1.TestMethod()";
         _mockExecutionAdapter?.Setup(adapter => adapter.ExecuteMethod(body)).Returns(expectedResult);

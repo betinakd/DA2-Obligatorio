@@ -18,13 +18,13 @@ public class AttributeController(IAttributeAdapter simClassAdapter) : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateAttribute(Guid id, [FromBody] AttributeRequest attribute)
+    public IActionResult UpdateAttribute(Guid id, [FromBody] AttributeRequestUpdate attribute)
     {
         var result = _simAttributeAdapter.UpdateAttribute(id, attribute);
         return Ok(result);
     }
 
-    [HttpGet("{id}", Name = "GetAttributeId")]
+    [HttpGet("{id}", Name = "GetAttributeById")]
     public IActionResult GetAttribute(Guid id)
     {
         var attribute = _simAttributeAdapter.GetAttribute(id);

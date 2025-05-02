@@ -17,15 +17,15 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
     }
 
     [HttpPost]
-    public IActionResult CreateSimClass([FromBody] SimClassRequest newClass)
+    public IActionResult CreateSimClass([FromBody] SimClassRequestUpdate newClass)
     {
         var createdClass = _simClassAdapter.CreateSimClass(newClass);
 
-        return CreatedAtAction(nameof(GetInfoClass), new { classId = createdClass.Id }, createdClass);
+        return CreatedAtAction(nameof(GetInfoClass), new { classId = createdClass.SimClass.Id }, createdClass);
     }
 
     [HttpPut]
-    public IActionResult UpdateSimClass([FromBody] SimClassRequestCreateClass updateClass)
+    public IActionResult UpdateSimClass([FromBody] SimClassRequestCreate updateClass)
     {
         var simClassResponse = _simClassAdapter.UpdateSimClass(updateClass, updateClass.Id);
         return Ok(simClassResponse);

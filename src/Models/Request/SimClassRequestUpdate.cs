@@ -6,9 +6,13 @@ using Models.Enums;
 namespace Models.Request;
 
 [ExcludeFromCodeCoverage]
-public class SimClassRequest()
+public class SimClassRequestUpdate()
 {
-    public Guid Id { get; set; }
+    [Required(ErrorMessage = "Id is a Guid and it is required.")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public Guid IdClass => Guid.TryParse(Id, out var guid) ? guid : Guid.Empty;
 
     [Required(ErrorMessage = "Name is required.")]
     public string Name { get; set; } = string.Empty;
