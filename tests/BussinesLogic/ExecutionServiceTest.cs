@@ -137,7 +137,7 @@ public class ExecutionServiceTest
 
         var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
 
-        Assert.IsTrue(result.Contains("/* recursión */"));
+        Assert.IsTrue(result.Contains("Recursive.RecursiveMethod()\n"));
     }
 
     [TestMethod]

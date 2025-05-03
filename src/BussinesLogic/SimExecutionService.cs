@@ -25,7 +25,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         if(visited.Contains(methodToExecute.Id))
         {
-            return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)} /* recursión */";
+            return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
         }
 
         var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
