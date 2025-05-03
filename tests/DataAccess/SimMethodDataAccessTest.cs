@@ -14,7 +14,6 @@ public class SimMethodDataAccessTest
     [TestInitialize]
     public void Setup()
     {
-        // Generar nombre único para cada prueba
         var databaseName = $"TestDB_{Guid.NewGuid()}";
 
         var options = new DbContextOptionsBuilder<SimulatorDbContext>()
@@ -24,7 +23,6 @@ public class SimMethodDataAccessTest
         _context = new SimulatorDbContext(options);
         _simMethodDataAccess = new SimMethodDataAccess(_context);
 
-        // Asegurarse de que la base de datos esté limpia
         _context.Database.EnsureDeleted();
         _context.Database.EnsureCreated();
     }
@@ -608,5 +606,176 @@ public class SimMethodDataAccessTest
         var result = dataAccess.InUseByOther(testId);
 
         Assert.IsFalse(result, "Cuando Reference es null, no debería considerarse en uso");
+    }
+
+    [TestMethod]
+    public void GetMethodById_ShouldOrderSignatureParametersAndLoadReferences()
+    {
+        var methodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        _context.SimClasses.Add(typeClass);
+
+        var simClass = new SimClass { Id = classId, Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var param = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param",
+            Index = 0,
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.Parameters.Add(param);
+
+        var localVar = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "localVar",
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.LocalVariables.Add(localVar);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "testAttr",
+            RelatedClassId = classId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.SimAttributes.Add(attribute);
+
+        var signature = new Signature { Id = Guid.NewGuid(), Name = "TestSignature" };
+        _context.Signatures.Add(signature);
+
+        var sigParam1 = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "sigParam1",
+            Index = 2,
+            SignatureId = signature.Id,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var sigParam2 = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "sigParam2",
+            Index = 0,
+            SignatureId = signature.Id,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var sigParam3 = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "sigParam3",
+            Index = 1,
+            SignatureId = signature.Id,
+            TypeId = typeId,
+            Type = typeClass
+        };
+
+        _context.ParameterSignatures.AddRange(sigParam1, sigParam2, sigParam3);
+        signature.Parameters = [sigParam1, sigParam2, sigParam3];
+
+        var refParam = new ReferenceParameter { Id = Guid.NewGuid(), ReferenceId = param.Id, Reference = param };
+        var refVar = new ReferenceVariable { Id = Guid.NewGuid(), ReferenceId = localVar.Id, Reference = localVar };
+        var refAttr = new ReferenceAttribute { Id = Guid.NewGuid(), ReferenceId = attribute.Id, Reference = attribute };
+        var refBase = new ReferenceBase { Id = Guid.NewGuid(), ReferenceId = classId, Reference = simClass };
+        var refThis = new ReferenceThis { Id = Guid.NewGuid(), ReferenceId = classId, Reference = simClass };
+
+        _context.References.AddRange(refParam, refVar, refAttr, refBase, refThis);
+
+        var inv1 = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Index = 0,
+            RelatedMethodId = methodId,
+            Reference = refParam
+        };
+        var inv2 = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Index = 1,
+            RelatedMethodId = methodId,
+            Reference = refVar
+        };
+        var inv3 = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Index = 2,
+            RelatedMethodId = methodId,
+            Reference = refAttr
+        };
+        var inv4 = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Index = 3,
+            RelatedMethodId = methodId,
+            Reference = refBase
+        };
+        var inv5 = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            Index = 4,
+            RelatedMethodId = methodId,
+            Reference = refThis,
+            Signature = signature
+        };
+
+        _context.Invocations.AddRange(inv1, inv2, inv3, inv4, inv5);
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Parameters = [param],
+            Invocations = [inv1, inv2, inv3, inv4, inv5]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.GetMethodById(methodId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(methodId, result.Id);
+        Assert.AreEqual("TestMethod", result.Name);
+        Assert.AreEqual(5, result.Invocations.Count);
+    }
+
+    [TestMethod]
+    public void MethodIsInUse_ReturnsTrue_WhenMethodHasLocalVariables()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "MethodWithLocalVariables"
+        };
+        _context.SimMethods.Add(method);
+
+        var localVariable = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestLocalVariable",
+            RelatedMethodId = methodId
+        };
+        _context.LocalVariables.Add(localVariable);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess.MethodIsInUse(methodId);
+
+        Assert.IsTrue(result, "Method with local variables should be considered in use");
     }
 }

@@ -22,11 +22,6 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Parameters)
             .FirstOrDefault(m => m.Id == methodId);
 
-        if(method == null)
-        {
-            throw new ArgumentException($"Method with ID {methodId} not found");
-        }
-
         parameter.Index = method.Parameters.Count;
         parameter.RelatedMethodId = method.Id;
 
@@ -44,11 +39,6 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         var method = _context.SimMethods
             .Include(m => m.Invocations)
             .FirstOrDefault(m => m.Id == idMethod);
-
-        if(method == null)
-        {
-            throw new ArgumentException($"Method with ID {idMethod} not found");
-        }
 
         newInvocation.Index = method.Invocations.Count;
         newInvocation.RelatedMethodId = method.Id;
@@ -104,6 +94,11 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         var result = false;
         foreach(var methodC in methodsClass)
         {
+            if(methodC.Parameters != null)
+            {
+                methodC.Parameters = methodC.Parameters.OrderBy(p => p.Index).ToList();
+            }
+
             if(methodC.Equals(method))
             {
                 result = true;
@@ -185,7 +180,6 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
             foreach(var inv in method.Invocations)
             {
-                // Ordenar los parámetros de la firma de invocación por índice
                 if(inv.Signature?.Parameters != null)
                 {
                     inv.Signature.Parameters = inv.Signature.Parameters
@@ -235,6 +229,13 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(v => v.RelatedMethod)
             .FirstOrDefault();
         return variable;
+    }
+
+    public bool MethodIsInUse(Guid id)
+    {
+        return _context.LocalVariables.Any(v => v.RelatedMethodId == id) ||
+               _context.Parameters.Any(p => p.RelatedMethodId == id) ||
+               _context.Invocations.Any(i => i.RelatedMethodId == id);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)

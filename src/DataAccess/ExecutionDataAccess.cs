@@ -20,28 +20,53 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(m => m.Parameters)
                 .ThenInclude(p => p.Type)
             .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceParameter).Reference)
-                    .ThenInclude(p => p.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceVariable).Reference)
-                    .ThenInclude(v => v.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceAttribute).Reference)
-                    .ThenInclude(a => a.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceBase).Reference)
-                    .ThenInclude(c => c.BaseClass)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => (i.Reference as ReferenceThis).Reference)
+                .ThenInclude(i => i.Reference)
             .Include(m => m.Invocations)
                 .ThenInclude(i => i.Signature)
                     .ThenInclude(s => s.Parameters)
                         .ThenInclude(p => p.Type)
-                            .Where(m =>
-                                m.RelatedClassId == simClass.Id &&
-                                m.Name == signature.Name &&
-                                (level == 0 || m.Privacity == SimPrivacity.Public
-                                || m.Privacity == SimPrivacity.Protected)).ToList();
+            .Where(m =>
+                m.RelatedClassId == simClass.Id &&
+                m.Name == signature.Name &&
+                (level == 0 || m.Privacity == SimPrivacity.Public
+                || m.Privacity == SimPrivacity.Protected))
+            .ToList();
+
+        foreach(var m in methods)
+        {
+            m.Parameters = m.Parameters.OrderBy(p => p.Index).ToList();
+
+            m.Invocations = m.Invocations.OrderBy(i => i.Index).ToList();
+
+            foreach(var inv in m.Invocations)
+            {
+                if(inv.Signature?.Parameters != null)
+                {
+                    inv.Signature.Parameters = inv.Signature.Parameters
+                        .OrderBy(p => p.Index)
+                        .ToList();
+                }
+
+                switch(inv.Reference)
+                {
+                    case ReferenceParameter rp:
+                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                        break;
+                    case ReferenceVariable rv:
+                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                        break;
+                    case ReferenceAttribute ra:
+                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        break;
+                    case ReferenceBase rb:
+                        _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                        break;
+                    case ReferenceThis rt:
+                        _context.Entry(rt).Reference(r => r.Reference).Load();
+                        break;
+                }
+            }
+        }
 
         var method = methods.FirstOrDefault(m => m.MatchSignature(signature));
 
@@ -71,11 +96,39 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     {
         var directInheritors = _context.SimClasses
             .Include(c => c.Methods)
-            .ThenInclude(m => m.Invocations)
-            .ThenInclude(a => a.Signature)
-            .ThenInclude(r => r.Parameters)
+                .ThenInclude(m => m.Parameters)
+                    .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => i.Signature)
+                        .ThenInclude(s => s.Parameters)
+                            .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => i.Reference)
             .Where(c => c.BaseClassId == baseClassId)
+            .AsSplitQuery()
             .ToList();
+
+        foreach(var simClass in directInheritors)
+        {
+            foreach(var method in simClass.Methods)
+            {
+                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
+
+                method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
+
+                foreach(var inv in method.Invocations)
+                {
+                    if(inv.Signature?.Parameters != null)
+                    {
+                        inv.Signature.Parameters = inv.Signature.Parameters
+                            .OrderBy(p => p.Index)
+                            .ToList();
+                    }
+                }
+            }
+        }
 
         var allInheritors = new List<SimClass>(directInheritors);
 
@@ -95,10 +148,34 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         var ownerClass = _context.SimClasses
             .Include(c => c.Methods)
+                .ThenInclude(m => m.Parameters)
+                    .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
                 .ThenInclude(m => m.Invocations)
-                    .ThenInclude(a => a.Signature)
-                        .ThenInclude(r => r.Parameters)
+                    .ThenInclude(i => i.Signature)
+                        .ThenInclude(s => s.Parameters)
+                            .ThenInclude(p => p.Type)
             .FirstOrDefault(c => c.Id == simMethod.RelatedClassId);
+
+        if(ownerClass != null)
+        {
+            foreach(var method in ownerClass.Methods)
+            {
+                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
+
+                method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
+
+                foreach(var invocation in method.Invocations)
+                {
+                    if(invocation.Signature?.Parameters != null)
+                    {
+                        invocation.Signature.Parameters = invocation.Signature.Parameters
+                            .OrderBy(p => p.Index)
+                            .ToList();
+                    }
+                }
+            }
+        }
 
         if(ownerClass != null)
         {
@@ -163,13 +240,21 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         return false;
     }
 
-    public bool MethodIsOverridingSealed(Guid idClass, SimMethod method)
+    public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
     {
         var ownerClass = _context.SimClasses
             .Include(c => c.Methods)
-            .ThenInclude(m => m.Parameters)
-            .ThenInclude(p => p.Type)
+                .ThenInclude(m => m.Parameters)
+                    .ThenInclude(p => p.Type)
             .FirstOrDefault(c => c.Id == idClass);
+
+        if(ownerClass != null)
+        {
+            foreach(var method in ownerClass.Methods)
+            {
+                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
+            }
+        }
 
         if(ownerClass == null)
         {
@@ -178,7 +263,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         foreach(var simMethod in ownerClass.Methods)
         {
-            if(simMethod.Accesibility == SimAccesibility.Sealed && simMethod.Equals(method))
+            if(simMethod.Accesibility == SimAccesibility.Sealed && simMethod.Equals(methodSim))
             {
                 return true;
             }
@@ -189,7 +274,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return false;
         }
 
-        return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, method);
+        return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
     }
 
     public void SaveExecutionLog(ExecutionLog executionLog)
