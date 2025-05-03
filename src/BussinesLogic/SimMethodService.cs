@@ -82,6 +82,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Parameter with that name is already in use.");
         }
 
+        if(_executionDA.MethodIsInUseByInheritingInvocations(methodId))
+        {
+            throw new InUseValueLogic("Cannot Add a parameter in a method used by an invocation.");
+        }
+
         return _simMethodDA.AddMethodParameter(methodId, parameter);
     }
 
@@ -90,6 +95,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         if(!_simMethodDA.ExistMethodById(id))
         {
             throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        if(_simMethodDA.MethodIsInUse(id))
+        {
+            throw new InUseValueLogic("Method cannot be deleted because it is in use by parameters, local variables or invocations.");
         }
 
         if(_executionDA.MethodIsInUseByInheritingInvocations(id))

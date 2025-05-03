@@ -20,4 +20,5 @@ public interface ISimMethodDataAccess
     bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter);
     Parameter AddMethodParameter(Guid methodId, Parameter parameter);
     void DeleteMethod(Guid id);
+    bool MethodIsInUse(Guid id);
 }

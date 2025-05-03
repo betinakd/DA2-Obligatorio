@@ -428,6 +428,9 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess!
             .Setup(m => m.MethodParameterRepeatedValues(methodId, parameter))
             .Returns(false);
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
+            .Returns(false);
         _mockSimMethodDataAccess!
             .Setup(m => m.AddMethodParameter(methodId, parameter))
             .Returns(parameter);
@@ -467,7 +470,9 @@ public class SimMethodServiceTest
         _mockExectuionDataAccess!
             .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
             .Returns(false);
-
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodIsInUse(methodId))
+            .Returns(false);
         _simMethodService!.DeleteMethod(methodId);
 
         _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
@@ -637,6 +642,10 @@ public class SimMethodServiceTest
         _mockExectuionDataAccess!
             .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
             .Returns(true);
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodIsInUse(methodId))
+            .Returns(false);
 
         _simMethodService!.DeleteMethod(methodId);
     }

@@ -185,7 +185,6 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
             foreach(var inv in method.Invocations)
             {
-                // Ordenar los parámetros de la firma de invocación por índice
                 if(inv.Signature?.Parameters != null)
                 {
                     inv.Signature.Parameters = inv.Signature.Parameters
@@ -235,6 +234,13 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(v => v.RelatedMethod)
             .FirstOrDefault();
         return variable;
+    }
+
+    public bool MethodIsInUse(Guid id)
+    {
+        return _context.LocalVariables.Any(v => v.RelatedMethodId == id) ||
+               _context.Parameters.Any(p => p.RelatedMethodId == id) ||
+               _context.Invocations.Any(i => i.RelatedMethodId == id);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
