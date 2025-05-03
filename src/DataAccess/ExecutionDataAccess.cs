@@ -96,11 +96,39 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     {
         var directInheritors = _context.SimClasses
             .Include(c => c.Methods)
-            .ThenInclude(m => m.Invocations)
-            .ThenInclude(a => a.Signature)
-            .ThenInclude(r => r.Parameters)
+                .ThenInclude(m => m.Parameters)
+                    .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => i.Signature)
+                        .ThenInclude(s => s.Parameters)
+                            .ThenInclude(p => p.Type)
+            .Include(c => c.Methods)
+                .ThenInclude(m => m.Invocations)
+                    .ThenInclude(i => i.Reference)
             .Where(c => c.BaseClassId == baseClassId)
+            .AsSplitQuery()
             .ToList();
+
+        foreach(var simClass in directInheritors)
+        {
+            foreach(var method in simClass.Methods)
+            {
+                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
+
+                method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
+
+                foreach(var inv in method.Invocations)
+                {
+                    if(inv.Signature?.Parameters != null)
+                    {
+                        inv.Signature.Parameters = inv.Signature.Parameters
+                            .OrderBy(p => p.Index)
+                            .ToList();
+                    }
+                }
+            }
+        }
 
         var allInheritors = new List<SimClass>(directInheritors);
 

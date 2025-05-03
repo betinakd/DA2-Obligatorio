@@ -386,4 +386,307 @@ public class SimClassDataAccessTest
 
         Assert.IsTrue(_context.SimClasses.Any(c => c.Id == otherClass.Id));
     }
+
+    [TestMethod]
+    public void GetSimClassById_ShouldOrderCollectionsAndLoadReferences()
+    {
+        var classId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        _context.SimClasses.Add(typeClass);
+
+        var simClass = new SimClass { Id = classId, Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+
+        var param1 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Index = 2,
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var param2 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param2",
+            Index = 1,
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var param3 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param3",
+            Index = 0,
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.Parameters.AddRange(param1, param2, param3);
+
+        var localVar = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "localVar",
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.LocalVariables.Add(localVar);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "testAttr",
+            RelatedClassId = classId,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.SimAttributes.Add(attribute);
+
+        var signature = new Signature { Id = Guid.NewGuid(), Name = "TestSignature" };
+        var sigParam1 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam1", Index = 2, SignatureId = signature.Id, TypeId = typeId, Type = typeClass };
+        var sigParam2 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam2", Index = 0, SignatureId = signature.Id, TypeId = typeId, Type = typeClass };
+        signature.Parameters = [sigParam1, sigParam2];
+        _context.Signatures.Add(signature);
+        _context.ParameterSignatures.AddRange(sigParam1, sigParam2);
+
+        var refParam = new ReferenceParameter { Id = Guid.NewGuid(), ReferenceId = param1.Id, Reference = param1 };
+        var refVar = new ReferenceVariable { Id = Guid.NewGuid(), ReferenceId = localVar.Id, Reference = localVar };
+        var refAttr = new ReferenceAttribute { Id = Guid.NewGuid(), ReferenceId = attribute.Id, Reference = attribute };
+        var refBase = new ReferenceBase { Id = Guid.NewGuid(), ReferenceId = typeId, Reference = typeClass };
+        var refThis = new ReferenceThis { Id = Guid.NewGuid(), ReferenceId = classId, Reference = simClass };
+        _context.References.AddRange(refParam, refVar, refAttr, refBase, refThis);
+
+        var inv1 = new Invocation { Id = Guid.NewGuid(), Index = 2, RelatedMethodId = methodId, Reference = refParam };
+        var inv2 = new Invocation { Id = Guid.NewGuid(), Index = 0, RelatedMethodId = methodId, Reference = refVar };
+        var inv3 = new Invocation { Id = Guid.NewGuid(), Index = 4, RelatedMethodId = methodId, Reference = refAttr };
+        var inv4 = new Invocation { Id = Guid.NewGuid(), Index = 1, RelatedMethodId = methodId, Reference = refBase };
+        var inv5 = new Invocation { Id = Guid.NewGuid(), Index = 3, RelatedMethodId = methodId, Reference = refThis, Signature = signature };
+        _context.Invocations.AddRange(inv1, inv2, inv3, inv4, inv5);
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Parameters = [param1, param2, param3],
+            LocalVariables = [localVar],
+            Invocations = [inv1, inv2, inv3, inv4, inv5]
+        };
+        _context.SimMethods.Add(method);
+
+        simClass.Methods = [method];
+
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.GetSimClassById(classId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Methods.Count);
+
+        var methodResult = result.Methods[0];
+
+        Assert.AreEqual(3, methodResult.Parameters.Count);
+        Assert.AreEqual(0, methodResult.Parameters[0].Index);
+        Assert.AreEqual(1, methodResult.Parameters[1].Index);
+        Assert.AreEqual(2, methodResult.Parameters[2].Index);
+
+        Assert.AreEqual(5, methodResult.Invocations.Count);
+        Assert.AreEqual(0, methodResult.Invocations[0].Index);
+        Assert.AreEqual(1, methodResult.Invocations[1].Index);
+        Assert.AreEqual(2, methodResult.Invocations[2].Index);
+        Assert.AreEqual(3, methodResult.Invocations[3].Index);
+        Assert.AreEqual(4, methodResult.Invocations[4].Index);
+
+        var invWithSignature = methodResult.Invocations.FirstOrDefault(i => i.Signature != null);
+        Assert.IsNotNull(invWithSignature);
+        Assert.IsNotNull(invWithSignature.Signature.Parameters);
+    }
+
+    [TestMethod]
+    public void GetAllSimClasses_ShouldOrderCollectionsAndLoadReferences()
+    {
+        var classId1 = Guid.NewGuid();
+        var classId2 = Guid.NewGuid();
+        var methodId1 = Guid.NewGuid();
+        var methodId2 = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        _context.SimClasses.Add(typeClass);
+
+        var simClass1 = new SimClass { Id = classId1, Name = "TestClass1" };
+        var simClass2 = new SimClass { Id = classId2, Name = "TestClass2", BaseClassId = classId1, BaseClass = simClass1 };
+        _context.SimClasses.AddRange(simClass1, simClass2);
+
+        var param1 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Index = 2,
+            RelatedMethodId = methodId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var param2 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param2",
+            Index = 0,
+            RelatedMethodId = methodId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var param3 = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param3",
+            Index = 1,
+            RelatedMethodId = methodId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.Parameters.AddRange(param1, param2, param3);
+
+        var localVar1 = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "cVar",
+            RelatedMethodId = methodId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var localVar2 = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "aVar",
+            RelatedMethodId = methodId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var localVar3 = new LocalVariable
+        {
+            Id = Guid.NewGuid(),
+            Name = "bVar",
+            RelatedMethodId = methodId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.LocalVariables.AddRange(localVar1, localVar2, localVar3);
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "testAttr",
+            RelatedClassId = classId1,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.SimAttributes.Add(attribute);
+
+        var signature = new Signature { Id = Guid.NewGuid(), Name = "TestSignature" };
+        var sigParam1 = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "sigParam1",
+            Index = 1,
+            SignatureId = signature.Id,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        var sigParam2 = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "sigParam2",
+            Index = 0,
+            SignatureId = signature.Id,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        signature.Parameters = [sigParam1, sigParam2];
+        _context.Signatures.Add(signature);
+        _context.ParameterSignatures.AddRange(sigParam1, sigParam2);
+
+        var refParam = new ReferenceParameter { Id = Guid.NewGuid(), ReferenceId = param1.Id, Reference = param1 };
+        var refVar = new ReferenceVariable { Id = Guid.NewGuid(), ReferenceId = localVar1.Id, Reference = localVar1 };
+        var refAttr = new ReferenceAttribute { Id = Guid.NewGuid(), ReferenceId = attribute.Id, Reference = attribute };
+        var refBase = new ReferenceBase { Id = Guid.NewGuid(), ReferenceId = classId1, Reference = simClass1 };
+        var refThis = new ReferenceThis { Id = Guid.NewGuid(), ReferenceId = classId2, Reference = simClass2 };
+        _context.References.AddRange(refParam, refVar, refAttr, refBase, refThis);
+
+        var inv1 = new Invocation { Id = Guid.NewGuid(), Index = 2, RelatedMethodId = methodId1, Reference = refParam };
+        var inv2 = new Invocation { Id = Guid.NewGuid(), Index = 0, RelatedMethodId = methodId1, Reference = refVar };
+        var inv3 = new Invocation { Id = Guid.NewGuid(), Index = 4, RelatedMethodId = methodId1, Reference = refAttr };
+        var inv4 = new Invocation { Id = Guid.NewGuid(), Index = 1, RelatedMethodId = methodId1, Reference = refBase };
+        var inv5 = new Invocation { Id = Guid.NewGuid(), Index = 3, RelatedMethodId = methodId1, Reference = refThis, Signature = signature };
+        _context.Invocations.AddRange(inv1, inv2, inv3, inv4, inv5);
+
+        var method1 = new SimMethod
+        {
+            Id = methodId1,
+            Name = "ZTestMethod",
+            RelatedClassId = classId1,
+            RelatedClass = simClass1,
+            Parameters = [param1, param2, param3],
+            LocalVariables = [localVar1, localVar2, localVar3],
+            Invocations = [inv1, inv2, inv3, inv4, inv5]
+        };
+
+        var method2 = new SimMethod
+        {
+            Id = methodId2,
+            Name = "ATestMethod",
+            RelatedClassId = classId1,
+            RelatedClass = simClass1
+        };
+
+        _context.SimMethods.AddRange(method1, method2);
+
+        simClass1.Methods = [method1, method2];
+        simClass1.Attributes = [attribute];
+
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.GetAllSimClasses();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(3, result.Count);
+
+        var testClass = result.FirstOrDefault(c => c.Id == classId1);
+        Assert.IsNotNull(testClass);
+
+        Assert.AreEqual(2, testClass.Methods.Count);
+        Assert.AreEqual("ATestMethod", testClass.Methods[0].Name);
+        Assert.AreEqual("ZTestMethod", testClass.Methods[1].Name);
+
+        var methodResult = testClass.Methods[1];
+
+        Assert.AreEqual(3, methodResult.Parameters.Count);
+        Assert.AreEqual(0, methodResult.Parameters[0].Index);
+        Assert.AreEqual(1, methodResult.Parameters[1].Index);
+        Assert.AreEqual(2, methodResult.Parameters[2].Index);
+
+        Assert.AreEqual(3, methodResult.LocalVariables.Count);
+        Assert.AreEqual("aVar", methodResult.LocalVariables[0].Name);
+        Assert.AreEqual("bVar", methodResult.LocalVariables[1].Name);
+        Assert.AreEqual("cVar", methodResult.LocalVariables[2].Name);
+
+        Assert.AreEqual(5, methodResult.Invocations.Count);
+        Assert.AreEqual(0, methodResult.Invocations[0].Index);
+        Assert.AreEqual(1, methodResult.Invocations[1].Index);
+        Assert.AreEqual(2, methodResult.Invocations[2].Index);
+        Assert.AreEqual(3, methodResult.Invocations[3].Index);
+        Assert.AreEqual(4, methodResult.Invocations[4].Index);
+
+        var invWithSignature = methodResult.Invocations.FirstOrDefault(i => i.Signature != null);
+        Assert.IsNotNull(invWithSignature);
+        Assert.IsNotNull(invWithSignature.Signature.Parameters);
+    }
 }
