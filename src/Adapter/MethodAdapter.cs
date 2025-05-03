@@ -113,6 +113,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Id = Guid.NewGuid(),
                 Name = variable.Name,
                 Type = type,
+                TypeId = type.Id,
                 RelatedMethod = method,
                 RelatedMethodId = idMethod
             };
@@ -223,6 +224,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
                 var newParameter = new ParameterSignature()
                 {
+                    Signature = signature,
+                    SignatureId = signature.Id,
                     Name = parameter.Name,
                     Type = type,
                     TypeId = type.Id,
@@ -250,7 +253,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, true);
                     break;
 
                 case TypeReference.Base:
@@ -261,14 +264,15 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, true);
                     break;
 
                 case TypeReference.Attribute:
                     var attribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
                     _executionService.ClassInheritAttribute(method.RelatedClassId, attribute.Id);
                     reference = new ReferenceAttribute() { Reference = attribute };
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    var isNotAbstract = false;
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
 
                 case TypeReference.Parameter:
@@ -279,7 +283,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
 
                 case TypeReference.LocalVariable:
@@ -290,7 +294,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
 
                 default:

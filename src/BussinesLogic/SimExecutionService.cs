@@ -49,11 +49,17 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         return result;
     }
 
-    public void ValidateMethodExistsInClass(SimClass classId, Signature methodName)
+    public void ValidateMethodExistsInClass(SimClass classId, Signature methodName, bool isNotAbstract)
     {
-        if(_executionDA.FindMethodInHierarchy(classId, methodName) == null)
+        var method = _executionDA.FindMethodInHierarchy(classId, methodName);
+        if(method == null)
         {
             throw new NonExistentValueLogic($"Method '{methodName.Name}' is not accessible from this context");
+        }
+
+        if(method.Accesibility == SimAccesibility.Abstract && isNotAbstract)
+        {
+            throw new InvalidAttributeLogic($"Cannot add an abstract method to execute Method {methodName.Name}");
         }
     }
 

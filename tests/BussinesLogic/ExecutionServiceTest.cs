@@ -176,7 +176,7 @@ public class ExecutionServiceTest
 
         _mockExecuteDataAccess.Setup(m => m.FindMethodInHierarchy(simClass, signature, 0)).Returns((SimMethod?)null);
 
-        _executionService.ValidateMethodExistsInClass(simClass, signature);
+        _executionService.ValidateMethodExistsInClass(simClass, signature, true);
     }
 
     [TestMethod]
