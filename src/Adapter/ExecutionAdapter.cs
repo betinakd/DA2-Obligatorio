@@ -36,6 +36,12 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             };
             var refer = _simClassService.GetSimClassById(request.ReferenceTypeId);
             var obj = _simClassService.GetSimClassById(request.InstanceTypeId);
+
+            if(!_executionService.IsReferenceBaseOfInstance(refer, obj))
+            {
+                throw new InvalidExecutionAdapter("Reference is not base of the instance");
+            }
+
             var reference = new ReferenceThis()
             {
                 Reference = refer
@@ -52,6 +58,10 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         catch(InvalidOperationLogic ex)
         {
             throw new InvalidExecutionAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
         }
     }
 }

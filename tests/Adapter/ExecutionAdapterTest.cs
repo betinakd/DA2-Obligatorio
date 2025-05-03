@@ -75,6 +75,12 @@ public class ExecutionAdapterTest
                 It.IsAny<HashSet<Guid>>()))
             .Returns("expectedResult");
 
+        _mockExecutionService!
+            .Setup(s => s.IsReferenceBaseOfInstance(
+                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
+                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
+            .Returns(true);
+
         _mockExecutionService!.Setup(s => s.SaveExecutionLog("ReferenceType", "InstanceType", "expectedResult"));
         var result = _executionAdapter!.ExecuteMethod(request);
 

@@ -86,4 +86,38 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         };
         _executionDA.SaveExecutionLog(executionLog);
     }
+
+    public bool IsReferenceBaseOfInstance(SimClass refer, SimClass obj)
+    {
+        if(refer == null || obj == null)
+        {
+            return false;
+        }
+
+        if(refer.Id == obj.Id)
+        {
+            return true;
+        }
+
+        if(!obj.BaseClassId.HasValue)
+        {
+            return false;
+        }
+
+        if(obj.BaseClassId.Value == refer.Id)
+        {
+            return true;
+        }
+
+        var baseClass = _executionDA.GetFilteredClasses(query =>
+            query.Where(c => c.Id == obj.BaseClassId.Value))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        return IsReferenceBaseOfInstance(refer, baseClass);
+    }
 }

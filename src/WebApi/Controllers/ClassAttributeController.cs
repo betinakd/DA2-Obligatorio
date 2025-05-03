@@ -11,7 +11,7 @@ public class ClassAttributeController(IAttributeAdapter simClassAdapter) : Contr
     private readonly IAttributeAdapter _simAttributeAdapter = simClassAdapter;
 
     [HttpPost("{id}/attributes")]
-    public IActionResult CreateAttribute(Guid id, [FromBody] AttributeRequestUpdate attribute)
+    public IActionResult CreateAttribute(Guid id, [FromBody] AttributeRequest attribute)
     {
         var result = _simAttributeAdapter.CreateAttribute(id, attribute);
         return CreatedAtRoute("GetAttributeById", new { id = result.Attribute.Id }, result);
