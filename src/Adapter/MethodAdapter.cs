@@ -253,7 +253,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, true);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
 
                 case TypeReference.Base:

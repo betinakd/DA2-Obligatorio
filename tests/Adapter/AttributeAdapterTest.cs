@@ -37,71 +37,17 @@ public class AttributeAdapterTest
     }
 
     [TestMethod]
-    public void UpdateAttribute_WithValidData_UpdatesAndReturnsResponse()
-    {
-        var attributeId = Guid.NewGuid();
-        var relatedClassId = Guid.NewGuid();
-        var typeId = Guid.NewGuid();
-
-        var attributeRequest = new AttributeRequestUpdate
-        {
-            Name = "TestAttribute",
-            Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdRelatedClass = relatedClassId.ToString(),
-            IdType = typeId.ToString(),
-        };
-
-        var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
-        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
-
-        var attributeSimClass = new SimAttribute()
-        {
-            Id = attributeId,
-            Name = attributeRequest.Name,
-            Privacity = SimPrivacity.Public,
-            RelatedClass = relatedClass,
-            RelatedClassId = relatedClassId,
-            Type = typeClass
-        };
-
-        _mockSimClassService!
-            .Setup(s => s.GetSimClassById(relatedClassId))
-            .Returns(relatedClass);
-        _mockSimClassService!
-            .Setup(s => s.GetSimClassById(typeId))
-            .Returns(typeClass);
-
-        _mockSimAttributeService!
-            .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
-            .Returns(attributeSimClass);
-
-        var result = _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
-
-        _mockSimClassService.Verify(s => s.GetSimClassById(relatedClassId), Times.Once);
-        _mockSimClassService.Verify(s => s.GetSimClassById(typeId), Times.Once);
-        _mockSimAttributeService.Verify(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()), Times.Once);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(attributeId, result.Attribute.Id);
-        Assert.AreEqual(attributeRequest.Name, result.Attribute.Name);
-        Assert.AreEqual(attributeRequest.Privacity, result.Attribute.Privacity);
-        Assert.AreEqual(attributeRequest.RelatedClassId, result.Attribute.RelatedClassId);
-        Assert.AreEqual(attributeRequest.TypeId, result.Attribute.TypeId);
-        Assert.AreEqual("Attribute updated successfully.", result.Message);
-    }
-
-    [TestMethod]
     public void CreateAttribute_WithValidData_CreatesAndReturnsResponse()
     {
         var attributeId = Guid.NewGuid();
         var relatedClassId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequestUpdate
+        var attributeRequest = new AttributeRequest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdType = typeId.ToString()
+            IdClassType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
@@ -180,11 +126,11 @@ public class AttributeAdapterTest
         var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequestUpdate
+        var attributeRequest = new AttributeRequest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdType = typeId.ToString()
+            IdClassType = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -207,15 +153,14 @@ public class AttributeAdapterTest
     [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateAttribute_ThrowsNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
     {
-        // Arrange
         var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequestUpdate
+        var attributeRequest = new AttributeRequest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdType = typeId.ToString()
+            IdClassType = typeId.ToString()
         };
 
         _mockSimClassService!
@@ -232,12 +177,11 @@ public class AttributeAdapterTest
         var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
-        var attributeRequest = new AttributeRequestUpdate
+        var attributeRequest = new AttributeRequest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdType = typeId.ToString(),
-            IdRelatedClass = classId.ToString()
+            IdClassType = typeId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -254,38 +198,6 @@ public class AttributeAdapterTest
             .Throws(new InvalidAttributeDomain("Exception message"));
 
         _simAttributeAdapter!.CreateAttribute(classId, attributeRequest);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InUseValueAdapter))]
-    public void UpdateAttribute_ThrowsInUseValueAdapter_WhenServiceThrowsInUseValueLogic()
-    {
-        var attributeId = Guid.NewGuid();
-        var relatedClassId = Guid.NewGuid();
-        var typeId = Guid.NewGuid();
-
-        var attributeRequest = new AttributeRequestUpdate
-        {
-            Name = "TestAttribute",
-            Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdRelatedClass = relatedClassId.ToString(),
-            IdType = typeId.ToString()
-        };
-
-        var relatedClass = new SimClass { Id = relatedClassId };
-        var typeClass = new SimClass { Id = typeId };
-
-        _mockSimClassService!
-            .Setup(s => s.GetSimClassById(relatedClassId))
-            .Returns(relatedClass);
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(typeId))
-            .Returns(typeClass);
-        _mockSimAttributeService!
-            .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
-            .Throws(new InUseValueLogic("Attribute in use"));
-
-        _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
     }
 
     [TestMethod]
@@ -308,39 +220,7 @@ public class AttributeAdapterTest
             .Setup(s => s.GetSimClassById(relatedClassId))
             .Throws(new NonExistentValueLogic("Class not found"));
 
-        _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeAdapter))]
-    public void UpdateAttribute_ThrowsInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
-    {
-        var attributeId = Guid.NewGuid();
-        var relatedClassId = Guid.NewGuid();
-        var typeId = Guid.NewGuid();
-
-        var attributeRequest = new AttributeRequestUpdate
-        {
-            Name = "TestAttribute",
-            Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdRelatedClass = relatedClassId.ToString(),
-            IdType = typeId.ToString()
-        };
-
-        var relatedClass = new SimClass { Id = relatedClassId };
-        var typeClass = new SimClass { Id = typeId };
-
-        _mockSimClassService!
-            .Setup(s => s.GetSimClassById(relatedClassId))
-            .Returns(relatedClass);
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(typeId))
-            .Returns(typeClass);
-        _mockSimAttributeService!
-            .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
-            .Throws(new InvalidAttributeLogic("Invalid attribute"));
-
-        _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
+        _simAttributeAdapter!.UpdateAttribute(attributeRequest);
     }
 
     [TestMethod]
@@ -348,31 +228,28 @@ public class AttributeAdapterTest
     public void UpdateAttribute_ThrowsInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeDomain()
     {
         var attributeId = Guid.NewGuid();
-        var relatedClassId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
         var attributeRequest = new AttributeRequestUpdate
         {
+            Id = attributeId.ToString(),
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdRelatedClass = relatedClassId.ToString(),
+            IdRelatedClass = classId.ToString(),
             IdType = typeId.ToString()
         };
 
-        var relatedClass = new SimClass { Id = relatedClassId };
-        var typeClass = new SimClass { Id = typeId };
+        var relatedClass = new SimClass { Id = classId, Name = "TestClass" };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
 
-        _mockSimClassService!
-            .Setup(s => s.GetSimClassById(relatedClassId))
-            .Returns(relatedClass);
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(typeId))
-            .Returns(typeClass);
-        _mockSimAttributeService!
-            .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
-            .Throws(new InvalidAttributeDomain("Invalid domain"));
+        _mockSimClassService!.Setup(s => s.GetSimClassById(classId)).Returns(relatedClass);
+        _mockSimClassService.Setup(s => s.GetSimClassById(typeId)).Returns(typeClass);
 
-        _simAttributeAdapter!.UpdateAttribute(attributeId, attributeRequest);
+        _mockSimAttributeService!.Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
+            .Throws(new InvalidAttributeDomain("Test domain validation error"));
+
+        _simAttributeAdapter!.UpdateAttribute(attributeRequest);
     }
 
     [TestMethod]

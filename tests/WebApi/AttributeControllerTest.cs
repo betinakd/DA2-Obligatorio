@@ -55,10 +55,10 @@ public class AttributeControllerTest
         };
         var updatedExpectedResponse = new UpdatedAttributeResponse() { Message = "Attribute updated succesfully.", Attribute = expectedResponse };
 
-        _mockAttributeAdapter?.Setup(a => a.UpdateAttribute(idToUpdate, attributeToUpdate)).Returns(updatedExpectedResponse);
+        _mockAttributeAdapter?.Setup(a => a.UpdateAttribute(attributeToUpdate)).Returns(updatedExpectedResponse);
 
-        var result = _attributeController?.UpdateAttribute(idToUpdate, attributeToUpdate);
-        _mockAttributeAdapter?.Verify(a => a.UpdateAttribute(idToUpdate, attributeToUpdate), Times.Once);
+        var result = _attributeController?.UpdateAttribute(attributeToUpdate);
+        _mockAttributeAdapter?.Verify(a => a.UpdateAttribute(attributeToUpdate), Times.Once);
 
         Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         var okResult = result as OkObjectResult;

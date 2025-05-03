@@ -17,10 +17,10 @@ public class AttributeController(IAttributeAdapter simClassAdapter) : Controller
         return NoContent();
     }
 
-    [HttpPut("{id}")]
-    public IActionResult UpdateAttribute(Guid id, [FromBody] AttributeRequestUpdate attribute)
+    [HttpPut]
+    public IActionResult UpdateAttribute([FromBody] AttributeRequestUpdate attribute)
     {
-        var result = _simAttributeAdapter.UpdateAttribute(id, attribute);
+        var result = _simAttributeAdapter.UpdateAttribute(attribute);
         return Ok(result);
     }
 

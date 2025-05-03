@@ -16,60 +16,12 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return null;
         }
 
-        var methods = _context.SimMethods
-            .Include(m => m.Parameters)
-                .ThenInclude(p => p.Type)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => i.Reference)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => i.Signature)
-                    .ThenInclude(s => s.Parameters)
-                        .ThenInclude(p => p.Type)
-            .Where(m =>
-                m.RelatedClassId == simClass.Id &&
-                m.Name == signature.Name &&
-                (level == 0 || m.Privacity == SimPrivacity.Public
-                || m.Privacity == SimPrivacity.Protected))
-            .ToList();
-
-        foreach(var m in methods)
-        {
-            m.Parameters = m.Parameters.OrderBy(p => p.Index).ToList();
-
-            m.Invocations = m.Invocations.OrderBy(i => i.Index).ToList();
-
-            foreach(var inv in m.Invocations)
-            {
-                if(inv.Signature?.Parameters != null)
-                {
-                    inv.Signature.Parameters = inv.Signature.Parameters
-                        .OrderBy(p => p.Index)
-                        .ToList();
-                }
-
-                switch(inv.Reference)
-                {
-                    case ReferenceParameter rp:
-                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
-                        break;
-                    case ReferenceVariable rv:
-                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
-                        break;
-                    case ReferenceAttribute ra:
-                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
-                        break;
-                    case ReferenceBase rb:
-                        _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
-                        break;
-                    case ReferenceThis rt:
-                        _context.Entry(rt).Reference(r => r.Reference).Load();
-                        break;
-                }
-            }
-        }
+        var methods = GetFilteredMethods(query => query.Where(m =>
+            m.RelatedClassId == simClass.Id &&
+            m.Name == signature.Name &&
+            (level == 0 || m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected)));
 
         var method = methods.FirstOrDefault(m => m.MatchSignature(signature));
-
         if(method != null)
         {
             return method;
@@ -84,51 +36,13 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(c => c.BaseClass)
             .FirstOrDefault(c => c.Id == simClass.BaseClassId.Value);
 
-        if(baseClass == null)
-        {
-            return null;
-        }
-
-        return FindMethodInHierarchy(baseClass, signature, level + 1);
+        return baseClass == null ? null : FindMethodInHierarchy(baseClass, signature, level + 1);
     }
 
     public List<SimClass> GetAllInheritingClasses(Guid baseClassId)
     {
-        var directInheritors = _context.SimClasses
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Parameters)
-                    .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => i.Signature)
-                        .ThenInclude(s => s.Parameters)
-                            .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => i.Reference)
-            .Where(c => c.BaseClassId == baseClassId)
-            .AsSplitQuery()
-            .ToList();
-
-        foreach(var simClass in directInheritors)
-        {
-            foreach(var method in simClass.Methods)
-            {
-                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
-
-                method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
-
-                foreach(var inv in method.Invocations)
-                {
-                    if(inv.Signature?.Parameters != null)
-                    {
-                        inv.Signature.Parameters = inv.Signature.Parameters
-                            .OrderBy(p => p.Index)
-                            .ToList();
-                    }
-                }
-            }
-        }
+        var directInheritors = GetFilteredClasses(query =>
+            query.Where(c => c.BaseClassId == baseClassId));
 
         var allInheritors = new List<SimClass>(directInheritors);
 
@@ -143,78 +57,59 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     public bool MethodIsInUseByInheritingInvocations(Guid methodId)
     {
         var simMethod = _context.SimMethods.FirstOrDefault(m => m.Id == methodId);
-        var ownerSimClass = _context.SimClasses.FirstOrDefault(c => c.Id == simMethod.RelatedClassId);
+        if(simMethod == null)
+        {
+            return false;
+        }
+
+        var ownerClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == simMethod.RelatedClassId)).FirstOrDefault();
+
+        if(IsMethodUsedInClass(ownerClass, simMethod))
+        {
+            return true;
+        }
+
         var inheritingClasses = GetAllInheritingClasses(simMethod.RelatedClassId);
+        return inheritingClasses.Any(c => IsMethodUsedInInheritingClass(c, simMethod));
+    }
 
-        var ownerClass = _context.SimClasses
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Parameters)
-                    .ThenInclude(p => p.Type)
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Invocations)
-                    .ThenInclude(i => i.Signature)
-                        .ThenInclude(s => s.Parameters)
-                            .ThenInclude(p => p.Type)
-            .FirstOrDefault(c => c.Id == simMethod.RelatedClassId);
-
-        if(ownerClass != null)
+    private bool IsMethodUsedInClass(SimClass? simClass, SimMethod simMethod)
+    {
+        if(simClass == null)
         {
-            foreach(var method in ownerClass.Methods)
-            {
-                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
-
-                method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
-
-                foreach(var invocation in method.Invocations)
-                {
-                    if(invocation.Signature?.Parameters != null)
-                    {
-                        invocation.Signature.Parameters = invocation.Signature.Parameters
-                            .OrderBy(p => p.Index)
-                            .ToList();
-                    }
-                }
-            }
+            return false;
         }
 
-        if(ownerClass != null)
+        if(simClass.Methods == null)
         {
-            foreach(var method in ownerClass.Methods)
-            {
-                var matchingInvocations = method.Invocations
-                    .Where(invocation => simMethod.MatchSignature(invocation.Signature))
-                    .ToList();
-
-                if(matchingInvocations.Any())
-                {
-                    return true;
-                }
-            }
+            return false;
         }
 
-        foreach(var simClass in inheritingClasses)
-        {
-            foreach(var method in simClass.Methods)
-            {
-                var matchingInvocations = method.Invocations
-                    .Where(invocation => simMethod.MatchSignature(invocation.Signature) &&
-                    (simMethod.Privacity == SimPrivacity.Public || simMethod.Privacity == SimPrivacity.Protected))
-                    .ToList();
+        return simClass.Methods.Any(m =>
+            m.Invocations.Any(i => simMethod.MatchSignature(i.Signature)));
+    }
 
-                if(matchingInvocations.Any())
-                {
-                    return true;
-                }
-            }
+    private bool IsMethodUsedInInheritingClass(SimClass simClass, SimMethod simMethod)
+    {
+        if(simClass?.Methods == null)
+        {
+            return false;
         }
 
-        return false;
+        var isAccessible = simMethod.Privacity == SimPrivacity.Public ||
+                           simMethod.Privacity == SimPrivacity.Protected;
+
+        return simClass.Methods.Any(m =>
+            m.Invocations.Any(i =>
+                simMethod.MatchSignature(i.Signature) && isAccessible));
     }
 
     public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0)
     {
         var currentClass = _context.SimClasses
             .Include(c => c.Attributes)
+            .Include(c => c.BaseClass)
             .FirstOrDefault(c => c.Id == classId);
 
         if(currentClass == null)
@@ -242,44 +137,136 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
     public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
     {
-        var ownerClass = _context.SimClasses
-            .Include(c => c.Methods)
-                .ThenInclude(m => m.Parameters)
-                    .ThenInclude(p => p.Type)
-            .FirstOrDefault(c => c.Id == idClass);
-
-        if(ownerClass != null)
-        {
-            foreach(var method in ownerClass.Methods)
-            {
-                method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
-            }
-        }
+        var ownerClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == idClass))
+            .FirstOrDefault();
 
         if(ownerClass == null)
         {
             return false;
         }
 
-        foreach(var simMethod in ownerClass.Methods)
+        if(ownerClass.Methods.Any(m =>
+            m.Accesibility == SimAccesibility.Sealed && m.Equals(methodSim)))
         {
-            if(simMethod.Accesibility == SimAccesibility.Sealed && simMethod.Equals(methodSim))
-            {
-                return true;
-            }
+            return true;
         }
 
-        if(!ownerClass.BaseClassId.HasValue)
-        {
-            return false;
-        }
-
-        return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
+        return ownerClass.BaseClassId.HasValue &&
+               MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
     }
 
     public void SaveExecutionLog(ExecutionLog executionLog)
     {
         _context.ExecutionLogs.Add(executionLog);
         _context.SaveChanges();
+    }
+
+    private void OrderMethodElements(SimMethod method)
+    {
+        method.Parameters = method.Parameters.OrderBy(p => p.Index).ToList();
+
+        method.Invocations = method.Invocations.OrderBy(i => i.Index).ToList();
+
+        foreach(var inv in method.Invocations)
+        {
+            if(inv.Signature?.Parameters != null)
+            {
+                inv.Signature.Parameters = inv.Signature.Parameters
+                    .OrderBy(p => p.Index)
+                    .ToList();
+            }
+        }
+    }
+
+    private void OrderMethodsInClass(SimClass simClass)
+    {
+        if(simClass?.Methods == null)
+        {
+            return;
+        }
+
+        foreach(var method in simClass.Methods)
+        {
+            OrderMethodElements(method);
+        }
+    }
+
+    private void LoadReferenceDetails(Invocation inv)
+    {
+        if(inv == null)
+        {
+            return;
+        }
+
+        switch(inv.Reference)
+        {
+            case ReferenceParameter rp:
+                _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                break;
+            case ReferenceVariable rv:
+                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                break;
+            case ReferenceAttribute ra:
+                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                break;
+            case ReferenceBase rb:
+                _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
+                break;
+            case ReferenceThis rt:
+                _context.Entry(rt).Reference(r => r.Reference).Load();
+                break;
+        }
+    }
+
+    private List<SimMethod> GetFilteredMethods(Func<IQueryable<SimMethod>, IQueryable<SimMethod>> filter)
+    {
+        var query = _context.SimMethods
+            .Include(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(m => m.Invocations).ThenInclude(i => i.Reference)
+            .Include(m => m.Invocations).ThenInclude(i => i.Signature)
+                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type);
+
+        var filteredMethods = filter(query).ToList();
+
+        foreach(var method in filteredMethods)
+        {
+            OrderMethodElements(method);
+
+            foreach(var inv in method.Invocations)
+            {
+                LoadReferenceDetails(inv);
+            }
+        }
+
+        return filteredMethods;
+    }
+
+    public List<SimClass> GetFilteredClasses(Func<IQueryable<SimClass>, IQueryable<SimClass>> filter)
+    {
+        var query = _context.SimClasses
+            .Include(c => c.BaseClass)
+            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature)
+                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
+            .AsSplitQuery();
+
+        var filteredClasses = filter(query).ToList();
+
+        foreach(var simClass in filteredClasses)
+        {
+            OrderMethodsInClass(simClass);
+
+            foreach(var method in simClass.Methods)
+            {
+                foreach(var inv in method.Invocations)
+                {
+                    LoadReferenceDetails(inv);
+                }
+            }
+        }
+
+        return filteredClasses;
     }
 }

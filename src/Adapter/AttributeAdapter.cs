@@ -31,7 +31,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         }
     }
 
-    public UpdatedAttributeResponse UpdateAttribute(Guid attributeId, AttributeRequestUpdate attribute)
+    public UpdatedAttributeResponse UpdateAttribute(AttributeRequestUpdate attribute)
     {
         try
         {
@@ -39,7 +39,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
             var type = _simClassService.GetSimClassById(attribute.TypeId);
             var updatedAttribute = new SimAttribute()
             {
-                Id = attributeId,
+                Id = attribute.IdAttribute,
                 Name = attribute.Name,
                 Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
                 RelatedClass = relatedClass,
@@ -47,7 +47,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 Type = type,
                 TypeId = type.Id
             };
-            _simAttributeService.UpdateAttribute(attributeId, updatedAttribute);
+            _simAttributeService.UpdateAttribute(attribute.IdAttribute, updatedAttribute);
 
             var response = new UpdatedAttributeResponse()
             {
@@ -75,12 +75,12 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         }
     }
 
-    public CreatedAttributeResponse CreateAttribute(Guid id, AttributeRequestUpdate attribute)
+    public CreatedAttributeResponse CreateAttribute(Guid id, AttributeRequest attribute)
     {
         try
         {
             var relatedClass = _simClassService.GetSimClassById(id);
-            var type = _simClassService.GetSimClassById(attribute.TypeId);
+            var type = _simClassService.GetSimClassById(attribute.ClassTypeId);
 
             var newAttribute = new SimAttribute()
             {

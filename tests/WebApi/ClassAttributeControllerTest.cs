@@ -25,13 +25,11 @@ public class ClassAttributeControllerTest
     public void CreateAttribute_ReturnsCreatedAtRouteResult()
     {
         var id = Guid.NewGuid();
-        var request = new AttributeRequestUpdate()
+        var request = new AttributeRequest()
         {
-            Id = id.ToString(),
             Name = "DummyAttribute",
-            IdType = Guid.NewGuid().ToString(),
+            IdClassType = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,
-            IdRelatedClass = Guid.NewGuid().ToString()
         };
 
         var expectedResponse = new CreatedAttributeResponse()

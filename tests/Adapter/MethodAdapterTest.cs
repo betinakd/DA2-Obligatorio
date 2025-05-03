@@ -547,7 +547,7 @@ public class MethodAdapterTest
         _mockSimClassService.VerifyAll();
         _mockExecutionService.Verify(s => s.ValidateMethodExistsInClass(
             It.Is<SimClass>(c => c.Id == referenceClass.Id),
-            It.Is<Signature>(sig => sig.Name == "MultiParamMethod" && sig.Parameters.Count == 2), true));
+            It.Is<Signature>(sig => sig.Name == "MultiParamMethod" && sig.Parameters.Count == 2), false));
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
         result.InvocationResponse.MethodName.Should().Be("MultiParamMethod");
@@ -863,7 +863,7 @@ public class MethodAdapterTest
         _mockExecutionService!
             .Setup(s => s.ValidateMethodExistsInClass(
                 It.Is<SimClass>(c => c.Id == classId),
-                It.Is<Signature>(sig => sig.Name == "ThisMethod"), true));
+                It.Is<Signature>(sig => sig.Name == "ThisMethod"), false));
 
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
         result.Should().NotBeNull();
@@ -873,7 +873,7 @@ public class MethodAdapterTest
         _mockSimClassService.VerifyAll();
         _mockExecutionService.Verify(s => s.ValidateMethodExistsInClass(
             It.Is<SimClass>(c => c.Id == classId),
-            It.Is<Signature>(sig => sig.Name == "ThisMethod"), true), Times.Once);
+            It.Is<Signature>(sig => sig.Name == "ThisMethod"), false), Times.Once);
     }
 
     [TestMethod]
@@ -1157,11 +1157,16 @@ public class MethodAdapterTest
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockSimClassService!.Setup(s => s.GetSimClassById(classId)).Returns(simClass);
+
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+
         _mockExecutionService!
             .Setup(s => s.ValidateMethodExistsInClass(
                 It.Is<SimClass>(c => c.Id == classId),
-                It.Is<Signature>(sig => sig.Name == "NonExistentMethod"), true))
+                It.Is<Signature>(sig => sig.Name == "NonExistentMethod"), false))
             .Throws(new InvalidAttributeLogic("Method does not exist in class"));
+
         adapter!.CreateInvocation(methodId, invocationRequest);
     }
 
