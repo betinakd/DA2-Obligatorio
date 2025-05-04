@@ -86,7 +86,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                 };
 
                 var parametersNewClass = new List<Parameter>();
-
+                var index = 0;
                 foreach(var param in method.Parameters)
                 {
                     var parameterType = _simClassService.GetSimClassById(param.ClassTypeId);
@@ -96,9 +96,10 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                         Type = parameterType,
                         TypeId = param.ClassTypeId,
                         RelatedMethod = newMethod,
-                        RelatedMethodId = newMethod.Id
+                        RelatedMethodId = newMethod.Id,
+                        Index = index
                     };
-
+                    index++;
                     parametersNewClass.Add(newParam);
                 }
 
@@ -116,6 +117,10 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
             return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(classToUpdate) };
         }
         catch(InvalidAttributeDomain ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }

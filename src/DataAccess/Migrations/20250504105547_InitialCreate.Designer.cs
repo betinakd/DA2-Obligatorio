@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250502222527_InitialCreate")]
+    [Migration("20250504105547_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -77,72 +77,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("RelatedMethodId");
 
                     b.ToTable("Invocations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2"),
-                            Index = 0,
-                            ReferenceId = new Guid("b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3"),
-                            RelatedMethodId = new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"),
-                            SignatureId = new Guid("e2e2e2e2-e2e2-e2e2-e2e2-e2e2e2e2e2e2")
-                        },
-                        new
-                        {
-                            Id = new Guid("c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2"),
-                            Index = 1,
-                            ReferenceId = new Guid("c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3"),
-                            RelatedMethodId = new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"),
-                            SignatureId = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3")
-                        },
-                        new
-                        {
-                            Id = new Guid("d2d2d2d2-d2d2-d2d2-d2d2-d2d2d2d2d2d2"),
-                            Index = 1,
-                            ReferenceId = new Guid("b8b8b8b8-b8b8-b8b8-b8b8-b8b8b8b8b8b3"),
-                            RelatedMethodId = new Guid("f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1"),
-                            SignatureId = new Guid("f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2")
-                        },
-                        new
-                        {
-                            Id = new Guid("f2f5f5f5-f5f5-f5f5-f5f5-f5f5f5f5f5f5"),
-                            Index = 0,
-                            ReferenceId = new Guid("b7b2b7b7-b7b7-b7b7-b7b7-b7b7b7b7b7b7"),
-                            RelatedMethodId = new Guid("e4e2e4e4-e4e4-e4e4-e4e4-e4e4e4e4e4e4"),
-                            SignatureId = new Guid("e6e2e6e6-e6e6-e6e6-e6e6-e6e6e6e6e6e6")
-                        },
-                        new
-                        {
-                            Id = new Guid("a2a6a6a6-a6a6-a6a6-a6a6-a6a6a6a6a6a6"),
-                            Index = 0,
-                            ReferenceId = new Guid("f2f7f7f7-f7f7-f7f7-f7f7-f7f7f7f7f7f7"),
-                            RelatedMethodId = new Guid("b2b5b5b5-b5b5-b5b5-b5b5-b5b5b5b5b5b5"),
-                            SignatureId = new Guid("e6e3e6e6-e6e6-e6e6-e6e6-e6e6e6e6e6e6")
-                        },
-                        new
-                        {
-                            Id = new Guid("b2b6b6b6-b6b6-b6b6-b6b6-b6b6b6b6b6b6"),
-                            Index = 0,
-                            ReferenceId = new Guid("e2e7e7e7-e7e7-e7e7-e7e7-e7e7e7e7e7e7"),
-                            RelatedMethodId = new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"),
-                            SignatureId = new Guid("f6f3f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6")
-                        },
-                        new
-                        {
-                            Id = new Guid("c2c6c6c6-c6c6-c6c6-c6c6-c6c6c6c6c6c6"),
-                            Index = 1,
-                            ReferenceId = new Guid("d2d7d7d7-d7d7-d7d7-d7d7-d7d7d7d7d7d7"),
-                            RelatedMethodId = new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"),
-                            SignatureId = new Guid("f6f2f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6")
-                        },
-                        new
-                        {
-                            Id = new Guid("d2d6d6d6-d6d6-d6d6-d6d6-d6d6d6d6d6d6"),
-                            Index = 0,
-                            ReferenceId = new Guid("c2c7c7c7-c7c7-c7c7-c7c7-c7c7c7c7c7c7"),
-                            RelatedMethodId = new Guid("f4f2f4f4-f4f4-f4f4-f4f4-f4f4f4f4f4f4"),
-                            SignatureId = new Guid("a2a7a7a7-a7a7-a7a7-a7a7-a7a7a7a7a7a7")
-                        });
                 });
 
             modelBuilder.Entity("Domain.LocalVariable", b =>
@@ -272,56 +206,6 @@ namespace DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Signatures");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e2e2e2e2-e2e2-e2e2-e2e2-e2e2e2e2e2e2"),
-                            Name = "Encender",
-                            RelatedInvocationId = new Guid("b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2")
-                        },
-                        new
-                        {
-                            Id = new Guid("f2f2f2f2-f2f2-f2f2-f2f2-f2f2f2f2f2f2"),
-                            Name = "Apagar",
-                            RelatedInvocationId = new Guid("d2d2d2d2-d2d2-d2d2-d2d2-d2d2d2d2d2d2")
-                        },
-                        new
-                        {
-                            Id = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"),
-                            Name = "IniciarViaje",
-                            RelatedInvocationId = new Guid("c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2")
-                        },
-                        new
-                        {
-                            Id = new Guid("e6e2e6e6-e6e6-e6e6-e6e6-e6e6e6e6e6e6"),
-                            Name = "EsValido",
-                            RelatedInvocationId = new Guid("f2f5f5f5-f5f5-f5f5-f5f5-f5f5f5f5f5f5")
-                        },
-                        new
-                        {
-                            Id = new Guid("f6f2f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6"),
-                            Name = "Limpiar",
-                            RelatedInvocationId = new Guid("c2c6c6c6-c6c6-c6c6-c6c6-c6c6c6c6c6c6")
-                        },
-                        new
-                        {
-                            Id = new Guid("a2a7a7a7-a7a7-a7a7-a7a7-a7a7a7a7a7a7"),
-                            Name = "Inicializar",
-                            RelatedInvocationId = new Guid("d2d6d6d6-d6d6-d6d6-d6d6-d6d6d6d6d6d6")
-                        },
-                        new
-                        {
-                            Id = new Guid("e6e3e6e6-e6e6-e6e6-e6e6-e6e6e6e6e6e6"),
-                            Name = "EsValido",
-                            RelatedInvocationId = new Guid("a2a6a6a6-a6a6-a6a6-a6a6-a6a6a6a6a6a6")
-                        },
-                        new
-                        {
-                            Id = new Guid("f6f3f6f6-f6f6-f6f6-f6f6-f6f6f6f6f6f6"),
-                            Name = "EsValido",
-                            RelatedInvocationId = new Guid("b2b6b6b6-b6b6-b6b6-b6b6-b6b6b6b6b6b6")
-                        });
                 });
 
             modelBuilder.Entity("Domain.SimAttribute", b =>
@@ -350,24 +234,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("TypeId");
 
                     b.ToTable("SimAttributes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2"),
-                            Name = "motorAuto",
-                            Privacity = 0,
-                            RelatedClassId = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
-                            TypeId = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1")
-                        },
-                        new
-                        {
-                            Id = new Guid("e5e5e2e5-e5e5-e5e5-e5e5-e5e5e5e5e5e5"),
-                            Name = "input",
-                            Privacity = 0,
-                            RelatedClassId = new Guid("a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4"),
-                            TypeId = new Guid("d4d2d4d4-d4d4-d4d4-d4d4-d4d4d4d4d4d4")
-                        });
                 });
 
             modelBuilder.Entity("Domain.SimClass", b =>
@@ -408,52 +274,10 @@ namespace DataAccess.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Motor",
-                            State = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
-                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Auto",
-                            State = 2
-                        },
-                        new
-                        {
                             Id = new Guid("22223222-2222-2222-2222-222222222222"),
                             BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "bool",
                             State = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4"),
-                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Validador",
-                            State = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Entrada",
-                            State = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4"),
-                            BaseClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            Name = "EntradaTexto",
-                            State = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("d4d2d4d4-d4d4-d4d4-d4d4-d4d4d4d4d4d4"),
-                            BaseClassId = new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4"),
-                            Name = "EntradaTextoEspecial",
-                            State = 0
                         });
                 });
 
@@ -486,98 +310,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ReturnTypeId");
 
                     b.ToTable("SimMethods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c1c1c1c1-c1c1-c1c1-c1c1-c1c1c1c1c1c1"),
-                            Accesibility = 2,
-                            Name = "Encender",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1d1d1d1-d1d1-d1d1-d1d1-d1d1d1d1d1d1"),
-                            Accesibility = 2,
-                            Name = "Apagar",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1"),
-                            Accesibility = 2,
-                            Name = "IniciarViaje",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
-                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("f1f1f1f1-f1f1-f1f1-f1f1-f1f1f1f1f1f1"),
-                            Accesibility = 2,
-                            Name = "FinalizarViaje",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1"),
-                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("e4e2e4e4-e4e4-e4e4-e4e4-e4e4e4e4e4e4"),
-                            Accesibility = 2,
-                            Name = "Validar",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4"),
-                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("f4f2f4f4-f4f4-f4f4-f4f4-f4f4f4f4f4f4"),
-                            Accesibility = 2,
-                            Name = "EsValido",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("c5c5c5c5-c5c5-c5c5-c2c5-c5c5c5c5c5c5"),
-                            Accesibility = 2,
-                            Name = "Limpiar",
-                            Privacity = 1,
-                            RelatedClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("d5d5d5d5-d5d5-d2d5-d5d5-d5d5d5d5d5d5"),
-                            Accesibility = 2,
-                            Name = "Inicializar",
-                            Privacity = 1,
-                            RelatedClassId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4"),
-                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("a2a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5"),
-                            Accesibility = 2,
-                            Name = "EsValido",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4"),
-                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("b2b5b5b5-b5b5-b5b5-b5b5-b5b5b5b5b5b5"),
-                            Accesibility = 0,
-                            Name = "EsValido",
-                            Privacity = 2,
-                            RelatedClassId = new Guid("d4d2d4d4-d4d4-d4d4-d4d4-d4d4d4d4d4d4"),
-                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
-                        });
                 });
 
             modelBuilder.Entity("Domain.ReferenceAttribute", b =>
@@ -590,36 +322,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ReferenceId");
 
                     b.HasDiscriminator().HasValue("Attribute");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3"),
-                            ReferenceType = "Attribute",
-                            RelatedInvocationId = new Guid("b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2"),
-                            ReferenceId = new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2")
-                        },
-                        new
-                        {
-                            Id = new Guid("b8b8b8b8-b8b8-b8b8-b8b8-b8b8b8b8b8b3"),
-                            ReferenceType = "Attribute",
-                            RelatedInvocationId = new Guid("b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2"),
-                            ReferenceId = new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2")
-                        },
-                        new
-                        {
-                            Id = new Guid("d3d3d3d3-d3d3-d3d3-d3d3-d3d3d3d3d3d3"),
-                            ReferenceType = "Attribute",
-                            RelatedInvocationId = new Guid("d2d2d2d2-d2d2-d2d2-d2d2-d2d2d2d2d2d2"),
-                            ReferenceId = new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2")
-                        },
-                        new
-                        {
-                            Id = new Guid("b7b2b7b7-b7b7-b7b7-b7b7-b7b7b7b7b7b7"),
-                            ReferenceType = "Attribute",
-                            RelatedInvocationId = new Guid("f2f5f5f5-f5f5-f5f5-f5f5-f5f5f5f5f5f5"),
-                            ReferenceId = new Guid("e5e5e2e5-e5e5-e5e5-e5e5-e5e5e5e5e5e5")
-                        });
                 });
 
             modelBuilder.Entity("Domain.ReferenceBase", b =>
@@ -638,22 +340,6 @@ namespace DataAccess.Migrations
                         });
 
                     b.HasDiscriminator().HasValue("Base");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e2e7e7e7-e7e7-e7e7-e7e7-e7e7e7e7e7e7"),
-                            ReferenceType = "Base",
-                            RelatedInvocationId = new Guid("b2b6b6b6-b6b6-b6b6-b6b6-b6b6b6b6b6b6"),
-                            ReferenceId = new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4")
-                        },
-                        new
-                        {
-                            Id = new Guid("f2f7f7f7-f7f7-f7f7-f7f7-f7f7f7f7f7f7"),
-                            ReferenceType = "Base",
-                            RelatedInvocationId = new Guid("a2a6a6a6-a6a6-a6a6-a6a6-a6a6a6a6a6a6"),
-                            ReferenceId = new Guid("d4d2d4d4-d4d4-d4d4-d4d4-d4d4d4d4d4d4")
-                        });
                 });
 
             modelBuilder.Entity("Domain.ReferenceParameter", b =>
@@ -690,29 +376,6 @@ namespace DataAccess.Migrations
                         });
 
                     b.HasDiscriminator().HasValue("This");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c3c3c3c3-c3c3-c3c3-c3c3-c3c3c3c3c3c3"),
-                            ReferenceType = "This",
-                            RelatedInvocationId = new Guid("c2c2c2c2-c2c2-c2c2-c2c2-c2c2c2c2c2c2"),
-                            ReferenceId = new Guid("b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1")
-                        },
-                        new
-                        {
-                            Id = new Guid("c2c7c7c7-c7c7-c7c7-c7c7-c7c7c7c7c7c7"),
-                            ReferenceType = "This",
-                            RelatedInvocationId = new Guid("d2d6d6d6-d6d6-d6d6-d6d6-d6d6d6d6d6d6"),
-                            ReferenceId = new Guid("b4b424b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4")
-                        },
-                        new
-                        {
-                            Id = new Guid("d2d7d7d7-d7d7-d7d7-d7d7-d7d7d7d7d7d7"),
-                            ReferenceType = "This",
-                            RelatedInvocationId = new Guid("c2c6c6c6-c6c6-c6c6-c6c6-c6c6c6c6c6c6"),
-                            ReferenceId = new Guid("c4c4c2c4-c4c4-c4c4-c4c4-c4c4c4c4c4c4")
-                        });
                 });
 
             modelBuilder.Entity("Domain.ReferenceVariable", b =>

@@ -20,7 +20,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         if(methodToExecute == null || (methodToExecute.Accesibility == SimAccesibility.Abstract && (objReal is ReferenceThis || objReal is ReferenceBase)))
         {
-            throw new InvalidOperationLogic("Method not executable from reference.");
+            throw new InvalidOperationLogic($"{methodToExecute.Name} Method not executable from reference.");
         }
 
         if(visited.Contains(methodToExecute.Id))
