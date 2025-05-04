@@ -17,6 +17,12 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         try
         {
             var parameters = new List<ParameterSignature>();
+            var signature = new Signature()
+            {
+                Name = request.MethodName
+            };
+
+            var index = 0;
             foreach(var parameter in request.Parameters)
             {
                 var typeParameter = _simClassService.GetSimClassById(parameter.ClassTypeId);
@@ -24,16 +30,17 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
                 {
                     Name = parameter.Name,
                     Type = typeParameter,
+                    TypeId = typeParameter.Id,
+                    Signature = signature,
+                    SignatureId = signature.Id,
+                    Index = index
                 };
-
+                index++;
                 parameters.Add(par);
             }
 
-            var signature = new Signature()
-            {
-                Parameters = parameters,
-                Name = request.MethodName
-            };
+            signature.Parameters = parameters;
+
             var refer = _simClassService.GetSimClassById(request.ReferenceTypeId);
             var obj = _simClassService.GetSimClassById(request.InstanceTypeId);
 
