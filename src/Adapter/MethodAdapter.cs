@@ -265,7 +265,12 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     }
 
                     reference = new ReferenceBase() { Reference = classBase, ReferenceId = classBase.Id };
-                    _executionService.ValidateMethodExistsInClass(classBase, signature, true);
+                    if(classBase.BaseClass == null)
+                    {
+                        throw new InvalidAttributeAdapter("Base class is null and cannot be validated.");
+                    }
+
+                    _executionService.ValidateMethodExistsInClass(classBase.BaseClass, signature, true);
                     break;
 
                 case TypeReference.Attribute:
