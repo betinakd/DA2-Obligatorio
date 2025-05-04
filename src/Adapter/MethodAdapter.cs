@@ -247,27 +247,38 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             switch(invocation.TypeReference)
             {
                 case TypeReference.This:
-                    reference = new ReferenceThis() { Reference = _simClassService.GetSimClassById(invocation.ReferenceId) };
+                    var simClass = _simClassService.GetSimClassById(invocation.ReferenceId);
+                    reference = new ReferenceThis() { Reference = simClass, ReferenceId = simClass.Id };
+                    if(method.RelatedClassId != reference.GetSimClass().Id)
+                    {
+                        throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
+                    }
+
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
 
                 case TypeReference.Base:
-                    var simClass = _simClassService.GetSimClassById(invocation.ReferenceId);
-                    reference = new ReferenceBase() { Reference = simClass };
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, true);
+                    var classBase = _simClassService.GetSimClassById(invocation.ReferenceId);
+                    if(classBase.Id != method.RelatedClassId)
+                    {
+                        throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
+                    }
+
+                    reference = new ReferenceBase() { Reference = classBase, ReferenceId = classBase.Id };
+                    _executionService.ValidateMethodExistsInClass(classBase, signature, true);
                     break;
 
                 case TypeReference.Attribute:
                     var attribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
                     _executionService.ClassInheritAttribute(method.RelatedClassId, attribute.Id);
-                    reference = new ReferenceAttribute() { Reference = attribute };
+                    reference = new ReferenceAttribute() { Reference = attribute, ReferenceId = attribute.Id };
                     var isNotAbstract = false;
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
 
                 case TypeReference.Parameter:
                     var parameter = _methodService.GetParameterById(invocation.ReferenceId);
-                    reference = new ReferenceParameter() { Reference = parameter };
+                    reference = new ReferenceParameter() { Reference = parameter, ReferenceId = parameter.Id };
                     if(idMethod != parameter.RelatedMethodId)
                     {
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");

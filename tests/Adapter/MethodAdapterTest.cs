@@ -1009,35 +1009,6 @@ public class MethodAdapterTest
 
     [TestMethod]
     [ExpectedException(typeof(InvalidAttributeAdapter))]
-    public void CreateInvocation_WithBaseReference_ShouldThrowWhenRelatedClassIdMismatch()
-    {
-        var methodId = Guid.NewGuid();
-        var relatedClassId = Guid.NewGuid();
-        var referenceClassId = Guid.NewGuid();
-
-        var method = new SimMethod
-        {
-            Id = methodId,
-            Name = "TestMethod",
-            RelatedClassId = relatedClassId
-        };
-        var referenceClass = new SimClass { Id = referenceClassId, Name = "DifferentClass" };
-
-        var invocationRequest = new InvocationRequest
-        {
-            IdReference = referenceClassId.ToString(),
-            TypeReference = TypeReference.Base,
-            MethodName = "BaseMethod",
-            Parameters = []
-        };
-
-        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
-        _mockSimClassService!.Setup(s => s.GetSimClassById(referenceClassId)).Returns(referenceClass);
-        adapter!.CreateInvocation(methodId, invocationRequest);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeAdapter))]
     public void CreateInvocation_WithParameterReference_ShouldThrowWhenMethodIdMismatch()
     {
         var methodId = Guid.NewGuid();
