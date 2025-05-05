@@ -12,7 +12,6 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Parameter> Parameters { get; set; }
     public DbSet<LocalVariable> LocalVariables { get; set; }
     public DbSet<Invocation> Invocations { get; set; }
-
     public DbSet<Reference> References { get; set; }
     public DbSet<Signature> Signatures { get; set; }
 
@@ -207,6 +206,24 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         var objectClassId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         var voidTypeId = Guid.Parse("22222222-2222-2222-2222-222222222222");
         var boolTypeId = Guid.Parse("22223222-2222-2222-2222-222222222222");
+        var stringTypeId = Guid.Parse("44444444-1111-1111-1111-111111111111");
+
+        var byteTypeId = Guid.Parse("33333333-1111-1111-1111-111111111111");
+        var sbyteTypeId = Guid.Parse("33333333-2222-1111-1111-111111111111");
+        var charTypeId = Guid.Parse("33333333-3333-1111-1111-111111111111");
+        var decimalTypeId = Guid.Parse("33333333-4444-1111-1111-111111111111");
+        var doubleTypeId = Guid.Parse("33333333-5555-1111-1111-111111111111");
+        var floatTypeId = Guid.Parse("33333333-6666-1111-1111-111111111111");
+        var intTypeId = Guid.Parse("33333333-7777-1111-1111-111111111111");
+        var uintTypeId = Guid.Parse("33333333-8888-1111-1111-111111111111");
+        var nintTypeId = Guid.Parse("33333333-9999-1111-1111-111111111111");
+        var nuintTypeId = Guid.Parse("33333333-AAAA-1111-1111-111111111111");
+        var longTypeId = Guid.Parse("33333333-BBBB-1111-1111-111111111111");
+        var ulongTypeId = Guid.Parse("33333333-CCCC-1111-1111-111111111111");
+        var shortTypeId = Guid.Parse("33333333-DDDD-1111-1111-111111111111");
+        var ushortTypeId = Guid.Parse("33333333-EEEE-1111-1111-111111111111");
+        var delegateTypeId = Guid.Parse("44444444-2222-1111-1111-111111111111");
+        var dynamicTypeId = Guid.Parse("44444444-3333-1111-1111-111111111111");
 
         _ = modelBuilder.Entity<SimClass>().HasData(
             new SimClass
@@ -230,6 +247,256 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "bool",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = byteTypeId,
+                Name = "byte",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = sbyteTypeId,
+                Name = "sbyte",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = charTypeId,
+                Name = "char",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = decimalTypeId,
+                Name = "decimal",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = doubleTypeId,
+                Name = "double",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = floatTypeId,
+                Name = "float",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = intTypeId,
+                Name = "int",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = uintTypeId,
+                Name = "uint",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = nintTypeId,
+                Name = "nint",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = nuintTypeId,
+                Name = "nuint",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = longTypeId,
+                Name = "long",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = ulongTypeId,
+                Name = "ulong",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = shortTypeId,
+                Name = "short",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = ushortTypeId,
+                Name = "ushort",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = stringTypeId,
+                Name = "string",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = delegateTypeId,
+                Name = "delegate",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
+            },
+            new SimClass
+            {
+                Id = dynamicTypeId,
+                Name = "dynamic",
+                BaseClassId = objectClassId,
+                State = SimAccesibility.Normal,
             });
+
+        var equalsMethodId = Guid.Parse("55555555-1111-1111-1111-111111111111");
+        var equalsStaticMethodId = Guid.Parse("55555555-2222-1111-1111-111111111111");
+        var finalizeMethodId = Guid.Parse("55555555-3333-1111-1111-111111111111");
+        var getHashCodeMethodId = Guid.Parse("55555555-4444-1111-1111-111111111111");
+        var getTypeMethodId = Guid.Parse("55555555-5555-1111-1111-111111111111");
+        var memberWiseCloneMethodId = Guid.Parse("55555555-6666-1111-1111-111111111111");
+        var referenceEqualsMethodId = Guid.Parse("55555555-7777-1111-1111-111111111111");
+        var toStringMethodId = Guid.Parse("55555555-8888-1111-1111-111111111111");
+
+        var equalsObjParamId = Guid.Parse("66666666-1111-1111-1111-111111111111");
+        var equalsStaticObj1ParamId = Guid.Parse("66666666-2222-1111-1111-111111111111");
+        var equalsStaticObj2ParamId = Guid.Parse("66666666-3333-1111-1111-111111111111");
+        var referenceEqualsObj1ParamId = Guid.Parse("66666666-4444-1111-1111-111111111111");
+        var referenceEqualsObj2ParamId = Guid.Parse("66666666-5555-1111-1111-111111111111");
+
+        _ = modelBuilder.Entity<SimMethod>().HasData(
+            new SimMethod
+            {
+                Id = equalsMethodId,
+                Name = "Equals",
+                ReturnTypeId = boolTypeId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Public,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = equalsStaticMethodId,
+                Name = "Equals",
+                ReturnTypeId = boolTypeId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Public,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = finalizeMethodId,
+                Name = "Finalize",
+                ReturnTypeId = voidTypeId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Protected,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = getHashCodeMethodId,
+                Name = "GetHashCode",
+                ReturnTypeId = intTypeId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Public,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = getTypeMethodId,
+                Name = "GetType",
+                ReturnTypeId = objectClassId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Public,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = memberWiseCloneMethodId,
+                Name = "MemberwiseClone",
+                ReturnTypeId = objectClassId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Protected,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = referenceEqualsMethodId,
+                Name = "ReferenceEquals",
+                ReturnTypeId = boolTypeId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Public,
+                Accesibility = SimAccesibility.Normal
+            },
+            new SimMethod
+            {
+                Id = toStringMethodId,
+                Name = "ToString",
+                ReturnTypeId = stringTypeId,
+                RelatedClassId = objectClassId,
+                Privacity = SimPrivacity.Public,
+                Accesibility = SimAccesibility.Normal
+            });
+
+        _ = modelBuilder.Entity<Parameter>().HasData(
+        new Parameter
+        {
+            Id = equalsObjParamId,
+            Name = "obj",
+            TypeId = objectClassId,
+            RelatedMethodId = equalsMethodId,
+            Index = 0
+        },
+        new Parameter
+        {
+            Id = equalsStaticObj1ParamId,
+            Name = "objA",
+            TypeId = objectClassId,
+            RelatedMethodId = equalsStaticMethodId,
+            Index = 0
+        },
+        new Parameter
+        {
+            Id = equalsStaticObj2ParamId,
+            Name = "objB",
+            TypeId = objectClassId,
+            RelatedMethodId = equalsStaticMethodId,
+            Index = 1
+        },
+        new Parameter
+        {
+            Id = referenceEqualsObj1ParamId,
+            Name = "objA",
+            TypeId = objectClassId,
+            RelatedMethodId = referenceEqualsMethodId,
+            Index = 0
+        },
+        new Parameter
+        {
+            Id = referenceEqualsObj2ParamId,
+            Name = "objB",
+            TypeId = objectClassId,
+            RelatedMethodId = referenceEqualsMethodId,
+            Index = 1
+        });
     }
 }
