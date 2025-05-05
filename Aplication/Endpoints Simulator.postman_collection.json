@@ -1,0 +1,471 @@
+{
+	"info": {
+		"_postman_id": "d0948f92-3cf7-4b60-b0bd-5d2b9fd436cc",
+		"name": "Endpoints Simulator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "Classes",
+			"item": [
+				{
+					"name": "GetAllClasses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/classes",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetClass",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClass",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": \"65068de0-27bc-4582-9e3b-c1f2d10143fa\",\r\n  \"name\": \"PizzaHawaiana\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"0bb96744-1385-45b6-81bc-ca47b8d8177a\",\r\n  \"methods\" : [\r\n    {\r\n        \"Name\": \"agregarIngredientes\",\r\n        \"Privacity\": \"Protected\",\r\n        \"Accesibility\": \"Normal\",\r\n        \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"Parameters\":[]\r\n    }\r\n  ],\r\n  \"attributes\":[\r\n    {\r\n        \"Name\": \"Pepperoni\",\r\n        \"IdClassType\" : \"22222222-2222-2222-2222-222222222222\",\r\n        \"Privacity\" : \"Public\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateClass",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Prueba\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteClass",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Attributes",
+			"item": [
+				{
+					"name": "GetAttribute",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/attributes/{{idAttribute}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attributes",
+								"{{idAttribute}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAttribute",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"Name\": \"Pepperoni\",\r\n        \"IdClassType\" : \"22222222-2222-2222-2222-222222222222\",\r\n        \"Privacity\" : \"Public\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}/attributes",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAttribute",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/attributes/{{idAttribute}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attributes",
+								"{{idAttribute}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAttribute",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"Id\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"Name\": \"Pepperoni\",\r\n        \"IdRelatedClass\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"IdType\" : \"22222222-2222-2222-2222-222222222222\",\r\n        \"Privacity\" : \"Public\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/attributes",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Methods",
+			"item": [
+				{
+					"name": "GetMethod",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateMethod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"prepararMasa\",\r\n  \"privacity\": \"Protected\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}/methods",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMethod",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddParameter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"Harina\",\r\n    \"IdClassType\" : \"0bb96744-1385-45b6-81bc-ca47b8d8177a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}/parameters",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddVariable",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"Queso\",\r\n    \"IdClassType\" : \"0bb96744-1385-45b6-81bc-ca47b8d8177a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}/variables",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}",
+								"variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddInvocation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\" :\"0bb96744-1385-45b6-81bc-ca47b8d8177a\",\r\n    \"MethodName\" :\"agregarSalsa\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Executions",
+			"item": [
+				{
+					"name": "ExecuteMethod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MethodName\" : \"Validar\",\r\n    \"Parameters\": [],\r\n    \"IdReferenceType\": \"a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4\",\r\n    \"IdInstanceType\":\"a4a2a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/executions",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"executions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:5128",
+			"type": "default"
+		},
+		{
+			"key": "idClass",
+			"value": "Guid",
+			"type": "default"
+		},
+		{
+			"key": "State",
+			"value": "Normal",
+			"type": "default"
+		},
+		{
+			"key": "idMethod",
+			"value": "Guid",
+			"type": "default"
+		}
+	]
+}
