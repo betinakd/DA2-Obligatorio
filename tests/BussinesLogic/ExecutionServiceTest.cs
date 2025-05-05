@@ -174,7 +174,7 @@ public class ExecutionServiceTest
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
         var signature = new Signature { Name = "MissingMethod", Parameters = [] };
 
-        _mockExecuteDataAccess.Setup(m => m.FindMethodInHierarchy(simClass, signature, 0)).Returns((SimMethod?)null);
+        _mockExecuteDataAccess.Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0)).Returns((SimMethod?)null);
 
         _executionService.ValidateMethodExistsInClass(simClass, signature, true);
     }

@@ -51,7 +51,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
     public void ValidateMethodExistsInClass(SimClass classId, Signature methodName, bool isNotAbstract)
     {
-        var method = _executionDA.FindMethodInHierarchy(classId, methodName);
+        var method = _executionDA.FindMethodInHierarchyPublicOrProtected(classId, methodName);
         if(method == null)
         {
             throw new NonExistentValueLogic($"Method '{methodName.Name}' is not accessible from this context");
