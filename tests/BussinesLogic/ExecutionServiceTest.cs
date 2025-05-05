@@ -267,4 +267,99 @@ public class ExecutionServiceTest
 
         _mockExecuteDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once());
     }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_SameClass_ReturnsTrue()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+
+        var result = _executionService!.IsReferenceBaseOfInstance(simClass, simClass);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_IndirectParent_ReturnsTrue()
+    {
+        var grandparentClass = new SimClass { Id = Guid.NewGuid(), Name = "GrandparentClass" };
+        var parentClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ParentClass",
+            BaseClassId = grandparentClass.Id
+        };
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = parentClass.Id
+        };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([parentClass]);
+
+        var result = _executionService!.IsReferenceBaseOfInstance(grandparentClass, childClass);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_Unrelated_ReturnsFalse()
+    {
+        var classA = new SimClass { Id = Guid.NewGuid(), Name = "ClassA" };
+        var classB = new SimClass { Id = Guid.NewGuid(), Name = "ClassB" };
+
+        var result = _executionService!.IsReferenceBaseOfInstance(classA, classB);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_NullClasses_ReturnsFalse()
+    {
+        Assert.IsFalse(_executionService!.IsReferenceBaseOfInstance(null, new SimClass()));
+        Assert.IsFalse(_executionService!.IsReferenceBaseOfInstance(new SimClass(), null));
+        Assert.IsFalse(_executionService!.IsReferenceBaseOfInstance(null, null));
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_BaseClassNotFound_ReturnsFalse()
+    {
+        var parentClass = new SimClass { Id = Guid.NewGuid(), Name = "ParentClass" };
+        var childClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ChildClass",
+            BaseClassId = parentClass.Id
+        };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([]);
+
+        var result = _executionService!.IsReferenceBaseOfInstance(new SimClass { Id = Guid.NewGuid() }, childClass);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void ValidateMethodExistsInClass_AbstractMethodWithIsNotAbstractFalse_DoesNotThrow()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "AbstractMethod", Parameters = [] };
+        var abstractMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "AbstractMethod",
+            RelatedClass = simClass,
+            Accesibility = SimAccesibility.Abstract
+        };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Returns(abstractMethod);
+
+        _executionService!.ValidateMethodExistsInClass(simClass, signature, false);
+    }
 }

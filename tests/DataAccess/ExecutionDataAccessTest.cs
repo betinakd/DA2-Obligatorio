@@ -1077,4 +1077,352 @@ public class ExecutionDataAccessTest
         savedLog.Reference.Should().Be("Test reference");
         savedLog.ObjectCreate.Should().Be("Test object creation");
     }
+
+    [TestMethod]
+    public void FindMethodInHierarchy_WithReferenceParameter_LoadsParameterTypesCorrectly()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var intType = new SimClass { Name = "int" };
+        _context.SimClasses.Add(intType);
+        _context.SaveChanges();
+
+        var methodParameter = new Parameter
+        {
+            Name = "methodParam",
+            TypeId = intType.Id,
+            Type = intType,
+            Index = 1
+        };
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Parameters = [methodParameter]
+        };
+        methodParameter.RelatedMethod = method;
+        methodParameter.RelatedMethodId = method.Id;
+
+        var invocationParameter = new Parameter
+        {
+            Name = "invocationParam",
+            TypeId = intType.Id,
+            Type = intType,
+            Index = 0
+        };
+
+        var referenceParameter = new ReferenceParameter
+        {
+            Reference = invocationParameter
+        };
+
+        var invocationSignature = new Signature
+        {
+            Name = "InvokedMethod",
+            Parameters = []
+        };
+
+        var invocation = new Invocation
+        {
+            Reference = referenceParameter,
+            Signature = invocationSignature,
+            Index = 0
+        };
+        method.Invocations.Add(invocation);
+
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [new ParameterSignature { Name = "methodParam", TypeId = intType.Id, Type = intType }] };
+        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("TestMethod");
+        result.Invocations.Should().HaveCount(1);
+        result.Invocations[0].Reference.Should().BeOfType<ReferenceParameter>();
+        var refParam = result.Invocations[0].Reference as ReferenceParameter;
+        refParam.Reference.Should().NotBeNull();
+        refParam.Reference.Type.Should().NotBeNull();
+        refParam.Reference.Type.Name.Should().Be("int");
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchy_WithReferenceVariable_LoadsVariableTypesCorrectly()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var stringType = new SimClass { Name = "string" };
+        _context.SimClasses.Add(stringType);
+        _context.SaveChanges();
+
+        var variable = new LocalVariable
+        {
+            Name = "testVar",
+            TypeId = stringType.Id,
+            Type = stringType
+        };
+        _context.LocalVariables.Add(variable);
+        _context.SaveChanges();
+
+        var referenceVariable = new ReferenceVariable
+        {
+            Reference = variable
+        };
+
+        var invocationSignature = new Signature
+        {
+            Name = "InvokedMethod",
+            Parameters = []
+        };
+
+        var invocation = new Invocation
+        {
+            Reference = referenceVariable,
+            Signature = invocationSignature,
+            Index = 0
+        };
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Invocations = [invocation]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("TestMethod");
+        result.Invocations.Should().HaveCount(1);
+        result.Invocations[0].Reference.Should().BeOfType<ReferenceVariable>();
+        var refVar = result.Invocations[0].Reference as ReferenceVariable;
+        refVar.Reference.Should().NotBeNull();
+        refVar.Reference.Type.Should().NotBeNull();
+        refVar.Reference.Type.Name.Should().Be("string");
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchy_WithReferenceAttribute_LoadsAttributeTypesCorrectly()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var boolType = new SimClass { Name = "bool" };
+        _context.SimClasses.Add(boolType);
+        _context.SaveChanges();
+
+        var attribute = new SimAttribute
+        {
+            Name = "testAttr",
+            TypeId = boolType.Id,
+            Type = boolType,
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass
+        };
+        _context.SimAttributes.Add(attribute);
+        _context.SaveChanges();
+
+        var referenceAttribute = new ReferenceAttribute
+        {
+            Reference = attribute
+        };
+
+        var invocationSignature = new Signature
+        {
+            Name = "InvokedMethod",
+            Parameters = []
+        };
+
+        var invocation = new Invocation
+        {
+            Reference = referenceAttribute,
+            Signature = invocationSignature,
+            Index = 0
+        };
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Invocations = [invocation]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("TestMethod");
+        result.Invocations.Should().HaveCount(1);
+        result.Invocations[0].Reference.Should().BeOfType<ReferenceAttribute>();
+        var refAttr = result.Invocations[0].Reference as ReferenceAttribute;
+        refAttr.Reference.Should().NotBeNull();
+        refAttr.Reference.Type.Should().NotBeNull();
+        refAttr.Reference.Type.Name.Should().Be("bool");
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchy_WithReferenceBase_LoadsBaseClassCorrectly()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var referenceBase = new ReferenceBase
+        {
+            Reference = childClass
+        };
+
+        var invocationSignature = new Signature
+        {
+            Name = "InvokedMethod",
+            Parameters = []
+        };
+
+        var invocation = new Invocation
+        {
+            Reference = referenceBase,
+            Signature = invocationSignature,
+            Index = 0
+        };
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = childClass.Id,
+            RelatedClass = childClass,
+            Invocations = [invocation]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var result = _executionDataAccess.FindMethodInHierarchy(childClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("TestMethod");
+        result.Invocations.Should().HaveCount(1);
+        result.Invocations[0].Reference.Should().BeOfType<ReferenceBase>();
+        var refBase = result.Invocations[0].Reference as ReferenceBase;
+        refBase.Reference.Should().NotBeNull();
+        refBase.Reference.BaseClass.Should().NotBeNull();
+        refBase.Reference.BaseClass.Name.Should().Be("BaseClass");
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchy_WithReferenceThis_LoadsThisReferenceCorrectly()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var referenceThis = new ReferenceThis
+        {
+            Reference = simClass
+        };
+
+        var invocationSignature = new Signature
+        {
+            Name = "InvokedMethod",
+            Parameters = []
+        };
+
+        var invocation = new Invocation
+        {
+            Reference = referenceThis,
+            Signature = invocationSignature,
+            Index = 0
+        };
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Invocations = [invocation]
+        };
+
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("TestMethod");
+        result.Invocations.Should().HaveCount(1);
+        result.Invocations[0].Reference.Should().BeOfType<ReferenceThis>();
+        var refThis = result.Invocations[0].Reference as ReferenceThis;
+        refThis.Reference.Should().NotBeNull();
+        refThis.Reference.Name.Should().Be("TestClass");
+    }
+
+    [TestMethod]
+    public void IsMethodUsedInClass_WithNullClass_ReturnsFalse()
+    {
+        var method = new SimMethod { Id = Guid.NewGuid(), Name = "TestMethod" };
+
+        var methodInfo = typeof(ExecutionDataAccess).GetMethod("IsMethodUsedInClass",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        var result = (bool)methodInfo.Invoke(_executionDataAccess, [null, method]);
+
+        result.Should().BeFalse("IsMethodUsedInClass should return false for null class");
+    }
+
+    [TestMethod]
+    public void IsMethodUsedInInheritingClass_WithNullClass_ReturnsFalse()
+    {
+        var method = new SimMethod { Id = Guid.NewGuid(), Name = "TestMethod" };
+
+        var methodInfo = typeof(ExecutionDataAccess).GetMethod("IsMethodUsedInInheritingClass",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        var result = (bool)methodInfo.Invoke(_executionDataAccess, [null, method]);
+
+        result.Should().BeFalse("IsMethodUsedInInheritingClass should return false for null class");
+    }
+
+    [TestMethod]
+    public void LoadReferenceDetails_WithNullInvocation_DoesNotThrowException()
+    {
+        var methodInfo = typeof(ExecutionDataAccess).GetMethod("LoadReferenceDetails",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        methodInfo.Invoke(_executionDataAccess, [null]);
+    }
+
+    [TestMethod]
+    public void OrderMethodsInClass_WithNullClass_DoesNotThrowException()
+    {
+        var methodInfo = typeof(ExecutionDataAccess).GetMethod("OrderMethodsInClass",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        methodInfo.Invoke(_executionDataAccess, [null]);
+    }
 }

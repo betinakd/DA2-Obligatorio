@@ -385,4 +385,13 @@ public class SimMethodTest
         Assert.IsFalse(resultMethodNullSignatureNotNull, "Cuando un TypeId es null y el otro no, deberían considerarse diferentes");
         Assert.IsFalse(resultMethodNotNullSignatureNull, "Cuando un TypeId es null y el otro no, deberían considerarse diferentes");
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(NotImplementedException))]
+    public void GetHashCode_ThrowsNotImplementedException()
+    {
+        var method = new SimMethod { Name = "TestMethod" };
+
+        method.GetHashCode();
+    }
 }

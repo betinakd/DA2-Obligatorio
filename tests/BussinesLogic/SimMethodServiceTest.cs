@@ -690,4 +690,52 @@ public class SimMethodServiceTest
 
         _mockExectuionDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_ShouldThrowException_WhenMethodIsInUseByParametersVariablesOrInvocations()
+    {
+        var methodId = Guid.NewGuid();
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
+            .Returns(false);
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.MethodIsInUse(methodId))
+            .Returns(true);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void AddMethodParameter_WhenMethodIsInUseByInheritingInvocations_ThrowsInUseValueLogic()
+    {
+        var methodId = Guid.NewGuid();
+        var parameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" }
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.MethodParameterRepeatedValues(methodId, parameter))
+            .Returns(false);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
+            .Returns(true);
+
+        _simMethodService!.AddMethodParameter(methodId, parameter);
+    }
 }
