@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250504105547_InitialCreate")]
+    [Migration("20250505011038_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -132,6 +132,48 @@ namespace DataAccess.Migrations
                     b.HasIndex("TypeId");
 
                     b.ToTable("Parameters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("66666666-1111-1111-1111-111111111111"),
+                            Index = 0,
+                            Name = "obj",
+                            RelatedMethodId = new Guid("55555555-1111-1111-1111-111111111111"),
+                            TypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-2222-1111-1111-111111111111"),
+                            Index = 0,
+                            Name = "objA",
+                            RelatedMethodId = new Guid("55555555-2222-1111-1111-111111111111"),
+                            TypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-3333-1111-1111-111111111111"),
+                            Index = 1,
+                            Name = "objB",
+                            RelatedMethodId = new Guid("55555555-2222-1111-1111-111111111111"),
+                            TypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-4444-1111-1111-111111111111"),
+                            Index = 0,
+                            Name = "objA",
+                            RelatedMethodId = new Guid("55555555-7777-1111-1111-111111111111"),
+                            TypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-5555-1111-1111-111111111111"),
+                            Index = 1,
+                            Name = "objB",
+                            RelatedMethodId = new Guid("55555555-7777-1111-1111-111111111111"),
+                            TypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        });
                 });
 
             modelBuilder.Entity("Domain.ParameterSignature", b =>
@@ -278,6 +320,125 @@ namespace DataAccess.Migrations
                             BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "bool",
                             State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-1111-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "byte",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-2222-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "sbyte",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "char",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-4444-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "decimal",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-5555-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "double",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-6666-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "float",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-7777-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "int",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-8888-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "uint",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-9999-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "nint",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-aaaa-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "nuint",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-bbbb-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "long",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-cccc-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "ulong",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-dddd-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "short",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-eeee-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "ushort",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-1111-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "string",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-2222-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "delegate",
+                            State = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-3333-1111-1111-111111111111"),
+                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "dynamic",
+                            State = 2
                         });
                 });
 
@@ -310,6 +471,80 @@ namespace DataAccess.Migrations
                     b.HasIndex("ReturnTypeId");
 
                     b.ToTable("SimMethods");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("55555555-1111-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "Equals",
+                            Privacity = 2,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-2222-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "Equals",
+                            Privacity = 2,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-3333-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "Finalize",
+                            Privacity = 1,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("22222222-2222-2222-2222-222222222222")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-4444-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "GetHashCode",
+                            Privacity = 2,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("33333333-7777-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-5555-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "GetType",
+                            Privacity = 2,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-6666-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "MemberwiseClone",
+                            Privacity = 1,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("11111111-1111-1111-1111-111111111111")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-7777-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "ReferenceEquals",
+                            Privacity = 2,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("22223222-2222-2222-2222-222222222222")
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-8888-1111-1111-111111111111"),
+                            Accesibility = 2,
+                            Name = "ToString",
+                            Privacity = 2,
+                            RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ReturnTypeId = new Guid("44444444-1111-1111-1111-111111111111")
+                        });
                 });
 
             modelBuilder.Entity("Domain.ReferenceAttribute", b =>
