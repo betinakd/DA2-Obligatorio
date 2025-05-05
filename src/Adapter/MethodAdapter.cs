@@ -175,7 +175,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Type = type,
                 RelatedMethod = method,
                 RelatedMethodId = idMethod,
-                TypeId = type.Id
+                TypeId = type.Id,
             };
             var newAttribute = _methodService.AddMethodParameter(idMethod, parameterMethod);
             var response = new CreatedParameterResponse
@@ -317,6 +317,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 RelatedMethodId = method.Id,
                 SignatureId = signature.Id
             };
+
+            newInvocation.Reference.RelatedInvocation = newInvocation;
+            newInvocation.Reference.RelatedInvocationId = newInvocation.Id;
 
             _methodService.AddInvocation(idMethod, newInvocation);
 

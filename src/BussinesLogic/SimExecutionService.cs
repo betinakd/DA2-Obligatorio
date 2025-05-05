@@ -18,7 +18,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         SimClass objClass = objReal.GetSimClass();
         SimMethod? methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
 
-        if(methodToExecute == null || (methodToExecute.Accesibility == SimAccesibility.Abstract && (objReal is ReferenceThis || objReal is ReferenceBase)))
+        if(methodToExecute == null)
         {
             throw new InvalidOperationLogic($"{methodToExecute.Name} Method not executable from reference.");
         }
