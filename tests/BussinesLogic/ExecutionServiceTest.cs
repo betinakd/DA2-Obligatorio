@@ -174,70 +174,9 @@ public class ExecutionServiceTest
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
         var signature = new Signature { Name = "MissingMethod", Parameters = [] };
 
-        _mockExecuteDataAccess.Setup(m => m.FindMethodInHierarchy(simClass, signature, 0)).Returns((SimMethod?)null);
+        _mockExecuteDataAccess.Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0)).Returns((SimMethod?)null);
 
         _executionService.ValidateMethodExistsInClass(simClass, signature, true);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InvalidOperationLogic))]
-    public void ExecuteMethod_AbstractMethodWithThisReference_ThrowsInvalidOperationLogic()
-    {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
-        var signature = new Signature { Name = "AbstractMethod", Parameters = [] };
-
-        var abstractMethod = new SimMethod
-        {
-            Id = Guid.NewGuid(),
-            Name = "AbstractMethod",
-            RelatedClass = simClass,
-            Accesibility = SimAccesibility.Abstract,
-            Invocations = []
-        };
-
-        var thisRef = new Mock<ReferenceThis>();
-        thisRef.Setup(r => r.GetSimClass()).Returns(simClass);
-        thisRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.AbstractMethod()");
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
-            .Returns(abstractMethod);
-
-        _executionService!.ExecuteMethod(thisRef.Object, thisRef.Object, signature);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InvalidOperationLogic))]
-    public void ExecuteMethod_AbstractMethodWithBaseReference_ThrowsInvalidOperationLogic()
-    {
-        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
-        var childClass = new SimClass
-        {
-            Id = Guid.NewGuid(),
-            Name = "ChildClass",
-            BaseClassId = baseClass.Id,
-            BaseClass = baseClass
-        };
-        var signature = new Signature { Name = "AbstractMethod", Parameters = [] };
-
-        var abstractMethod = new SimMethod
-        {
-            Id = Guid.NewGuid(),
-            Name = "AbstractMethod",
-            RelatedClass = baseClass,
-            Accesibility = SimAccesibility.Abstract,
-            Invocations = []
-        };
-
-        var baseRef = new Mock<ReferenceBase>();
-        baseRef.Setup(r => r.GetSimClass()).Returns(baseClass);
-        baseRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("base.AbstractMethod()");
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(baseClass, signature, 0))
-            .Returns(abstractMethod);
-
-        _executionService!.ExecuteMethod(baseRef.Object, baseRef.Object, signature);
     }
 
     [TestMethod]
@@ -418,7 +357,7 @@ public class ExecutionServiceTest
         };
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0))
             .Returns(abstractMethod);
 
         _executionService!.ValidateMethodExistsInClass(simClass, signature, false);

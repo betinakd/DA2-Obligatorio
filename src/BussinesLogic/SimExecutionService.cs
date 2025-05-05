@@ -18,7 +18,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         SimClass objClass = objReal.GetSimClass();
         SimMethod? methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
 
-        if(methodToExecute == null || (methodToExecute.Accesibility == SimAccesibility.Abstract && (objReal is ReferenceThis || objReal is ReferenceBase)))
+        if(methodToExecute == null)
         {
             throw new InvalidOperationLogic($"{methodToExecute.Name} Method not executable from reference.");
         }
@@ -51,7 +51,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
     public void ValidateMethodExistsInClass(SimClass classId, Signature methodName, bool isNotAbstract)
     {
-        var method = _executionDA.FindMethodInHierarchy(classId, methodName);
+        var method = _executionDA.FindMethodInHierarchyPublicOrProtected(classId, methodName);
         if(method == null)
         {
             throw new NonExistentValueLogic($"Method '{methodName.Name}' is not accessible from this context");

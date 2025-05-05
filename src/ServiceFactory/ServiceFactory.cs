@@ -27,8 +27,12 @@ public static class SimulatorServiceFactory
         services.AddScoped<IExecutionAdapter, ExecutionAdapter>();
         services.AddScoped<IExecutionService, ExecutionService>();
         services.AddScoped<IExecutionDataAccess, ExecutionDataAccess>();
-        services.AddDbContext<DbContext, SimulatorDbContext>(options => options.UseSqlServer(connectionString));
-
+        services.AddDbContext<DbContext, SimulatorDbContext>(options =>
+            options.UseSqlServer(connectionString, sqlOptions =>
+            {
+                sqlOptions.CommandTimeout(30000);
+                sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            }));
         return services;
     }
 }
