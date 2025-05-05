@@ -778,4 +778,215 @@ public class SimMethodDataAccessTest
 
         Assert.IsTrue(result, "Method with local variables should be considered in use");
     }
+
+    [TestMethod]
+    public void GetInvocationById_WithReferenceParameter_LoadsCorrectly()
+    {
+        var methodId = Guid.NewGuid();
+        var paramId = Guid.NewGuid();
+        var invocationId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        _context!.SimClasses.Add(typeClass);
+        _context.SaveChanges();
+
+        var parameter = new Parameter
+        {
+            Id = paramId,
+            Name = "TestParam",
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.Parameters.Add(parameter);
+
+        var referenceParameter = new ReferenceParameter
+        {
+            Id = Guid.NewGuid(),
+            Reference = parameter
+        };
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestSignature",
+            Parameters = []
+        };
+
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            RelatedMethodId = methodId,
+            Reference = referenceParameter,
+            Signature = signature
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess!.GetInvocationById(invocationId);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result.Reference, typeof(ReferenceParameter));
+        var refParam = result.Reference as ReferenceParameter;
+        Assert.IsNotNull(refParam!.Reference);
+        Assert.AreEqual(parameter.Name, refParam.Reference.Name);
+        Assert.IsNotNull(refParam.Reference.Type);
+        Assert.AreEqual("TypeClass", refParam.Reference.Type.Name);
+    }
+
+    [TestMethod]
+    public void GetInvocationById_WithReferenceAttribute_LoadsCorrectly()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var invocationId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        _context!.SimClasses.Add(typeClass);
+
+        var containingClass = new SimClass { Id = classId, Name = "ContainingClass" };
+        _context.SimClasses.Add(containingClass);
+        _context.SaveChanges();
+
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttr",
+            TypeId = typeId,
+            Type = typeClass,
+            RelatedClassId = classId,
+            RelatedClass = containingClass
+        };
+        _context.SimAttributes.Add(attribute);
+
+        var referenceAttribute = new ReferenceAttribute
+        {
+            Id = Guid.NewGuid(),
+            Reference = attribute
+        };
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestSignature"
+        };
+
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            RelatedMethodId = methodId,
+            Reference = referenceAttribute,
+            Signature = signature
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess!.GetInvocationById(invocationId);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result.Reference, typeof(ReferenceAttribute));
+        var refAttr = result.Reference as ReferenceAttribute;
+        Assert.IsNotNull(refAttr!.Reference);
+        Assert.AreEqual(attribute.Name, refAttr.Reference.Name);
+        Assert.IsNotNull(refAttr.Reference.Type);
+        Assert.AreEqual("TypeClass", refAttr.Reference.Type.Name);
+    }
+
+    [TestMethod]
+    public void GetInvocationById_WithReferenceBase_LoadsCorrectly()
+    {
+        var methodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+        var invocationId = Guid.NewGuid();
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
+        _context!.SimClasses.Add(baseClass);
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "ChildClass",
+            BaseClassId = baseClassId,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var referenceBase = new ReferenceBase
+        {
+            Id = Guid.NewGuid(),
+            Reference = simClass
+        };
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestSignature"
+        };
+
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            RelatedMethodId = methodId,
+            Reference = referenceBase,
+            Signature = signature
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess!.GetInvocationById(invocationId);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result.Reference, typeof(ReferenceBase));
+        var refBase = result.Reference as ReferenceBase;
+        Assert.IsNotNull(refBase!.Reference);
+        Assert.AreEqual(simClass.Name, refBase.Reference.Name);
+        Assert.IsNotNull(refBase.Reference.BaseClass);
+        Assert.AreEqual("BaseClass", refBase.Reference.BaseClass.Name);
+    }
+
+    [TestMethod]
+    public void GetInvocationById_WithReferenceThis_LoadsCorrectly()
+    {
+        var methodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var invocationId = Guid.NewGuid();
+
+        var simClass = new SimClass { Id = classId, Name = "ThisClass" };
+        _context!.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var referenceThis = new ReferenceThis
+        {
+            Id = Guid.NewGuid(),
+            Reference = simClass
+        };
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestSignature"
+        };
+
+        var invocation = new Invocation
+        {
+            Id = invocationId,
+            RelatedMethodId = methodId,
+            Reference = referenceThis,
+            Signature = signature
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var result = _simMethodDataAccess!.GetInvocationById(invocationId);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result.Reference, typeof(ReferenceThis));
+        var refThis = result.Reference as ReferenceThis;
+        Assert.IsNotNull(refThis!.Reference);
+        Assert.AreEqual(simClass.Name, refThis.Reference.Name);
+    }
 }
