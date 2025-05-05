@@ -112,4 +112,83 @@ public class ExecutionAdapterTest
             _executionAdapter!.ExecuteMethod(request);
         });
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidExecutionAdapter))]
+    public void ExecuteMethod_WhenReferenceIsNotBaseOfInstance_ThrowsInvalidExecutionAdapter()
+    {
+        var instanceTypeId = Guid.NewGuid();
+        var referenceTypeId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceTypeId.ToString(),
+            IdReferenceType = referenceTypeId.ToString(),
+            Parameters = []
+        };
+
+        var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
+        var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
+
+        _simClassService!
+            .Setup(s => s.GetSimClassById(instanceTypeId))
+            .Returns(instanceTypeClass);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(referenceTypeId))
+            .Returns(referenceTypeClass);
+
+        _mockExecutionService!
+            .Setup(s => s.IsReferenceBaseOfInstance(
+                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
+                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
+            .Returns(false);
+
+        _executionAdapter!.ExecuteMethod(request);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
+    public void ExecuteMethod_WhenNonExistentValueLogicThrown_ShouldThrowNonExistentValueAdapter()
+    {
+        var instanceTypeId = Guid.NewGuid();
+        var referenceTypeId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceTypeId.ToString(),
+            IdReferenceType = referenceTypeId.ToString(),
+            Parameters = []
+        };
+
+        var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
+        var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
+
+        _simClassService!
+            .Setup(s => s.GetSimClassById(instanceTypeId))
+            .Returns(instanceTypeClass);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(referenceTypeId))
+            .Returns(referenceTypeClass);
+
+        _mockExecutionService!
+            .Setup(s => s.IsReferenceBaseOfInstance(
+                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
+                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
+            .Returns(true);
+
+        _mockExecutionService
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<Reference>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<int>(),
+                It.IsAny<HashSet<Guid>>()))
+            .Throws(new NonExistentValueLogic("Method not found"));
+
+        _executionAdapter!.ExecuteMethod(request);
+    }
 }

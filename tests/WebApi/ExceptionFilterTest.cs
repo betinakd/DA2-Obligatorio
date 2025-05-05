@@ -94,4 +94,41 @@ public class ExceptionFilterTests
 
         AssertResult(exceptionContext, HttpStatusCode.Conflict, 4, "Value already in use");
     }
+
+    [TestMethod]
+    public void OnException_NoMatchingExceptionHandler_ReturnsDefaultInternalServerError()
+    {
+        var exception = new Exception("Unhandled exception type");
+        var exceptionContext = CreateExceptionContext(exception);
+
+        var filterType = typeof(ExceptionFilter);
+        var dictionaryField = filterType.GetField("_errorFactories", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        var originalDictionary = dictionaryField?.GetValue(_exceptionFilter) as Dictionary<Type, Func<Exception, IActionResult>>;
+
+        var emptyDictionary = new Dictionary<Type, Func<Exception, IActionResult>>();
+        dictionaryField?.SetValue(_exceptionFilter, emptyDictionary);
+
+        try
+        {
+            _exceptionFilter!.OnException(exceptionContext);
+
+            Assert.IsNotNull(exceptionContext.Result);
+            var objectResult = exceptionContext.Result as ObjectResult;
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult!.StatusCode);
+
+            var resultValue = objectResult.Value as ErrorResponse;
+            Assert.IsNotNull(resultValue);
+            Assert.AreEqual(6, resultValue!.InnerCode);
+            Assert.AreEqual("Unhandled exception type", resultValue.Message);
+        }
+        finally
+        {
+            if(originalDictionary != null)
+            {
+                dictionaryField?.SetValue(_exceptionFilter, originalDictionary);
+            }
+        }
+    }
 }
