@@ -357,7 +357,7 @@ public class ExecutionServiceTest
         };
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0))
             .Returns(abstractMethod);
 
         _executionService!.ValidateMethodExistsInClass(simClass, signature, false);

@@ -32,8 +32,7 @@ public static class SimulatorServiceFactory
             {
                 sqlOptions.CommandTimeout(30000);
                 sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            })
-        );
+            }));
         return services;
     }
 }
