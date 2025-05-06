@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Exceptions;
 
 namespace Tests.Domain;
 
@@ -393,5 +394,61 @@ public class SimMethodTest
         var method = new SimMethod { Name = "TestMethod" };
 
         method.GetHashCode();
+    }
+
+    [TestMethod]
+    public void Name_WhenSetToValidValue_ShouldSetValue()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "ValidClassName";
+
+        Assert.AreEqual("ValidClassName", simClass.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Name_WhenSetToEmptyString_ShouldThrowException()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = string.Empty;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Name_WhenSetToInvalidCharacters_ShouldThrowException()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "Invalid@Name";
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Name_WhenSetToOnlyNumbers_ShouldThrowException()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "12345";
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Name_WhenSetToReservedWord_ShouldThrowException()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "class";
+    }
+
+    [TestMethod]
+    public void Name_WhenSetToValidNameWithNumbers_ShouldSetValue()
+    {
+        var simClass = new SimClass();
+
+        simClass.Name = "ClassName123";
+
+        Assert.AreEqual("ClassName123", simClass.Name);
     }
 }

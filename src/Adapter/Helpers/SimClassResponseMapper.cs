@@ -46,6 +46,7 @@ public static class SimClassResponseMapper
                     Parameters = i.Signature?.Parameters.Select(p => new ParameterResponse
                     {
                         Id = p.Id,
+                        MethodId = i.RelatedMethodId,
                         Name = p.Name,
                         ClassTypeId = p.TypeId
                     }).ToList() ?? []

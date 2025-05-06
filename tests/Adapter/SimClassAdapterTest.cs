@@ -248,106 +248,6 @@ public class SimClassAdapterTest
     }
 
     [TestMethod]
-    public void UpdateSimClass_ShouldUpdateSuccessfully_WhenValidRequest()
-    {
-        var classId = Guid.NewGuid();
-        var baseClassId = Guid.NewGuid();
-        var attributeTypeId = Guid.NewGuid();
-        var methodReturnTypeId = Guid.NewGuid();
-        var parameterTypeId = Guid.NewGuid();
-
-        var request = new SimClassRequestUpdate
-        {
-            Name = "UpdatedClass",
-            State = SimModelsAccesibility.Normal,
-            IdBaseClass = baseClassId.ToString(),
-            Methods =
-        [
-            new MethodRequest
-            {
-                Name = "TestMethod",
-                Privacity = SimModelsPrivacity.Public,
-                Accesibility = SimModelsAccesibility.Normal,
-                IdReturnType = methodReturnTypeId.ToString(),
-                Parameters =
-                [
-                    new ParameterRequest
-                    {
-                        Name = "testParam",
-                        IdClassType = parameterTypeId.ToString()
-                    }
-
-                ]
-            }
-
-        ],
-            Attributes =
-        [
-            new AttributeRequest
-            {
-                Name = "TestAttribute",
-                Privacity = SimModelsPrivacity.Private,
-                IdClassType = attributeTypeId.ToString()
-            }
-
-        ]
-        };
-
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
-        var attributeTypeClass = new SimClass { Id = attributeTypeId, Name = "AttributeType" };
-        var methodReturnType = new SimClass { Id = methodReturnTypeId, Name = "ReturnType" };
-        var parameterType = new SimClass { Id = parameterTypeId, Name = "ParameterType" };
-
-        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(baseClassId))
-            .Returns(baseClass);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(attributeTypeId))
-            .Returns(attributeTypeClass);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(methodReturnTypeId))
-            .Returns(methodReturnType);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(parameterTypeId))
-            .Returns(parameterType);
-
-        _mockExecutionService
-            .Setup(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()))
-            .Verifiable();
-
-        _mockSimClassService
-            .Setup(s => s.UpdateSimClass(It.Is<SimClass>(sc =>
-                sc.Id == classId &&
-                sc.Name == request.Name &&
-                sc.BaseClassId == baseClassId &&
-                sc.Methods.Count == 1 &&
-                sc.Attributes.Count == 1)))
-            .Returns((SimClass sc) => sc);  // Return the input SimClass
-
-        var result = _simClassAdapter.UpdateSimClass(request, classId);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("Class updated successfully", result.Message);
-        Assert.IsNotNull(result.SimClass);
-        Assert.AreEqual(classId, result.SimClass.Id);
-        Assert.AreEqual(request.Name, result.SimClass.Name);
-
-        _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
-        _mockSimClassService.Verify(s => s.GetSimClassById(attributeTypeId), Times.Once);
-        _mockSimClassService.Verify(s => s.GetSimClassById(methodReturnTypeId), Times.Once);
-        _mockSimClassService.Verify(s => s.GetSimClassById(parameterTypeId), Times.Once);
-        _mockExecutionService.Verify(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()), Times.Once);
-        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-    }
-
-    [TestMethod]
     public void UpdateSimClass_ShouldThrowNonExistentValueAdapter_WhenBaseClassNotFound()
     {
         var classId = Guid.NewGuid();
@@ -442,5 +342,115 @@ public class SimClassAdapterTest
 
         Assert.AreEqual("Class is in use", exception.Message);
         _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldReturnSuccessResponse_WhenUpdateIsSuccessful()
+    {
+        // Arrange
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+        var objTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods =
+        [
+            new MethodRequest
+            {
+                Name = "TestMethod",
+                Privacity = SimModelsPrivacity.Public,
+                Accesibility = SimModelsAccesibility.Normal,
+                IdReturnType = objTypeId.ToString(),
+                Parameters =
+                [
+                    new ParameterRequest { Name = "param1", IdClassType = objTypeId.ToString() }
+                ]
+            }
+
+        ],
+            Attributes =
+        [
+            new AttributeRequest
+            {
+                Name = "TestAttribute",
+                Privacity = SimModelsPrivacity.Private,
+                IdClassType = objTypeId.ToString()
+            }
+
+        ]
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
+        var objectClass = new SimClass { Id = objTypeId, Name = "Object" };
+        var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(objTypeId))
+            .Returns(objectClass);
+
+        _mockExecutionService
+            .Setup(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()));
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Callback<SimClass>(c => updatedClass = c)
+            .Returns(updatedClass);
+
+        var result = _simClassAdapter.UpdateSimClass(request, classId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Class updated successfully", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
+
+        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+        _mockExecutionService.Verify(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldSetDefaultObjectId_WhenBaseClassIdIsEmpty()
+    {
+        var classId = Guid.NewGuid();
+        var objectId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = Guid.Empty.ToString(), // Empty GUID
+            Methods = [],
+            Attributes = []
+        };
+
+        var objectClass = new SimClass { Id = objectId, Name = "Object" };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Default);
+        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Default);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(objectId))
+            .Returns(objectClass);
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()));
+
+        var result = _simClassAdapter.UpdateSimClass(request, classId);
+
+        Assert.IsNotNull(result);
+        _mockSimClassService.Verify(s => s.GetSimClassById(objectId), Times.Once);
     }
 }

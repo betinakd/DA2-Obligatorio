@@ -310,6 +310,9 @@ public class ExecutionServiceTest
         var classA = new SimClass { Id = Guid.NewGuid(), Name = "ClassA" };
         var classB = new SimClass { Id = Guid.NewGuid(), Name = "ClassB" };
 
+        _ = _mockExecuteDataAccess.Setup(exec => exec.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([]);
+
         var result = _executionService!.IsReferenceBaseOfInstance(classA, classB);
 
         Assert.IsFalse(result);
