@@ -296,6 +296,6 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(c => c.BaseClass)
             .FirstOrDefault(c => c.Id == simClass.BaseClassId.Value);
 
-        return baseClass == null ? null : FindMethodInHierarchy(baseClass, signature, level + 1);
+        return baseClass == null ? null : FindMethodInHierarchyPublicOrProtected(baseClass, signature, level + 1);
     }
 }

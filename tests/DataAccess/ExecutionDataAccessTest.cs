@@ -1446,7 +1446,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
-            Privacity = SimPrivacity.Private // Should be found since it's level 0
+            Privacity = SimPrivacity.Private
         };
         simClass.Methods.Add(privateMethod);
         _context.SimMethods.Add(privateMethod);
@@ -1554,7 +1554,7 @@ public class ExecutionDataAccessTest
             Name = "PrivateMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Private // Should not be found in base class
+            Privacity = SimPrivacity.Private
         };
         baseClass.Methods.Add(privateMethod);
         _context.SimMethods.Add(privateMethod);
