@@ -1,11 +1,13 @@
 using Domain.Enums;
+using Domain.Exceptions;
+using Domain.Validations;
 
 namespace Domain;
 
 public class SimMethod
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = string.Empty;
+    private string _name = string.Empty;
     public Guid? ReturnTypeId { get; set; }
     public SimClass? ReturnType { get; set; } = null!;
     public Guid RelatedClassId { get; set; }
@@ -73,6 +75,30 @@ public class SimMethod
         }
 
         return true;
+    }
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if(!SyntaxisValidation.IsValidName(value))
+            {
+                throw new InvalidAttributeDomain("Name cannot be empty or contain invalid characters.");
+            }
+
+            if(SyntaxisValidation.OnlyNumbers(value))
+            {
+                throw new InvalidAttributeDomain("Name cannot be only numbers.");
+            }
+
+            if(SyntaxisValidation.ReservedWords(value))
+            {
+                throw new InvalidAttributeDomain("Name cannot be a reserved word.");
+            }
+
+            _name = value;
+        }
     }
 
     public override int GetHashCode()

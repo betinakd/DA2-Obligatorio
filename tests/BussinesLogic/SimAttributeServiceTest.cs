@@ -302,6 +302,6 @@ public class SimAttributeServiceTest
 
         _mockSimAttributeDataAccess!.Setup(da => da.ExistAttributeById(attributeId)).Returns(false);
 
-        _simAttributeService!.GetSimAttribute(attributeId);
+        var result = _simAttributeService!.GetSimAttribute(attributeId);
     }
 }

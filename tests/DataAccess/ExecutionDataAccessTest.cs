@@ -1425,4 +1425,145 @@ public class ExecutionDataAccessTest
 
         methodInfo.Invoke(_executionDataAccess, [null]);
     }
+
+    [TestMethod]
+    public void FindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
+    {
+        var signature = new Signature { Name = "AnyMethod" };
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(null, signature);
+        result.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchyPublicOrProtected_FindsAnyMethod_InOriginalClass()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var privateMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = simClass.Id,
+            RelatedClass = simClass,
+            Privacity = SimPrivacity.Private
+        };
+        simClass.Methods.Add(privateMethod);
+        _context.SimMethods.Add(privateMethod);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("TestMethod");
+        result.Privacity.Should().Be(SimPrivacity.Private);
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchyPublicOrProtected_FindsPublicMethod_InBaseClass()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var publicMethod = new SimMethod
+        {
+            Name = "PublicMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            Privacity = SimPrivacity.Public
+        };
+        baseClass.Methods.Add(publicMethod);
+        _context.SimMethods.Add(publicMethod);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "PublicMethod", Parameters = [] };
+
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("PublicMethod");
+        result.Privacity.Should().Be(SimPrivacity.Public);
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchyPublicOrProtected_FindsProtectedMethod_InBaseClass()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var protectedMethod = new SimMethod
+        {
+            Name = "ProtectedMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            Privacity = SimPrivacity.Protected
+        };
+        baseClass.Methods.Add(protectedMethod);
+        _context.SimMethods.Add(protectedMethod);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "ProtectedMethod", Parameters = [] };
+
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be("ProtectedMethod");
+        result.Privacity.Should().Be(SimPrivacity.Protected);
+    }
+
+    [TestMethod]
+    public void FindMethodInHierarchyPublicOrProtected_DoesNotFindPrivateMethod_InBaseClass()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var privateMethod = new SimMethod
+        {
+            Name = "PrivateMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            Privacity = SimPrivacity.Private
+        };
+        baseClass.Methods.Add(privateMethod);
+        _context.SimMethods.Add(privateMethod);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "PrivateMethod", Parameters = [] };
+
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
+
+        result.Should().BeNull("Private methods in base classes should not be accessible");
+    }
 }

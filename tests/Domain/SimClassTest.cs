@@ -83,18 +83,6 @@ public class SimClassTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void SetBaseClass_ThrowsException_WhenBaseClassIsNull()
-    {
-        var simClass = new SimClass
-        {
-            Name = "DerivedClass"
-        };
-
-        simClass.BaseClass = null;
-    }
-
-    [TestMethod]
     public void SetBaseClass_ShouldSetBaseClass_WhenBaseClassIsValidNormal()
     {
         var baseClass = new SimClass
@@ -170,18 +158,6 @@ public class SimClassTest
         derivedClass.BaseClass = baseClass;
 
         Assert.AreEqual(baseClass, derivedClass.BaseClass);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void SetBaseClass_ShouldThrowException_WhenBaseClassIsNull()
-    {
-        var simClass = new SimClass
-        {
-            Name = "DerivedClass"
-        };
-
-        simClass.SetBaseClass(null);
     }
 
     [TestMethod]
@@ -306,5 +282,27 @@ public class SimClassTest
         derivedClass.SetBaseClass(baseClass);
 
         Assert.AreEqual(baseClass, derivedClass.BaseClass);
+    }
+
+    [TestMethod]
+    public void BaseClassId_WhenSetToNull_ShouldUseObjectGuid()
+    {
+        var simClass = new SimClass();
+
+        simClass.BaseClassId = null;
+
+        Assert.AreEqual(Guid.Parse("11111111-1111-1111-1111-111111111111"), simClass.BaseClassId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void BaseClassId_WhenClassIsAbstractAndSettingNonObjectGuid_ShouldThrowException()
+    {
+        var simClass = new SimClass
+        {
+            State = SimAccesibility.Abstract
+        };
+
+        simClass.BaseClassId = Guid.NewGuid();
     }
 }

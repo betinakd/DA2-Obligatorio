@@ -20,8 +20,8 @@ public class SimClassRequestCreate()
     [JsonIgnore]
     public Guid BaseClassId => Guid.TryParse(IdBaseClass, out var guid) ? guid : Guid.Empty;
 
-    [Required(ErrorMessage = "IdBaseClass is required.")]
-    public string IdBaseClass { get; set; } = string.Empty;
+    // [Required(ErrorMessage = "IdBaseClass is required.")]
+    public string IdBaseClass { get; set; } = "11111111-1111-1111-1111-111111111111";
     public List<MethodRequest> Methods { get; set; } = [];
     public List<AttributeRequest> Attributes { get; set; } = [];
 }

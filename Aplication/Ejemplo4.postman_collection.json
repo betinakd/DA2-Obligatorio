@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "string method ToString Copy",
+			"name": "string method ToString",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -34,7 +34,7 @@
 			"response": []
 		},
 		{
-			"name": "Class usuario Copy",
+			"name": "Class usuario",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -57,7 +57,7 @@
 			"response": []
 		},
 		{
-			"name": "Attribute Nombre Copy",
+			"name": "Attribute Nombre",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -84,7 +84,7 @@
 			"response": []
 		},
 		{
-			"name": "Method Validar Copy",
+			"name": "Method Validar",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -111,7 +111,7 @@
 			"response": []
 		},
 		{
-			"name": "Class Logger Copy",
+			"name": "Class Logger",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -134,7 +134,7 @@
 			"response": []
 		},
 		{
-			"name": "Method Registrar Copy",
+			"name": "Method Registrar",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -161,7 +161,7 @@
 			"response": []
 		},
 		{
-			"name": "Registrar params Copy",
+			"name": "Registrar params",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -188,7 +188,7 @@
 			"response": []
 		},
 		{
-			"name": "Class Autenticador Copy",
+			"name": "Class Autenticador",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -211,7 +211,7 @@
 			"response": []
 		},
 		{
-			"name": "Attribute loggerLocal Copy",
+			"name": "Attribute loggerLocal",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -238,7 +238,7 @@
 			"response": []
 		},
 		{
-			"name": "Method Preparar Copy",
+			"name": "Method Preparar",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -265,7 +265,7 @@
 			"response": []
 		},
 		{
-			"name": "Method LogAcceso Copy",
+			"name": "Method LogAcceso",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -292,7 +292,7 @@
 			"response": []
 		},
 		{
-			"name": "LogAcceso params Copy",
+			"name": "LogAcceso params",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -319,7 +319,7 @@
 			"response": []
 		},
 		{
-			"name": "Method ValidarCredenciales Copy",
+			"name": "Method ValidarCredenciales",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -346,7 +346,7 @@
 			"response": []
 		},
 		{
-			"name": "ValidarCredenciales param Copy",
+			"name": "ValidarCredenciales param",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -373,7 +373,7 @@
 			"response": []
 		},
 		{
-			"name": "Method Auntenticar Copy",
+			"name": "Method Auntenticar",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -400,7 +400,7 @@
 			"response": []
 		},
 		{
-			"name": "Autenticar params Copy",
+			"name": "Autenticar params",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -427,7 +427,7 @@
 			"response": []
 		},
 		{
-			"name": "Autenticar invoks this.Preparar() Copy",
+			"name": "Autenticar invoks this.Preparar()",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -454,7 +454,7 @@
 			"response": []
 		},
 		{
-			"name": "Autenticar invoks this.ValidarCredenciales(Usuario) Copy",
+			"name": "Autenticar invoks this.ValidarCredenciales(Usuario)",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -481,7 +481,7 @@
 			"response": []
 		},
 		{
-			"name": "Autenticar invoks this.LogAcceso(Usuario) Copy",
+			"name": "Autenticar invoks this.LogAcceso(Usuario)",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -508,7 +508,7 @@
 			"response": []
 		},
 		{
-			"name": "Autenticar invoks loggerLocal.Registrar(string) Copy",
+			"name": "Autenticar invoks loggerLocal.Registrar(string)",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -535,7 +535,7 @@
 			"response": []
 		},
 		{
-			"name": "Class AutenticadorPassword Copy",
+			"name": "Class AutenticadorPassword",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -558,7 +558,7 @@
 			"response": []
 		},
 		{
-			"name": "Attribute clavePrivada Copy",
+			"name": "Attribute clavePrivada",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -585,7 +585,7 @@
 			"response": []
 		},
 		{
-			"name": "Method ValidarCredenciales Copy",
+			"name": "Method ValidarCredenciales",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -612,7 +612,7 @@
 			"response": []
 		},
 		{
-			"name": "ValidarCredenciales params Copy",
+			"name": "ValidarCredenciales params",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -639,7 +639,7 @@
 			"response": []
 		},
 		{
-			"name": "ValidarCredenciales invoks usuario.Validar() Copy",
+			"name": "ValidarCredenciales invoks usuario.Validar()",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -666,7 +666,7 @@
 			"response": []
 		},
 		{
-			"name": "ValidarCredenciales invoks clavePrivada.ToString() Copy",
+			"name": "ValidarCredenciales invoks clavePrivada.ToString()",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -693,7 +693,7 @@
 			"response": []
 		},
 		{
-			"name": "Excecution Copy",
+			"name": "Excecution",
 			"request": {
 				"method": "POST",
 				"header": [],

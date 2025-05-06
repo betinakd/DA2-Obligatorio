@@ -23,11 +23,26 @@ public class SimClass
         }
     }
 
-    private string _name = string.Empty;
-    public Guid? BaseClassId { get; set; }
+    private Guid? _baseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+    public Guid? BaseClassId
+    {
+        get => _baseClassId;
+        set
+        {
+            if(State == SimAccesibility.Abstract && value != Guid.Parse("11111111-1111-1111-1111-111111111111"))
+            {
+                throw new InvalidAttributeDomain("BaseClassId must be object State is Abstract.");
+            }
 
+            if(value == null)
+            {
+                _baseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            }
+        }
+    }
+
+    private string _name = string.Empty;
     private SimClass? _baseClassField = null;
-    public SimAccesibility State { get; set; } = SimAccesibility.Normal;
 
     public List<SimAttribute> Attributes { get; set; } = [];
 
@@ -60,7 +75,7 @@ public class SimClass
         get => _baseClassField;
         set
         {
-            if(value == null || value?.State == SimAccesibility.Sealed)
+            if(value?.State == SimAccesibility.Sealed)
             {
                 throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
             }
@@ -69,9 +84,24 @@ public class SimClass
         }
     }
 
+    private SimAccesibility _state = SimAccesibility.Normal;
+    public SimAccesibility State
+    {
+        get => _state;
+        set
+        {
+            if(value == SimAccesibility.Abstract && _baseClassId != Guid.Parse("11111111-1111-1111-1111-111111111111"))
+            {
+                throw new InvalidAttributeDomain("BaseClassId must be object when State is Abstract.");
+            }
+
+            _state = value;
+        }
+    }
+
     public void SetBaseClass(SimClass? value)
     {
-        if(value == null || value?.State == SimAccesibility.Sealed)
+        if(value?.State == SimAccesibility.Sealed)
         {
             throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
         }

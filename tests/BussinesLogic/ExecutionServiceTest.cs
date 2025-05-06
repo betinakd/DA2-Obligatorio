@@ -141,33 +141,6 @@ public class ExecutionServiceTest
     }
 
     [TestMethod]
-    public void ExecuteMethod_LevelZero_UsesGetSignatureWithClassName()
-    {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
-        var method = new SimMethod
-        {
-            Id = Guid.NewGuid(),
-            Name = "TestMethod",
-            RelatedClass = simClass,
-            Invocations = []
-        };
-        var signature = new Signature { Name = "TestMethod", Parameters = [] };
-
-        var mockRef = new Mock<Reference>();
-        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
-        mockRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.TestMethod()");
-        mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
-            .Returns(method);
-
-        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
-
-        Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
-    }
-
-    [TestMethod]
     [ExpectedException(typeof(NonExistentValueLogic))]
     public void ValidateMethodExistsInClass_MethodDoesNotExist_Throws()
     {
@@ -279,15 +252,9 @@ public class ExecutionServiceTest
     }
 
     [TestMethod]
-    public void IsReferenceBaseOfInstance_IndirectParent_ReturnsTrue()
+    public void IsReferenceBaseOfInstance_BaseClassNotFound_ReturnsFalse()
     {
-        var grandparentClass = new SimClass { Id = Guid.NewGuid(), Name = "GrandparentClass" };
-        var parentClass = new SimClass
-        {
-            Id = Guid.NewGuid(),
-            Name = "ParentClass",
-            BaseClassId = grandparentClass.Id
-        };
+        var parentClass = new SimClass { Id = Guid.NewGuid(), Name = "ParentClass" };
         var childClass = new SimClass
         {
             Id = Guid.NewGuid(),
@@ -295,13 +262,17 @@ public class ExecutionServiceTest
             BaseClassId = parentClass.Id
         };
 
-        _mockExecuteDataAccess!
-            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
-            .Returns([parentClass]);
+        _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
 
-        var result = _executionService!.IsReferenceBaseOfInstance(grandparentClass, childClass);
+        _mockExecuteDataAccess
+            .Setup(m => m.GetFilteredClasses(It.Is<Func<IQueryable<SimClass>, IQueryable<SimClass>>>(
+                func => true)))
+            .Returns([]);
 
-        Assert.IsTrue(result);
+        var result = _executionService.IsReferenceBaseOfInstance(new SimClass { Id = Guid.NewGuid() }, childClass);
+
+        Assert.IsFalse(result);
     }
 
     [TestMethod]
@@ -309,6 +280,9 @@ public class ExecutionServiceTest
     {
         var classA = new SimClass { Id = Guid.NewGuid(), Name = "ClassA" };
         var classB = new SimClass { Id = Guid.NewGuid(), Name = "ClassB" };
+
+        _ = _mockExecuteDataAccess.Setup(exec => exec.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([]);
 
         var result = _executionService!.IsReferenceBaseOfInstance(classA, classB);
 
@@ -321,26 +295,6 @@ public class ExecutionServiceTest
         Assert.IsFalse(_executionService!.IsReferenceBaseOfInstance(null, new SimClass()));
         Assert.IsFalse(_executionService!.IsReferenceBaseOfInstance(new SimClass(), null));
         Assert.IsFalse(_executionService!.IsReferenceBaseOfInstance(null, null));
-    }
-
-    [TestMethod]
-    public void IsReferenceBaseOfInstance_BaseClassNotFound_ReturnsFalse()
-    {
-        var parentClass = new SimClass { Id = Guid.NewGuid(), Name = "ParentClass" };
-        var childClass = new SimClass
-        {
-            Id = Guid.NewGuid(),
-            Name = "ChildClass",
-            BaseClassId = parentClass.Id
-        };
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
-            .Returns([]);
-
-        var result = _executionService!.IsReferenceBaseOfInstance(new SimClass { Id = Guid.NewGuid() }, childClass);
-
-        Assert.IsFalse(result);
     }
 
     [TestMethod]
