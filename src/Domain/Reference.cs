@@ -1,6 +1,6 @@
 namespace Domain;
 
-public abstract class Reference : SimClass
+public abstract class Reference
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Invocation? RelatedInvocation { get; set; }

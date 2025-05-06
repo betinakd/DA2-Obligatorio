@@ -26,6 +26,11 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
     {
         try
         {
+            if(request.BaseClassId == Guid.Empty)
+            {
+                request.IdBaseClass = "11111111-1111-1111-1111-111111111111";
+            }
+
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
             return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
         }
@@ -47,6 +52,11 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
     {
         try
         {
+            if(request.BaseClassId == Guid.Empty)
+            {
+                request.IdBaseClass = "11111111-1111-1111-1111-111111111111";
+            }
+
             var baseClass = _simClassService.GetSimClassById(request.BaseClassId);
             var methodsNewClass = new List<SimMethod>();
             var attributesNewClas = new List<SimAttribute>();
