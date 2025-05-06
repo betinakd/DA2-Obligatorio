@@ -20,7 +20,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         if(methodToExecute == null)
         {
-            throw new InvalidOperationLogic($"Method with signature {signature.Name} not executable from reference.");
+            throw new InvalidOperationLogic($"Method not executable from reference.");
         }
 
         if(visited.Contains(methodToExecute.Id))
