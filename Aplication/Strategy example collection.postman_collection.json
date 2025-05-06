@@ -1,0 +1,555 @@
+{
+	"info": {
+		"_postman_id": "92a368de-3724-4429-9593-959d2c227bff",
+		"name": "Strategy example collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "Strategy class",
+			"item": [
+				{
+					"name": "create class",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"ShippingStrategy\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5128/api/v1/classes/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create abstrac method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"CalculateShippingCost\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\",\r\n    \"IdReturnType\": \"33333333-3333-1111-1111-111111111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idStrategyClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idStrategyClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pickup class",
+			"item": [
+				{
+					"name": "create class",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Pickup_Shipping\",\r\n  \"IdBaseClass\": \"23e1b8f6-5c3c-42ed-9b5c-cf7cbbf21d93\", //shippingestrategia\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create override method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"CalculateShippingCost\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\",\r\n    \"IdReturnType\": \"33333333-3333-1111-1111-111111111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idPickupClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idPickupClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Standard class",
+			"item": [
+				{
+					"name": "create class",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"StandardStrategy\",\r\n  \"IdBaseClass\": \"23e1b8f6-5c3c-42ed-9b5c-cf7cbbf21d93\", //ShippingStrategy\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create override method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"CalculateShippingCost\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\",\r\n    \"IdReturnType\": \"33333333-3333-1111-1111-111111111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idStandardClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idStandardClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order class (context)",
+			"item": [
+				{
+					"name": "create class",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"OrderClass\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SetShippingStrategy method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"SetShippingStrategy\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idOrderClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idOrderClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SetShippingStrategy params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"strategy\",\r\n    \"IdClassType\": \"23e1b8f6-5c3c-42ed-9b5c-cf7cbbf21d93\" //ShippingStrategy\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{id_method_setShippingStrategy}}/parameters",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{id_method_setShippingStrategy}}",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CalculateCost method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"CalculateCost\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"33333333-5555-1111-1111-111111111111\" //double\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idOrderClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idOrderClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Execution fon PickupShipping",
+			"item": [
+				{
+					"name": "Client class creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"ClientClass\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Attribute ShippingStrategy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"strategy_atr_pickup\",\r\n    \"IdClassType\":\"0c53c9cf-30a5-49a7-95cc-faa84fb06b55\", //PICKUPCLASS simulamos ShippingStrategy strategy = new PickupShipping()\r\n    \"Privacity\": \"Public\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idOrderClass}}/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idOrderClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Attribute Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"order\",\r\n    \"IdClassType\":\"93ecafdc-037b-4c95-9435-113e1a668ccd\", //simulamos Order order = new Order()\r\n    \"Privacity\": \"Public\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idClientClass}}/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idClientClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CalculateCost invocs shippingStrategy.CalculateShippingCost()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"ae6a850b-7c8a-4af5-956b-649d936f814e\", //shippingStrategy.CalculateShippingCost()\r\n    \"MethodName\": \"CalculateShippingCost\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{id_method_CalculateCost}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{id_method_CalculateCost}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CalculateCost invocs shippingStrategy.CalculateShippingCost() Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"ae6a850b-7c8a-4af5-956b-649d936f814e\", //shippingStrategy.CalculateShippingCost()\r\n    \"MethodName\": \"CalculateShippingCost\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{id_method_CalculateCost}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{id_method_CalculateCost}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Main method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Main_Pickup\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idClientClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idClientClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Main invokes setShipping method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"40a34a8d-5515-4a79-a584-255b2ec19bbd\", //order.SetShippingStrategy(strategy)\r\n    \"MethodName\": \"SetShippingStrategy\",\r\n    \"Parameters\":[\r\n        {\r\n        \"Name\": \"strategy_atr_pickup\",\r\n        \"IdClassType\": \"23e1b8f6-5c3c-42ed-9b5c-cf7cbbf21d93\" //ShippingStrategy (instanciado como PickupShipping)\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{id_method_Main1}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{id_method_Main1}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Main invokes CalculateCost method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"8863B5B4-75CF-4074-AA43-65A427D5A7C7\", //order.CalculateCost()\r\n    \"MethodName\": \"CalculateCost\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{id_method_Main1}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{id_method_Main1}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Main excecution",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MethodName\":\"Main_Pickup\",\r\n    \"Parameters\":[],\r\n    \"IdReferenceType\":\"d8101b04-b9fe-4caa-a5fa-927a5d7f0cd5\", // client\r\n    \"IdInstanceType\": \"d8101b04-b9fe-4caa-a5fa-927a5d7f0cd5\"  // client\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}executions",
+							"host": [
+								"{{domain}}executions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "direct excecution",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\":\"CalculateShippingCost\",\r\n    \"Parameters\":[],\r\n    \"IdReferenceType\":\"23e1b8f6-5c3c-42ed-9b5c-cf7cbbf21d93\", //shippingestrategia\r\n    \"IdInstanceType\": \"ff2b72a4-53fa-4f26-983b-328b4ec9e7c9\"  //standardstrategy\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}executions",
+					"host": [
+						"{{domain}}executions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
