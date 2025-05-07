@@ -2,6 +2,7 @@ using Adapter;
 using Adapter.Exceptions;
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using IBussinesLogic;
 using Models.Request;
 using Moq;
@@ -188,6 +189,45 @@ public class ExecutionAdapterTest
                 It.IsAny<int>(),
                 It.IsAny<HashSet<Guid>>()))
             .Throws(new NonExistentValueLogic("Method not found"));
+
+        _executionAdapter!.ExecuteMethod(request);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidExecutionAdapter))]
+    public void ExecuteMethod_WhenClassIsAbstract_ThrowsInvalidExecutionAdapter()
+    {
+        var instanceTypeId = Guid.NewGuid();
+        var referenceTypeId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceTypeId.ToString(),
+            IdReferenceType = referenceTypeId.ToString(),
+            Parameters = []
+        };
+
+        var instanceTypeClass = new SimClass
+        {
+            Id = instanceTypeId,
+            Name = "InstanceType",
+            State = SimAccesibility.Abstract
+        };
+
+        var referenceTypeClass = new SimClass
+        {
+            Id = referenceTypeId,
+            Name = "ReferenceType"
+        };
+
+        _simClassService!
+            .Setup(s => s.GetSimClassById(instanceTypeId))
+            .Returns(instanceTypeClass);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(referenceTypeId))
+            .Returns(referenceTypeClass);
 
         _executionAdapter!.ExecuteMethod(request);
     }
