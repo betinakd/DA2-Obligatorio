@@ -1,6 +1,7 @@
 using Adapter.Exceptions;
 using BussinesLogic.Exceptions;
 using Domain;
+using Domain.Enums;
 using IAdapter;
 using IBussinesLogic;
 using Models.Request;
@@ -43,6 +44,11 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
 
             var refer = _simClassService.GetSimClassById(request.ReferenceTypeId);
             var obj = _simClassService.GetSimClassById(request.InstanceTypeId);
+
+            if(obj.State == SimAccesibility.Abstract)
+            {
+                throw new InvalidExecutionAdapter("Cannot create an instance of the abstract type.");
+            }
 
             if(!_executionService.IsReferenceBaseOfInstance(refer, obj))
             {
