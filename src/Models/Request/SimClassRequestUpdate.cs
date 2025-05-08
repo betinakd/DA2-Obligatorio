@@ -24,7 +24,6 @@ public class SimClassRequestUpdate()
     [JsonIgnore]
     public Guid BaseClassId => Guid.TryParse(IdBaseClass, out var guid) ? guid : Guid.Empty;
 
-    // [Required(ErrorMessage = "IdBaseClass is required and Guid format.")]
     public string IdBaseClass { get; set; } = "11111111-1111-1111-1111-111111111111";
     public List<MethodRequest> Methods { get; set; } = [];
     public List<AttributeRequest> Attributes { get; set; } = [];

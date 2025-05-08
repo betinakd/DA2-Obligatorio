@@ -17,10 +17,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-    <ProjectReference Include="..\IBussinesLogic\IBussinesLogic.csproj" />
+    <ProjectReference Include="..\IBussinesLogic\IBussinessLogic.csproj" />
     <ProjectReference Include="..\Adapter\Adapter.csproj" />
     <ProjectReference Include="..\IAdapter\IAdapter.csproj" />
-    <ProjectReference Include="..\BussinesLogic\BussinesLogic.csproj" />
+    <ProjectReference Include="..\BussinesLogic\BussinessLogic.csproj" />
   </ItemGroup>
 
 </Project>
