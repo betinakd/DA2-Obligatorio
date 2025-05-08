@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4D065489-274
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{B5920205-EBD3-47B8-826B-B749C3333201}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBussinessLogic", "src\IBussinesLogic\IBussinessLogic.csproj", "{8826BE24-83D9-4063-982E-88DC36CD6CBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBussinessLogic", "src\IBussinessLogic\IBussinessLogic.csproj", "{8826BE24-83D9-4063-982E-88DC36CD6CBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "src\Models\Models.csproj", "{46C4BE04-396C-4AD4-BF34-D1E59DA334F5}"
 EndProject
@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAdapter", "src\IAdapter\IA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDataAccess", "src\IDataAccess\IDataAccess.csproj", "{C5FD91A0-E80F-437B-8E10-B8C9B8913928}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BussinessLogic", "src\BussinesLogic\BussinessLogic.csproj", "{5B39BD9D-B9B3-444D-9CD6-433EA9ADF24F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BussinessLogic", "src\BussinessLogic\BussinessLogic.csproj", "{5B39BD9D-B9B3-444D-9CD6-433EA9ADF24F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "src\DataAccess\DataAccess.csproj", "{20D7AD08-A82B-4A6A-8382-23C62CF490F7}"
 EndProject
