@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Adapter\Adapter.csproj" />
     <ProjectReference Include="..\IAdapter\IAdapter.csproj" />
-    <ProjectReference Include="..\IBussinesLogic\IBussinesLogic.csproj" />
+    <ProjectReference Include="..\IBussinesLogic\IBussinessLogic.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Adapter\Adapter.csproj" />
     <ProjectReference Include="..\ServiceFactory\ServiceFactory.csproj" />

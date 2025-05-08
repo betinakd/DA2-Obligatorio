@@ -3,9 +3,9 @@
   <ItemGroup>
     <ProjectReference Include="..\IAdapter\IAdapter.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\IBussinesLogic\IBussinesLogic.csproj" />
+    <ProjectReference Include="..\IBussinesLogic\IBussinessLogic.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\BussinesLogic\BussinesLogic.csproj" />
+    <ProjectReference Include="..\BussinesLogic\BussinessLogic.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

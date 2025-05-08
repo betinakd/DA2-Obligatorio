@@ -21,11 +21,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Domain\Domain.csproj" />
-    <ProjectReference Include="..\src\IBussinesLogic\IBussinesLogic.csproj" />
+    <ProjectReference Include="..\src\IBussinesLogic\IBussinessLogic.csproj" />
     <ProjectReference Include="..\src\Models\Models.csproj" />
     <ProjectReference Include="..\src\WebApi\WebApi.csproj" />
     <ProjectReference Include="..\src\IDataAccess\IDataAccess.csproj" />
-    <ProjectReference Include="..\src\BussinesLogic\BussinesLogic.csproj" />
+    <ProjectReference Include="..\src\BussinesLogic\BussinessLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
