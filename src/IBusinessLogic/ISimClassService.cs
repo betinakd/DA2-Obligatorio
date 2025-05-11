@@ -1,7 +1,7 @@
 ﻿using Domain;
 using Domain.Enums;
 
-namespace IBussinesLogic;
+namespace IBusinessLogic;
 
 public interface ISimClassService
 {

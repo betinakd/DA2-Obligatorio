@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Adapter;
-using BussinesLogic;
+using BusinessLogic;
 using DataAccess;
 using DataAccess.Context;
 using IAdapter;
-using IBussinesLogic;
+using IBusinessLogic;
 using IDataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
