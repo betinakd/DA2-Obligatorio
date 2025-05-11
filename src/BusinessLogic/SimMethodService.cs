@@ -1,10 +1,10 @@
-using BussinesLogic.Exceptions;
+using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
-using IBussinesLogic;
+using IBusinessLogic;
 using IDataAccess;
 
-namespace BussinesLogic;
+namespace BusinessLogic;
 
 public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAccess simClassDA, IExecutionDataAccess executionDA) : IMethodService
 {

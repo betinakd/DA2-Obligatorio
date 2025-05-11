@@ -1,6 +1,6 @@
 using Domain;
 
-namespace IBussinesLogic;
+namespace IBusinessLogic;
 
 public interface IExecutionService
 {

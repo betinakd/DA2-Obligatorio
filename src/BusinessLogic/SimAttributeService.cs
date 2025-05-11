@@ -1,9 +1,9 @@
-using BussinesLogic.Exceptions;
+using BusinessLogic.Exceptions;
 using Domain;
-using IBussinesLogic;
+using IBusinessLogic;
 using IDataAccess;
 
-namespace BussinesLogic;
+namespace BusinessLogic;
 
 public class SimAttributeService(ISimAttributeDataAccess simAttributeDA, ISimClassDataAccess simClassDA) : ISimAttributeService
 {
