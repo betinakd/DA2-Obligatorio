@@ -1,11 +1,11 @@
-using BussinesLogic;
-using BussinesLogic.Exceptions;
+using BusinessLogic;
+using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
 using IDataAccess;
 using Moq;
 
-namespace Tests.BussinesLogic;
+namespace Tests.BusinessLogic;
 
 [TestClass]
 public class SimMethodServiceTest
