@@ -38,6 +38,26 @@ public class TransformerService : ITransformerService
         {
             assemblies.Add(serviceAssembly);
         }
+
+        var transformerTypes = new List<Type>();
+        foreach(var a in assemblies)
+        {
+            try
+            {
+                transformerTypes.AddRange(
+                    a.GetTypes().Where(t => typeof(IResponseTransformer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+                );
+            }
+            catch(ReflectionTypeLoadException ex)
+            {
+                transformerTypes.AddRange(
+                    ex.Types.Where(t => t != null && typeof(IResponseTransformer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+                );
+                Console.WriteLine($"Error al cargar tipos del ensamblado {a.FullName}: {ex.Message}");
+            }
+        }
+
+        Console.WriteLine($"Encontrados {transformerTypes.Count} tipos de transformadores en {assemblies.Count} ensamblados");
     }
 
     private IEnumerable<Assembly> LoadAssemblies()
