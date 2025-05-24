@@ -41,4 +41,21 @@ public class TransformerServiceTest
         Assert.IsNotNull(_testPluginsPath, "El path de los plugins es nulo.");
         Assert.IsTrue(Directory.GetFiles(_testPluginsPath).Length > 0, "No se cargaron transformadores.");
     }
+
+    [TestMethod]
+    public void LoadTransformers_ShouldCreatePluginsDirectory_WhenItDoesNotExist()
+    {
+        if (Directory.Exists(_testPluginsPath))
+        {
+            Directory.Delete(_testPluginsPath, true);
+        }
+
+        var transformerService = new TransformerService();
+        var pluginsPathField = typeof(TransformerService).GetField("_pluginsPath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        pluginsPathField.SetValue(transformerService, _testPluginsPath);
+
+        transformerService.LoadTransformers();
+
+        Assert.IsTrue(Directory.Exists(_testPluginsPath), "El directorio de plugins no fue creado.");
+    }
 }
