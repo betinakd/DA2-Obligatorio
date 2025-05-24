@@ -50,9 +50,9 @@ public class SimClass
         get => _baseClassId;
         set
         {
-            if(State == SimAccesibility.Abstract && value != Guid.Parse("11111111-1111-1111-1111-111111111111"))
+            if((State == SimAccesibility.Abstract || State == SimAccesibility.Interface) && value != Guid.Parse("11111111-1111-1111-1111-111111111111"))
             {
-                throw new InvalidAttributeDomain("BaseClassId must be object State is Abstract.");
+                throw new InvalidAttributeDomain("Cannot set a base class for an abstract or interface class.");
             }
 
             if(value == null)
@@ -96,9 +96,9 @@ public class SimClass
         get => _baseClassField;
         set
         {
-            if(value?.State == SimAccesibility.Sealed)
+            if(value?.State == SimAccesibility.Sealed || value == null)
             {
-                throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
+                throw new InvalidAttributeDomain("Cannot set as base a sealed or Interface Class.");
             }
 
             _baseClassField = value;
