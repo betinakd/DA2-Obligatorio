@@ -1,6 +1,7 @@
 using IAdapter;
 using IBusinessLogic;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 using Moq;
 using Transformers.Abstractions;
 using WebApi.Controllers;
@@ -19,7 +20,7 @@ public class TransformersControllerTest
     {
         _mockTransformerService = new Mock<ITransformerService>();
         _mockExecutionAdapter = new Mock<IExecutionAdapter>();
-        _controller = new TransformersController(_mockTransformerService.Object);
+        _controller = new TransformersController(_mockTransformerService.Object, _mockExecutionAdapter.Object);
     }
 
     [TestMethod]
@@ -56,5 +57,19 @@ public class TransformersControllerTest
         Assert.AreEqual("Transformadores recargados correctamente", messageProp.GetValue(value));
         Assert.AreEqual(transformers, transformersProp.GetValue(value));
         _mockTransformerService.Verify(x => x.LoadTransformers(), Times.Once);
+    }
+
+    [TestMethod]
+    public void ExecuteWithTransform_ReturnsOkWithResult()
+    {
+        var request = new MethodExecutionRequest();
+        var response = new TransformedResponse();
+        _mockExecutionAdapter.Setup(x => x.ExecuteMethodWithTransform(request, null)).Returns(response);
+
+        var result = _controller.ExecuteWithTransform(request, null);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(response, okResult.Value);
     }
 }

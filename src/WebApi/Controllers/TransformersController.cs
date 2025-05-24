@@ -1,13 +1,16 @@
+using IAdapter;
 using IBusinessLogic;
 using Microsoft.AspNetCore.Mvc;
+using Models.Request;
 
 namespace WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/transformers")]
-public class TransformersController(ITransformerService transformerService) : ControllerBase
+public class TransformersController(ITransformerService transformerService, IExecutionAdapter executionAdapter) : ControllerBase
 {
     private readonly ITransformerService _transformerService = transformerService;
+    private readonly IExecutionAdapter _executionAdapter = executionAdapter;
 
     [HttpGet]
     public IActionResult GetTransformers()
@@ -24,5 +27,14 @@ public class TransformersController(ITransformerService transformerService) : Co
             message = "Transformadores recargados correctamente",
             transformers = _transformerService.GetAvailableTransformers()
         });
+    }
+
+    [HttpPost("execute")]
+    public IActionResult ExecuteWithTransform(
+        [FromBody] MethodExecutionRequest request,
+        [FromQuery] string transformerId = null)
+    {
+        var result = _executionAdapter.ExecuteMethodWithTransform(request, transformerId);
+        return Ok(result);
     }
 }
