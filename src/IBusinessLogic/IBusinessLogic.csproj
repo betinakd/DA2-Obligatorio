@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Transformers.Abstractions\Transformers.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

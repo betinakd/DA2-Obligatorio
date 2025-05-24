@@ -5,6 +5,7 @@ using Domain.Enums;
 using IAdapter;
 using IBusinessLogic;
 using Models.Request;
+using Transformers.Abstractions;
 
 namespace Adapter;
 
@@ -75,5 +76,10 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         {
             throw new NonExistentValueAdapter(ex.Message);
         }
+    }
+
+    public TransformedResponse ExecuteMethodWithTransform(MethodExecutionRequest request, string transformerId = null)
+    {
+        throw new NotImplementedException();
     }
 }
