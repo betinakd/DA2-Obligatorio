@@ -279,4 +279,33 @@ public class TransformerServiceTest
         Assert.AreEqual("default", result.TransformerId);
         Assert.IsNotNull(result.AvailableTransformers);
     }
+
+    [TestMethod]
+    public void TransformExecution_ShouldReturnTransformed_WhenTransformerWorks()
+    {
+        var service = new TransformerService();
+        var transformersField = typeof(TransformerService)
+            .GetField("_transformers", BindingFlags.NonPublic | BindingFlags.Instance);
+        var transformersList = transformersField.GetValue(service) as List<IResponseTransformer>;
+        transformersList.Clear();
+        transformersList.Add(new UpperCaseTransformer());
+
+        var result = service.TransformExecution("abc", "upper");
+
+        Assert.AreEqual("abc", result.OriginalResult);
+        Assert.AreEqual("ABC", result.TransformedResult);
+        Assert.AreEqual("text/plain", result.ContentType);
+        Assert.AreEqual("upper", result.TransformerId);
+        Assert.IsNotNull(result.AvailableTransformers);
+    }
+
+    public class UpperCaseTransformer : IResponseTransformer
+    {
+        public string Id => "upper";
+        public string Name => "Upper";
+        public int DisplayOrder => 1;
+        public string ContentType => "text/plain";
+        public object Transform(object input) => input is string s ? s.ToUpper() : input;
+        public string Transform(string executionResult) => executionResult.ToUpper();
+    }
 }

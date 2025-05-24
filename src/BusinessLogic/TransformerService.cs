@@ -143,9 +143,20 @@ public class TransformerService : ITransformerService
                 AvailableTransformers = GetAvailableTransformers().ToList()
             };
         }
-        else
-        {
-            return null;
-        }
+
+        IResponseTransformer transformer = string.IsNullOrEmpty(transformerId)
+            ? _transformers.First()
+            : _transformers.FirstOrDefault(t => t.Id == transformerId) ?? _transformers.First();
+
+            var transformedResult = transformer.Transform(executionResult);
+
+            return new TransformedResponse
+            {
+                OriginalResult = executionResult,
+                TransformedResult = transformedResult,
+                ContentType = transformer.ContentType,
+                TransformerId = transformer.Id,
+                AvailableTransformers = GetAvailableTransformers().ToList()
+            };
     }
 }
