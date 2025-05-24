@@ -172,16 +172,6 @@ public class TransformerServiceTest
             "No se encontró el log esperado de ID duplicado.");
     }
 
-    public class TestTransformer : IResponseTransformer
-    {
-        public string Id => "test-transformer";
-        public string Name => "Test Transformer";
-        public int DisplayOrder => 1;
-        public string ContentType => "text/plain";
-        public object Transform(object input) => input;
-        public string Transform(string executionResult) => executionResult;
-    }
-
     public class DuplicateTransformer1 : IResponseTransformer
     {
         public string Id => "duplicate-id";
@@ -233,5 +223,24 @@ public class TransformerServiceTest
         public string ContentType => "text/plain";
         public object Transform(object input) => input;
         public string Transform(string executionResult) => executionResult;
+    }
+
+    [TestMethod]
+    public void GetAvailableTransformers_ShouldReturnTransformerInfoList()
+    {
+        var service = new TransformerService();
+
+        var transformersField = typeof(TransformerService)
+            .GetField("_transformers", BindingFlags.NonPublic | BindingFlags.Instance);
+        var transformersList = transformersField.GetValue(service) as List<IResponseTransformer>;
+        transformersList.Clear();
+        transformersList.Add(new DuplicateTransformer1());
+
+        var result = service.GetAvailableTransformers().ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("duplicate-id", result[0].Id);
+        Assert.AreEqual("Duplicado 1", result[0].Name);
+        Assert.AreEqual("text/plain", result[0].ContentType);
     }
 }

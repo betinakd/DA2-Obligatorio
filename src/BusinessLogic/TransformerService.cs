@@ -11,11 +11,17 @@ public class TransformerService : ITransformerService
     public TransformerService()
     {
         _pluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "Transformers");
+        LoadTransformers();
     }
 
     public IEnumerable<TransformerInfo> GetAvailableTransformers()
     {
-        throw new NotImplementedException();
+        return _transformers.Select(t => new TransformerInfo
+        {
+            Id = t.Id,
+            Name = t.Name,
+            ContentType = t.ContentType
+        });
     }
 
     public IResponseTransformer GetTransformerById(string id)
