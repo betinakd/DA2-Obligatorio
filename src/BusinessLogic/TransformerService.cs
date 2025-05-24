@@ -31,6 +31,13 @@ public class TransformerService : ITransformerService
         {
             assemblies.Add(Assembly.GetExecutingAssembly());
         }
+
+        if(Assembly.GetAssembly(typeof(TransformerService)) != Assembly.GetExecutingAssembly() &&
+            Assembly.GetAssembly(typeof(TransformerService)) is Assembly serviceAssembly &&
+            !assemblies.Contains(serviceAssembly))
+        {
+            assemblies.Add(serviceAssembly);
+        }
     }
 
     private IEnumerable<Assembly> LoadAssemblies()
