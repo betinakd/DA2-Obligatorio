@@ -148,6 +148,8 @@ public class TransformerService : ITransformerService
             ? _transformers.First()
             : _transformers.FirstOrDefault(t => t.Id == transformerId) ?? _transformers.First();
 
+        try
+        {
             var transformedResult = transformer.Transform(executionResult);
 
             return new TransformedResponse
@@ -158,5 +160,19 @@ public class TransformerService : ITransformerService
                 TransformerId = transformer.Id,
                 AvailableTransformers = GetAvailableTransformers().ToList()
             };
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al aplicar el transformador {transformer.Id}: {ex.Message}");
+
+            return new TransformedResponse
+            {
+                OriginalResult = executionResult,
+                TransformedResult = $"Error al transformar: {ex.Message}\n\nResultado original:\n{executionResult}",
+                ContentType = "text/plain",
+                TransformerId = "error",
+                AvailableTransformers = GetAvailableTransformers().ToList()
+            };
+        }
     }
 }

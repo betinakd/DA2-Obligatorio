@@ -308,4 +308,33 @@ public class TransformerServiceTest
         public object Transform(object input) => input is string s ? s.ToUpper() : input;
         public string Transform(string executionResult) => executionResult.ToUpper();
     }
+
+    [TestMethod]
+    public void TransformExecution_ShouldReturnError_WhenTransformerThrows()
+    {
+        var service = new TransformerService();
+        var transformersField = typeof(TransformerService)
+            .GetField("_transformers", BindingFlags.NonPublic | BindingFlags.Instance);
+        var transformersList = transformersField.GetValue(service) as List<IResponseTransformer>;
+        transformersList.Clear();
+        transformersList.Add(new FailingTransformer2());
+
+        var result = service.TransformExecution("input", "fail");
+
+        Assert.AreEqual("input", result.OriginalResult);
+        Assert.IsTrue(result.TransformedResult.Contains("Error al transformar:"));
+        Assert.AreEqual("text/plain", result.ContentType);
+        Assert.AreEqual("error", result.TransformerId);
+        Assert.IsNotNull(result.AvailableTransformers);
+    }
+
+    public class FailingTransformer2 : IResponseTransformer
+    {
+        public string Id => "fail";
+        public string Name => "Fail";
+        public int DisplayOrder => 1;
+        public string ContentType => "text/plain";
+        public object Transform(object input) => throw new InvalidOperationException("Test fail");
+        public string Transform(string executionResult) => throw new InvalidOperationException("Test fail");
+    }
 }
