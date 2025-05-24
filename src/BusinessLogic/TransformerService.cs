@@ -58,6 +58,25 @@ public class TransformerService : ITransformerService
         }
 
         Console.WriteLine($"Encontrados {transformerTypes.Count} tipos de transformadores en {assemblies.Count} ensamblados");
+
+        foreach(var type in transformerTypes)
+        {
+            try
+            {
+                var transformer = (IResponseTransformer)Activator.CreateInstance(type);
+
+                if(_transformers.Any(t => t.Id == transformer.Id))
+                {
+                    Console.WriteLine($"Ya existe un transformador con el ID '{transformer.Id}'. Se ignorará el del tipo {type.FullName}");
+                    continue;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error al crear instancia del transformador {type.FullName}: {ex.Message}");
+                continue;
+            }
+        }
     }
 
     private IEnumerable<Assembly> LoadAssemblies()

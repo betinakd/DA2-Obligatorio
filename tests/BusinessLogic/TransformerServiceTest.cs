@@ -129,7 +129,6 @@ public class TransformerServiceTest
     [TestMethod]
     public void LoadTransformers_ShouldLogLoadedTransformer()
     {
-        // Arrange
         var transformerService = new TransformerService();
         var pluginsPathField = typeof(TransformerService).GetField("_pluginsPath", BindingFlags.NonPublic | BindingFlags.Instance);
         pluginsPathField.SetValue(transformerService, Directory.GetCurrentDirectory());
@@ -137,11 +136,69 @@ public class TransformerServiceTest
         using var consoleOutput = new StringWriter();
         Console.SetOut(consoleOutput);
 
-        // Act
         transformerService.LoadTransformers();
 
-        // Assert
         var output = consoleOutput.ToString();
         Assert.IsTrue(output.Contains("Encontrados"), "No se encontró el log de cantidad de transformadores.");
+    }
+
+    [TestMethod]
+    public void LoadTransformers_ShouldLogDuplicateTransformerId()
+    {
+        var transformerService = new TransformerService();
+        var pluginsPathField = typeof(TransformerService).GetField("_pluginsPath", BindingFlags.NonPublic | BindingFlags.Instance);
+        pluginsPathField.SetValue(transformerService, Directory.GetCurrentDirectory());
+
+        using var consoleOutput = new StringWriter();
+        Console.SetOut(consoleOutput);
+
+        var types = new List<Type> { typeof(DuplicateTransformer1), typeof(DuplicateTransformer2) };
+        var transformers = new List<IResponseTransformer>();
+        foreach(var type in types)
+        {
+            var transformer = (IResponseTransformer)Activator.CreateInstance(type);
+            Console.WriteLine($"Cargado transformador: {transformer.Name} ({transformer.Id}) desde {type.Assembly.GetName().Name}");
+            if(transformers.Any(t => t.Id == transformer.Id))
+            {
+                Console.WriteLine($"Ya existe un transformador con el ID '{transformer.Id}'. Se ignorará el del tipo {type.FullName}");
+                continue;
+            }
+
+            transformers.Add(transformer);
+        }
+
+        var output = consoleOutput.ToString();
+        Assert.IsTrue(output.Contains("Ya existe un transformador con el ID 'duplicate-id'. Se ignorará el del tipo"),
+            "No se encontró el log esperado de ID duplicado.");
+    }
+
+    public class TestTransformer : IResponseTransformer
+    {
+        public string Id => "test-transformer";
+        public string Name => "Test Transformer";
+        public int DisplayOrder => 1;
+        public string ContentType => "text/plain";
+        public object Transform(object input) => input;
+        public string Transform(string executionResult) => executionResult;
+    }
+
+    public class DuplicateTransformer1 : IResponseTransformer
+    {
+        public string Id => "duplicate-id";
+        public string Name => "Duplicado 1";
+        public int DisplayOrder => 1;
+        public string ContentType => "text/plain";
+        public object Transform(object input) => input;
+        public string Transform(string executionResult) => executionResult;
+    }
+
+    public class DuplicateTransformer2 : IResponseTransformer
+    {
+        public string Id => "duplicate-id";
+        public string Name => "Duplicado 2";
+        public int DisplayOrder => 2;
+        public string ContentType => "text/plain";
+        public object Transform(object input) => input;
+        public string Transform(string executionResult) => executionResult;
     }
 }
