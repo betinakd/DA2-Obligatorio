@@ -20,6 +20,11 @@ public class SimClass
             {
                 State = SimAccesibility.Abstract;
             }
+
+            if(_methods.Any(m => m.Accesibility != SimAccesibility.Interface && State == SimAccesibility.Interface))
+            {
+                throw new InvalidAttributeDomain("An interface cannot have non-interface accesibility methods.");
+            }
         }
     }
 

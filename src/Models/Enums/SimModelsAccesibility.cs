@@ -19,4 +19,9 @@ public enum SimModelsAccesibility
     /// Represents a sealed simulation state.
     /// </summary>
     Normal,
+
+    /// <summary>
+    /// Represents a interface simulation state.
+    /// </summary>
+    Interface,
 }

@@ -305,4 +305,21 @@ public class SimClassTest
 
         simClass.BaseClassId = Guid.NewGuid();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Methods_ShouldThrowException_WhenInterfaceHasNonInterfaceMethods()
+    {
+        var simClass = new SimClass
+        {
+            Name = "IMyInterface",
+            State = SimAccesibility.Interface
+        };
+
+        simClass.Methods =
+        [
+            new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface },
+            new SimMethod { Name = "InvalidMethod", Accesibility = SimAccesibility.Normal }
+        ];
+    }
 }
