@@ -243,4 +243,22 @@ public class TransformerServiceTest
         Assert.AreEqual("Duplicado 1", result[0].Name);
         Assert.AreEqual("text/plain", result[0].ContentType);
     }
+
+    [TestMethod]
+    public void GetTransformerById_ShouldReturnTransformer_WhenExists()
+    {
+        var service = new TransformerService();
+        var transformersField = typeof(TransformerService)
+            .GetField("_transformers", BindingFlags.NonPublic | BindingFlags.Instance);
+        var transformersList = transformersField.GetValue(service) as List<IResponseTransformer>;
+        transformersList.Clear();
+        transformersList.Add(new DuplicateTransformer1());
+
+        var result = service.GetTransformerById("duplicate-id");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("duplicate-id", result.Id);
+        Assert.AreEqual("Duplicado 1", result.Name);
+        Assert.AreEqual("text/plain", result.ContentType);
+    }
 }

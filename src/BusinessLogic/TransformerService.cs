@@ -26,7 +26,7 @@ public class TransformerService : ITransformerService
 
     public IResponseTransformer GetTransformerById(string id)
     {
-        throw new NotImplementedException();
+        return _transformers.FirstOrDefault(t => t.Id == id);
     }
 
     public void LoadTransformers()
