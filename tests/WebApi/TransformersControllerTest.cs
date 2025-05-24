@@ -72,4 +72,18 @@ public class TransformersControllerTest
         Assert.IsNotNull(okResult);
         Assert.AreEqual(response, okResult.Value);
     }
+
+    [TestMethod]
+    public void TransformExecution_ReturnsOkWithResult()
+    {
+        var request = new TransformRequest { ExecutionResult = "result" };
+        var response = new TransformedResponse();
+        _mockTransformerService.Setup(x => x.TransformExecution("result", null)).Returns(response);
+
+        var result = _controller.TransformExecution(request, null);
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+        Assert.AreEqual(response, okResult.Value);
+    }
 }

@@ -2,6 +2,7 @@ using IAdapter;
 using IBusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
+using Transformers.Abstractions;
 
 namespace WebApi.Controllers;
 
@@ -35,6 +36,15 @@ public class TransformersController(ITransformerService transformerService, IExe
         [FromQuery] string transformerId = null)
     {
         var result = _executionAdapter.ExecuteMethodWithTransform(request, transformerId);
+        return Ok(result);
+    }
+
+    [HttpPost("transform")]
+    public IActionResult TransformExecution(
+    [FromBody] TransformRequest request,
+    [FromQuery] string transformerId = null)
+    {
+        var result = _transformerService.TransformExecution(request.ExecutionResult, transformerId);
         return Ok(result);
     }
 }
