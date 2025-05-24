@@ -51,14 +51,12 @@ public class TransformerService : ITransformerService
             try
             {
                 transformerTypes.AddRange(
-                    a.GetTypes().Where(t => typeof(IResponseTransformer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                );
+                    a.GetTypes().Where(t => typeof(IResponseTransformer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract));
             }
             catch(ReflectionTypeLoadException ex)
             {
                 transformerTypes.AddRange(
-                    ex.Types.Where(t => t != null && typeof(IResponseTransformer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                );
+                    ex.Types.Where(t => t != null && typeof(IResponseTransformer).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract));
                 Console.WriteLine($"Error al cargar tipos del ensamblado {a.FullName}: {ex.Message}");
             }
         }

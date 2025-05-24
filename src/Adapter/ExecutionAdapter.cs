@@ -9,10 +9,12 @@ using Transformers.Abstractions;
 
 namespace Adapter;
 
-public class ExecutionAdapter(IExecutionService executionService, ISimClassService simClassService) : IExecutionAdapter
+public class ExecutionAdapter(IExecutionService executionService, ISimClassService simClassService,
+        ITransformerService transformerService) : IExecutionAdapter
 {
     private readonly IExecutionService _executionService = executionService;
     private readonly ISimClassService _simClassService = simClassService;
+    private readonly ITransformerService _transformerService = transformerService;
 
     public string ExecuteMethod(MethodExecutionRequest request)
     {
@@ -80,6 +82,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
 
     public TransformedResponse ExecuteMethodWithTransform(MethodExecutionRequest request, string transformerId = null)
     {
-        throw new NotImplementedException();
+        var executionResult = ExecuteMethod(request);
+        return _transformerService.TransformExecution(executionResult, transformerId);
     }
 }
