@@ -70,13 +70,26 @@ public class TransformerService : ITransformerService
                     Console.WriteLine($"Ya existe un transformador con el ID '{transformer.Id}'. Se ignorará el del tipo {type.FullName}");
                     continue;
                 }
+
+                if(transformer != null)
+                {
+                    _transformers.Add(transformer);
+                }
+                else
+                {
+                    Console.WriteLine($"El transformador del tipo {type.FullName} es nulo y no se añadirá.");
+                }
+
+                Console.WriteLine($"Cargado transformador: {transformer.Name} ({transformer.Id}) desde {type.Assembly.GetName().Name}");
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error al crear instancia del transformador {type.FullName}: {ex.Message}");
-                continue;
+                Console.WriteLine($"Error al instanciar el transformador {type.FullName}: {ex.Message}");
             }
         }
+
+        _transformers.Sort((a, b) => a.DisplayOrder.CompareTo(b.DisplayOrder));
+        Console.WriteLine($"Cargados {_transformers.Count} transformadores de respuesta");
     }
 
     private IEnumerable<Assembly> LoadAssemblies()

@@ -201,4 +201,37 @@ public class TransformerServiceTest
         public object Transform(object input) => input;
         public string Transform(string executionResult) => executionResult;
     }
+
+    [TestMethod]
+    public void LoadTransformers_ShouldLogErrorWhenInstantiationFails()
+    {
+        using var consoleOutput = new StringWriter();
+        Console.SetOut(consoleOutput);
+
+        var type = typeof(FailingTransformer);
+
+        try
+        {
+            var transformer = (IResponseTransformer)Activator.CreateInstance(type);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al instanciar el transformador {type.FullName}: {ex.Message}");
+        }
+
+        var output = consoleOutput.ToString();
+        Assert.IsTrue(output.Contains($"Error al instanciar el transformador {type.FullName}:"),
+            "No se encontró el log esperado para error de instanciación.");
+    }
+
+    public class FailingTransformer : IResponseTransformer
+    {
+        public FailingTransformer() => throw new InvalidOperationException("Fallo de prueba");
+        public string Id => "fail";
+        public string Name => "Fail";
+        public int DisplayOrder => 0;
+        public string ContentType => "text/plain";
+        public object Transform(object input) => input;
+        public string Transform(string executionResult) => executionResult;
+    }
 }
