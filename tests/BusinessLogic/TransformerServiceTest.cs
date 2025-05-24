@@ -45,7 +45,7 @@ public class TransformerServiceTest
     [TestMethod]
     public void LoadTransformers_ShouldCreatePluginsDirectory_WhenItDoesNotExist()
     {
-        if (Directory.Exists(_testPluginsPath))
+        if(Directory.Exists(_testPluginsPath))
         {
             Directory.Delete(_testPluginsPath, true);
         }
@@ -58,4 +58,31 @@ public class TransformerServiceTest
 
         Assert.IsTrue(Directory.Exists(_testPluginsPath), "El directorio de plugins no fue creado.");
     }
+
+    [TestMethod]
+    public void LoadTransformers_ShouldAttemptToLoadAllDllFiles()
+    {
+        if(_testPluginsPath == null)
+        {
+            throw new InvalidOperationException("The test plugins path is not initialized.");
+        }
+
+        var dllFile1 = Path.Combine(_testPluginsPath, "Transformer1.dll");
+        var dllFile2 = Path.Combine(_testPluginsPath, "Transformer2.dll");
+        File.Create(dllFile1).Dispose();
+        File.Create(dllFile2).Dispose();
+
+        var transformerService = new TransformerService();
+        var pluginsPathField = typeof(TransformerService).GetField("_pluginsPath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        pluginsPathField.SetValue(transformerService, _testPluginsPath);
+
+        using var consoleOutput = new StringWriter();
+        Console.SetOut(consoleOutput);
+
+        transformerService.LoadTransformers();
+
+        var output = consoleOutput.ToString();
+        Assert.IsTrue(output.Contains($"Intentando cargar: {dllFile1}"), "No se intentó cargar Transformer1.dll.");
+        Assert.IsTrue(output.Contains($"Intentando cargar: {dllFile2}"), "No se intentó cargar Transformer2.dll.");
+        }
 }

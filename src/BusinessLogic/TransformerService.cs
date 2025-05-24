@@ -1,3 +1,4 @@
+using System.Reflection;
 using IBusinessLogic;
 using Transformers.Abstractions;
 
@@ -31,6 +32,22 @@ public class TransformerService : ITransformerService
             Directory.CreateDirectory(_pluginsPath);
             Console.WriteLine($"Creada carpeta de plugins: {_pluginsPath}");
             return;
+        }
+
+        var dllFiles = Directory.GetFiles(_pluginsPath, "*.dll", SearchOption.TopDirectoryOnly);
+        Console.WriteLine($"Encontrados {dllFiles.Length} archivos DLL en {_pluginsPath}");
+
+        foreach(var dllPath in dllFiles)
+        {
+            try
+            {
+                Console.WriteLine($"Intentando cargar: {dllPath}");
+                var assembly = Assembly.LoadFrom(dllPath);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error al cargar el ensamblado {dllPath}: {ex.Message}");
+            }
         }
     }
 
