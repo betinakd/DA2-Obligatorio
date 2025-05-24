@@ -26,12 +26,20 @@ public class TransformerService : ITransformerService
     public void LoadTransformers()
     {
         _transformers.Clear();
+        var assemblies = LoadAssemblies().ToList();
+        if(!assemblies.Contains(Assembly.GetExecutingAssembly()))
+        {
+            assemblies.Add(Assembly.GetExecutingAssembly());
+        }
+    }
 
+    private IEnumerable<Assembly> LoadAssemblies()
+    {
         if(!Directory.Exists(_pluginsPath))
         {
             Directory.CreateDirectory(_pluginsPath);
             Console.WriteLine($"Creada carpeta de plugins: {_pluginsPath}");
-            return;
+            yield break;
         }
 
         var dllFiles = Directory.GetFiles(_pluginsPath, "*.dll", SearchOption.TopDirectoryOnly);
@@ -39,14 +47,20 @@ public class TransformerService : ITransformerService
 
         foreach(var dllPath in dllFiles)
         {
+            Assembly assembly = null;
             try
             {
                 Console.WriteLine($"Intentando cargar: {dllPath}");
-                var assembly = Assembly.LoadFrom(dllPath);
+                assembly = Assembly.LoadFrom(dllPath);
             }
             catch(Exception ex)
             {
                 Console.WriteLine($"Error al cargar el ensamblado {dllPath}: {ex.Message}");
+            }
+
+            if(assembly != null)
+            {
+                yield return assembly;
             }
         }
     }

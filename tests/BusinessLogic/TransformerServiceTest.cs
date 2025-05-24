@@ -1,3 +1,4 @@
+using System.Reflection;
 using BusinessLogic;
 
 namespace Tests.BusinessLogic;
@@ -84,5 +85,20 @@ public class TransformerServiceTest
         var output = consoleOutput.ToString();
         Assert.IsTrue(output.Contains($"Intentando cargar: {dllFile1}"), "No se intentó cargar Transformer1.dll.");
         Assert.IsTrue(output.Contains($"Intentando cargar: {dllFile2}"), "No se intentó cargar Transformer2.dll.");
-        }
+    }
+
+    [TestMethod]
+    public void LoadTransformers_ShouldLoadAssembliesCorrectly()
+    {
+        var transformerService = new TransformerService();
+
+        var loadAssembliesMethod = typeof(TransformerService).GetMethod("LoadAssemblies", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var mockAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() };
+        loadAssembliesMethod.Invoke(transformerService, null);
+
+        transformerService.LoadTransformers();
+
+        Assert.IsNotNull(mockAssemblies, "Los ensamblados no se cargaron correctamente.");
+        Assert.IsTrue(mockAssemblies.Contains(Assembly.GetExecutingAssembly()), "El ensamblado actual no está presente en la lista.");
+    }
 }
