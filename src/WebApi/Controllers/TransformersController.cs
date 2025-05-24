@@ -44,6 +44,11 @@ public class TransformersController(ITransformerService transformerService, IExe
     [FromBody] TransformRequest request,
     [FromQuery] string transformerId = null)
     {
+        if(request == null)
+        {
+            return BadRequest("Se requiere un resultado de ejecución");
+        }
+
         var result = _transformerService.TransformExecution(request.ExecutionResult, transformerId);
         return Ok(result);
     }

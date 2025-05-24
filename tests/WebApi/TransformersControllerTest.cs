@@ -86,4 +86,14 @@ public class TransformersControllerTest
         Assert.IsNotNull(okResult);
         Assert.AreEqual(response, okResult.Value);
     }
+
+    [TestMethod]
+    public void TransformExecution_ReturnsBadRequest_WhenRequestIsNull()
+    {
+        var result = _controller.TransformExecution(null, null);
+
+        var badRequest = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequest);
+        Assert.AreEqual("Se requiere un resultado de ejecución", badRequest.Value);
+    }
 }
