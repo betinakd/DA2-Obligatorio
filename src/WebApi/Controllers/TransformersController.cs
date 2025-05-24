@@ -14,4 +14,15 @@ public class TransformersController(ITransformerService transformerService) : Co
     {
         return Ok(_transformerService.GetAvailableTransformers());
     }
+
+    [HttpPost("reload")]
+    public IActionResult ReloadTransformers()
+    {
+        _transformerService.LoadTransformers();
+        return Ok(new
+        {
+            message = "Transformadores recargados correctamente",
+            transformers = _transformerService.GetAvailableTransformers()
+        });
+    }
 }

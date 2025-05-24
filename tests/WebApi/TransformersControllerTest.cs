@@ -34,4 +34,27 @@ public class TransformersControllerTest
         Assert.IsNotNull(okResult);
         Assert.AreEqual(transformers, okResult.Value);
     }
+
+    [TestMethod]
+    public void ReloadTransformers_ReturnsOkWithMessageAndTransformers()
+    {
+        var transformers = new List<TransformerInfo>();
+        _mockTransformerService.Setup(x => x.GetAvailableTransformers()).Returns(transformers);
+
+        var result = _controller.ReloadTransformers();
+
+        var okResult = result as OkObjectResult;
+        Assert.IsNotNull(okResult);
+
+        var value = okResult.Value;
+        var messageProp = value.GetType().GetProperty("message");
+        var transformersProp = value.GetType().GetProperty("transformers");
+
+        Assert.IsNotNull(messageProp);
+        Assert.IsNotNull(transformersProp);
+
+        Assert.AreEqual("Transformadores recargados correctamente", messageProp.GetValue(value));
+        Assert.AreEqual(transformers, transformersProp.GetValue(value));
+        _mockTransformerService.Verify(x => x.LoadTransformers(), Times.Once);
+    }
 }
