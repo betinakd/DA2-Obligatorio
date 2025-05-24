@@ -132,6 +132,20 @@ public class TransformerService : ITransformerService
 
     public TransformedResponse TransformExecution(string executionResult, string transformerId = null)
     {
-        throw new NotImplementedException();
+        if(_transformers.Count == 0)
+        {
+            return new TransformedResponse
+            {
+                OriginalResult = executionResult,
+                TransformedResult = executionResult,
+                ContentType = "text/plain",
+                TransformerId = "default",
+                AvailableTransformers = GetAvailableTransformers().ToList()
+            };
+        }
+        else
+        {
+            return null;
+        }
     }
 }

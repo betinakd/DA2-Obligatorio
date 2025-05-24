@@ -261,4 +261,22 @@ public class TransformerServiceTest
         Assert.AreEqual("Duplicado 1", result.Name);
         Assert.AreEqual("text/plain", result.ContentType);
     }
+
+    [TestMethod]
+    public void TransformExecution_ShouldReturnDefault_WhenNoTransformers()
+    {
+        var service = new TransformerService();
+        var transformersField = typeof(TransformerService)
+            .GetField("_transformers", BindingFlags.NonPublic | BindingFlags.Instance);
+        var transformersList = transformersField.GetValue(service) as List<IResponseTransformer>;
+        transformersList.Clear();
+
+        var result = service.TransformExecution("original");
+
+        Assert.AreEqual("original", result.OriginalResult);
+        Assert.AreEqual("original", result.TransformedResult);
+        Assert.AreEqual("text/plain", result.ContentType);
+        Assert.AreEqual("default", result.TransformerId);
+        Assert.IsNotNull(result.AvailableTransformers);
+    }
 }
