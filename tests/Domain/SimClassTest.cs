@@ -339,4 +339,21 @@ public class SimClassTest
         new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface }
         ];
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Methods_ShouldThrowException_WhenContainsDuplicateMethodNames()
+    {
+        var simClass = new SimClass
+        {
+            Name = "TestClass"
+        };
+
+        simClass.Methods =
+        [
+            new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal }
+        ];
+    }
 }
