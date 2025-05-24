@@ -10,7 +10,7 @@ public class TransformerService : ITransformerService
     private readonly string _pluginsPath;
     public TransformerService()
     {
-        _pluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "Transformers");
+        _pluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
         LoadTransformers();
     }
 
