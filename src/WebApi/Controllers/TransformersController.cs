@@ -44,7 +44,7 @@ public class TransformersController(ITransformerService transformerService, IExe
     [FromBody] TransformRequest request,
     [FromQuery] string transformerId = null)
     {
-        if(request == null)
+        if(request == null || string.IsNullOrEmpty(request.ExecutionResult))
         {
             return BadRequest("Se requiere un resultado de ejecución");
         }
