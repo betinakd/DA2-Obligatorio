@@ -367,4 +367,50 @@ public class SimClassTest
 
         simClass.BaseClassId = new Guid("22222222-2222-2222-2222-222222222222");
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void SetBaseClassShouldThrowExceptionWhenBaseClassIsInterface()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "RegularClass"
+        };
+
+        simClass.BaseClass = interfaceClass;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void State_ShouldThrowException_WhenSettingAbstractWithNonObjectBaseClassId()
+    {
+        var simClass = new SimClass
+        {
+            BaseClassId = Guid.NewGuid(),
+            Name = "TestClass"
+        };
+        simClass.BaseClassId = Guid.NewGuid();
+
+        simClass.State = SimAccesibility.Abstract;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void State_ShouldThrowException_WhenSettingInterfaceWithNonObjectBaseClassId()
+    {
+        var simClass = new SimClass
+        {
+            BaseClassId = Guid.NewGuid(),
+            Name = "ITestInterface"
+        };
+        simClass.BaseClassId = Guid.NewGuid();
+
+        simClass.State = SimAccesibility.Interface;
+    }
 }
