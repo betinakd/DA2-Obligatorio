@@ -164,6 +164,11 @@ public class SimClass
                 throw new InvalidAttributeDomain("An interface cannot implement other classes.");
             }
 
+            if(value.Any(i => i.State != SimAccesibility.Interface))
+            {
+                throw new InvalidAttributeDomain("Cannot implement a non interface.");
+            }
+
             _implements = value;
         }
     }

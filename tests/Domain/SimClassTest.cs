@@ -540,4 +540,26 @@ public class SimClassTest
 
         CollectionAssert.AreEqual(implementations, simClass.Implements);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Implements_ShouldThrowException_WhenImplementingNonInterface()
+    {
+        var simClass = new SimClass
+        {
+            Name = "RegularClass",
+            State = SimAccesibility.Normal
+        };
+
+        var regularClassToImplement = new SimClass
+        {
+            Name = "AnotherRegularClass",
+            State = SimAccesibility.Normal
+        };
+
+        simClass.Implements =
+    [
+        regularClassToImplement
+    ];
+    }
 }

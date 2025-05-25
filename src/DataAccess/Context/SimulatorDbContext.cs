@@ -199,6 +199,11 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         _ = modelBuilder.Entity<ParameterSignature>()
             .Property(p => p.Index)
             .HasDefaultValue(0);
+
+        _ = modelBuilder.Entity<SimClass>()
+            .HasMany(c => c.Implements)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("SimClassImplements"));
     }
 
     private void DataSeed(ModelBuilder modelBuilder)

@@ -26,6 +26,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Invocations)
                     .ThenInclude(i => i.Reference)
+            .Include(c => c.Implements)
             .FirstOrDefault(c => c.Id == id);
 
         if(simClass == null)
@@ -66,6 +67,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
         _context.SimAttributes.RemoveRange(simClass.Attributes);
 
         _context.SimClasses.Remove(simClass);
+        simClass.Implements.Clear();
         _context.SaveChanges();
     }
 
@@ -99,6 +101,10 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                 .ThenInclude(m => m.Invocations)
                     .ThenInclude(i => i.Reference)
             .Include(c => c.BaseClass)
+            .Include(c => c.Implements)
+                .ThenInclude(i => i.Methods)
+                    .ThenInclude(m => m.Parameters)
+                        .ThenInclude(p => p.Type)
             .AsSplitQuery()
             .ToList();
 

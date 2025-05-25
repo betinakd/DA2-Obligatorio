@@ -27,4 +27,6 @@ public class SimClassRequestUpdate()
     public string IdBaseClass { get; set; } = "11111111-1111-1111-1111-111111111111";
     public List<MethodRequest> Methods { get; set; } = [];
     public List<AttributeRequest> Attributes { get; set; } = [];
+
+    public List<InterfaceRequestUpdate> Implements { get; set; } = [];
 }
