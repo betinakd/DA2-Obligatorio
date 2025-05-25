@@ -493,4 +493,51 @@ public class SimClassTest
         new SimAttribute { Name = "TestAttribute" }
     ];
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Implements_ShouldThrowException_WhenInterfaceImplementsClasses()
+    {
+        var simClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+
+        var classToImplement = new SimClass
+        {
+            Name = "RegularClass",
+            State = SimAccesibility.Normal
+        };
+
+        simClass.Implements =
+    [
+        classToImplement
+    ];
+    }
+
+    [TestMethod]
+    public void Implements_ShouldNotThrowException_WhenNonInterfaceImplementsClasses()
+    {
+        var simClass = new SimClass
+        {
+            Name = "RegularClass",
+            State = SimAccesibility.Normal
+        };
+
+        var classToImplement = new SimClass
+        {
+            Name = "InterfaceToImplement",
+            State = SimAccesibility.Interface
+        };
+
+        var implementations = new List<SimClass>
+    {
+        classToImplement
+    };
+
+        simClass.Implements = implementations;
+
+        CollectionAssert.AreEqual(implementations, simClass.Implements);
+    }
 }

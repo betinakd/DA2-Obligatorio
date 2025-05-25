@@ -130,4 +130,9 @@ public class SimMethod
             _name = value;
         }
     }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
+    }
 }

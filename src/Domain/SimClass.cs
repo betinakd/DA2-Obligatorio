@@ -153,6 +153,21 @@ public class SimClass
         }
     }
 
+    private List<SimClass> _implements = [];
+    public List<SimClass> Implements
+    {
+        get => _implements;
+        set
+        {
+            if(State == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("An interface cannot implement other classes.");
+            }
+
+            _implements = value;
+        }
+    }
+
     public void SetBaseClass(SimClass? value)
     {
         if(value?.State == SimAccesibility.Sealed)

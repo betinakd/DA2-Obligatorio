@@ -44,10 +44,19 @@ public class SimMethodDataAccessTest
             Id = Guid.NewGuid(),
             TypeId = typeId,
             Name = "TestLocalVariable",
-            RelatedMethodId = methodId,
             Type = new SimClass { Id = typeId, Name = "TestType" },
-            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
         };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = Guid.NewGuid(),
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
+            LocalVariables = []
+        };
+        _context.SimMethods.Add(method);
+        _context.SaveChanges();
 
         var result = _simMethodDataAccess.AddLocalVariable(methodId, localVariable);
 
@@ -140,17 +149,17 @@ public class SimMethodDataAccessTest
             Id = classId,
             Name = "TestClass"
         };
-        _context.SimClasses.Add(simClass);
-
         var method = new SimMethod
         {
             Id = methodId,
             Name = "TestMethod",
-            RelatedClassId = classId,
-            RelatedClass = simClass,
+            RelatedClassId = Guid.NewGuid(),
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
             Invocations = []
         };
+
         _context.SimMethods.Add(method);
+        _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
         var reference = new ReferenceThis
@@ -193,14 +202,23 @@ public class SimMethodDataAccessTest
             .FirstOrDefault(m => m.Id == methodId);
 
         Assert.IsNotNull(updatedMethod);
-        Assert.AreEqual(2, updatedMethod.Invocations.Count);
+
+        Assert.AreEqual(1, updatedMethod.Invocations.Count);
         Assert.AreEqual(invocation.Id, updatedMethod.Invocations.First().Id);
     }
 
     [TestMethod]
     public void CreateMethod_ShouldAddMethodToDatabase()
     {
-        var simClassId = Guid.NewGuid();
+        var simClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestClass"
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var simClassId = simClass.Id;
         var simMethod = new SimMethod
         {
             Id = Guid.NewGuid(),
@@ -210,11 +228,16 @@ public class SimMethodDataAccessTest
 
         var result = _simMethodDataAccess.CreateMethod(simClassId, simMethod);
 
-        var methodInDb = _context.SimMethods.FirstOrDefault(m => m.Id == simMethod.Id);
+        var methodInDb = _context.SimMethods
+            .Include(m => m.RelatedClass)
+            .FirstOrDefault(m => m.Id == simMethod.Id);
+
         Assert.IsNotNull(methodInDb);
         Assert.AreEqual(simMethod.Name, methodInDb.Name);
-        Assert.AreEqual(simMethod.RelatedClassId, methodInDb.RelatedClassId);
+        Assert.AreEqual(simClassId, methodInDb.RelatedClassId);
         Assert.AreEqual(simMethod.Id, result.Id);
+        Assert.IsNotNull(methodInDb.RelatedClass);
+        Assert.AreEqual("TestClass", methodInDb.RelatedClass.Name);
     }
 
     [TestMethod]
