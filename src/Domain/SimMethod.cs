@@ -55,20 +55,9 @@ public class SimMethod
             return false;
         }
 
-        foreach(var parameter in Parameters)
+        for(var i = 0; i < Parameters.Count; i++)
         {
-            var parameterMatched = false;
-            foreach(var otherParam in otherMethod.Parameters)
-            {
-                var typeIdsMatch = parameter.TypeId == otherParam.TypeId;
-                if(typeIdsMatch)
-                {
-                    parameterMatched = true;
-                    break;
-                }
-            }
-
-            if(!parameterMatched)
+            if(Parameters[i].TypeId != otherMethod.Parameters[i].TypeId)
             {
                 return false;
             }
