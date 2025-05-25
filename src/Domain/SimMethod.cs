@@ -45,7 +45,20 @@ public class SimMethod
         }
     }
 
-    public List<Invocation> Invocations { get; set; } = [];
+    private List<Invocation> _invocations = [];
+    public List<Invocation> Invocations
+    {
+        get => _invocations;
+        set
+        {
+            if(Accesibility == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot have invocations.");
+            }
+
+            _invocations = value;
+        }
+    }
 
     public bool MatchSignature(Signature signature)
     {

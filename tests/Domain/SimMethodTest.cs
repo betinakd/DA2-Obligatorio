@@ -511,4 +511,38 @@ public class SimMethodTest
 
         CollectionAssert.AreEqual(localVariables, method.LocalVariables);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Invocations_WhenSettingInvocationsOnInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.Invocations =
+    [
+        new Invocation { RelatedMethodId = Guid.NewGuid() }
+    ];
+    }
+
+    [TestMethod]
+    public void Invocations_WhenSettingInvocationsOnNonInterfaceMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+        var invocations = new List<Invocation>
+    {
+        new Invocation { RelatedMethodId = Guid.NewGuid() }
+    };
+
+        method.Invocations = invocations;
+
+        CollectionAssert.AreEqual(invocations, method.Invocations);
+    }
 }
