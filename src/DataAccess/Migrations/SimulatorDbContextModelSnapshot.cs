@@ -301,7 +301,6 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            BaseClassId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Object",
                             State = 2
                         },

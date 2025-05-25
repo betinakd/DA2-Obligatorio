@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,8 +33,8 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BaseClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    State = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,15 +75,38 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SimClassImplements",
+                columns: table => new
+                {
+                    ImplementsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SimClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SimClassImplements", x => new { x.ImplementsId, x.SimClassId });
+                    table.ForeignKey(
+                        name: "FK_SimClassImplements_SimClasses_ImplementsId",
+                        column: x => x.ImplementsId,
+                        principalTable: "SimClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SimClassImplements_SimClasses_SimClassId",
+                        column: x => x.SimClassId,
+                        principalTable: "SimClasses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SimMethods",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReturnTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RelatedClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Privacity = table.Column<int>(type: "int", nullable: false),
-                    Accesibility = table.Column<int>(type: "int", nullable: false)
+                    Accesibility = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -431,6 +454,11 @@ namespace DataAccess.Migrations
                 column: "BaseClassId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SimClassImplements_SimClassId",
+                table: "SimClassImplements",
+                column: "SimClassId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SimMethods_RelatedClassId",
                 table: "SimMethods",
                 column: "RelatedClassId");
@@ -449,6 +477,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "ParameterSignatures");
+
+            migrationBuilder.DropTable(
+                name: "SimClassImplements");
 
             migrationBuilder.DropTable(
                 name: "Signatures");

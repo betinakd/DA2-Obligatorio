@@ -130,7 +130,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
             classToUpdate.Methods = methodsNewClass;
             classToUpdate.SetBaseClass(baseClass);
             classToUpdate.BaseClassId = baseClass.Id;
-            classToUpdate.Implements = interfaces;
+            classToUpdate.SetImplements(interfaces);
             _simClassService.UpdateSimClass(classToUpdate);
 
             return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(classToUpdate) };

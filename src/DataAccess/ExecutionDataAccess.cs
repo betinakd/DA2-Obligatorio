@@ -5,6 +5,7 @@ using IDataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
+
 public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAccess
 {
     private readonly SimulatorDbContext _context = context;
@@ -151,8 +152,15 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return true;
         }
 
-        return ownerClass.BaseClassId.HasValue &&
-               MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
+        if(ownerClass.BaseClassId.HasValue)
+        {
+            if(ownerClass.BaseClassId.Value != idClass)
+            {
+                return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
+            }
+        }
+
+        return false;
     }
 
     public void SaveExecutionLog(ExecutionLog executionLog)

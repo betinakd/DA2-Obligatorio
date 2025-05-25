@@ -236,6 +236,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Id = objectClassId,
                 Name = "Object",
                 State = SimAccesibility.Normal,
+                BaseClassId = null
             },
             new SimClass
             {

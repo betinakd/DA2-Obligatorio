@@ -285,16 +285,6 @@ public class SimClassTest
     }
 
     [TestMethod]
-    public void BaseClassIdWhenSetToNullShouldUseObjectGuid()
-    {
-        var simClass = new SimClass();
-
-        simClass.BaseClassId = null;
-
-        Assert.AreEqual(Guid.Parse("11111111-1111-1111-1111-111111111111"), simClass.BaseClassId);
-    }
-
-    [TestMethod]
     [ExpectedException(typeof(InvalidAttributeDomain))]
     public void BaseClassIdWhenClassIsAbstractAndSettingNonObjectGuidShouldThrowException()
     {
@@ -561,5 +551,64 @@ public class SimClassTest
     [
         regularClassToImplement
     ];
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void SetImplements_ShouldThrowException_WhenMissingInterfaceMethods()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+            Methods =
+            [
+            new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface },
+            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface }
+            ]
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "ImplementingClass",
+            State = SimAccesibility.Normal,
+            Methods =
+            [
+                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal }
+            ]
+        };
+
+        simClass.SetImplements([interfaceClass]);
+    }
+
+    [TestMethod]
+    public void SetImplements_ShouldNotThrowException_WhenAllInterfaceMethodsImplemented()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+            Methods =
+            [
+                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface },
+            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface }
+            ]
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "ImplementingClass",
+            State = SimAccesibility.Normal,
+            Methods =
+            [
+                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal },
+            new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal }
+            ]
+        };
+
+        simClass.SetImplements([interfaceClass]);
+
+        CollectionAssert.Contains(simClass.Implements.ToList(), interfaceClass);
     }
 }

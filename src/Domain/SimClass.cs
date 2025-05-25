@@ -55,7 +55,7 @@ public class SimClass
                 throw new InvalidAttributeDomain("Cannot set a base class for an abstract or interface class.");
             }
 
-            if(value == null || value == Guid.Empty)
+            if(value == Guid.Empty)
             {
                 _baseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111");
             }
@@ -192,5 +192,23 @@ public class SimClass
         }
 
         _baseClassField = value;
+    }
+
+    public void SetImplements(List<SimClass> value)
+    {
+        var interfaceMethods = new List<SimMethod>();
+        foreach(var interfaceClass in value)
+        {
+            interfaceMethods.AddRange(interfaceClass.Methods);
+        }
+
+        var missingMethods = interfaceMethods.Where(im => !Methods.Any(m => m.Equals(im))).ToList();
+
+        if(missingMethods.Any())
+        {
+            throw new InvalidAttributeDomain($"The following interface methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+        }
+
+        Implements = value;
     }
 }
