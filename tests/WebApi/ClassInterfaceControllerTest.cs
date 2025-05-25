@@ -32,14 +32,10 @@ public class ClassInterfaceControllerTest
             IdInterface = Guid.NewGuid().ToString()
         };
 
-        var expectedResponse = new UpdateSimClassResponse
+        var expectedResponse = new SimClassResponse
         {
-            Message = "Interface added successfully",
-            SimClass = new SimClassResponse
-            {
-                Id = classId,
-                Name = "TestClass"
-            }
+            Id = classId,
+            Name = "TestClass"
         };
 
         _mockSimClassAdapter

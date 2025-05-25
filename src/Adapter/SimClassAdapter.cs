@@ -182,8 +182,24 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         }
     }
 
-    public object AddInterface(Guid id, InterfaceRequestUpdate methodRequest)
+    public SimClassResponse AddInterface(Guid id, InterfaceRequestUpdate methodRequest)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var simClass = _simClassService.AddInterface(id, methodRequest.InterfaceId);
+            return SimClassResponseMapper.MapToSimClassResponse(simClass);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
     }
 }

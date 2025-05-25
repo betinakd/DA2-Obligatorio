@@ -10,5 +10,5 @@ public interface ISimClassAdapter
     UpdateSimClassResponse UpdateSimClass(SimClassRequestUpdate request, Guid idSimClass);
     void DeleteSimClass(Guid id);
     SimClassResponse GetSimClassInfo(Guid classId);
-    object AddInterface(Guid id, InterfaceRequestUpdate methodRequest);
+    SimClassResponse AddInterface(Guid id, InterfaceRequestUpdate methodRequest);
 }
