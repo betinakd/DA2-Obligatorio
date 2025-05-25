@@ -413,4 +413,68 @@ public class SimClassTest
 
         simClass.State = SimAccesibility.Interface;
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void AttributesShouldThrowExceptionWhenContainsDuplicateAttributeNames()
+    {
+        var simClass = new SimClass
+        {
+            Name = "TestClass"
+        };
+        var boolClass = new SimClass
+        {
+            Name = "bool",
+            State = SimAccesibility.Normal,
+            Id = Guid.NewGuid(),
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+        var stringClass = new SimClass
+        {
+            Name = "string",
+            State = SimAccesibility.Normal,
+            Id = Guid.NewGuid(),
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+
+        simClass.Attributes =
+        [
+            new SimAttribute { Name = "Attribute1", Type = stringClass },
+            new SimAttribute { Name = "Attribute2", Type = stringClass },
+            new SimAttribute { Name = "Attribute1", Type = boolClass }
+        ];
+    }
+
+    [TestMethod]
+    public void AttributesShouldSetValueWhenNoDuplicateAttributeNames()
+    {
+        var simClass = new SimClass
+        {
+            Name = "TestClass"
+        };
+        var boolClass = new SimClass
+        {
+            Name = "bool",
+            State = SimAccesibility.Normal,
+            Id = Guid.NewGuid(),
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+        var stringClass = new SimClass
+        {
+            Name = "string",
+            State = SimAccesibility.Normal,
+            Id = Guid.NewGuid(),
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+        var attributes = new List<SimAttribute>
+        {
+            new SimAttribute { Name = "Attribute1", Type = stringClass },
+            new SimAttribute { Name = "Attribute2", Type = stringClass },
+            new SimAttribute { Name = "Attribute3", Type = boolClass }
+        };
+
+        simClass.Attributes = attributes;
+
+        CollectionAssert.AreEqual(attributes, simClass.Attributes);
+    }
 }

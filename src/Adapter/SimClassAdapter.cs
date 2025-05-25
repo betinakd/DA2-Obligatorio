@@ -9,6 +9,7 @@ using Models.Request;
 using Models.Response;
 
 namespace Adapter;
+
 public class SimClassAdapter(ISimClassService simClassService, IExecutionService executionService)
     : ISimClassAdapter
 {

@@ -68,8 +68,27 @@ public class SimClass
 
     private string _name = string.Empty;
     private SimClass? _baseClassField = null;
+    private List<SimAttribute> _attributes = [];
 
-    public List<SimAttribute> Attributes { get; set; } = [];
+    public List<SimAttribute> Attributes
+    {
+        get => _attributes;
+        set
+        {
+            for(var i = 0; i < value.Count; i++)
+            {
+                for(var j = 0; j < value.Count; j++)
+                {
+                    if(value[i].Name.Equals(value[j].Name) && i != j)
+                    {
+                        throw new InvalidAttributeDomain($"Duplicate attribute name found: {value[i].Name}");
+                    }
+                }
+            }
+
+            _attributes = value;
+        }
+    }
 
     public string Name
     {
