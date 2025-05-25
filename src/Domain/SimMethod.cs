@@ -30,7 +30,21 @@ public class SimMethod
         }
     }
 
-    public List<LocalVariable> LocalVariables { get; set; } = [];
+    private List<LocalVariable> _localVariables = [];
+    public List<LocalVariable> LocalVariables
+    {
+        get => _localVariables;
+        set
+        {
+            if(Accesibility == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot have local variables.");
+            }
+
+            _localVariables = value;
+        }
+    }
+
     public List<Invocation> Invocations { get; set; } = [];
 
     public bool MatchSignature(Signature signature)
