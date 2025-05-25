@@ -477,4 +477,20 @@ public class SimClassTest
 
         CollectionAssert.AreEqual(attributes, simClass.Attributes);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Attributes_ShouldThrowException_WhenSettingAttributesOnInterface()
+    {
+        var simClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+
+        simClass.Attributes =
+    [
+        new SimAttribute { Name = "TestAttribute" }
+    ];
+    }
 }

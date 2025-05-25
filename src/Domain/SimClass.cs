@@ -75,6 +75,11 @@ public class SimClass
         get => _attributes;
         set
         {
+            if(State == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("An interface cannot have attributes.");
+            }
+
             for(var i = 0; i < value.Count; i++)
             {
                 for(var j = 0; j < value.Count; j++)
