@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Enums;
 using Domain.Exceptions;
 
 namespace Tests.Domain;
@@ -388,15 +389,6 @@ public class SimMethodTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NotImplementedException))]
-    public void GetHashCode_ThrowsNotImplementedException()
-    {
-        var method = new SimMethod { Name = "TestMethod" };
-
-        method.GetHashCode();
-    }
-
-    [TestMethod]
     public void Name_WhenSetToValidValue_ShouldSetValue()
     {
         var simClass = new SimClass();
@@ -450,5 +442,39 @@ public class SimMethodTest
         simClass.Name = "ClassName123";
 
         Assert.AreEqual("ClassName123", simClass.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Parameters_WhenSettingParametersOnInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.Parameters =
+    [
+        new Parameter { Name = "param1", TypeId = Guid.NewGuid() }
+    ];
+    }
+
+    [TestMethod]
+    public void Parameters_WhenSettingParametersOnNonInterfaceMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+        var parameters = new List<Parameter>
+    {
+        new Parameter { Name = "param1", TypeId = Guid.NewGuid() }
+    };
+
+        method.Parameters = parameters;
+
+        CollectionAssert.AreEqual(parameters, method.Parameters);
     }
 }

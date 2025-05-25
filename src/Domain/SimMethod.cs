@@ -15,7 +15,21 @@ public class SimMethod
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }
     public SimAccesibility Accesibility { get; set; }
-    public List<Parameter> Parameters { get; set; } = [];
+    private List<Parameter> _parameters = [];
+    public List<Parameter> Parameters
+    {
+        get => _parameters;
+        set
+        {
+            if(Accesibility == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot have parameters.");
+            }
+
+            _parameters = value;
+        }
+    }
+
     public List<LocalVariable> LocalVariables { get; set; } = [];
     public List<Invocation> Invocations { get; set; } = [];
 
@@ -88,10 +102,5 @@ public class SimMethod
 
             _name = value;
         }
-    }
-
-    public override int GetHashCode()
-    {
-        throw new NotImplementedException();
     }
 }
