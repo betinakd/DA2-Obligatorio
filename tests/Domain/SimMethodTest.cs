@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Enums;
 using Domain.Exceptions;
 
 namespace Tests.Domain;
@@ -388,15 +389,6 @@ public class SimMethodTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NotImplementedException))]
-    public void GetHashCode_ThrowsNotImplementedException()
-    {
-        var method = new SimMethod { Name = "TestMethod" };
-
-        method.GetHashCode();
-    }
-
-    [TestMethod]
     public void Name_WhenSetToValidValue_ShouldSetValue()
     {
         var simClass = new SimClass();
@@ -450,5 +442,150 @@ public class SimMethodTest
         simClass.Name = "ClassName123";
 
         Assert.AreEqual("ClassName123", simClass.Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Parameters_WhenSettingParametersOnInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.Parameters =
+    [
+        new Parameter { Name = "param1", TypeId = Guid.NewGuid() }
+    ];
+    }
+
+    [TestMethod]
+    public void Parameters_WhenSettingParametersOnNonInterfaceMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+        var parameters = new List<Parameter>
+    {
+        new Parameter { Name = "param1", TypeId = Guid.NewGuid() }
+    };
+
+        method.Parameters = parameters;
+
+        CollectionAssert.AreEqual(parameters, method.Parameters);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void LocalVariables_WhenSettingLocalVariablesOnInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.LocalVariables =
+    [
+        new LocalVariable { Name = "localVar1", TypeId = Guid.NewGuid() }
+    ];
+    }
+
+    [TestMethod]
+    public void LocalVariables_WhenSettingLocalVariablesOnNonInterfaceMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+        var localVariables = new List<LocalVariable>
+    {
+        new LocalVariable { Name = "localVar1", TypeId = Guid.NewGuid() }
+    };
+
+        method.LocalVariables = localVariables;
+
+        CollectionAssert.AreEqual(localVariables, method.LocalVariables);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Invocations_WhenSettingInvocationsOnInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.Invocations =
+    [
+        new Invocation { RelatedMethodId = Guid.NewGuid() }
+    ];
+    }
+
+    [TestMethod]
+    public void Invocations_WhenSettingInvocationsOnNonInterfaceMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+        var invocations = new List<Invocation>
+    {
+        new Invocation { RelatedMethodId = Guid.NewGuid() }
+    };
+
+        method.Invocations = invocations;
+
+        CollectionAssert.AreEqual(invocations, method.Invocations);
+    }
+
+    [TestMethod]
+    public void EqualsWithoutReturnType_WithNotSameObject_ShouldReturnFalse()
+    {
+        var method = new SimMethod { Name = "TestMethod" };
+        var differentObject = new object();
+
+        var result = method.EqualsWithoutReturnType(differentObject);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void EqualsWithReturnType_SameSignatureButDifferentReturnType_ReturnsFalse()
+    {
+        var paramTypeId = Guid.NewGuid();
+
+        var method1 = new SimMethod
+        {
+            Name = "TestMethod",
+            ReturnTypeId = Guid.NewGuid(),
+            Parameters =
+        [
+            new Parameter { Name = "param1", TypeId = paramTypeId }
+        ]
+        };
+
+        var method2 = new SimMethod
+        {
+            Name = "TestMethod",
+            ReturnTypeId = Guid.NewGuid(),
+            Parameters =
+        [
+            new Parameter { Name = "differentParamName", TypeId = paramTypeId }
+        ]
+        };
+
+        Assert.IsTrue(method1.EqualsWithoutReturnType(method2));
+
+        var result = method1.Equals(method2);
+
+        Assert.IsFalse(result);
     }
 }

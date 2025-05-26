@@ -10,4 +10,5 @@ public interface ISimClassService
     SimClass UpdateSimClass(SimClass simClass);
     SimClass GetSimClassById(Guid id);
     void DeleteSimClass(Guid id);
+    SimClass AddInterface(Guid id, Guid interfaceId);
 }

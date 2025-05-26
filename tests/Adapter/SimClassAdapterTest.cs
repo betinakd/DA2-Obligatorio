@@ -430,7 +430,7 @@ public class SimClassAdapterTest
         {
             Name = "UpdatedClass",
             State = SimModelsAccesibility.Normal,
-            IdBaseClass = Guid.Empty.ToString(), // Empty GUID
+            IdBaseClass = Guid.Empty.ToString(),
             Methods = [],
             Attributes = []
         };

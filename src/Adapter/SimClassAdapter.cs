@@ -9,6 +9,7 @@ using Models.Request;
 using Models.Response;
 
 namespace Adapter;
+
 public class SimClassAdapter(ISimClassService simClassService, IExecutionService executionService)
     : ISimClassAdapter
 {
@@ -118,10 +119,18 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                 methodsNewClass.Add(newMethod);
             }
 
+            var interfaces = new List<SimClass>();
+            foreach(var inter in request.Implements)
+            {
+                var interfaceClass = _simClassService.GetSimClassById(inter.InterfaceId);
+                interfaces.Add(interfaceClass);
+            }
+
             classToUpdate.Attributes = attributesNewClas;
             classToUpdate.Methods = methodsNewClass;
             classToUpdate.SetBaseClass(baseClass);
             classToUpdate.BaseClassId = baseClass.Id;
+            classToUpdate.SetImplements(interfaces);
             _simClassService.UpdateSimClass(classToUpdate);
 
             return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(classToUpdate) };
@@ -170,6 +179,31 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         catch(NonExistentValueLogic ex)
         {
             throw new NonExistentValueAdapter(ex.Message);
+        }
+    }
+
+    public CreatedSimClassResponse AddInterface(Guid id, InterfaceRequestUpdate methodRequest)
+    {
+        try
+        {
+            var simClass = _simClassService.AddInterface(id, methodRequest.InterfaceId);
+            return new CreatedSimClassResponse() { Message = "Interface implemented successfully.", SimClass = SimClassResponseMapper.MapToSimClassResponse(simClass) };
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeDomain ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 }

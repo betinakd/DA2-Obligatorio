@@ -6,7 +6,7 @@ namespace Domain.Enums;
 public enum SimAccesibility
 {
     /// <summary>
-    /// Represents a normal simulation state.
+    /// Represents a sealed simulation state.
     /// </summary>
     Sealed,
 
@@ -16,7 +16,12 @@ public enum SimAccesibility
     Abstract,
 
     /// <summary>
-    /// Represents a sealed simulation state.
+    /// Represents a normal simulation state.
     /// </summary>
     Normal,
+
+    /// <summary>
+    /// Represents a interface simulation state.
+    /// </summary>
+    Interface,
 }

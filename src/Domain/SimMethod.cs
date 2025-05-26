@@ -15,9 +15,50 @@ public class SimMethod
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }
     public SimAccesibility Accesibility { get; set; }
-    public List<Parameter> Parameters { get; set; } = [];
-    public List<LocalVariable> LocalVariables { get; set; } = [];
-    public List<Invocation> Invocations { get; set; } = [];
+    private List<Parameter> _parameters = [];
+    public List<Parameter> Parameters
+    {
+        get => _parameters;
+        set
+        {
+            if(Accesibility == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot have parameters.");
+            }
+
+            _parameters = value;
+        }
+    }
+
+    private List<LocalVariable> _localVariables = [];
+    public List<LocalVariable> LocalVariables
+    {
+        get => _localVariables;
+        set
+        {
+            if(Accesibility == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot have local variables.");
+            }
+
+            _localVariables = value;
+        }
+    }
+
+    private List<Invocation> _invocations = [];
+    public List<Invocation> Invocations
+    {
+        get => _invocations;
+        set
+        {
+            if(Accesibility == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot have invocations.");
+            }
+
+            _invocations = value;
+        }
+    }
 
     public bool MatchSignature(Signature signature)
     {
@@ -45,6 +86,11 @@ public class SimMethod
 
     public override bool Equals(object? obj)
     {
+        return EqualsWithReturnType(obj);
+    }
+
+    public bool EqualsWithoutReturnType(object? obj)
+    {
         if(obj is not SimMethod otherMethod)
         {
             return false;
@@ -55,26 +101,25 @@ public class SimMethod
             return false;
         }
 
-        foreach(var parameter in Parameters)
+        for(var i = 0; i < Parameters.Count; i++)
         {
-            var parameterMatched = false;
-            foreach(var otherParam in otherMethod.Parameters)
-            {
-                var typeIdsMatch = parameter.TypeId == otherParam.TypeId;
-                if(typeIdsMatch)
-                {
-                    parameterMatched = true;
-                    break;
-                }
-            }
-
-            if(!parameterMatched)
+            if(Parameters[i].TypeId != otherMethod.Parameters[i].TypeId)
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private bool EqualsWithReturnType(object? otherMethod)
+    {
+        if(otherMethod is not SimMethod obj)
+        {
+            return false;
+        }
+
+        return EqualsWithoutReturnType(obj) && (ReturnTypeId == obj.ReturnTypeId);
     }
 
     public string Name
@@ -99,6 +144,11 @@ public class SimMethod
 
             _name = value;
         }
+    }
+
+    public override string ToString()
+    {
+        return Privacity + " " + Accesibility + " " + ReturnType.Name + " " + Name + "(" + string.Join(", ", Parameters.Select(p => p.Name)) + ")";
     }
 
     public override int GetHashCode()

@@ -59,6 +59,27 @@ public static class SimClassResponseMapper
                 TypeId = a.TypeId,
                 Privacity = EnumMapper.MapToModelPrivacity(a.Privacity),
                 RelatedClassId = a.RelatedClassId
+            }).ToList(),
+            Implements = domainClass.Implements.Select(i => new InterfaceResponse
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Methods = i.Methods.Select(m => new MethodResponse
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    IdClassOwner = m.RelatedClassId,
+                    ReturnTypeId = m.ReturnTypeId,
+                    Privacity = EnumMapper.MapToModelPrivacity(m.Privacity),
+                    Accesibility = EnumMapper.MapToModelAccesibility(m.Accesibility),
+                    Parameters = m.Parameters.Select(p => new ParameterResponse
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ClassTypeId = p.TypeId,
+                        MethodId = p.RelatedMethodId
+                    }).ToList()
+                }).ToList()
             }).ToList()
         };
     }

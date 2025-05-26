@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250505011038_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250525212306_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -547,6 +547,21 @@ namespace DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SimClassSimClass", b =>
+                {
+                    b.Property<Guid>("ImplementsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SimClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ImplementsId", "SimClassId");
+
+                    b.HasIndex("SimClassId");
+
+                    b.ToTable("SimClassImplements", (string)null);
+                });
+
             modelBuilder.Entity("Domain.ReferenceAttribute", b =>
                 {
                     b.HasBaseType("Domain.Reference");
@@ -753,6 +768,21 @@ namespace DataAccess.Migrations
                     b.Navigation("RelatedClass");
 
                     b.Navigation("ReturnType");
+                });
+
+            modelBuilder.Entity("SimClassSimClass", b =>
+                {
+                    b.HasOne("Domain.SimClass", null)
+                        .WithMany()
+                        .HasForeignKey("ImplementsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.SimClass", null)
+                        .WithMany()
+                        .HasForeignKey("SimClassId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.ReferenceAttribute", b =>

@@ -114,4 +114,32 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
         return true;
     }
+
+    public SimClass AddInterface(Guid id, Guid interfaceId)
+    {
+        if(!_simClassDA.ExistSimClassById(id))
+        {
+            throw new NonExistentValueLogic("SimClass not found.");
+        }
+
+        if(!_simClassDA.ExistSimClassById(interfaceId))
+        {
+            throw new NonExistentValueLogic("Interface not found.");
+        }
+
+        var simClass = _simClassDA.GetSimClassById(id);
+        var interfaceToAdd = _simClassDA.GetSimClassById(interfaceId);
+
+        if(simClass.Implements.Contains(interfaceToAdd))
+        {
+            throw new InUseValueLogic("Interface already added.");
+        }
+
+        var implementsToUpdate = simClass.Implements;
+        implementsToUpdate.Add(interfaceToAdd);
+        simClass.SetImplements(implementsToUpdate);
+        UpdateSimClass(simClass);
+
+        return simClass;
+    }
 }
