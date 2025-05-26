@@ -14,6 +14,6 @@ public class ClassImplementsController(ISimClassAdapter simClassAdapter) : Contr
     public IActionResult AddInterfaceToClass(Guid id, [FromBody] InterfaceRequestUpdate classRequest)
     {
         var response = _simClassAdapter.AddInterface(id, classRequest);
-        return CreatedAtRoute("GetSimClass", new { id = id }, response);
+        return CreatedAtRoute("GetSimClass", new { classId = id }, response);
     }
 }

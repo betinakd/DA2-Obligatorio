@@ -38,9 +38,15 @@ public class ClassInterfaceControllerTest
             Name = "TestClass"
         };
 
+        var expectedResponseCreated = new CreatedSimClassResponse
+        {
+            Message = "Interface added successfully",
+            SimClass = expectedResponse
+        };
+
         _mockSimClassAdapter
             .Setup(m => m.AddInterface(classId, interfaceRequest))
-            .Returns(expectedResponse);
+            .Returns(expectedResponseCreated);
 
         var result = _simClassController.AddInterfaceToClass(classId, interfaceRequest);
 
@@ -51,8 +57,8 @@ public class ClassInterfaceControllerTest
 
         var createdResult = result as CreatedAtRouteResult;
         createdResult!.RouteName.Should().Be("GetSimClass");
-        createdResult.RouteValues!["id"].Should().Be(classId);
-        createdResult.Value.Should().Be(expectedResponse);
+        createdResult.RouteValues!["classId"].Should().Be(classId);
+        createdResult.Value.Should().Be(expectedResponseCreated);
     }
 
     [TestMethod]

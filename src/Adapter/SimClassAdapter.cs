@@ -182,12 +182,12 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
         }
     }
 
-    public SimClassResponse AddInterface(Guid id, InterfaceRequestUpdate methodRequest)
+    public CreatedSimClassResponse AddInterface(Guid id, InterfaceRequestUpdate methodRequest)
     {
         try
         {
             var simClass = _simClassService.AddInterface(id, methodRequest.InterfaceId);
-            return SimClassResponseMapper.MapToSimClassResponse(simClass);
+            return new CreatedSimClassResponse() { Message = "Interface implemented successfully.", SimClass = SimClassResponseMapper.MapToSimClassResponse(simClass) };
         }
         catch(NonExistentValueLogic ex)
         {
@@ -198,6 +198,10 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
             throw new InUseValueAdapter(ex.Message);
         }
         catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeDomain ex)
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }

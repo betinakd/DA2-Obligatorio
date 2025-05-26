@@ -66,8 +66,18 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         _context.SimAttributes.RemoveRange(simClass.Attributes);
 
+        var implementsToRemove = _context.SimClasses
+            .Where(c => c.Id == id)
+            .SelectMany(c => c.Implements)
+            .ToList();
+
+        foreach(var impl in implementsToRemove)
+        {
+            _context.Entry(simClass).Collection("SimClassImplements").EntityEntry
+                .State = EntityState.Deleted;
+        }
+
         _context.SimClasses.Remove(simClass);
-        simClass.Implements.Clear();
         _context.SaveChanges();
     }
 
@@ -170,6 +180,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             .Include(c => c.Methods).ThenInclude(m => m.LocalVariables).ThenInclude(v => v.Type)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
+            .Include(c => c.Implements).ThenInclude(i => i.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
             .AsSplitQuery()
             .FirstOrDefault();
 
