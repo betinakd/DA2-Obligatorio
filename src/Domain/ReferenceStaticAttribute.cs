@@ -50,6 +50,6 @@ public class ReferenceStaticAttribute : Reference
 
     public override string GetReferenceTypeDescription()
     {
-        return "Attribute";
+        return "StaticAttribute";
     }
 }

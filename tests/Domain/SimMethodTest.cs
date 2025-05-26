@@ -572,4 +572,50 @@ public class SimMethodTest
 
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Invocations_WhenStaticMethodHasNonStaticInvocations_ShouldThrowException()
+    {
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticTestMethod",
+            IsStatic = true
+        };
+
+        var nonStaticReference = new ReferenceAttribute();
+        staticMethod.Invocations =
+        [
+            new Invocation
+        {
+            RelatedMethodId = Guid.NewGuid(),
+            Reference = nonStaticReference
+        }
+
+        ];
+    }
+
+    [TestMethod]
+    public void Invocations_WhenStaticMethodHasOnlyStaticInvocations_ShouldNotThrowException()
+    {
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticTestMethod",
+            IsStatic = true
+        };
+
+        var staticReference = new ReferenceStatic();
+        staticMethod.Invocations =
+        [
+            new Invocation
+        {
+            RelatedMethodId = Guid.NewGuid(),
+            Reference = staticReference
+        }
+
+        ];
+
+        Assert.IsNotNull(staticMethod.Invocations);
+        Assert.AreEqual(1, staticMethod.Invocations.Count);
+    }
 }

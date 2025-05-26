@@ -52,6 +52,11 @@ public class SimMethod
                 throw new InvalidAttributeDomain("Interface methods cannot have invocations.");
             }
 
+            if(IsStatic && value.Any(i => i.Reference.GetReferenceTypeDescription() != "Static" && i.Reference.GetReferenceTypeDescription() != "StaticAttribute"))
+            {
+                throw new InvalidAttributeDomain("Static methods cannot have non-static invocations.");
+            }
+
             _invocations = value;
         }
     }
