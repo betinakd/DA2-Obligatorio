@@ -91,7 +91,7 @@ public class ReferenceStaticAttributeTest
 
         var result = reference.GetReferenceTypeDescription();
 
-        Assert.AreEqual("Attribute", result);
+        Assert.AreEqual("StaticAttribute", result);
     }
 
     [TestMethod]
