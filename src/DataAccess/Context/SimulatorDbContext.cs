@@ -141,7 +141,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasValue<ReferenceBase>("Base")
                     .HasValue<ReferenceAttribute>("Attribute")
                     .HasValue<ReferenceParameter>("Parameter")
-                    .HasValue<ReferenceVariable>("Variable");
+                    .HasValue<ReferenceVariable>("Variable")
+                    .HasValue<ReferenceStaticAttribute>("StaticAttribute")
+                    .HasValue<ReferenceStatic>("Static");
 
         _ = modelBuilder.Entity<Reference>()
             .HasKey(r => r.Id);

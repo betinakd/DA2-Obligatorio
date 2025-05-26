@@ -21,6 +21,7 @@ public class SimClassResponseMapper
                 IdClassOwner = m.RelatedClassId,
                 Name = m.Name,
                 ReturnTypeId = m.ReturnTypeId,
+                IsStatic = m.IsStatic,
                 Privacity = EnumMapper.MapToModelPrivacity(m.Privacity),
                 Accesibility = EnumMapper.MapToModelAccesibility(m.Accesibility),
                 Parameters = m.Parameters.Select(p => new ParameterResponse
@@ -58,7 +59,8 @@ public class SimClassResponseMapper
                 Name = a.Name,
                 TypeId = a.TypeId,
                 Privacity = EnumMapper.MapToModelPrivacity(a.Privacity),
-                RelatedClassId = a.RelatedClassId
+                RelatedClassId = a.RelatedClassId,
+                IsStatic = a.IsStatic
             }).ToList(),
             Implements = domainClass.Implements.Select(i => new InterfaceResponse
             {

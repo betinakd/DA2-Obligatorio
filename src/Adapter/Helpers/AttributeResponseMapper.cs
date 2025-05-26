@@ -19,7 +19,8 @@ public class AttributeResponseMapper
             Name = domainAttribute.Name,
             TypeId = domainAttribute.TypeId,
             Privacity = EnumMapper.MapToModelPrivacity(domainAttribute.Privacity),
-            RelatedClassId = domainAttribute.RelatedClassId
+            RelatedClassId = domainAttribute.RelatedClassId,
+            IsStatic = domainAttribute.IsStatic
         };
     }
 }

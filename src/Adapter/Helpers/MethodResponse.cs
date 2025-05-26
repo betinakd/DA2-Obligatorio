@@ -3,6 +3,7 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
 public class MethodResponseMapper
 {
@@ -18,6 +19,7 @@ public class MethodResponseMapper
             Id = domainMethod.Id,
             Name = domainMethod.Name,
             IdClassOwner = domainMethod.RelatedClassId,
+            IsStatic = domainMethod.IsStatic,
             ReturnTypeId = domainMethod.ReturnTypeId,
             Privacity = EnumMapper.MapToModelPrivacity(domainMethod.Privacity),
             Accesibility = EnumMapper.MapToModelAccesibility(domainMethod.Accesibility),
