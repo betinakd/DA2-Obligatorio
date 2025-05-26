@@ -86,6 +86,11 @@ public class SimMethod
 
     public override bool Equals(object? obj)
     {
+        return EqualsWithReturnType(obj);
+    }
+
+    public bool EqualsWithoutReturnType(object? obj)
+    {
         if(obj is not SimMethod otherMethod)
         {
             return false;
@@ -105,6 +110,16 @@ public class SimMethod
         }
 
         return true;
+    }
+
+    private bool EqualsWithReturnType(object? otherMethod)
+    {
+        if(otherMethod is not SimMethod obj)
+        {
+            return false;
+        }
+
+        return EqualsWithoutReturnType(obj) && (ReturnTypeId == obj.ReturnTypeId);
     }
 
     public string Name
@@ -129,10 +144,5 @@ public class SimMethod
 
             _name = value;
         }
-    }
-
-    public override int GetHashCode()
-    {
-        throw new NotImplementedException();
     }
 }

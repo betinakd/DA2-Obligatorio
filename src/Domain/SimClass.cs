@@ -35,7 +35,7 @@ public class SimClass
             {
                 for(var j = 0; j < _methods.Count; j++)
                 {
-                    if(_methods[i].Equals(_methods[j]) && i != j)
+                    if(_methods[i].EqualsWithoutReturnType(_methods[j]) && i != j)
                     {
                         throw new InvalidAttributeDomain($"Duplicate method name found: {_methods[i].Name}");
                     }

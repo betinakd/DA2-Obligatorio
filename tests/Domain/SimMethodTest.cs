@@ -545,4 +545,47 @@ public class SimMethodTest
 
         CollectionAssert.AreEqual(invocations, method.Invocations);
     }
+
+    [TestMethod]
+    public void EqualsWithoutReturnType_WithNotSameObject_ShouldReturnFalse()
+    {
+        var method = new SimMethod { Name = "TestMethod" };
+        var differentObject = new object();
+
+        var result = method.EqualsWithoutReturnType(differentObject);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void EqualsWithReturnType_SameSignatureButDifferentReturnType_ReturnsFalse()
+    {
+        var paramTypeId = Guid.NewGuid();
+
+        var method1 = new SimMethod
+        {
+            Name = "TestMethod",
+            ReturnTypeId = Guid.NewGuid(),
+            Parameters =
+        [
+            new Parameter { Name = "param1", TypeId = paramTypeId }
+        ]
+        };
+
+        var method2 = new SimMethod
+        {
+            Name = "TestMethod",
+            ReturnTypeId = Guid.NewGuid(),
+            Parameters =
+        [
+            new Parameter { Name = "differentParamName", TypeId = paramTypeId } // Mismo tipo de parámetro
+        ]
+        };
+
+        Assert.IsTrue(method1.EqualsWithoutReturnType(method2));
+
+        var result = method1.Equals(method2);
+
+        Assert.IsFalse(result);
+    }
 }
