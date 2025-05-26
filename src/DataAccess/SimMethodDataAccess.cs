@@ -175,6 +175,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                 case ReferenceThis rt:
                     _context.Entry(rt).Reference(r => r.Reference).Load();
                     break;
+                case ReferenceStaticAttribute rsa:
+                    _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                    break;
+                case ReferenceStatic rsv:
+                    _context.Entry(rsv).Reference(r => r.Reference).Load();
+                    break;
             }
         }
 
@@ -227,6 +233,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                         break;
                     case ReferenceThis rt:
                         _context.Entry(rt).Reference(r => r.Reference).Load();
+                        break;
+                    case ReferenceStaticAttribute rsa:
+                        _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        break;
+                    case ReferenceStatic rsv:
+                        _context.Entry(rsv).Reference(r => r.Reference).Load();
                         break;
                 }
             }
