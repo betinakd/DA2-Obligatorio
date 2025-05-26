@@ -24,4 +24,7 @@ public class MethodRequest()
     [Required(ErrorMessage = "IdReturnType is required.")]
     public string IdReturnType { get; set; } = string.Empty;
     public List<ParameterRequest> Parameters { get; set; } = [];
+
+    [Required(ErrorMessage = "IsStatic is required his value is true or false.")]
+    public bool IsStatic { get; set; }
 }
