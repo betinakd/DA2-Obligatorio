@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Transformers.Abstractions\Transformers.Abstractions.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

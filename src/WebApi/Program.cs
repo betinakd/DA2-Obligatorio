@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddServices(connectionString);
+builder.Services.AddSingleton<IBusinessLogic.ITransformerService, BusinessLogic.TransformerService>();
 
 // Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
