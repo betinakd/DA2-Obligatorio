@@ -578,7 +578,7 @@ public class SimMethodTest
             ReturnTypeId = Guid.NewGuid(),
             Parameters =
         [
-            new Parameter { Name = "differentParamName", TypeId = paramTypeId } // Mismo tipo de parámetro
+            new Parameter { Name = "differentParamName", TypeId = paramTypeId }
         ]
         };
 

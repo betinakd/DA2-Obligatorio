@@ -187,7 +187,7 @@ public class SimClass
 
             if(missingMethods.Any())
             {
-                throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+                throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
             }
         }
 
@@ -206,7 +206,7 @@ public class SimClass
 
         if(missingMethods.Any())
         {
-            throw new InvalidAttributeDomain($"The following interface methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+            throw new InvalidAttributeDomain($"The following interface methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
         }
 
         Implements = value;

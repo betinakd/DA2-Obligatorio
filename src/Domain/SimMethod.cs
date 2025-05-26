@@ -146,8 +146,8 @@ public class SimMethod
         }
     }
 
-    public override int GetHashCode()
+    public override string ToString()
     {
-        throw new NotImplementedException();
+        return Privacity + " " + Accesibility + " " + ReturnType.Name + " " + Name + "(" + string.Join(", ", Parameters.Select(p => p.Name)) + ")";
     }
 }

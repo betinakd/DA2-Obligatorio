@@ -232,7 +232,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(m => m.Parameters).ThenInclude(p => p.Type)
             .Include(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Signature)
-                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+                .ThenInclude(s => s.Parameters)
             .Include(m => m.ReturnType);
 
         var filteredMethods = filter(query).ToList();
@@ -258,6 +258,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature)
                 .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
+            .Include(c => c.Methods).ThenInclude(m => m.ReturnType)
             .AsSplitQuery();
 
         var filteredClasses = filter(query).ToList();

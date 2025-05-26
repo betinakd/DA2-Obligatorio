@@ -182,24 +182,65 @@ public class SimClassTest
     [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetBaseClassShouldThrowExceptionWhenConcreteClassDoesNotImplementAllAbstractMethods()
     {
+        // Crear un tipo de retorno para los métodos
+        var voidType = new SimClass
+        {
+            Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+            Name = "void",
+            State = SimAccesibility.Normal,
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+
+        // Inicializar la clase base abstracta con métodos completos
         var baseClass = new SimClass
         {
+            Id = Guid.NewGuid(),
             Name = "AbstractBaseClass",
             State = SimAccesibility.Abstract,
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
             Methods =
             [
-                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
-                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
+                new SimMethod
+                {
+                Name = "AbstractMethod1",
+                Accesibility = SimAccesibility.Abstract,
+                ReturnType = voidType,
+                ReturnTypeId = voidType.Id,
+                Parameters = [],
+                Privacity = SimPrivacity.Public
+            },
+            new SimMethod
+            {
+                Name = "AbstractMethod2",
+                Accesibility = SimAccesibility.Abstract,
+                ReturnType = voidType,
+                ReturnTypeId = voidType.Id,
+                Parameters = [],
+                Privacity = SimPrivacity.Public
+            }
+
             ]
         };
 
+        // Configurar la clase derivada con implementación parcial
         var derivedClass = new SimClass
         {
+            Id = Guid.NewGuid(),
             Name = "DerivedClass",
             State = SimAccesibility.Normal,
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
             Methods =
             [
-                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal }
+                new SimMethod
+                {
+                Name = "AbstractMethod1",
+                Accesibility = SimAccesibility.Normal,
+                ReturnType = voidType,
+                ReturnTypeId = voidType.Id,
+                Parameters = [],
+                Privacity = SimPrivacity.Public
+            }
+
             ]
         };
 
@@ -557,24 +598,62 @@ public class SimClassTest
     [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetImplements_ShouldThrowException_WhenMissingInterfaceMethods()
     {
+        var voidType = new SimClass
+        {
+            Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+            Name = "void",
+            State = SimAccesibility.Normal,
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+
         var interfaceClass = new SimClass
         {
+            Id = Guid.NewGuid(),
             Name = "ITestInterface",
             State = SimAccesibility.Interface,
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
             Methods =
             [
-            new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface },
-            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface }
+                new SimMethod
+                {
+                Name = "Method1",
+                Accesibility = SimAccesibility.Interface,
+                ReturnType = voidType,
+                ReturnTypeId = voidType.Id,
+                Parameters = [],
+                Privacity = SimPrivacity.Public
+            },
+            new SimMethod
+            {
+                Name = "Method2",
+                Accesibility = SimAccesibility.Interface,
+                ReturnType = voidType,
+                ReturnTypeId = voidType.Id,
+                Parameters = [],
+                Privacity = SimPrivacity.Public
+            }
+
             ]
         };
 
         var simClass = new SimClass
         {
+            Id = Guid.NewGuid(),
             Name = "ImplementingClass",
             State = SimAccesibility.Normal,
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
             Methods =
             [
-                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal }
+                new SimMethod
+                {
+                Name = "Method1",
+                Accesibility = SimAccesibility.Normal,
+                ReturnType = voidType,
+                ReturnTypeId = voidType.Id,
+                Parameters = [],
+                Privacity = SimPrivacity.Public
+            }
+
             ]
         };
 
