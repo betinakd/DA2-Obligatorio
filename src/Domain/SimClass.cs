@@ -31,7 +31,7 @@ public class SimClass
                 throw new InvalidAttributeDomain("A non-interface class cannot have interface methods.");
             }
 
-            if(_methods.Any(m => m.IsStatic) && State == SimAccesibility.Interface)
+            if(_methods.Any(m => m.IsStatic && State == SimAccesibility.Interface))
             {
                 throw new InvalidAttributeDomain("A interface class cannot have static methods.");
             }

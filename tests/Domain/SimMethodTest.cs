@@ -618,4 +618,57 @@ public class SimMethodTest
         Assert.IsNotNull(staticMethod.Invocations);
         Assert.AreEqual(1, staticMethod.Invocations.Count);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Accesibility_WhenStaticMethodSetToAbstract_ShouldThrowException()
+    {
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticMethod",
+            IsStatic = true
+        };
+
+        staticMethod.Accesibility = SimAccesibility.Abstract;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Accesibility_WhenStaticMethodSetToInterface_ShouldThrowException()
+    {
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticMethod",
+            IsStatic = true
+        };
+
+        staticMethod.Accesibility = SimAccesibility.Interface;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Accesibility_WhenStaticMethodSetToSealed_ShouldThrowException()
+    {
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticMethod",
+            IsStatic = true
+        };
+
+        staticMethod.Accesibility = SimAccesibility.Sealed;
+    }
+
+    [TestMethod]
+    public void Accesibility_WhenStaticMethodSetToNormal_ShouldNotThrowException()
+    {
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticMethod",
+            IsStatic = true
+        };
+
+        staticMethod.Accesibility = SimAccesibility.Normal;
+
+        Assert.AreEqual(SimAccesibility.Normal, staticMethod.Accesibility);
+    }
 }
