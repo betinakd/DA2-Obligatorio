@@ -671,4 +671,73 @@ public class SimMethodTest
 
         Assert.AreEqual(SimAccesibility.Normal, staticMethod.Accesibility);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsStatic_WhenSetToTrueWithAbstractAccesibility_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Abstract
+        };
+
+        method.IsStatic = true;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsStatic_WhenSetToTrueWithInterfaceAccesibility_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.IsStatic = true;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsStatic_WhenSetToTrueWithSealedAccesibility_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Sealed
+        };
+
+        method.IsStatic = true;
+    }
+
+    [TestMethod]
+    public void IsStatic_WhenSetToTrueWithNormalAccesibility_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal
+        };
+
+        method.IsStatic = true;
+
+        Assert.IsTrue(method.IsStatic);
+    }
+
+    [TestMethod]
+    public void IsStatic_WhenSetToFalse_ShouldNotThrowExceptionRegardlessOfAccesibility()
+    {
+        var methodAbstract = new SimMethod { Accesibility = SimAccesibility.Abstract };
+        var methodInterface = new SimMethod { Accesibility = SimAccesibility.Interface };
+        var methodSealed = new SimMethod { Accesibility = SimAccesibility.Sealed };
+
+        methodAbstract.IsStatic = false;
+        methodInterface.IsStatic = false;
+        methodSealed.IsStatic = false;
+
+        Assert.IsFalse(methodAbstract.IsStatic);
+        Assert.IsFalse(methodInterface.IsStatic);
+        Assert.IsFalse(methodSealed.IsStatic);
+    }
 }

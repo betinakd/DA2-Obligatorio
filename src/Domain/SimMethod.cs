@@ -15,6 +15,7 @@ public class SimMethod
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }
     private SimAccesibility _accesibility;
+
     public SimAccesibility Accesibility
     {
         get => _accesibility;
@@ -29,7 +30,21 @@ public class SimMethod
         }
     }
 
-    public bool IsStatic { get; set; } = false;
+    private bool _isStatic = false;
+    public bool IsStatic
+    {
+        get => _isStatic;
+        set
+        {
+            if(value && Accesibility != SimAccesibility.Normal)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be Abstract, Interface or Sealed accessibility.");
+            }
+
+            _isStatic = value;
+        }
+    }
+
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters
     {
