@@ -232,7 +232,8 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(m => m.Parameters).ThenInclude(p => p.Type)
             .Include(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Signature)
-                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type);
+                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+            .Include(m => m.ReturnType);
 
         var filteredMethods = filter(query).ToList();
 

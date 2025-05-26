@@ -113,6 +113,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Parameters)
                 .ThenInclude(p => p.Type)
             .Where(a => a.RelatedClassId == idClass)
+            .Include(m => m.ReturnType)
             .ToList();
         var result = false;
         foreach(var methodC in methodsClass)
