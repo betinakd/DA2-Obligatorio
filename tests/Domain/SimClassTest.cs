@@ -690,4 +690,57 @@ public class SimClassTest
 
         CollectionAssert.Contains(simClass.Implements.ToList(), interfaceClass);
     }
+
+    [TestMethod]
+    public void Equals_SameId_ReturnsTrue()
+    {
+        var id = Guid.NewGuid();
+        var class1 = new SimClass { Id = id, Name = "Class1" };
+        var class2 = new SimClass { Id = id, Name = "DifferentName" };
+
+        Assert.IsTrue(class1.Equals(class2));
+        Assert.IsTrue(class2.Equals(class1));
+        Assert.IsTrue(class1 == class1);
+    }
+
+    [TestMethod]
+    public void Equals_DifferentIds_ReturnsFalse()
+    {
+        var class1 = new SimClass { Id = Guid.NewGuid(), Name = "Class1" };
+        var class2 = new SimClass { Id = Guid.NewGuid(), Name = "Class1" };
+
+        Assert.IsFalse(class1.Equals(class2));
+    }
+
+    [TestMethod]
+    public void Equals_NullOrDifferentType_ReturnsFalse()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "Class1" };
+        var differentType = "Not a SimClass";
+
+        Assert.IsFalse(simClass.Equals(null));
+        Assert.IsFalse(simClass.Equals(differentType));
+    }
+
+    [TestMethod]
+    public void GetHashCode_SameId_ReturnsSameHashCode()
+    {
+        var id = Guid.NewGuid();
+        var class1 = new SimClass { Id = id, Name = "Class1" };
+        var class2 = new SimClass { Id = id, Name = "DifferentName" };
+
+        Assert.AreEqual(class1.GetHashCode(), class2.GetHashCode());
+    }
+
+    [TestMethod]
+    public void Collection_Contains_WorksWithCustomEquals()
+    {
+        var id = Guid.NewGuid();
+        var class1 = new SimClass { Id = id, Name = "Class1" };
+        var class2 = new SimClass { Id = id, Name = "Same class, different instance" };
+
+        var collection = new List<SimClass> { class1 };
+
+        Assert.IsTrue(collection.Contains(class2), "Collection should find an object with the same ID");
+    }
 }
