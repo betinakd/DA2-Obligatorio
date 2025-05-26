@@ -150,4 +150,9 @@ public class SimMethod
     {
         return Privacity + " " + Accesibility + " " + ReturnType.Name + " " + Name + "(" + string.Join(", ", Parameters.Select(p => p.Name)) + ")";
     }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
+    }
 }
