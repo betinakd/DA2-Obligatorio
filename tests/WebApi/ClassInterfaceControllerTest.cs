@@ -14,13 +14,13 @@ namespace Tests.WebApi;
 public class ClassInterfaceControllerTest
 {
     private Mock<ISimClassAdapter>? _mockSimClassAdapter;
-    private ClassInterfaceController? _simClassController;
+    private ClassImplementsController? _simClassController;
 
     [TestInitialize]
     public void Setup()
     {
         _mockSimClassAdapter = new Mock<ISimClassAdapter>();
-        _simClassController = new ClassInterfaceController(_mockSimClassAdapter.Object);
+        _simClassController = new ClassImplementsController(_mockSimClassAdapter.Object);
     }
 
     [TestMethod]

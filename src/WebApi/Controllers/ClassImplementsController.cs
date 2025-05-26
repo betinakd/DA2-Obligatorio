@@ -6,11 +6,11 @@ namespace WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/classes")]
-public class ClassInterfaceController(ISimClassAdapter simClassAdapter) : ControllerBase
+public class ClassImplementsController(ISimClassAdapter simClassAdapter) : ControllerBase
 {
     private readonly ISimClassAdapter _simClassAdapter = simClassAdapter;
 
-    [HttpPost("{id}/interfaces")]
+    [HttpPost("{id}/implements")]
     public IActionResult AddInterfaceToClass(Guid id, [FromBody] InterfaceRequestUpdate classRequest)
     {
         var response = _simClassAdapter.AddInterface(id, classRequest);

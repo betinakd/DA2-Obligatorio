@@ -422,11 +422,18 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(interfaceId)).Returns(interfaceToAdd);
         _mockSimClassDataAccess.Setup(da => da.UpdateSimClass(It.IsAny<SimClass>()));
 
+        _mockSimClassDataAccess.Setup(da => da.InUseByOther(classId)).Returns(false);
+
+        _mockSimAttributeDataAccess.Setup(da =>
+            da.InUseByOther(It.IsAny<Guid>())).Returns(false);
+        _mockExecutionDataAccess.Setup(da =>
+            da.MethodIsInUseByInheritingInvocations(It.IsAny<Guid>())).Returns(false);
+
         var result = _simClassService.AddInterface(classId, interfaceId);
 
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.AtLeastOnce);
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(interfaceId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(classId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(classId), Times.AtLeastOnce);
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(interfaceId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(It.Is<SimClass>(s =>
             s.Implements.Contains(interfaceToAdd))), Times.Once);

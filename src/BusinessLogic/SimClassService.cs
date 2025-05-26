@@ -138,7 +138,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
         var implementsToUpdate = simClass.Implements;
         implementsToUpdate.Add(interfaceToAdd);
         simClass.SetImplements(implementsToUpdate);
-        _simClassDA.UpdateSimClass(simClass);
+        UpdateSimClass(simClass);
 
         return simClass;
     }
