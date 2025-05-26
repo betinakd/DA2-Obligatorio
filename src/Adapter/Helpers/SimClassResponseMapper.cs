@@ -5,7 +5,7 @@ using Models.Response;
 namespace Adapter.Helpers;
 
 [ExcludeFromCodeCoverage]
-public static class SimClassResponseMapper
+public class SimClassResponseMapper
 {
     public static SimClassResponse MapToSimClassResponse(SimClass domainClass)
     {

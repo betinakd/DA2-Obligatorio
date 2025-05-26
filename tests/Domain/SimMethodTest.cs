@@ -445,22 +445,6 @@ public class SimMethodTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void Parameters_WhenSettingParametersOnInterfaceMethod_ShouldThrowException()
-    {
-        var method = new SimMethod
-        {
-            Name = "TestMethod",
-            Accesibility = SimAccesibility.Interface
-        };
-
-        method.Parameters =
-    [
-        new Parameter { Name = "param1", TypeId = Guid.NewGuid() }
-    ];
-    }
-
-    [TestMethod]
     public void Parameters_WhenSettingParametersOnNonInterfaceMethod_ShouldNotThrowException()
     {
         var method = new SimMethod

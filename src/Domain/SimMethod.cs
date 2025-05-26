@@ -15,17 +15,13 @@ public class SimMethod
     public SimClass RelatedClass { get; set; } = null!;
     public SimPrivacity Privacity { get; set; }
     public SimAccesibility Accesibility { get; set; }
+    public bool IsStatic { get; set; } = false;
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters
     {
         get => _parameters;
         set
         {
-            if(Accesibility == SimAccesibility.Interface && value.Any())
-            {
-                throw new InvalidAttributeDomain("Interface methods cannot have parameters.");
-            }
-
             _parameters = value;
         }
     }

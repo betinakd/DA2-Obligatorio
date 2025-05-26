@@ -3,8 +3,9 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
-public static class VariableResponseMapper
+public class VariableResponseMapper
 {
     public static VariableResponse MapToVariableResponse(LocalVariable domainVariable)
     {
