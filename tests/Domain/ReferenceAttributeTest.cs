@@ -82,4 +82,20 @@ public class ReferenceAttributeTest
 
         Assert.AreEqual(expectedId, actualId);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void TestReference_ShouldThrowExceptionWhenStaticAttribute()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        var staticAttribute = new SimAttribute
+        {
+            Type = simClass,
+            Name = "StaticAttr",
+            IsStatic = true
+        };
+        var reference = new ReferenceAttribute();
+
+        reference.Reference = staticAttribute;
+    }
 }

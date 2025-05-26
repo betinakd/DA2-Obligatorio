@@ -4,7 +4,21 @@ namespace Domain;
 
 public class ReferenceAttribute : Reference
 {
-    public SimAttribute Reference { get; set; } = new SimAttribute();
+    private SimAttribute _reference = new SimAttribute();
+    public SimAttribute Reference
+    {
+        get => _reference;
+        set
+        {
+            if(value != null && value.IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static attributes are not allowed. Use ReferenceStaticAttribute instead.");
+            }
+
+            _reference = value;
+        }
+    }
+
     public Guid ReferenceId { get; set; }
 
     public override string GetSignature(Signature method)
