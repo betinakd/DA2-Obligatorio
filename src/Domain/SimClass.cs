@@ -20,6 +20,27 @@ public class SimClass
             {
                 State = SimAccesibility.Abstract;
             }
+
+            if(_methods.Any(m => m.Accesibility != SimAccesibility.Interface && State == SimAccesibility.Interface))
+            {
+                throw new InvalidAttributeDomain("An interface cannot have non-interface accesibility methods.");
+            }
+
+            if(_methods.Any(m => m.Accesibility == SimAccesibility.Interface && State != SimAccesibility.Interface))
+            {
+                throw new InvalidAttributeDomain("A non-interface class cannot have interface methods.");
+            }
+
+            for(var i = 0; i < _methods.Count; i++)
+            {
+                for(var j = 0; j < _methods.Count; j++)
+                {
+                    if(_methods[i].EqualsWithoutReturnType(_methods[j]) && i != j)
+                    {
+                        throw new InvalidAttributeDomain($"Duplicate method name found: {_methods[i].Name}");
+                    }
+                }
+            }
         }
     }
 
@@ -29,22 +50,50 @@ public class SimClass
         get => _baseClassId;
         set
         {
-            if(State == SimAccesibility.Abstract && value != Guid.Parse("11111111-1111-1111-1111-111111111111"))
+            if((State == SimAccesibility.Abstract || State == SimAccesibility.Interface) && value != Guid.Parse("11111111-1111-1111-1111-111111111111"))
             {
-                throw new InvalidAttributeDomain("BaseClassId must be object State is Abstract.");
+                throw new InvalidAttributeDomain("Cannot set a base class for an abstract or interface class.");
             }
 
-            if(value == null)
+            if(value == Guid.Empty)
             {
                 _baseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            }
+            else
+            {
+                _baseClassId = value;
             }
         }
     }
 
     private string _name = string.Empty;
     private SimClass? _baseClassField = null;
+    private List<SimAttribute> _attributes = [];
 
-    public List<SimAttribute> Attributes { get; set; } = [];
+    public List<SimAttribute> Attributes
+    {
+        get => _attributes;
+        set
+        {
+            if(State == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("An interface cannot have attributes.");
+            }
+
+            for(var i = 0; i < value.Count; i++)
+            {
+                for(var j = 0; j < value.Count; j++)
+                {
+                    if(value[i].Name.Equals(value[j].Name) && i != j)
+                    {
+                        throw new InvalidAttributeDomain($"Duplicate attribute name found: {value[i].Name}");
+                    }
+                }
+            }
+
+            _attributes = value;
+        }
+    }
 
     public string Name
     {
@@ -75,9 +124,9 @@ public class SimClass
         get => _baseClassField;
         set
         {
-            if(value?.State == SimAccesibility.Sealed)
+            if(value?.State == SimAccesibility.Sealed || value?.State == SimAccesibility.Interface)
             {
-                throw new InvalidAttributeDomain("Cannot set as base a sealed or null Class.");
+                throw new InvalidAttributeDomain("Cannot set as base a sealed or Interface Class.");
             }
 
             _baseClassField = value;
@@ -95,7 +144,32 @@ public class SimClass
                 throw new InvalidAttributeDomain("BaseClassId must be object when State is Abstract.");
             }
 
+            if(value == SimAccesibility.Interface && _baseClassId != Guid.Parse("11111111-1111-1111-1111-111111111111"))
+            {
+                throw new InvalidAttributeDomain("BaseClassId must be object when State is Interface.");
+            }
+
             _state = value;
+        }
+    }
+
+    private List<SimClass> _implements = [];
+    public List<SimClass> Implements
+    {
+        get => _implements;
+        set
+        {
+            if(State == SimAccesibility.Interface && value.Any())
+            {
+                throw new InvalidAttributeDomain("An interface cannot implement other classes.");
+            }
+
+            if(value.Any(i => i.State != SimAccesibility.Interface))
+            {
+                throw new InvalidAttributeDomain("Cannot implement a non interface.");
+            }
+
+            _implements = value;
         }
     }
 
@@ -113,10 +187,28 @@ public class SimClass
 
             if(missingMethods.Any())
             {
-                throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.Name))}");
+                throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
             }
         }
 
         _baseClassField = value;
+    }
+
+    public void SetImplements(List<SimClass> value)
+    {
+        var interfaceMethods = new List<SimMethod>();
+        foreach(var interfaceClass in value)
+        {
+            interfaceMethods.AddRange(interfaceClass.Methods);
+        }
+
+        var missingMethods = interfaceMethods.Where(im => !Methods.Any(m => m.Equals(im))).ToList();
+
+        if(missingMethods.Any())
+        {
+            throw new InvalidAttributeDomain($"The following interface methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
+        }
+
+        Implements = value;
     }
 }

@@ -187,7 +187,7 @@ public class SimClassDataAccessTest
         {
             Id = simClassId,
             Name = "Original Name",
-            BaseClassId = Guid.NewGuid(),
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
             State = SimAccesibility.Abstract
         };
 

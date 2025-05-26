@@ -5,6 +5,7 @@ using IDataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
+
 public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAccess
 {
     private readonly SimulatorDbContext _context = context;
@@ -151,8 +152,15 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return true;
         }
 
-        return ownerClass.BaseClassId.HasValue &&
-               MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
+        if(ownerClass.BaseClassId.HasValue)
+        {
+            if(ownerClass.BaseClassId.Value != idClass)
+            {
+                return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
+            }
+        }
+
+        return false;
     }
 
     public void SaveExecutionLog(ExecutionLog executionLog)
@@ -224,7 +232,8 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(m => m.Parameters).ThenInclude(p => p.Type)
             .Include(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Signature)
-                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type);
+                .ThenInclude(s => s.Parameters)
+            .Include(m => m.ReturnType);
 
         var filteredMethods = filter(query).ToList();
 
@@ -249,6 +258,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature)
                 .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
+            .Include(c => c.Methods).ThenInclude(m => m.ReturnType)
             .AsSplitQuery();
 
         var filteredClasses = filter(query).ToList();

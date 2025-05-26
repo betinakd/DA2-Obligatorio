@@ -11,8 +11,19 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public LocalVariable AddLocalVariable(Guid methodId, LocalVariable localVariable)
     {
+        var method = _context.SimMethods
+            .Include(m => m.LocalVariables)
+            .FirstOrDefault(m => m.Id == methodId);
+
+        localVariable.RelatedMethodId = methodId;
+
+        var updatedVariables = method.LocalVariables;
+        updatedVariables.Add(localVariable);
+        method.LocalVariables = updatedVariables;
+
         _context.LocalVariables.Add(localVariable);
         _context.SaveChanges();
+
         return localVariable;
     }
 
@@ -25,10 +36,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         parameter.Index = method.Parameters.Count;
         parameter.RelatedMethodId = method.Id;
 
+        var updatedParameter = method.Parameters;
+        updatedParameter.Add(parameter);
+
+        method.Parameters = updatedParameter;
+
         _context.Parameters.Add(parameter);
-
-        method.Parameters.Add(parameter);
-
         _context.SaveChanges();
 
         return parameter;
@@ -43,10 +56,11 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         newInvocation.Index = method.Invocations.Count;
         newInvocation.RelatedMethodId = method.Id;
 
+        var updatedInvocations = method.Invocations;
+        updatedInvocations.Add(newInvocation);
+        method.Invocations = updatedInvocations;
+
         _context.Invocations.Add(newInvocation);
-
-        method.Invocations.Add(newInvocation);
-
         _context.SaveChanges();
 
         return newInvocation;
@@ -54,6 +68,15 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public SimMethod CreateMethod(Guid idClass, SimMethod method)
     {
+        var simClass = _context.SimClasses
+            .Include(c => c.Methods)
+            .FirstOrDefault(c => c.Id == idClass);
+
+        method.RelatedClassId = idClass;
+        var updatedMethods = simClass.Methods;
+        updatedMethods.Add(method);
+        simClass.Methods = updatedMethods;
+
         _context.SimMethods.Add(method);
         _context.SaveChanges();
         return method;
@@ -90,6 +113,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Parameters)
                 .ThenInclude(p => p.Type)
             .Where(a => a.RelatedClassId == idClass)
+            .Include(m => m.ReturnType)
             .ToList();
         var result = false;
         foreach(var methodC in methodsClass)
