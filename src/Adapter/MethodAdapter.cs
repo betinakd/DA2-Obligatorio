@@ -302,6 +302,12 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
+                case TypeReference.StaticAttribute:
+                    var staticAttribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
+                    reference = new ReferenceStaticAttribute() { Reference = staticAttribute, ReferenceId = staticAttribute.Id };
+                    _methodService.ValidateStaticAttributeAccessibility(staticAttribute, idMethod);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    break;
                 case TypeReference.Static:
                     var staticClass = _simClassService.GetSimClassById(invocation.ReferenceId);
                     reference = new ReferenceStatic() { Reference = staticClass, ReferenceId = staticClass.Id };
