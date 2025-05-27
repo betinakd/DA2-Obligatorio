@@ -11,4 +11,5 @@ public interface ISimClassService
     SimClass GetSimClassById(Guid id);
     void DeleteSimClass(Guid id);
     SimClass AddInterface(Guid id, Guid interfaceId);
+    public void ClassInheritAttribute(Guid idClass, Guid idAttribute);
 }

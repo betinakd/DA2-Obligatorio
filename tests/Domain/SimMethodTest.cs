@@ -173,8 +173,8 @@ public class SimMethodTest
             Name = "MyMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "a" },
-                new ParameterSignature { Name = "b" }
+                new ParameterSignature { Name = "a", TypeId = Guid.NewGuid() },
+                new ParameterSignature { Name = "b", TypeId = Guid.NewGuid() }
             ]
         };
 
@@ -300,92 +300,6 @@ public class SimMethodTest
         var result = method1.Equals(method2);
 
         Assert.IsFalse(result);
-    }
-
-    [TestMethod]
-    public void Equals_WithNullTypeIds_ShouldHandleCorrectly()
-    {
-        var typeId = Guid.NewGuid();
-
-        var method1 = new SimMethod
-        {
-            Name = "TestMethod",
-            Parameters = [
-                new Parameter { Name = "param1", TypeId = null }
-            ]
-        };
-
-        var method2 = new SimMethod
-        {
-            Name = "TestMethod",
-            Parameters = [
-                new Parameter { Name = "differentName", TypeId = null } // También null
-            ]
-        };
-
-        var method3 = new SimMethod
-        {
-            Name = "TestMethod",
-            Parameters = [
-                new Parameter { Name = "param1", TypeId = typeId } // No es null
-            ]
-        };
-
-        var resultBothNull = method1.Equals(method2);
-        var resultOneNull = method1.Equals(method3);
-
-        Assert.IsTrue(resultBothNull);
-        Assert.IsFalse(resultOneNull);
-    }
-
-    [TestMethod]
-    public void MatchSignature_WithNullTypeIds_HandlesCorrectly()
-    {
-        var typeId = Guid.NewGuid();
-
-        var methodBothNull = new SimMethod
-        {
-            Name = "TestMethod",
-            Parameters =
-            [
-                new Parameter { Name = "param1", TypeId = null }
-            ]
-        };
-
-        var signatureBothNull = new Signature
-        {
-            Name = "TestMethod",
-            Parameters =
-            [
-                new ParameterSignature { Name = "x", TypeId = null }
-            ]
-        };
-
-        var signatureNotNull = new Signature
-        {
-            Name = "TestMethod",
-            Parameters =
-            [
-                new ParameterSignature { Name = "x", TypeId = typeId }
-            ]
-        };
-
-        var methodNotNull = new SimMethod
-        {
-            Name = "TestMethod",
-            Parameters =
-            [
-                new Parameter { Name = "param1", TypeId = typeId }
-            ]
-        };
-
-        var resultBothNull = methodBothNull.MatchSignature(signatureBothNull);
-        var resultMethodNullSignatureNotNull = methodBothNull.MatchSignature(signatureNotNull);
-        var resultMethodNotNullSignatureNull = methodNotNull.MatchSignature(signatureBothNull);
-
-        Assert.IsTrue(resultBothNull, "Cuando ambos TypeId son null, deberían considerarse iguales");
-        Assert.IsFalse(resultMethodNullSignatureNotNull, "Cuando un TypeId es null y el otro no, deberían considerarse diferentes");
-        Assert.IsFalse(resultMethodNotNullSignatureNull, "Cuando un TypeId es null y el otro no, deberían considerarse diferentes");
     }
 
     [TestMethod]

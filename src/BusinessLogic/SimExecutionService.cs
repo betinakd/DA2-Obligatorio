@@ -63,14 +63,6 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         }
     }
 
-    public void ClassInheritAttribute(Guid idClass, Guid idAttribute)
-    {
-        if(!_executionDA.ClassInheritAttribute(idClass, idAttribute))
-        {
-            throw new NonExistentValueLogic("Attribute not reacheable from method.");
-        }
-    }
-
     public void MethodIsOverridingSealed(Guid idClass, SimMethod method)
     {
         _executionDA.MethodIsOverridingSealed(idClass, method);

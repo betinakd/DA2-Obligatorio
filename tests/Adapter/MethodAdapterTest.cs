@@ -464,7 +464,14 @@ public class MethodAdapterTest
         var attributeId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
 
-        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" }, // Añadir RelatedClass
+            RelatedClassId = Guid.NewGuid()
+        };
+
         var simClass = new SimClass { Id = classTypeId, Name = "int" };
         var attribute = new SimAttribute
         {
@@ -480,13 +487,19 @@ public class MethodAdapterTest
             MethodName = "AttrMethod",
             Parameters = []
         };
-        var signature = new Signature() { Name = "BaseMethod", Parameters = [], Id = Guid.NewGuid(), RelatedInvocationId = Guid.NewGuid() };
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockAttributeService!.Setup(s => s.GetSimAttribute(attributeId)).Returns(attribute);
+
+        _mockMethodService.Setup(s => s.MethodInheritsAttribute(method, attribute));
+
         _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
             .Returns((Guid id, Invocation inv) => inv);
-        _mockExecutionService.Setup(s => s.ValidateMethodExistsInClass(simClass, signature, false));
+
+        _mockExecutionService!.Setup(s => s.ValidateMethodExistsInClass(
+            It.IsAny<SimClass>(),
+            It.Is<Signature>(sig => sig.Name == "AttrMethod"),
+            false));
 
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
@@ -1123,7 +1136,11 @@ public class MethodAdapterTest
         {
             Id = methodId,
             Name = "TestMethod",
-            RelatedClassId = classId
+            RelatedClassId = classId,
+            Accesibility = SimAccesibility.Normal,
+            Privacity = SimPrivacity.Public,
+            ReturnTypeId = attributeTypeId,
+            ReturnType = new SimClass { Id = attributeTypeId, Name = "ReturnType" }
         };
         var attributeType = new SimClass { Id = attributeTypeId, Name = "AttributeType" };
         var attribute = new SimAttribute
@@ -1143,7 +1160,10 @@ public class MethodAdapterTest
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockAttributeService!.Setup(s => s.GetSimAttribute(attributeId)).Returns(attribute);
-        _mockExecutionService!.Setup(s => s.ClassInheritAttribute(classId, attributeId));
+        _mockSimClassService!.Setup(s => s.ClassInheritAttribute(classId, attributeId));
+
+        _mockMethodService.Setup(s => s.MethodInheritsAttribute(method, attribute));
+
         _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
             .Returns((Guid id, Invocation inv) => inv);
         _mockExecutionService
@@ -1154,7 +1174,7 @@ public class MethodAdapterTest
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
         result.Should().NotBeNull();
         result.Message.Should().Be("Invocation created successfully");
-        _mockExecutionService.Verify(s => s.ClassInheritAttribute(classId, attributeId), Times.Once);
+        _mockMethodService.Verify(s => s.MethodInheritsAttribute(method, attribute), Times.Once);
     }
 
     [TestMethod]

@@ -424,11 +424,22 @@ public class SimMethodDataAccessTest
     {
         var parameterId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var type = new SimClass { Id = typeId, Name = "ParameterType" };
+        _context.SimClasses.Add(type);
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        _context.SimMethods.Add(method);
+
         var parameter = new Parameter
         {
             Id = parameterId,
             Name = "TestParameter",
-            RelatedMethodId = methodId
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = type,
+            RelatedMethod = method
         };
         _context.Parameters.Add(parameter);
         _context.SaveChanges();

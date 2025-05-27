@@ -153,51 +153,6 @@ public class ExecutionServiceTest
     }
 
     [TestMethod]
-    public void ClassInheritAttribute_AttributeInherited_DoesNotThrowException()
-    {
-        var classId = Guid.NewGuid();
-        var attributeId = Guid.NewGuid();
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
-            .Returns(true);
-
-        _executionService!.ClassInheritAttribute(classId, attributeId);
-
-        _mockExecuteDataAccess.Verify(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()), Times.Once);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(NonExistentValueLogic))]
-    public void ClassInheritAttribute_AttributeNotInherited_ThrowsNonExistentValueLogic()
-    {
-        var classId = Guid.NewGuid();
-        var attributeId = Guid.NewGuid();
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
-            .Returns(false);
-
-        _executionService!.ClassInheritAttribute(classId, attributeId);
-    }
-
-    [TestMethod]
-    public void ClassInheritAttribute_VerifiesExceptionMessage()
-    {
-        var classId = Guid.NewGuid();
-        var attributeId = Guid.NewGuid();
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
-            .Returns(false);
-
-        var exception = Assert.ThrowsException<NonExistentValueLogic>(
-            () => _executionService!.ClassInheritAttribute(classId, attributeId));
-
-        Assert.AreEqual("Attribute not reacheable from method.", exception.Message);
-    }
-
-    [TestMethod]
     public void SaveExecutionLog_CreatesLogAndCallsDataAccess()
     {
         var reference = "TestClass";

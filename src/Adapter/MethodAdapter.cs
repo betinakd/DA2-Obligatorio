@@ -276,7 +276,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
                 case TypeReference.Attribute:
                     var attribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
-                    _executionService.ClassInheritAttribute(method.RelatedClassId, attribute.Id);
+                    _methodService.MethodInheritsAttribute(method, attribute);
                     reference = new ReferenceAttribute() { Reference = attribute, ReferenceId = attribute.Id };
                     var isNotAbstract = false;
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);

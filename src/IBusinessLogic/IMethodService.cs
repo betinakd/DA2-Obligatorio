@@ -16,4 +16,5 @@ public interface IMethodService
     void SignatureStaticExistsInClass(SimClass staticClass, Guid invoksMethod, Signature signature);
 
     void ValidateStaticAttributeAccessibility(SimAttribute staticAttribute, Guid methodId);
+    void MethodInheritsAttribute(SimMethod method, SimAttribute attribute);
 }

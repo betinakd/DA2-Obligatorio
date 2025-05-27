@@ -232,4 +232,30 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
                 break;
         }
     }
+
+    public void MethodInheritsAttribute(SimMethod method, SimAttribute attribute)
+    {
+        foreach(var parameter in method.Parameters)
+        {
+            if(_simClassDA.ClassInheritAttribute(parameter.TypeId, attribute.Id))
+            {
+                return;
+            }
+        }
+
+        foreach(var localVariable in method.LocalVariables)
+        {
+            if(_simClassDA.ClassInheritAttribute(localVariable.TypeId, attribute.Id))
+            {
+                return;
+            }
+        }
+
+        if(_simClassDA.ClassInheritAttribute(method.RelatedClass.Id, attribute.Id))
+        {
+            return;
+        }
+
+        throw new InvalidAttributeLogic("Method cannot access the specified attribute.");
+    }
 }

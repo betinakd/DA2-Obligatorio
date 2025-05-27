@@ -1161,4 +1161,63 @@ public class SimMethodServiceTest
 
         _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void MethodInheritsAttribute_WhenNoInheritanceRelation_ShouldThrowException()
+    {
+        var methodClassId = Guid.NewGuid();
+        var attributeClassId = Guid.NewGuid();
+        var parameterTypeId = Guid.NewGuid();
+        var variableTypeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
+            Parameters = [
+                new Parameter
+            {
+                Id = Guid.NewGuid(),
+                Name = "param1",
+                TypeId = parameterTypeId,
+                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+            }
+
+            ],
+            LocalVariables = [
+                new LocalVariable
+            {
+                Id = Guid.NewGuid(),
+                Name = "localVar1",
+                TypeId = variableTypeId,
+                Type = new SimClass { Id = variableTypeId, Name = "VarType" }
+            }
+
+            ]
+        };
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = attributeClassId, Name = "AttributeClass" },
+            RelatedClassId = attributeClassId
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(methodClassId, attribute.Id, 0))
+            .Returns(false);
+
+        _mockSimClassDataAccess
+            .Setup(m => m.ClassInheritAttribute(parameterTypeId, attribute.Id, 0))
+            .Returns(false);
+
+        _mockSimClassDataAccess
+            .Setup(m => m.ClassInheritAttribute(variableTypeId, attribute.Id, 0))
+            .Returns(false);
+
+        _simMethodService!.MethodInheritsAttribute(method, attribute);
+    }
 }
