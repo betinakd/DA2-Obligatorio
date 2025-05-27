@@ -65,7 +65,20 @@ public class SimMethod
         }
     }
 
-    public bool IsOverride { get; set; } = false;
+    private bool _isOverride = false;
+    public bool IsOverride
+    {
+        get => _isOverride;
+        set
+        {
+            if(value && IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot override other methods.");
+            }
+
+            _isOverride = value;
+        }
+    }
 
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters

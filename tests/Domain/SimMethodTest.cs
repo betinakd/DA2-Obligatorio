@@ -707,4 +707,44 @@ public class SimMethodTest
 
         method.IsVirtual = true;
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsOverride_WhenSetToTrueWithStaticMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = true
+        };
+
+        method.IsOverride = true;
+    }
+
+    [TestMethod]
+    public void IsOverride_WhenSetToTrueWithNonStaticMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = false
+        };
+
+        method.IsOverride = true;
+
+        Assert.IsTrue(method.IsOverride);
+    }
+
+    [TestMethod]
+    public void IsOverride_WhenSetToFalse_ShouldNotThrowExceptionRegardlessOfStaticFlag()
+    {
+        var staticMethod = new SimMethod { IsStatic = true };
+        var nonStaticMethod = new SimMethod { IsStatic = false };
+
+        staticMethod.IsOverride = false;
+        nonStaticMethod.IsOverride = false;
+
+        Assert.IsFalse(staticMethod.IsOverride);
+        Assert.IsFalse(nonStaticMethod.IsOverride);
+    }
 }
