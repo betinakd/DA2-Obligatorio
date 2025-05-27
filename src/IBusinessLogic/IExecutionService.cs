@@ -10,4 +10,5 @@ public interface IExecutionService
     public void MethodIsOverridingSealed(Guid idClass, SimMethod method);
     public void SaveExecutionLog(string reference, string objCreate, string execution);
     bool IsReferenceBaseOfInstance(SimClass refer, SimClass obj);
+    public bool IsAuthorizedUser(Guid apiKey);
 }

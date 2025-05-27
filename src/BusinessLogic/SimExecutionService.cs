@@ -120,4 +120,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         return IsReferenceBaseOfInstance(refer, baseClass);
     }
+
+    public bool IsAuthorizedUser(Guid apiKey)
+    {
+        throw new NotImplementedException();
+    }
 }

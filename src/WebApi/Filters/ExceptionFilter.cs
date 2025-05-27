@@ -63,6 +63,17 @@ public sealed class ExceptionFilter : IExceptionFilter
         {
             StatusCode = (int)HttpStatusCode.InternalServerError
         }
+    },
+    {
+        typeof(InvalidApikeyAdapter),
+        ex => new ObjectResult(new ErrorResponse
+        {
+            InnerCode = 7,
+            Message = ex.Message
+        })
+        {
+            StatusCode = (int)HttpStatusCode.Unauthorized
+        }
     }
 };
 

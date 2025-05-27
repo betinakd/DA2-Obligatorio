@@ -286,7 +286,8 @@ public class ExecutionAdapterTest
             mockSimClassService.Object,
             mockTransformerService.Object);
 
-        var result = adapter.ExecuteMethodWithTransform(request, "test");
+        var validKey = new Guid("77777777-aaaa-1111-1111-111111111111");
+        var result = adapter.ExecuteMethodWithTransform(validKey, request, "test");
 
         Assert.IsNotNull(result);
         Assert.AreEqual("transformado", result.TransformedResult);
