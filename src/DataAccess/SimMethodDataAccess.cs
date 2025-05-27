@@ -283,4 +283,35 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
     {
         return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name.ToLower() == localVariable.Name.ToLower());
     }
+
+    private List<Invocation> GetAllInvocations()
+    {
+        var invocationIds = _context.Invocations.Select(i => i.Id).ToList();
+        var invocations = new List<Invocation>();
+
+        foreach(var id in invocationIds)
+        {
+            var invocation = GetInvocationById(id);
+            if(invocation != null)
+            {
+                invocations.Add(invocation);
+            }
+        }
+
+        return invocations;
+    }
+
+    public bool MethodInUseByInvocations(SimMethod method)
+    {
+        var invocations = GetAllInvocations();
+        foreach(var invocation in invocations)
+        {
+            if(method.MatchSignature(invocation.Signature))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
