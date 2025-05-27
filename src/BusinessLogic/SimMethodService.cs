@@ -154,11 +154,51 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
     {
         var method = GetMethodById(invoksMethod);
         var relatedClass = method.RelatedClass;
-        var methodMatchingSignature = relatedClass.Methods
+        var methodMatchingSignature = staticClass.Methods
             .FirstOrDefault(m => m.MatchSignature(signature) && m.IsStatic && m.Privacity != SimPrivacity.Private);
         if(methodMatchingSignature == null)
         {
             throw new NonExistentValueLogic("No static method with matching signature found in the class.");
         }
+
+        if(methodMatchingSignature.Privacity == SimPrivacity.Protected &&
+           !IsClassBaseOfOrSameAs(staticClass, relatedClass))
+        {
+            throw new NonExistentValueLogic("Protected static method is not accessible from this context.");
+        }
+    }
+
+    private bool IsClassBaseOfOrSameAs(SimClass potentialBase, SimClass potentialDerived)
+    {
+        if(potentialBase == null || potentialDerived == null)
+        {
+            return false;
+        }
+
+        if(potentialBase.Id == potentialDerived.Id)
+        {
+            return true;
+        }
+
+        if(!potentialDerived.BaseClassId.HasValue)
+        {
+            return false;
+        }
+
+        if(potentialDerived.BaseClassId.Value == potentialBase.Id)
+        {
+            return true;
+        }
+
+        var baseClass = _executionDA.GetFilteredClasses(query =>
+            query.Where(c => c.Id == potentialDerived.BaseClassId.Value))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        return IsClassBaseOfOrSameAs(potentialBase, baseClass);
     }
 }

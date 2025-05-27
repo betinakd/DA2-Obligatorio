@@ -13,8 +13,8 @@ public class SimMethod
     public Guid RelatedClassId { get; set; }
 
     public SimClass RelatedClass { get; set; } = null!;
-    public SimPrivacity Privacity { get; set; }
-    private SimAccesibility _accesibility;
+    public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
+    private SimAccesibility _accesibility = SimAccesibility.Normal;
 
     public SimAccesibility Accesibility
     {

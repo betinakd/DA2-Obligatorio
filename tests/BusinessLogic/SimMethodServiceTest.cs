@@ -754,6 +754,7 @@ public class SimMethodServiceTest
         var staticMethod = new SimMethod
         {
             Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal,
             IsStatic = true,
             Privacity = SimPrivacity.Public
         };
@@ -778,13 +779,6 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess
             .Setup(m => m.GetMethodById(methodId))
             .Returns(invokingMethod);
-
-        var mockMethod = new Mock<SimMethod>();
-        mockMethod.Setup(m => m.MatchSignature(It.IsAny<Signature>())).Returns(true);
-        mockMethod.SetupGet(m => m.IsStatic).Returns(true);
-        mockMethod.SetupGet(m => m.Privacity).Returns(SimPrivacity.Public);
-
-        staticClass.Methods = [mockMethod.Object];
 
         _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
 
@@ -824,6 +818,64 @@ public class SimMethodServiceTest
         _mockSimMethodDataAccess
             .Setup(m => m.GetMethodById(methodId))
             .Returns(invokingMethod);
+
+        _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void SignatureStaticExistsInClass_WhenProtectedMethodWithNoInheritance_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+        var unrelatedClassId = Guid.NewGuid();
+
+        var signature = new Signature
+        {
+            Name = "ProtectedStaticMethod",
+            Parameters = []
+        };
+
+        var protectedStaticMethod = new SimMethod
+        {
+            Name = "ProtectedStaticMethod",
+            Accesibility = SimAccesibility.Normal,
+            IsStatic = true,
+            Privacity = SimPrivacity.Protected,
+            Parameters = []
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass",
+            Methods = [protectedStaticMethod]
+        };
+
+        var unrelatedClass = new SimClass
+        {
+            Id = unrelatedClassId,
+            Name = "UnrelatedClass",
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+
+        var invokingMethod = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = unrelatedClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(invokingMethod);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([]);
 
         _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
     }
