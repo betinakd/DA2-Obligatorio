@@ -20,6 +20,6 @@ public class AttributeRequest()
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsPrivacity Privacity { get; set; }
 
-    [Required(ErrorMessage = "IsStatic is required his value is true or false.")]
+    [JsonRequired]
     public bool IsStatic { get; set; }
 }

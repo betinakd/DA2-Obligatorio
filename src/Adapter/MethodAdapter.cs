@@ -48,7 +48,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
                 Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
                 ReturnType = returnType,
-                ReturnTypeId = returnType.Id
+                ReturnTypeId = returnType.Id,
+                IsStatic = method.IsStatic,
             };
 
             var createdMethod = _methodService.AddMethod(idClass, newMethod);
