@@ -738,4 +738,93 @@ public class SimMethodServiceTest
 
         _simMethodService!.AddMethodParameter(methodId, parameter);
     }
+
+    [TestMethod]
+    public void SignatureStaticExistsInClass_WhenMatchingMethodExists_ShouldNotThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            Parameters = []
+        };
+
+        var staticMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = true,
+            Privacity = SimPrivacity.Public
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass",
+            Methods = [staticMethod]
+        };
+
+        var invokingMethod = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(invokingMethod);
+
+        var mockMethod = new Mock<SimMethod>();
+        mockMethod.Setup(m => m.MatchSignature(It.IsAny<Signature>())).Returns(true);
+        mockMethod.SetupGet(m => m.IsStatic).Returns(true);
+        mockMethod.SetupGet(m => m.Privacity).Returns(SimPrivacity.Public);
+
+        staticClass.Methods = [mockMethod.Object];
+
+        _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
+
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void SignatureStaticExistsInClass_WhenNoMatchingMethod_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+
+        var signature = new Signature
+        {
+            Name = "MissingMethod",
+            Parameters = []
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass",
+            Methods = []
+        };
+
+        var invokingMethod = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(invokingMethod);
+
+        _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
+    }
 }

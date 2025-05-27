@@ -149,4 +149,16 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
         return _simMethodDA.GetVariableById(id);
     }
+
+    public void SignatureStaticExistsInClass(SimClass staticClass, Guid invoksMethod, Signature signature)
+    {
+        var method = GetMethodById(invoksMethod);
+        var relatedClass = method.RelatedClass;
+        var methodMatchingSignature = relatedClass.Methods
+            .FirstOrDefault(m => m.MatchSignature(signature) && m.IsStatic && m.Privacity != SimPrivacity.Private);
+        if(methodMatchingSignature == null)
+        {
+            throw new NonExistentValueLogic("No static method with matching signature found in the class.");
+        }
+    }
 }

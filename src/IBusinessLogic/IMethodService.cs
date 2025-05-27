@@ -13,4 +13,5 @@ public interface IMethodService
     public void DeleteMethod(Guid id);
     public Invocation AddInvocation(Guid idMethod, Invocation newInvocation);
     public Invocation GetInvocationById(Guid id);
+    void SignatureStaticExistsInClass(SimClass staticClass, Guid invoksMethod, Signature signature);
 }
