@@ -45,6 +45,23 @@ public class SimMethod
         }
     }
 
+    private bool _isVirtual = false;
+    public bool IsVirtual
+    {
+        get => _isVirtual;
+        set
+        {
+            if(value && IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be virtual.");
+            }
+
+            _isVirtual = value;
+        }
+    }
+
+    public bool IsOverride { get; set; } = false;
+
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters
     {
