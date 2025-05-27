@@ -302,6 +302,11 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
                     break;
+                case TypeReference.Static:
+                    var staticClass = _simClassService.GetSimClassById(invocation.ReferenceId);
+                    reference = new ReferenceStatic() { Reference = staticClass, ReferenceId = staticClass.Id };
+                    _methodService.SignatureStaticExistsInClass(staticClass, idMethod, signature);
+                    break;
 
                 default:
                     throw new InvalidAttributeAdapter($"Unsupported type reference : {invocation.TypeReference}.");

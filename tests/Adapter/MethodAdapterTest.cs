@@ -1156,4 +1156,89 @@ public class MethodAdapterTest
         result.Message.Should().Be("Invocation created successfully");
         _mockExecutionService.Verify(s => s.ClassInheritAttribute(classId, attributeId), Times.Once);
     }
+
+    [TestMethod]
+    public void CreateInvocation_WithStaticClassReference_ShouldReturnCreatedInvocationResponse()
+    {
+        var methodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass"
+        };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = staticClassId.ToString(),
+            TypeReference = TypeReference.Static,
+            MethodName = "StaticMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockSimClassService!.Setup(s => s.GetSimClassById(staticClassId)).Returns(staticClass);
+        _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
+            .Returns((Guid id, Invocation inv) => inv);
+        _mockMethodService
+            .Setup(s => s.SignatureStaticExistsInClass(
+                It.Is<SimClass>(c => c.Id == staticClassId),
+                methodId,
+                It.Is<Signature>(sig => sig.Name == "StaticMethod")));
+
+        var result = adapter!.CreateInvocation(methodId, invocationRequest);
+
+        result.Should().NotBeNull();
+        result.Message.Should().Be("Invocation created successfully");
+        result.InvocationResponse.MethodName.Should().Be("StaticMethod");
+        result.InvocationResponse.TypeReference.Should().Be("Static");
+
+        _mockMethodService.Verify(s => s.SignatureStaticExistsInClass(
+            It.Is<SimClass>(c => c.Id == staticClassId),
+            methodId,
+            It.Is<Signature>(sig => sig.Name == "StaticMethod")),
+            Times.Once);
+
+        _mockMethodService.Verify(s => s.AddInvocation(methodId, It.IsAny<Invocation>()), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueAdapter))]
+    public void CreateInvocation_WithStaticClassReference_ShouldThrowWhenMethodDoesNotExist()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        var staticClass = new SimClass { Id = staticClassId, Name = "StaticClass" };
+
+        var invocationRequest = new InvocationRequest
+        {
+            IdReference = staticClassId.ToString(),
+            TypeReference = TypeReference.Static,
+            MethodName = "NonExistentStaticMethod",
+            Parameters = []
+        };
+
+        _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockSimClassService!.Setup(s => s.GetSimClassById(staticClassId)).Returns(staticClass);
+
+        _mockMethodService
+            .Setup(s => s.SignatureStaticExistsInClass(
+                It.Is<SimClass>(c => c.Id == staticClassId),
+                methodId,
+                It.Is<Signature>(sig => sig.Name == "NonExistentStaticMethod")))
+            .Throws(new NonExistentValueLogic("Static method does not exist in class"));
+
+        adapter!.CreateInvocation(methodId, invocationRequest);
+    }
 }
