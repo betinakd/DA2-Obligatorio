@@ -269,9 +269,11 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public bool MethodIsInUse(Guid id)
     {
+        var method = GetMethodById(id);
         return _context.LocalVariables.Any(v => v.RelatedMethodId == id) ||
                _context.Parameters.Any(p => p.RelatedMethodId == id) ||
-               _context.Invocations.Any(i => i.RelatedMethodId == id);
+               _context.Invocations.Any(i => i.RelatedMethodId == id) ||
+               MethodInUseByInvocations(method);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
