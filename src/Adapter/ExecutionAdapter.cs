@@ -82,7 +82,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
 
     public TransformedResponse ExecuteMethodWithTransform(Guid apiKey, MethodExecutionRequest request, string transformerId = null)
     {
-        if(IsAuthorizedUser(apiKey))
+        if(!IsAuthorizedUser(apiKey))
         {
             throw new InvalidApikeyAdapter("API Key inválida o ausente");
         }

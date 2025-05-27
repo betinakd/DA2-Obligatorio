@@ -287,6 +287,7 @@ public class ExecutionAdapterTest
             mockTransformerService.Object);
 
         var validKey = new Guid("77777777-aaaa-1111-1111-111111111111");
+        mockExecutionService.Setup(x => x.IsAuthorizedUser(validKey)).Returns(true);
         var result = adapter.ExecuteMethodWithTransform(validKey, request, "test");
 
         Assert.IsNotNull(result);
