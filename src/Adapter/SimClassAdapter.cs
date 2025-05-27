@@ -78,7 +78,8 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     RelatedClassId = idSimClass,
                     RelatedClass = classToUpdate,
                     Type = typeClass,
-                    TypeId = typeClass.Id
+                    TypeId = typeClass.Id,
+                    IsStatic = atri.IsStatic
                 };
                 attributesNewClas.Add(newAttribute);
             }
@@ -94,6 +95,7 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     RelatedClassId = idSimClass,
                     ReturnTypeId = method.ReturnTypeId,
                     RelatedClass = classToUpdate,
+                    IsStatic = method.IsStatic
                 };
 
                 var parametersNewClass = new List<Parameter>();

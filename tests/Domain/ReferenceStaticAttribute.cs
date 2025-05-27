@@ -4,16 +4,16 @@ using Domain.Exceptions;
 namespace Tests.Domain;
 
 [TestClass]
-public class ReferenceAttributeTest
+public class ReferenceStaticAttributeTest
 {
     [TestMethod]
     public void TestGetSimClass_ShouldReturnAttributeType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
-        var referenceAttribute = new ReferenceAttribute { Reference = attribute };
+        var attribute = new SimAttribute { Type = simClass, Name = "StaticAttr", IsStatic = true };
+        var referenceStaticAttribute = new ReferenceStaticAttribute { Reference = attribute };
 
-        var result = referenceAttribute.GetSimClass();
+        var result = referenceStaticAttribute.GetSimClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -24,14 +24,14 @@ public class ReferenceAttributeTest
     [ExpectedException(typeof(InvalidAttributeDomain))]
     public void TestGetSimClass_ShouldThrowExceptionWhenTypeIsNull()
     {
-        var attribute = new SimAttribute();
-        var referenceAttribute = new ReferenceAttribute { Reference = attribute };
+        var attribute = new SimAttribute { IsStatic = true };
+        var referenceStaticAttribute = new ReferenceStaticAttribute { Reference = attribute };
 
-        referenceAttribute.GetSimClass();
+        referenceStaticAttribute.GetSimClass();
     }
 
     [TestMethod]
-    public void TestGetSignature_ShouldReturnThisSignatureFormat()
+    public void TestGetSignature_ShouldReturnStaticSignatureFormat()
     {
         var signature = new Signature
         {
@@ -43,11 +43,12 @@ public class ReferenceAttributeTest
             ]
         };
         var simClass = new SimClass { Name = "TestClass" };
-        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
-        var reference = new ReferenceAttribute { Reference = attribute };
+        var attribute = new SimAttribute { Type = simClass, Name = "StaticAttr", IsStatic = true };
+        var reference = new ReferenceStaticAttribute { Reference = attribute };
+
         var result = reference.GetSignature(signature);
 
-        Assert.AreEqual("Atri.TestMethod(param1, param2)", result);
+        Assert.AreEqual("StaticAttr.TestMethod(param1, param2)", result);
     }
 
     [TestMethod]
@@ -63,8 +64,8 @@ public class ReferenceAttributeTest
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
-        var attribute = new SimAttribute { Type = simClass, Name = "Attr" };
-        var reference = new ReferenceAttribute { Reference = attribute };
+        var attribute = new SimAttribute { Type = simClass, Name = "StaticAttr", IsStatic = true };
+        var reference = new ReferenceStaticAttribute { Reference = attribute };
 
         var result = reference.GetSignatureWithClassName(signature);
 
@@ -75,8 +76,8 @@ public class ReferenceAttributeTest
     public void TestGetReferenceId_ShouldReturnReferenceId()
     {
         var expectedId = Guid.NewGuid();
-        var attribute = new SimAttribute { Id = expectedId, Name = "Attr" };
-        var reference = new ReferenceAttribute { Reference = attribute };
+        var attribute = new SimAttribute { Id = expectedId, Name = "StaticAttr", IsStatic = true };
+        var reference = new ReferenceStaticAttribute { Reference = attribute };
 
         var actualId = reference.GetReferenceId();
 
@@ -84,18 +85,28 @@ public class ReferenceAttributeTest
     }
 
     [TestMethod]
+    public void TestGetReferenceTypeDescription_ShouldReturnAttribute()
+    {
+        var reference = new ReferenceStaticAttribute();
+
+        var result = reference.GetReferenceTypeDescription();
+
+        Assert.AreEqual("StaticAttribute", result);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void TestReference_ShouldThrowExceptionWhenStaticAttribute()
+    public void TestReference_ShouldThrowExceptionWhenNonStaticAttribute()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var staticAttribute = new SimAttribute
+        var nonStaticAttribute = new SimAttribute
         {
             Type = simClass,
-            Name = "StaticAttr",
-            IsStatic = true
+            Name = "NonStaticAttr",
+            IsStatic = false
         };
-        var reference = new ReferenceAttribute();
+        var reference = new ReferenceStaticAttribute();
 
-        reference.Reference = staticAttribute;
+        reference.Reference = nonStaticAttribute;
     }
 }

@@ -2,7 +2,7 @@ using Domain.Exceptions;
 
 namespace Domain;
 
-public class ReferenceAttribute : Reference
+public class ReferenceStaticAttribute : Reference
 {
     private SimAttribute _reference = new SimAttribute();
     public SimAttribute Reference
@@ -10,9 +10,9 @@ public class ReferenceAttribute : Reference
         get => _reference;
         set
         {
-            if(value != null && value.IsStatic)
+            if(value != null && !value.IsStatic)
             {
-                throw new InvalidAttributeDomain("Static attributes are not allowed. Use ReferenceStaticAttribute instead.");
+                throw new InvalidAttributeDomain("Only static attributes allowed on ReferenceStaticAttribute.");
             }
 
             _reference = value;
@@ -50,6 +50,6 @@ public class ReferenceAttribute : Reference
 
     public override string GetReferenceTypeDescription()
     {
-        return "Attribute";
+        return "StaticAttribute";
     }
 }

@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Models.Enums;
 
 namespace Models.Request;
+
 [ExcludeFromCodeCoverage]
 public class AttributeRequestUpdate()
 {
@@ -30,4 +31,7 @@ public class AttributeRequestUpdate()
 
     [JsonIgnore]
     public Guid RelatedClassId => Guid.TryParse(IdRelatedClass, out var guid) ? guid : Guid.Empty;
+
+    [Required(ErrorMessage = "IsStatic is required his value is true or false.")]
+    public bool IsStatic { get; set; }
 }

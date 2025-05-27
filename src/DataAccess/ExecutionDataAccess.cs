@@ -105,36 +105,6 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 simMethod.MatchSignature(i.Signature) && isAccessible));
     }
 
-    public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0)
-    {
-        var currentClass = _context.SimClasses
-            .Include(c => c.Attributes)
-            .Include(c => c.BaseClass)
-            .FirstOrDefault(c => c.Id == classId);
-
-        if(currentClass == null)
-        {
-            return false;
-        }
-
-        if(currentClass.Attributes.Any(a => a.Id == attributeId) && level == 0)
-        {
-            return true;
-        }
-
-        if(currentClass.Attributes.Any(a => a.Id == attributeId && (a.Privacity == SimPrivacity.Public || a.Privacity == SimPrivacity.Protected)) && level != 0)
-        {
-            return true;
-        }
-
-        if(currentClass.BaseClassId.HasValue)
-        {
-            return ClassInheritAttribute(currentClass.BaseClassId.Value, attributeId, level + 1);
-        }
-
-        return false;
-    }
-
     public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
     {
         var ownerClass = GetFilteredClasses(query =>
@@ -222,6 +192,12 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 break;
             case ReferenceThis rt:
                 _context.Entry(rt).Reference(r => r.Reference).Load();
+                break;
+            case ReferenceStaticAttribute rsa:
+                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                break;
+            case ReferenceStatic rsv:
+                _context.Entry(rsv).Reference(r => r.Reference).Load();
                 break;
         }
     }

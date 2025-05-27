@@ -24,4 +24,7 @@ public class MethodRequest()
     [Required(ErrorMessage = "IdReturnType is required.")]
     public string IdReturnType { get; set; } = string.Empty;
     public List<ParameterRequest> Parameters { get; set; } = [];
+
+    [JsonRequired]
+    public bool IsStatic { get; set; }
 }

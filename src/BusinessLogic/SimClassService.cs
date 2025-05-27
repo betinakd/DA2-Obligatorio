@@ -142,4 +142,12 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
         return simClass;
     }
+
+    public void ClassInheritAttribute(Guid idClass, Guid idAttribute)
+    {
+        if(!_simClassDA.ClassInheritAttribute(idClass, idAttribute))
+        {
+            throw new NonExistentValueLogic("Attribute not reacheable from method.");
+        }
+    }
 }

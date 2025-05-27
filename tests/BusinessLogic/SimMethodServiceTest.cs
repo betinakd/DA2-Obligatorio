@@ -738,4 +738,486 @@ public class SimMethodServiceTest
 
         _simMethodService!.AddMethodParameter(methodId, parameter);
     }
+
+    [TestMethod]
+    public void SignatureStaticExistsInClass_WhenMatchingMethodExists_ShouldNotThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            Parameters = []
+        };
+
+        var staticMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal,
+            IsStatic = true,
+            Privacity = SimPrivacity.Public
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass",
+            Methods = [staticMethod]
+        };
+
+        var invokingMethod = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(invokingMethod);
+
+        _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
+
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void SignatureStaticExistsInClass_WhenNoMatchingMethod_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+
+        var signature = new Signature
+        {
+            Name = "MissingMethod",
+            Parameters = []
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass",
+            Methods = []
+        };
+
+        var invokingMethod = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(invokingMethod);
+
+        _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void SignatureStaticExistsInClass_WhenProtectedMethodWithNoInheritance_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var staticClassId = Guid.NewGuid();
+        var unrelatedClassId = Guid.NewGuid();
+
+        var signature = new Signature
+        {
+            Name = "ProtectedStaticMethod",
+            Parameters = []
+        };
+
+        var protectedStaticMethod = new SimMethod
+        {
+            Name = "ProtectedStaticMethod",
+            Accesibility = SimAccesibility.Normal,
+            IsStatic = true,
+            Privacity = SimPrivacity.Protected,
+            Parameters = []
+        };
+
+        var staticClass = new SimClass
+        {
+            Id = staticClassId,
+            Name = "StaticClass",
+            Methods = [protectedStaticMethod]
+        };
+
+        var unrelatedClass = new SimClass
+        {
+            Id = unrelatedClassId,
+            Name = "UnrelatedClass",
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+        };
+
+        var invokingMethod = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = unrelatedClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(invokingMethod);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([]);
+
+        _simMethodService!.SignatureStaticExistsInClass(staticClass, methodId, signature);
+    }
+
+    [TestMethod]
+    public void ValidateStaticAttributeAccessibility_WithPublicAttribute_ShouldNotThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var attributeOwnerClassId = Guid.NewGuid();
+
+        var attributeOwnerClass = new SimClass
+        {
+            Id = attributeOwnerClassId,
+            Name = "AttributeOwnerClass"
+        };
+
+        var callingClass = new SimClass
+        {
+            Id = classId,
+            Name = "CallingClass"
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = callingClass
+        };
+
+        var publicStaticAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "PublicStaticAttr",
+            Privacity = SimPrivacity.Public,
+            IsStatic = true,
+            RelatedClass = attributeOwnerClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.ValidateStaticAttributeAccessibility(publicStaticAttribute, methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    public void ValidateStaticAttributeAccessibility_WithPrivateAttributeFromSameClass_ShouldNotThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var sameClassId = Guid.NewGuid();
+
+        var sameClass = new SimClass
+        {
+            Id = sameClassId,
+            Name = "SameClass"
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = sameClass
+        };
+
+        var privateStaticAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "PrivateStaticAttr",
+            Privacity = SimPrivacity.Private,
+            IsStatic = true,
+            RelatedClass = sameClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.ValidateStaticAttributeAccessibility(privateStaticAttribute, methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void ValidateStaticAttributeAccessibility_WithPrivateAttributeFromDifferentClass_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var callingClassId = Guid.NewGuid();
+        var attributeOwnerClassId = Guid.NewGuid();
+
+        var attributeOwnerClass = new SimClass
+        {
+            Id = attributeOwnerClassId,
+            Name = "AttributeOwnerClass"
+        };
+
+        var callingClass = new SimClass
+        {
+            Id = callingClassId,
+            Name = "CallingClass"
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = callingClass
+        };
+
+        var privateStaticAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "PrivateStaticAttr",
+            Privacity = SimPrivacity.Private,
+            IsStatic = true,
+            RelatedClass = attributeOwnerClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.ValidateStaticAttributeAccessibility(privateStaticAttribute, methodId);
+    }
+
+    [TestMethod]
+    public void ValidateStaticAttributeAccessibility_WithProtectedAttributeFromSameClass_ShouldNotThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var sameClassId = Guid.NewGuid();
+
+        var sameClass = new SimClass
+        {
+            Id = sameClassId,
+            Name = "SameClass"
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = sameClass
+        };
+
+        var protectedStaticAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "ProtectedStaticAttr",
+            Privacity = SimPrivacity.Protected,
+            IsStatic = true,
+            RelatedClass = sameClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    public void ValidateStaticAttributeAccessibility_WithProtectedAttributeFromBaseClass_ShouldNotThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var derivedClassId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+
+        var baseClass = new SimClass
+        {
+            Id = baseClassId,
+            Name = "BaseClass"
+        };
+
+        var derivedClass = new SimClass
+        {
+            Id = derivedClassId,
+            Name = "DerivedClass",
+            BaseClassId = baseClassId
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = derivedClass
+        };
+
+        var protectedStaticAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "ProtectedStaticAttr",
+            Privacity = SimPrivacity.Protected,
+            IsStatic = true,
+            RelatedClass = baseClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([baseClass]);
+
+        _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void ValidateStaticAttributeAccessibility_WithProtectedAttributeFromUnrelatedClass_ShouldThrowException()
+    {
+        var methodId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var unrelatedClassId = Guid.NewGuid();
+        var attributeOwnerClassId = Guid.NewGuid();
+
+        var attributeOwnerClass = new SimClass
+        {
+            Id = attributeOwnerClassId,
+            Name = "AttributeOwnerClass"
+        };
+
+        var unrelatedClass = new SimClass
+        {
+            Id = unrelatedClassId,
+            Name = "UnrelatedClass",
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111") // Default base
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            RelatedClass = unrelatedClass
+        };
+
+        var protectedStaticAttribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "ProtectedStaticAttr",
+            Privacity = SimPrivacity.Protected,
+            IsStatic = true,
+            RelatedClass = attributeOwnerClass
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _mockExectuionDataAccess!
+            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
+            .Returns([]);
+
+        _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void MethodInheritsAttribute_WhenNoInheritanceRelation_ShouldThrowException()
+    {
+        var methodClassId = Guid.NewGuid();
+        var attributeClassId = Guid.NewGuid();
+        var parameterTypeId = Guid.NewGuid();
+        var variableTypeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
+            Parameters = [
+                new Parameter
+            {
+                Id = Guid.NewGuid(),
+                Name = "param1",
+                TypeId = parameterTypeId,
+                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+            }
+
+            ],
+            LocalVariables = [
+                new LocalVariable
+            {
+                Id = Guid.NewGuid(),
+                Name = "localVar1",
+                TypeId = variableTypeId,
+                Type = new SimClass { Id = variableTypeId, Name = "VarType" }
+            }
+
+            ]
+        };
+
+        var attribute = new SimAttribute
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = attributeClassId, Name = "AttributeClass" },
+            RelatedClassId = attributeClassId
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(methodClassId, attribute.Id, 0))
+            .Returns(false);
+
+        _mockSimClassDataAccess
+            .Setup(m => m.ClassInheritAttribute(parameterTypeId, attribute.Id, 0))
+            .Returns(false);
+
+        _mockSimClassDataAccess
+            .Setup(m => m.ClassInheritAttribute(variableTypeId, attribute.Id, 0))
+            .Returns(false);
+
+        _simMethodService!.MethodInheritsAttribute(method, attribute);
+    }
 }

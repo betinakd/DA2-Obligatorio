@@ -13,19 +13,44 @@ public class SimMethod
     public Guid RelatedClassId { get; set; }
 
     public SimClass RelatedClass { get; set; } = null!;
-    public SimPrivacity Privacity { get; set; }
-    public SimAccesibility Accesibility { get; set; }
+    public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
+    private SimAccesibility _accesibility = SimAccesibility.Normal;
+
+    public SimAccesibility Accesibility
+    {
+        get => _accesibility;
+        set
+        {
+            if(IsStatic && value != SimAccesibility.Normal)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be Abstract, Interface, Sealed accessibility.");
+            }
+
+            _accesibility = value;
+        }
+    }
+
+    private bool _isStatic = false;
+    public bool IsStatic
+    {
+        get => _isStatic;
+        set
+        {
+            if(value && Accesibility != SimAccesibility.Normal)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be Abstract, Interface or Sealed accessibility.");
+            }
+
+            _isStatic = value;
+        }
+    }
+
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters
     {
         get => _parameters;
         set
         {
-            if(Accesibility == SimAccesibility.Interface && value.Any())
-            {
-                throw new InvalidAttributeDomain("Interface methods cannot have parameters.");
-            }
-
             _parameters = value;
         }
     }
@@ -54,6 +79,11 @@ public class SimMethod
             if(Accesibility == SimAccesibility.Interface && value.Any())
             {
                 throw new InvalidAttributeDomain("Interface methods cannot have invocations.");
+            }
+
+            if(IsStatic && value.Any(i => i.Reference.GetReferenceTypeDescription() != "Static" && i.Reference.GetReferenceTypeDescription() != "StaticAttribute"))
+            {
+                throw new InvalidAttributeDomain("Static methods cannot have non-static invocations.");
             }
 
             _invocations = value;

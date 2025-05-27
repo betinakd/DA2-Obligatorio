@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Models.Enums;
 
 namespace Models.Request;
+
 [ExcludeFromCodeCoverage]
 public class AttributeRequest()
 {
@@ -18,4 +19,7 @@ public class AttributeRequest()
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsPrivacity Privacity { get; set; }
+
+    [JsonRequired]
+    public bool IsStatic { get; set; }
 }

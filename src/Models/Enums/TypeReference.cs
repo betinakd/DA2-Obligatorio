@@ -29,4 +29,14 @@ public enum TypeReference
     /// Represents a reference to a local variable within a method.
     /// </summary>
     LocalVariable,
+
+    /// <summary>
+    /// Represents a reference to a Static method.
+    /// </summary>
+    Static,
+
+    /// <summary>
+    /// Represents a reference to a Static Attribute method.
+    /// </summary>
+    StaticAttribute,
 }

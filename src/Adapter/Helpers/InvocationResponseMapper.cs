@@ -4,7 +4,7 @@ using Models.Response;
 
 namespace Adapter.Helpers;
 [ExcludeFromCodeCoverage]
-public static class InvocationResponseMapper
+public class InvocationResponseMapper
 {
     public static InvocationResponse MapToInvocationResponse(Invocation domainInvocation)
     {

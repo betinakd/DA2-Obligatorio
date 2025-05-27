@@ -12,4 +12,5 @@ public interface ISimClassDataAccess
     public void UpdateSimClass(SimClass simClass);
     public bool InUseByOther(Guid id);
     public bool ExistSimClassName(string name);
+    public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0);
 }
