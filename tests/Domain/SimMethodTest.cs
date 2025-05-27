@@ -747,4 +747,17 @@ public class SimMethodTest
         Assert.IsFalse(staticMethod.IsOverride);
         Assert.IsFalse(nonStaticMethod.IsOverride);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsOverride_WhenSetToTrueOnNonVirtualMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = false
+        };
+
+        method.IsOverride = true;
+    }
 }
