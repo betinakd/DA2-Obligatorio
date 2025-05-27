@@ -694,4 +694,17 @@ public class SimMethodTest
         Assert.IsFalse(staticMethod.IsVirtual);
         Assert.IsFalse(nonStaticMethod.IsVirtual);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsVirtual_WhenSetToTrueWithInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.IsVirtual = true;
+    }
 }

@@ -56,6 +56,11 @@ public class SimMethod
                 throw new InvalidAttributeDomain("Static methods cannot be virtual.");
             }
 
+            if(value && Accesibility == SimAccesibility.Interface)
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot be virtual.");
+            }
+
             _isVirtual = value;
         }
     }
