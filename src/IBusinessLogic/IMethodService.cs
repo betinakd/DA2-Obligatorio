@@ -12,6 +12,8 @@ public interface IMethodService
     public SimMethod AddMethod(Guid id, SimMethod method);
     public void DeleteMethod(Guid id);
     public Invocation AddInvocation(Guid idMethod, Invocation newInvocation);
-    public Invocation GetInvocationById(Guid id);
+    Invocation GetInvocationById(Guid id);
     void SignatureStaticExistsInClass(SimClass staticClass, Guid invoksMethod, Signature signature);
+
+    void ValidateStaticAttributeAccessibility(SimAttribute staticAttribute, Guid methodId);
 }

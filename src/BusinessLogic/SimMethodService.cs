@@ -201,4 +201,35 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
         return IsClassBaseOfOrSameAs(potentialBase, baseClass);
     }
+
+    public void ValidateStaticAttributeAccessibility(SimAttribute staticAttribute, Guid methodId)
+    {
+        var method = GetMethodById(methodId);
+        var callingClass = method.RelatedClass;
+
+        var attributeOwnerClass = staticAttribute.RelatedClass;
+
+        switch(staticAttribute.Privacity)
+        {
+            case SimPrivacity.Private:
+                if(callingClass.Id != attributeOwnerClass.Id)
+                {
+                    throw new InvalidAttributeLogic("Cannot access private static attribute from a different class.");
+                }
+
+                break;
+
+            case SimPrivacity.Protected:
+                if(callingClass.Id != attributeOwnerClass.Id &&
+                    !IsClassBaseOfOrSameAs(attributeOwnerClass, callingClass))
+                {
+                    throw new InvalidAttributeLogic("Cannot access protected static attribute from a non-derived class.");
+                }
+
+                break;
+
+            case SimPrivacity.Public:
+                break;
+        }
+    }
 }
