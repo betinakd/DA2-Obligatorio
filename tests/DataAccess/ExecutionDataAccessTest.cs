@@ -660,7 +660,9 @@ public class ExecutionDataAccessTest
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
             Accesibility = SimAccesibility.Sealed,
-            Parameters = [parameter]
+            Parameters = [parameter],
+            IsVirtual = true,
+            IsOverride = true
         };
         parameter.RelatedMethodId = sealedMethod.Id;
         parameter.RelatedMethod = sealedMethod;
@@ -720,7 +722,9 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Accesibility = SimAccesibility.Sealed,
-            Parameters = [parameter]
+            Parameters = [parameter],
+            IsVirtual = true,
+            IsOverride = true
         };
         parameter.RelatedMethodId = sealedMethod.Id;
         parameter.RelatedMethod = sealedMethod;
@@ -789,7 +793,9 @@ public class ExecutionDataAccessTest
             RelatedClassId = grandparentClass.Id,
             RelatedClass = grandparentClass,
             Accesibility = SimAccesibility.Sealed,
-            Parameters = [parameter]
+            Parameters = [parameter],
+            IsVirtual = true,
+            IsOverride = true
         };
         parameter.RelatedMethodId = sealedMethod.Id;
         parameter.RelatedMethod = sealedMethod;

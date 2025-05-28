@@ -76,11 +76,6 @@ public class SimMethod
                 throw new InvalidAttributeDomain("Static methods cannot override other methods.");
             }
 
-            if(value && !_isVirtual)
-            {
-                throw new InvalidAttributeDomain("Non virtual methods cannot override.");
-            }
-
             _isOverride = value;
         }
     }
@@ -224,5 +219,18 @@ public class SimMethod
     public override int GetHashCode()
     {
         throw new NotImplementedException();
+    }
+
+    public void Validate()
+    {
+        if(IsOverride && !IsVirtual)
+        {
+            throw new InvalidAttributeDomain("Only virtual methods can be overridden.");
+        }
+
+        if(IsOverride && Privacity == SimPrivacity.Private)
+        {
+            throw new InvalidAttributeDomain("Override methods cannot be private.");
+        }
     }
 }

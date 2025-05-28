@@ -107,6 +107,16 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
     public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
     {
+        if(methodSim == null)
+        {
+            return false;
+        }
+
+        if(!methodSim.IsOverride)
+        {
+            return false;
+        }
+
         var ownerClass = GetFilteredClasses(query =>
             query.Where(c => c.Id == idClass))
             .FirstOrDefault();

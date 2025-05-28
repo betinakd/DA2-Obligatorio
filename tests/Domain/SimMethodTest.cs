@@ -727,7 +727,8 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            IsStatic = false
+            IsStatic = false,
+            IsVirtual = true
         };
 
         method.IsOverride = true;
@@ -749,15 +750,59 @@ public class SimMethodTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void IsOverride_WhenSetToTrueOnNonVirtualMethod_ShouldThrowException()
+    public void Validate_WhenMethodIsCorrectlyConfigured_ShouldNotThrowException()
     {
         var method = new SimMethod
         {
-            Name = "TestMethod",
-            IsVirtual = false
+            Name = "ValidMethod",
+            IsVirtual = true,
+            IsOverride = true,
+            Privacity = SimPrivacity.Public
         };
 
-        method.IsOverride = true;
+        method.Validate();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Validate_WhenOverrideIsNotVirtual_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "InvalidMethod",
+            IsVirtual = false,
+            IsOverride = true
+        };
+
+        method.Validate();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Validate_WhenOverrideIsPrivate_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "InvalidMethod",
+            IsVirtual = true,
+            IsOverride = true,
+            Privacity = SimPrivacity.Private
+        };
+
+        method.Validate();
+    }
+
+    [TestMethod]
+    public void Validate_WhenNotOverride_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "ValidMethod",
+            IsVirtual = false,
+            IsOverride = false,
+            Privacity = SimPrivacity.Private
+        };
+
+        method.Validate();
     }
 }
