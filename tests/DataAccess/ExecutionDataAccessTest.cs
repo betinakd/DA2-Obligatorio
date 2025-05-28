@@ -1341,4 +1341,60 @@ public class ExecutionDataAccessTest
 
         result.Should().BeFalse("Private methods in base class should not be overridable");
     }
+
+    [TestMethod]
+    public void FindSealedMethodInHierarchy_ReturnsNull_WhenClassDoesNotExist()
+    {
+        var nonExistentClassId = Guid.NewGuid();
+        var methodToCheck = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess.FindSealedMethodInHierarchy(nonExistentClassId, methodToCheck);
+
+        result.Should().BeNull("Method should return null when class doesn't exist");
+    }
+
+    [TestMethod]
+    public void FindSealedMethodInHierarchy_ReturnsSealedMethod_WhenFoundInGrandparentClass()
+    {
+        var grandparentClass = new SimClass { Name = "GrandparentClass" };
+        _context.SimClasses.Add(grandparentClass);
+        _context.SaveChanges();
+
+        var parentClass = new SimClass
+        {
+            Name = "ParentClass",
+            BaseClassId = grandparentClass.Id,
+            BaseClass = grandparentClass
+        };
+        _context.SimClasses.Add(parentClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = parentClass.Id,
+            BaseClass = parentClass
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var sealedMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = grandparentClass.Id,
+            RelatedClass = grandparentClass,
+            Accesibility = SimAccesibility.Sealed
+        };
+        grandparentClass.Methods.Add(sealedMethod);
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess.FindSealedMethodInHierarchy(childClass.Id, methodToCheck);
+
+        result.Should().NotBeNull("Method should find sealed method in grandparent class");
+        result.Id.Should().Be(sealedMethod.Id);
+        result.Accesibility.Should().Be(SimAccesibility.Sealed);
+    }
 }

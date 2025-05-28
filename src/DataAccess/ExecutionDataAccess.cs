@@ -149,6 +149,34 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         return false;
     }
 
+    public SimMethod FindSealedMethodInHierarchy(Guid classId, SimMethod methodToCheck)
+    {
+        var baseClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == classId))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return null;
+        }
+
+        var sealedMethod = baseClass.Methods.FirstOrDefault(m =>
+            m.EqualsWithoutReturnType(methodToCheck) &&
+            m.Accesibility == SimAccesibility.Sealed);
+
+        if(sealedMethod != null)
+        {
+            return sealedMethod;
+        }
+
+        if(baseClass.BaseClassId.HasValue)
+        {
+            return FindSealedMethodInHierarchy(baseClass.BaseClassId.Value, methodToCheck);
+        }
+
+        return null;
+    }
+
     public void SaveExecutionLog(ExecutionLog executionLog)
     {
         _context.ExecutionLogs.Add(executionLog);
