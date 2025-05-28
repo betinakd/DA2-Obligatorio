@@ -544,4 +544,31 @@ public class SimClassAdapterTest
         Assert.AreEqual("Invalid attribute detected", exception.Message);
         _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
     }
+
+    [TestMethod]
+    public void AddInterface_ShouldReturnSuccessResponse_WhenInterfaceIsAddedSuccessfully()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var simClass = new SimClass { Id = classId, Name = "UpdatedClass" };
+
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Returns(simClass);
+
+        var result = _simClassAdapter.AddInterface(classId, request);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Interface implemented successfully.", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
+
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
 }
