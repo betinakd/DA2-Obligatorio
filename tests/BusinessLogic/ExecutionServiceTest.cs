@@ -348,4 +348,58 @@ public class ExecutionServiceTest
 
         _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
     }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_NoBaseClassId_ReturnsFalse()
+    {
+        var refer = new SimClass { Id = Guid.NewGuid(), Name = "ReferClass" };
+        var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = null };
+
+        _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+
+        var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_BaseClassIdMatchesReferId_ReturnsTrue()
+    {
+        var refer = new SimClass { Id = Guid.NewGuid(), Name = "ReferClass" };
+        var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = refer.Id };
+
+        _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+
+        var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_RecursiveBaseClass_ReturnsTrue()
+    {
+        var refer = new SimClass { Id = Guid.NewGuid(), Name = "ReferClass" };
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass", BaseClassId = refer.Id };
+        var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = baseClass.Id };
+
+        var mockDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+
+        mockDataAccess
+            .Setup(m => m.GetFilteredClasses(It.Is<Func<IQueryable<SimClass>, IQueryable<SimClass>>>(f =>
+                f(new List<SimClass> { baseClass }.AsQueryable()).Any(c => c.Id == baseClass.Id))))
+            .Returns([baseClass]);
+
+        mockDataAccess
+            .Setup(m => m.GetFilteredClasses(It.Is<Func<IQueryable<SimClass>, IQueryable<SimClass>>>(f =>
+                f(new List<SimClass> { refer }.AsQueryable()).Any(c => c.Id == refer.Id))))
+            .Returns([refer]);
+
+        var service = new ExecutionService(mockDataAccess.Object);
+
+        var result = service.IsReferenceBaseOfInstance(refer, obj);
+
+        Assert.IsTrue(result);
+    }
 }

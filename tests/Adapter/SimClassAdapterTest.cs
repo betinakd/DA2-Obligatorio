@@ -3,6 +3,7 @@ using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
+using Domain.Exceptions;
 using IBusinessLogic;
 using Models.Enums;
 using Models.Request;
@@ -569,6 +570,90 @@ public class SimClassAdapterTest
         Assert.AreEqual(classId, result.SimClass.Id);
         Assert.AreEqual("UpdatedClass", result.SimClass.Name);
 
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowNonExistentValueAdapter_WhenInterfaceDoesNotExist()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new NonExistentValueLogic("Interface not found"));
+
+        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Interface not found", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowInUseValueAdapter_WhenInterfaceIsAlreadyInUse()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new InUseValueLogic("Interface is already in use"));
+
+        var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Interface is already in use", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicOccurs()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute detected"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Invalid attribute detected", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeDomainOccurs()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new InvalidAttributeDomain("Invalid domain attribute"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Invalid domain attribute", exception.Message);
         _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
     }
 }
