@@ -176,27 +176,6 @@ public class ExecutionServiceTest
     }
 
     [TestMethod]
-    public void MethodIsOverridingSealed_CallsDataAccess()
-    {
-        var classId = Guid.NewGuid();
-        var method = new SimMethod
-        {
-            Id = Guid.NewGuid(),
-            Name = "TestMethod",
-            Accesibility = SimAccesibility.Normal
-        };
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.CanOverride(classId, method))
-            .Returns(false)
-            .Verifiable();
-
-        _executionService!.MethodIsOverridingSealed(classId, method);
-
-        _mockExecuteDataAccess.Verify(m => m.CanOverride(classId, method), Times.Once());
-    }
-
-    [TestMethod]
     public void IsReferenceBaseOfInstance_SameClass_ReturnsTrue()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
@@ -270,5 +249,103 @@ public class ExecutionServiceTest
             .Returns(abstractMethod);
 
         _executionService!.ValidateMethodExistsInClass(simClass, signature, false);
+    }
+
+    [TestMethod]
+    public void ExecuteMethod_DynamicDispatch_UsesObjRealClass()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            IsVirtual = true,
+            Invocations = [],
+            RelatedClass = simClass,
+            RelatedClassId = simClass.Id
+        };
+
+        var innerMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "InnerMethod",
+            Invocations = [],
+            RelatedClass = simClass,
+            RelatedClassId = simClass.Id
+        };
+        var innerSignature = new Signature { Name = "InnerMethod", Parameters = [] };
+
+        var thisRef = new Mock<ReferenceThis>();
+        thisRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        thisRef.Setup(r => r.GetSignature(It.IsAny<Signature>())).Returns("this.Method()");
+        thisRef.Setup(r => r.GetSignatureWithClassName(It.IsAny<Signature>())).Returns("TestClass.Method()");
+
+        var invocation = new Invocation
+        {
+            Reference = thisRef.Object,
+            Signature = innerSignature
+        };
+        method.Invocations.Add(invocation);
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Returns(method);
+
+        _mockExecuteDataAccess
+            .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, It.IsAny<int>()))
+            .Returns(innerMethod);
+
+        var result = _executionService!.ExecuteMethod(thisRef.Object, thisRef.Object, signature);
+
+        Assert.IsTrue(result.Contains("TestClass.Method()"));
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationLogic))]
+    public void ExecuteMethod_PrivateMethodFromDifferentClass_ThrowsException()
+    {
+        var referenceClass = new SimClass { Id = Guid.NewGuid(), Name = "ReferenceClass" };
+        var objClass = new SimClass { Id = Guid.NewGuid(), Name = "ObjectClass" };
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "PrivateMethod",
+            Privacity = SimPrivacity.Private,
+            Invocations = []
+        };
+
+        var signature = new Signature { Name = "PrivateMethod", Parameters = [] };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(referenceClass);
+
+        var mockObjReal = new Mock<Reference>();
+        mockObjReal.Setup(r => r.GetSimClass()).Returns(objClass);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(referenceClass, signature, It.IsAny<int>()))
+            .Returns(method);
+
+        _executionService!.ExecuteMethod(mockRef.Object, mockObjReal.Object, signature);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationLogic))]
+    public void ExecuteMethod_MethodNotFound_ThrowsException()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "NonExistentMethod", Parameters = [] };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Returns((SimMethod?)null);
+
+        _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
     }
 }

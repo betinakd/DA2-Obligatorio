@@ -167,6 +167,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         if(!methodToCheck.IsVirtual)
         {
+            // If the method is not virtual, it cannot be sealed.
             return null;
         }
 

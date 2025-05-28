@@ -1196,8 +1196,7 @@ public class SimMethodServiceTest
         var service = new SimMethodService(
             Mock.Of<ISimMethodDataAccess>(),
             Mock.Of<ISimClassDataAccess>(),
-            mockExecutionDA.Object
-        );
+            mockExecutionDA.Object);
 
         service.IsValidVirtualOverride(idClass, method);
     }

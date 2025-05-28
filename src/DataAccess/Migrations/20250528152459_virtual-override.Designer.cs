@@ -4,6 +4,7 @@ using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    partial class SimulatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250528152459_virtual-override")]
+    partial class virtualoverride
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -486,9 +489,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-1111-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "Equals",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -498,9 +501,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-2222-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "Equals",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -510,9 +513,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-3333-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "Finalize",
                             Privacity = 1,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -522,9 +525,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-4444-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "GetHashCode",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -534,9 +537,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-5555-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "GetType",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -546,9 +549,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-6666-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "MemberwiseClone",
                             Privacity = 1,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -558,9 +561,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-7777-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "ReferenceEquals",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -570,9 +573,9 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-8888-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
+                            IsOverride = false,
                             IsStatic = false,
-                            IsVirtual = true,
+                            IsVirtual = false,
                             Name = "ToString",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
