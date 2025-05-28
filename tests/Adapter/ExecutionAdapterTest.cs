@@ -294,4 +294,122 @@ public class ExecutionAdapterTest
         Assert.AreEqual("transformado", result.TransformedResult);
         Assert.AreEqual("test", result.TransformerId);
     }
+
+    [TestMethod]
+    public void ExecuteMethodWithTransform_EmptyApiKey_ShouldThrowException()
+    {
+        var mockExecutionService = new Mock<IExecutionService>();
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockTransformerService = new Mock<ITransformerService>();
+
+        var paramTypeId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+        var instanceId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceId.ToString(),
+            IdReferenceType = referenceId.ToString(),
+            Parameters =
+            [
+                new ParameterRequest { Name = "param1", IdClassType = paramTypeId.ToString() }
+            ]
+        };
+
+        var simClass = new SimClass { Id = paramTypeId, Name = "ParamType", State = SimAccesibility.Normal };
+        var simReference = new SimClass { Id = referenceId, Name = "Ref", State = SimAccesibility.Normal };
+        var simInstance = new SimClass { Id = instanceId, Name = "Obj", State = SimAccesibility.Normal };
+
+        mockSimClassService.Setup(x => x.GetSimClassById(paramTypeId)).Returns(simClass);
+        mockSimClassService.Setup(x => x.GetSimClassById(referenceId)).Returns(simReference);
+        mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
+
+        mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
+        mockExecutionService.Setup(x => x.ExecuteMethod(It.IsAny<ReferenceThis>(), It.IsAny<ReferenceThis>(), It.IsAny<Signature>(), It.IsAny<int>(), It.IsAny<HashSet<Guid>>()))
+            .Returns("resultado");
+        mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+        var expectedResponse = new TransformedResponse
+        {
+            OriginalResult = "resultado",
+            TransformedResult = "transformado",
+            ContentType = "text/plain",
+            TransformerId = "test"
+        };
+        mockTransformerService.Setup(x => x.TransformExecution("resultado", "test")).Returns(expectedResponse);
+
+        var adapter = new ExecutionAdapter(
+            mockExecutionService.Object,
+            mockSimClassService.Object,
+            mockTransformerService.Object);
+
+        var invalidKey = Guid.Empty;
+        mockExecutionService.Setup(x => x.IsAuthorizedUser(invalidKey)).Returns(false);
+
+        var ex = Assert.ThrowsException<InvalidApikeyAdapter>(() =>
+        {
+            adapter.ExecuteMethodWithTransform(invalidKey, request, "test");
+        });
+        Assert.AreEqual("API Key inválida o ausente", ex.Message);
+    }
+
+    [TestMethod]
+    public void ExecuteMethodWithTransform_InvalidApiKey_ShouldThrowException()
+    {
+        var mockExecutionService = new Mock<IExecutionService>();
+        var mockSimClassService = new Mock<ISimClassService>();
+        var mockTransformerService = new Mock<ITransformerService>();
+
+        var paramTypeId = Guid.NewGuid();
+        var referenceId = Guid.NewGuid();
+        var instanceId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceId.ToString(),
+            IdReferenceType = referenceId.ToString(),
+            Parameters =
+            [
+                new ParameterRequest { Name = "param1", IdClassType = paramTypeId.ToString() }
+            ]
+        };
+
+        var simClass = new SimClass { Id = paramTypeId, Name = "ParamType", State = SimAccesibility.Normal };
+        var simReference = new SimClass { Id = referenceId, Name = "Ref", State = SimAccesibility.Normal };
+        var simInstance = new SimClass { Id = instanceId, Name = "Obj", State = SimAccesibility.Normal };
+
+        mockSimClassService.Setup(x => x.GetSimClassById(paramTypeId)).Returns(simClass);
+        mockSimClassService.Setup(x => x.GetSimClassById(referenceId)).Returns(simReference);
+        mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
+
+        mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
+        mockExecutionService.Setup(x => x.ExecuteMethod(It.IsAny<ReferenceThis>(), It.IsAny<ReferenceThis>(), It.IsAny<Signature>(), It.IsAny<int>(), It.IsAny<HashSet<Guid>>()))
+            .Returns("resultado");
+        mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+        var expectedResponse = new TransformedResponse
+        {
+            OriginalResult = "resultado",
+            TransformedResult = "transformado",
+            ContentType = "text/plain",
+            TransformerId = "test"
+        };
+        mockTransformerService.Setup(x => x.TransformExecution("resultado", "test")).Returns(expectedResponse);
+
+        var adapter = new ExecutionAdapter(
+            mockExecutionService.Object,
+            mockSimClassService.Object,
+            mockTransformerService.Object);
+
+        var invalidKey = Guid.NewGuid();
+        mockExecutionService.Setup(x => x.IsAuthorizedUser(invalidKey)).Returns(false);
+
+        var ex = Assert.ThrowsException<InvalidApikeyAdapter>(() =>
+        {
+            adapter.ExecuteMethodWithTransform(invalidKey, request, "test");
+        });
+        Assert.AreEqual("API Key inválida o ausente", ex.Message);
+    }
 }
