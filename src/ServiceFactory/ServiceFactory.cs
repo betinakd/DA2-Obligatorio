@@ -26,6 +26,7 @@ public static class SimulatorServiceFactory
         services.AddScoped<ISimAttributeDataAccess, SimAttributeDataAccess>();
         services.AddScoped<IExecutionAdapter, ExecutionAdapter>();
         services.AddScoped<IExecutionService, ExecutionService>();
+        services.AddScoped<IApikeyDataAccess, ApikeyDataAccess>();
         services.AddScoped<IExecutionDataAccess, ExecutionDataAccess>();
         services.AddDbContext<DbContext, SimulatorDbContext>(options =>
             options.UseSqlServer(connectionString, sqlOptions =>
