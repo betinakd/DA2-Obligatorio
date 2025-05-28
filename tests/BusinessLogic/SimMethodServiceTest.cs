@@ -1200,4 +1200,114 @@ public class SimMethodServiceTest
 
         service.IsValidVirtualOverride(idClass, method);
     }
+
+    [TestMethod]
+    public void MethodInheritsAttribute_Returns_WhenParameterTypeInheritsAttribute()
+    {
+        var methodClassId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var parameterTypeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
+            Parameters = [
+                new Parameter
+            {
+                Id = Guid.NewGuid(),
+                Name = "param1",
+                TypeId = parameterTypeId,
+                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+            }
+
+            ],
+            LocalVariables = []
+        };
+
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "AttributeClass" },
+            RelatedClassId = attributeId
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(parameterTypeId, attributeId, 0))
+            .Returns(true);
+
+        _simMethodService!.MethodInheritsAttribute(method, attribute);
+    }
+
+    [TestMethod]
+    public void MethodInheritsAttribute_Returns_WhenLocalVariableTypeInheritsAttribute()
+    {
+        var methodClassId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+        var variableTypeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
+            Parameters = [],
+            LocalVariables = [
+                new LocalVariable
+            {
+                Id = Guid.NewGuid(),
+                Name = "localVar1",
+                TypeId = variableTypeId,
+                Type = new SimClass { Id = variableTypeId, Name = "VarType" }
+            }
+
+            ]
+        };
+
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "AttributeClass" },
+            RelatedClassId = attributeId
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(variableTypeId, attributeId, 0))
+            .Returns(true);
+
+        _simMethodService!.MethodInheritsAttribute(method, attribute);
+    }
+
+    [TestMethod]
+    public void MethodInheritsAttribute_Returns_WhenMethodClassInheritsAttribute()
+    {
+        var methodClassId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
+            Parameters = [],
+            LocalVariables = []
+        };
+
+        var attribute = new SimAttribute
+        {
+            Id = attributeId,
+            Name = "TestAttribute",
+            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "AttributeClass" },
+            RelatedClassId = attributeId
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(methodClassId, attributeId, 0))
+            .Returns(true);
+
+        _simMethodService!.MethodInheritsAttribute(method, attribute);
+    }
 }
