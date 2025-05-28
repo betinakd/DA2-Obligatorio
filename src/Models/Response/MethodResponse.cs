@@ -20,4 +20,6 @@ public class MethodResponse()
     public List<VariableResponse> Variables { get; set; } = [];
     public List<InvocationResponse> Invocations { get; set; } = [];
     public bool IsStatic { get; set; }
+    public bool IsVirtual { get; set; }
+    public bool IsOverride { get; set; }
 }

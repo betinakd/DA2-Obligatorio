@@ -654,4 +654,175 @@ public class SimMethodTest
         Assert.IsFalse(methodInterface.IsStatic);
         Assert.IsFalse(methodSealed.IsStatic);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsVirtual_WhenSetToTrueWithStaticMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = true
+        };
+
+        method.IsVirtual = true;
+    }
+
+    [TestMethod]
+    public void IsVirtual_WhenSetToTrueWithNonStaticMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = false
+        };
+
+        method.IsVirtual = true;
+
+        Assert.IsTrue(method.IsVirtual);
+    }
+
+    [TestMethod]
+    public void IsVirtual_WhenSetToFalse_ShouldNotThrowExceptionRegardlessOfStaticFlag()
+    {
+        var staticMethod = new SimMethod { IsStatic = true };
+        var nonStaticMethod = new SimMethod { IsStatic = false };
+
+        staticMethod.IsVirtual = false;
+        nonStaticMethod.IsVirtual = false;
+
+        Assert.IsFalse(staticMethod.IsVirtual);
+        Assert.IsFalse(nonStaticMethod.IsVirtual);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsVirtual_WhenSetToTrueWithInterfaceMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Interface
+        };
+
+        method.IsVirtual = true;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void IsOverride_WhenSetToTrueWithStaticMethod_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = true
+        };
+
+        method.IsOverride = true;
+    }
+
+    [TestMethod]
+    public void IsOverride_WhenSetToTrueWithNonStaticMethod_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsStatic = false,
+            IsVirtual = true
+        };
+
+        method.IsOverride = true;
+
+        Assert.IsTrue(method.IsOverride);
+    }
+
+    [TestMethod]
+    public void IsOverride_WhenSetToFalse_ShouldNotThrowExceptionRegardlessOfStaticFlag()
+    {
+        var staticMethod = new SimMethod { IsStatic = true };
+        var nonStaticMethod = new SimMethod { IsStatic = false };
+
+        staticMethod.IsOverride = false;
+        nonStaticMethod.IsOverride = false;
+
+        Assert.IsFalse(staticMethod.IsOverride);
+        Assert.IsFalse(nonStaticMethod.IsOverride);
+    }
+
+    [TestMethod]
+    public void Validate_WhenMethodIsCorrectlyConfigured_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "ValidMethod",
+            IsVirtual = true,
+            IsOverride = true,
+            Privacity = SimPrivacity.Public
+        };
+
+        method.Validate();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Validate_WhenOverrideIsNotVirtual_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "InvalidMethod",
+            IsVirtual = false,
+            IsOverride = true
+        };
+
+        method.Validate();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Validate_WhenOverrideIsPrivate_ShouldThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "InvalidMethod",
+            IsVirtual = true,
+            IsOverride = true,
+            Privacity = SimPrivacity.Private
+        };
+
+        method.Validate();
+    }
+
+    [TestMethod]
+    public void Validate_WhenNotOverride_ShouldNotThrowException()
+    {
+        var method = new SimMethod
+        {
+            Name = "ValidMethod",
+            IsVirtual = false,
+            IsOverride = false,
+            Privacity = SimPrivacity.Private
+        };
+
+        method.Validate();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Parameters_WhenSettingDuplicateParameterNames_ShouldThrowException()
+    {
+        var typeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod"
+        };
+
+        var parameters = new List<Parameter>
+    {
+        new Parameter { Name = "param1", TypeId = typeId },
+        new Parameter { Name = "Param1", TypeId = typeId } // Duplicado (case-insensitive)
+    };
+
+        method.Parameters = parameters;
+    }
 }

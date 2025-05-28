@@ -50,7 +50,30 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ReturnType = returnType,
                 ReturnTypeId = returnType.Id,
                 IsStatic = method.IsStatic,
+                IsVirtual = method.IsVirtual,
+                IsOverride = method.IsOverride,
             };
+
+            newMethod.Validate();
+            var index = 0;
+            var parmeters = new List<Parameter>();
+            foreach(var parameter in method.Parameters)
+            {
+                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                parmeters.Add(new Parameter
+                {
+                    Id = Guid.NewGuid(),
+                    Name = parameter.Name,
+                    Type = type,
+                    TypeId = type.Id,
+                    RelatedMethod = newMethod,
+                    RelatedMethodId = newMethod.Id,
+                    Index = index
+                });
+                index++;
+            }
+
+            newMethod.Parameters = parmeters;
 
             var createdMethod = _methodService.AddMethod(idClass, newMethod);
 

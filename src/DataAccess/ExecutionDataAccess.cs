@@ -105,32 +105,87 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 simMethod.MatchSignature(i.Signature) && isAccessible));
     }
 
-    public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
+    public bool CanOverride(Guid classId, SimMethod methodToOverride)
     {
-        var ownerClass = GetFilteredClasses(query =>
-            query.Where(c => c.Id == idClass))
-            .FirstOrDefault();
-
-        if(ownerClass == null)
+        if(methodToOverride == null)
         {
             return false;
         }
 
-        if(ownerClass.Methods.Any(m =>
-            m.Accesibility == SimAccesibility.Sealed && m.Equals(methodSim)))
+        if(!methodToOverride.IsOverride)
         {
             return true;
         }
 
-        if(ownerClass.BaseClassId.HasValue)
+        var currentClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == classId))
+            .FirstOrDefault();
+
+        if(currentClass == null || !currentClass.BaseClassId.HasValue)
         {
-            if(ownerClass.BaseClassId.Value != idClass)
-            {
-                return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
-            }
+            return false;
+        }
+
+        var baseClassId = currentClass.BaseClassId.Value;
+        var baseClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == baseClassId))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        var baseMethod = baseClass.Methods.FirstOrDefault(m =>
+            m.Equals(methodToOverride) &&
+            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
+            (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
+
+        if(baseMethod != null)
+        {
+            return true;
+        }
+
+        if(baseClass.BaseClassId.HasValue && baseClass.BaseClassId.Value != baseClassId)
+        {
+            return CanOverride(baseClass.Id, methodToOverride);
         }
 
         return false;
+    }
+
+    public SimMethod FindSealedMethodInHierarchy(Guid classId, SimMethod methodToCheck)
+    {
+        var baseClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == classId))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return null;
+        }
+
+        if(!methodToCheck.IsVirtual)
+        {
+            // If the method is not virtual, it cannot be sealed.
+            return null;
+        }
+
+        var sealedMethod = baseClass.Methods.FirstOrDefault(m =>
+            m.Equals(methodToCheck) &&
+            m.Accesibility == SimAccesibility.Sealed);
+
+        if(sealedMethod != null)
+        {
+            return sealedMethod;
+        }
+
+        if(baseClass.BaseClassId.HasValue)
+        {
+            return FindSealedMethodInHierarchy(baseClass.BaseClassId.Value, methodToCheck);
+        }
+
+        return null;
     }
 
     public void SaveExecutionLog(ExecutionLog executionLog)

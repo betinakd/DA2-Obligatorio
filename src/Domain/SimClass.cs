@@ -8,6 +8,7 @@ public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private List<SimMethod> _methods = [];
+
     public List<SimMethod> Methods
     {
         get => _methods;

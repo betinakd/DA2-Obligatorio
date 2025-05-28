@@ -45,12 +45,58 @@ public class SimMethod
         }
     }
 
+    private bool _isVirtual = false;
+    public bool IsVirtual
+    {
+        get => _isVirtual;
+        set
+        {
+            if(value && IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be virtual.");
+            }
+
+            if(value && Accesibility == SimAccesibility.Interface)
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot be virtual.");
+            }
+
+            _isVirtual = value;
+        }
+    }
+
+    private bool _isOverride = false;
+    public bool IsOverride
+    {
+        get => _isOverride;
+        set
+        {
+            if(value && IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot override other methods.");
+            }
+
+            _isOverride = value;
+        }
+    }
+
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters
     {
         get => _parameters;
         set
         {
+            var duplicateNames = value
+                .GroupBy(p => p.Name.ToLower())
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if(duplicateNames.Any())
+            {
+                throw new InvalidAttributeDomain($"Method cannot have parameters with the same name: {string.Join(", ", duplicateNames)}");
+            }
+
             _parameters = value;
         }
     }
@@ -184,5 +230,23 @@ public class SimMethod
     public override int GetHashCode()
     {
         throw new NotImplementedException();
+    }
+
+    public void Validate()
+    {
+        if(IsOverride && !IsVirtual)
+        {
+            throw new InvalidAttributeDomain("Only virtual methods can be overridden.");
+        }
+
+        if(IsOverride && Privacity == SimPrivacity.Private)
+        {
+            throw new InvalidAttributeDomain("Override methods cannot be private.");
+        }
+
+        if(Accesibility == SimAccesibility.Abstract && (IsStatic || IsVirtual || IsOverride))
+        {
+            throw new InvalidAttributeDomain("Abstract methods cannot be static, virtual or override.");
+        }
     }
 }

@@ -10,11 +10,11 @@ using Models.Response;
 
 namespace Adapter;
 
-public class SimClassAdapter(ISimClassService simClassService, IExecutionService executionService)
+public class SimClassAdapter(ISimClassService simClassService, IMethodService methodService)
     : ISimClassAdapter
 {
     private readonly ISimClassService _simClassService = simClassService;
-    private readonly IExecutionService _executionService = executionService;
+    private readonly IMethodService _methodService = methodService;
 
     public IList<SimClassResponse> GetAllSimClasses()
     {
@@ -95,7 +95,9 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     RelatedClassId = idSimClass,
                     ReturnTypeId = method.ReturnTypeId,
                     RelatedClass = classToUpdate,
-                    IsStatic = method.IsStatic
+                    IsStatic = method.IsStatic,
+                    IsVirtual = method.IsVirtual,
+                    IsOverride = method.IsOverride,
                 };
 
                 var parametersNewClass = new List<Parameter>();
@@ -116,8 +118,9 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     parametersNewClass.Add(newParam);
                 }
 
-                _executionService.MethodIsOverridingSealed(idSimClass, newMethod);
                 newMethod.Parameters = parametersNewClass;
+                newMethod.Validate();
+                _methodService.IsValidVirtualOverride(idSimClass, newMethod);
                 methodsNewClass.Add(newMethod);
             }
 

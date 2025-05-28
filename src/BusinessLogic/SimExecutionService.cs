@@ -13,10 +13,44 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
     public string ExecuteMethod(Reference reference, Reference objReal, Signature signature, int level = 0, HashSet<Guid>? visited = null)
     {
         visited ??= [];
+
+        SimClass referenceClass = reference.GetSimClass();
+        SimMethod? staticMethod = _executionDA.FindMethodInHierarchy(referenceClass, signature);
+
+        if(staticMethod == null)
+        {
+            throw new InvalidOperationLogic($"Method not executable from reference.");
+        }
+
+        var useDynamicDispatch = staticMethod.Accesibility == SimAccesibility.Abstract || staticMethod.IsVirtual;
+
+        return ExecuteMethodInternal(reference, objReal, signature, level, visited, useDynamicDispatch);
+    }
+
+    private string ExecuteMethodInternal(Reference reference, Reference objReal, Signature signature, int level, HashSet<Guid> visited, bool useDynamicDispatch)
+    {
         var identation = new string(' ', level * 4);
 
-        SimClass objClass = objReal.GetSimClass();
-        SimMethod? methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
+        SimMethod? methodToExecute;
+
+        if(useDynamicDispatch)
+        {
+            SimClass objClass = objReal.GetSimClass();
+            methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
+        }
+        else
+        {
+            SimClass referenceClass = reference.GetSimClass();
+            methodToExecute = _executionDA.FindMethodInHierarchy(referenceClass, signature);
+
+            SimClass objClass = objReal.GetSimClass();
+            if(methodToExecute != null &&
+               methodToExecute.Privacity == SimPrivacity.Private &&
+               referenceClass.Id != objClass.Id)
+            {
+                throw new InvalidOperationLogic($"Private method '{signature.Name}' not accessible from this context.");
+            }
+        }
 
         if(methodToExecute == null)
         {
@@ -28,12 +62,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
             return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
         }
 
-        var result = $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
-
-        if(level == 0)
-        {
-            result = $"{identation}{reference.GetSignatureWithClassName(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
-        }
+        var result = level == 0
+            ? $"{identation}{reference.GetSignatureWithClassName(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n"
+            : $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
 
         visited.Add(methodToExecute.Id);
 
@@ -61,11 +92,6 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         {
             throw new InvalidAttributeLogic($"Cannot add an abstract method to execute Method {methodName.Name}");
         }
-    }
-
-    public void MethodIsOverridingSealed(Guid idClass, SimMethod method)
-    {
-        _executionDA.MethodIsOverridingSealed(idClass, method);
     }
 
     public void SaveExecutionLog(string reference, string objCreate, string execution)

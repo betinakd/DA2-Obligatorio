@@ -23,6 +23,8 @@ public class MethodResponseMapper
             ReturnTypeId = domainMethod.ReturnTypeId,
             Privacity = EnumMapper.MapToModelPrivacity(domainMethod.Privacity),
             Accesibility = EnumMapper.MapToModelAccesibility(domainMethod.Accesibility),
+            IsVirtual = domainMethod.IsVirtual,
+            IsOverride = domainMethod.IsOverride,
             Parameters = domainMethod.Parameters.Select(p => new ParameterResponse
             {
                 Id = p.Id,
