@@ -681,7 +681,9 @@ public class ExecutionDataAccessTest
         var methodToCheck = new SimMethod
         {
             Name = "SealedMethod",
-            Parameters = [paramToCheck]
+            Parameters = [paramToCheck],
+            IsVirtual = true,
+            IsOverride = true
         };
 
         var result = _executionDataAccess.MethodIsOverridingSealed(simClass.Id, methodToCheck);
@@ -743,7 +745,9 @@ public class ExecutionDataAccessTest
         var methodToCheck = new SimMethod
         {
             Name = "SealedMethod",
-            Parameters = [paramToCheck]
+            Parameters = [paramToCheck],
+            IsVirtual = true,
+            IsOverride = true
         };
 
         var result = _executionDataAccess.MethodIsOverridingSealed(childClass.Id, methodToCheck);
@@ -814,7 +818,9 @@ public class ExecutionDataAccessTest
         var methodToCheck = new SimMethod
         {
             Name = "SealedMethod",
-            Parameters = [paramToCheck]
+            Parameters = [paramToCheck],
+            IsVirtual = true,
+            IsOverride = true
         };
 
         var result = _executionDataAccess.MethodIsOverridingSealed(childClass.Id, methodToCheck);
