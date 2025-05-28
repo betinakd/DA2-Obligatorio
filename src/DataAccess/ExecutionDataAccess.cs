@@ -112,6 +112,11 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return false;
         }
 
+        if(!methodToOverride.IsOverride)
+        {
+            return true;
+        }
+
         var currentClass = GetFilteredClasses(query =>
             query.Where(c => c.Id == classId))
             .FirstOrDefault();
@@ -132,7 +137,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         }
 
         var baseMethod = baseClass.Methods.FirstOrDefault(m =>
-            m.EqualsWithoutReturnType(methodToOverride) &&
+            m.Equals(methodToOverride) &&
             (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
             (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
 
@@ -160,8 +165,13 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return null;
         }
 
+        if(!methodToCheck.IsVirtual)
+        {
+            return null;
+        }
+
         var sealedMethod = baseClass.Methods.FirstOrDefault(m =>
-            m.EqualsWithoutReturnType(methodToCheck) &&
+            m.Equals(methodToCheck) &&
             m.Accesibility == SimAccesibility.Sealed);
 
         if(sealedMethod != null)

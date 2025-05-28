@@ -1117,7 +1117,13 @@ public class ExecutionDataAccessTest
     public void CanOverride_ReturnsFalse_WhenClassDoesNotExist()
     {
         var nonExistentClassId = Guid.NewGuid();
-        var method = new SimMethod { Name = "TestMethod" };
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            IsOverride = true,
+            Privacity = SimPrivacity.Public
+        };
 
         var result = _executionDataAccess.CanOverride(nonExistentClassId, method);
 
@@ -1131,7 +1137,12 @@ public class ExecutionDataAccessTest
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
-        var method = new SimMethod { Name = "TestMethod" };
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            IsOverride = true,
+        };
 
         var result = _executionDataAccess.CanOverride(simClass.Id, method);
 
@@ -1150,7 +1161,12 @@ public class ExecutionDataAccessTest
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
-        var method = new SimMethod { Name = "TestMethod" };
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            IsOverride = true,
+        };
 
         var result = _executionDataAccess.CanOverride(simClass.Id, method);
 
@@ -1258,13 +1274,19 @@ public class ExecutionDataAccessTest
             RelatedClassId = grandparentClass.Id,
             RelatedClass = grandparentClass,
             IsVirtual = true,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
+            IsOverride = true,
         };
         grandparentClass.Methods.Add(grandparentMethod);
         _context.SimMethods.Add(grandparentMethod);
         _context.SaveChanges();
 
-        var methodToOverride = new SimMethod { Name = "TestMethod" };
+        var methodToOverride = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            IsOverride = true,
+        };
 
         var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
 
@@ -1294,13 +1316,13 @@ public class ExecutionDataAccessTest
             RelatedClass = baseClass,
             IsVirtual = false,
             Accesibility = SimAccesibility.Normal,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         baseClass.Methods.Add(baseMethod);
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
 
-        var methodToOverride = new SimMethod { Name = "TestMethod" };
+        var methodToOverride = new SimMethod { Name = "TestMethod", IsVirtual = true, IsOverride = true };
 
         var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
 
@@ -1335,7 +1357,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
 
-        var methodToOverride = new SimMethod { Name = "TestMethod" };
+        var methodToOverride = new SimMethod { Name = "TestMethod", IsVirtual = true, IsOverride = true };
 
         var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
 
@@ -1389,7 +1411,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(sealedMethod);
         _context.SaveChanges();
 
-        var methodToCheck = new SimMethod { Name = "TestMethod" };
+        var methodToCheck = new SimMethod { Name = "TestMethod", IsVirtual = true, IsOverride = false };
 
         var result = _executionDataAccess.FindSealedMethodInHierarchy(childClass.Id, methodToCheck);
 
