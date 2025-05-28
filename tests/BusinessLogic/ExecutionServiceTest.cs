@@ -402,4 +402,25 @@ public class ExecutionServiceTest
 
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void ValidateMethodExistsInClass_AbstractMethodWithIsNotAbstractTrue_Throws()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "AbstractMethod", Parameters = [] };
+        var abstractMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "AbstractMethod",
+            RelatedClass = simClass,
+            Accesibility = SimAccesibility.Abstract
+        };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0))
+            .Returns(abstractMethod);
+
+        _executionService!.ValidateMethodExistsInClass(simClass, signature, true);
+    }
 }
