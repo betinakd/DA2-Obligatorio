@@ -333,4 +333,33 @@ public class ExecutionServiceTest
         Assert.IsFalse(result);
         _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(apiKey), Times.Once);
     }
+
+    [TestMethod]
+    public void IsAuthorizedUser_NonExistentApiKey_ReturnsFalse()
+    {
+        var apiKey = Guid.NewGuid();
+
+        _mockApikeyDataAccess!
+            .Setup(m => m.ApiKeyExists(apiKey))
+            .Returns(false);
+
+        var result = _executionService.IsAuthorizedUser(apiKey);
+
+        Assert.IsFalse(result);
+        _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(apiKey), Times.Once);
+    }
+
+    [TestMethod]
+    public void IsAuthorizedUser_ValidCase_ReturnsTrue()
+    {
+        var validApikey = new Guid("77777777-aaaa-1111-1111-111111111111");
+        _mockApikeyDataAccess!
+            .Setup(m => m.ApiKeyExists(validApikey))
+            .Returns(true);
+
+        var result = _executionService.IsAuthorizedUser(validApikey);
+
+        Assert.IsTrue(result);
+        _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(validApikey), Times.Once);
+    }
 }
