@@ -27,4 +27,10 @@ public class MethodRequest()
 
     [JsonRequired]
     public bool IsStatic { get; set; }
+
+    [JsonRequired]
+    public bool IsVirtual { get; set; }
+
+    [JsonRequired]
+    public bool IsOverride { get; set; }
 }

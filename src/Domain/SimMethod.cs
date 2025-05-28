@@ -232,5 +232,10 @@ public class SimMethod
         {
             throw new InvalidAttributeDomain("Override methods cannot be private.");
         }
+
+        if(Accesibility == SimAccesibility.Abstract && (IsStatic || IsVirtual || IsOverride))
+        {
+            throw new InvalidAttributeDomain("Interface methods cannot be static, virtual or override.");
+        }
     }
 }

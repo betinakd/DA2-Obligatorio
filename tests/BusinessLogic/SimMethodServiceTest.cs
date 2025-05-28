@@ -145,7 +145,7 @@ public class SimMethodServiceTest
             .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
             .Verifiable();
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(classId, method))
+            .Setup(m => m.CanOverride(classId, method))
             .Returns(false);
         var result = _simMethodService!.AddMethod(classId, method);
 
@@ -546,7 +546,7 @@ public class SimMethodServiceTest
             .Setup(m => m.CreateMethod(idClass, method))
             .Returns(method);
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(idClass, method))
+            .Setup(m => m.CanOverride(idClass, method))
             .Returns(false);
         _simMethodService!.AddMethod(idClass, method);
 
@@ -582,7 +582,7 @@ public class SimMethodServiceTest
             .Setup(m => m.CreateMethod(idClass, method))
             .Returns(method);
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(idClass, method))
+            .Setup(m => m.CanOverride(idClass, method))
             .Returns(false);
         _simMethodService!.AddMethod(idClass, method);
 
@@ -618,7 +618,7 @@ public class SimMethodServiceTest
             .Setup(m => m.CreateMethod(idClass, method))
             .Returns(method);
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(idClass, method))
+            .Setup(m => m.CanOverride(idClass, method))
             .Returns(false);
         _mockSimClassDataAccess!
             .Setup(m => m.UpdateSimClass(It.IsAny<SimClass>()))
@@ -683,12 +683,12 @@ public class SimMethodServiceTest
             .Returns(false);
 
         _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(classId, method))
+            .Setup(m => m.CanOverride(classId, method))
             .Returns(true);
 
         _simMethodService!.AddMethod(classId, method);
 
-        _mockExectuionDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once);
+        _mockExectuionDataAccess.Verify(m => m.CanOverride(classId, method), Times.Once);
     }
 
     [TestMethod]

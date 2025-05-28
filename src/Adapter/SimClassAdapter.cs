@@ -95,8 +95,12 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     RelatedClassId = idSimClass,
                     ReturnTypeId = method.ReturnTypeId,
                     RelatedClass = classToUpdate,
-                    IsStatic = method.IsStatic
+                    IsStatic = method.IsStatic,
+                    IsVirtual = method.IsVirtual,
+                    IsOverride = method.IsOverride,
                 };
+
+                newMethod.Validate();
 
                 var parametersNewClass = new List<Parameter>();
                 var index = 0;

@@ -65,7 +65,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
     public void MethodIsOverridingSealed(Guid idClass, SimMethod method)
     {
-        _executionDA.MethodIsOverridingSealed(idClass, method);
+        _executionDA.CanOverride(idClass, method);
     }
 
     public void SaveExecutionLog(string reference, string objCreate, string execution)

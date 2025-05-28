@@ -187,13 +187,13 @@ public class ExecutionServiceTest
         };
 
         _mockExecuteDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(classId, method))
+            .Setup(m => m.CanOverride(classId, method))
             .Returns(false)
             .Verifiable();
 
         _executionService!.MethodIsOverridingSealed(classId, method);
 
-        _mockExecuteDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once());
+        _mockExecuteDataAccess.Verify(m => m.CanOverride(classId, method), Times.Once());
     }
 
     [TestMethod]

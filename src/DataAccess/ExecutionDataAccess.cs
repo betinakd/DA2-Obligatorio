@@ -105,39 +105,45 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 simMethod.MatchSignature(i.Signature) && isAccessible));
     }
 
-    public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
+    public bool CanOverride(Guid classId, SimMethod methodToOverride)
     {
-        if(methodSim == null)
+        if(methodToOverride == null)
         {
             return false;
         }
 
-        if(!methodSim.IsOverride)
-        {
-            return false;
-        }
-
-        var ownerClass = GetFilteredClasses(query =>
-            query.Where(c => c.Id == idClass))
+        var currentClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == classId))
             .FirstOrDefault();
 
-        if(ownerClass == null)
+        if(currentClass == null || !currentClass.BaseClassId.HasValue)
         {
             return false;
         }
 
-        if(ownerClass.Methods.Any(m =>
-            m.Accesibility == SimAccesibility.Sealed && m.Equals(methodSim)))
+        var baseClassId = currentClass.BaseClassId.Value;
+        var baseClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == baseClassId))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        var baseMethod = baseClass.Methods.FirstOrDefault(m =>
+            m.EqualsWithoutReturnType(methodToOverride) &&
+            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
+            (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
+
+        if(baseMethod != null)
         {
             return true;
         }
 
-        if(ownerClass.BaseClassId.HasValue)
+        if(baseClass.BaseClassId.HasValue && baseClass.BaseClassId.Value != baseClassId)
         {
-            if(ownerClass.BaseClassId.Value != idClass)
-            {
-                return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
-            }
+            return CanOverride(baseClass.Id, methodToOverride);
         }
 
         return false;

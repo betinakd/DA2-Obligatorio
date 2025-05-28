@@ -50,7 +50,11 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 ReturnType = returnType,
                 ReturnTypeId = returnType.Id,
                 IsStatic = method.IsStatic,
+                IsVirtual = method.IsVirtual,
+                IsOverride = method.IsOverride,
             };
+
+            newMethod.Validate();
 
             var createdMethod = _methodService.AddMethod(idClass, newMethod);
 
