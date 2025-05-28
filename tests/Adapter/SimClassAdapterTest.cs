@@ -15,15 +15,15 @@ namespace Tests.Adapter;
 public class SimClassAdapterTest
 {
     private Mock<ISimClassService>? _mockSimClassService;
-    private Mock<IExecutionService>? _mockExecutionService;
+    private Mock<IMethodService>? _mockMethodService;
     private SimClassAdapter? _simClassAdapter;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
     }
 
     [TestMethod]
@@ -263,8 +263,8 @@ public class SimClassAdapterTest
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -295,8 +295,8 @@ public class SimClassAdapterTest
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Sealed };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -326,8 +326,8 @@ public class SimClassAdapterTest
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -389,8 +389,8 @@ public class SimClassAdapterTest
         var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -400,8 +400,8 @@ public class SimClassAdapterTest
             .Setup(s => s.GetSimClassById(objTypeId))
             .Returns(objectClass);
 
-        _mockExecutionService
-            .Setup(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()));
+        _mockMethodService
+            .Setup(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()));
 
         _mockSimClassService
             .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
@@ -417,7 +417,7 @@ public class SimClassAdapterTest
         Assert.AreEqual("UpdatedClass", result.SimClass.Name);
 
         _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-        _mockExecutionService.Verify(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()), Times.Once);
+        _mockMethodService.Verify(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()), Times.Once);
     }
 
     [TestMethod]
@@ -438,8 +438,8 @@ public class SimClassAdapterTest
         var objectClass = new SimClass { Id = objectId, Name = "Object" };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Default);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Default);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Default);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(objectId))

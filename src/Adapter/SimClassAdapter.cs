@@ -10,11 +10,11 @@ using Models.Response;
 
 namespace Adapter;
 
-public class SimClassAdapter(ISimClassService simClassService, IExecutionService executionService)
+public class SimClassAdapter(ISimClassService simClassService, IMethodService methodService)
     : ISimClassAdapter
 {
     private readonly ISimClassService _simClassService = simClassService;
-    private readonly IExecutionService _executionService = executionService;
+    private readonly IMethodService _methodService = methodService;
 
     public IList<SimClassResponse> GetAllSimClasses()
     {
@@ -100,8 +100,6 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     IsOverride = method.IsOverride,
                 };
 
-                newMethod.Validate();
-
                 var parametersNewClass = new List<Parameter>();
                 var index = 0;
                 foreach(var param in method.Parameters)
@@ -120,8 +118,9 @@ public class SimClassAdapter(ISimClassService simClassService, IExecutionService
                     parametersNewClass.Add(newParam);
                 }
 
-                _executionService.MethodIsOverridingSealed(idSimClass, newMethod);
                 newMethod.Parameters = parametersNewClass;
+                newMethod.Validate();
+                _methodService.IsValidVirtualOverride(idSimClass, newMethod);
                 methodsNewClass.Add(newMethod);
             }
 
