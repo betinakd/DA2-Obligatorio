@@ -1177,4 +1177,28 @@ public class SimMethodServiceTest
 
         _simMethodService!.MethodInheritsAttribute(method, attribute);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void IsValidVirtualOverride_ShouldThrowException_WhenCanOverrideIsFalse()
+    {
+        var idClass = Guid.NewGuid();
+        var method = new SimMethod { Name = "TestMethod" };
+
+        var mockExecutionDA = new Mock<IExecutionDataAccess>(MockBehavior.Strict);
+        mockExecutionDA
+            .Setup(m => m.FindSealedMethodInHierarchy(idClass, method))
+            .Returns((SimMethod?)null);
+        mockExecutionDA
+            .Setup(m => m.CanOverride(idClass, method))
+            .Returns(false);
+
+        var service = new SimMethodService(
+            Mock.Of<ISimMethodDataAccess>(),
+            Mock.Of<ISimClassDataAccess>(),
+            mockExecutionDA.Object
+        );
+
+        service.IsValidVirtualOverride(idClass, method);
+    }
 }
