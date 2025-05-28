@@ -453,4 +453,65 @@ public class SimClassAdapterTest
         Assert.IsNotNull(result);
         _mockSimClassService.Verify(s => s.GetSimClassById(objectId), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldProcessImplementsCorrectly()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+        var interfaceId1 = Guid.NewGuid();
+        var interfaceId2 = Guid.NewGuid();
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = [],
+            Implements =
+        [
+            new InterfaceRequestUpdate { IdInterface = interfaceId1.ToString() },
+            new InterfaceRequestUpdate { IdInterface = interfaceId2.ToString() }
+        ]
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
+        var interfaceClass1 = new SimClass { Id = interfaceId1, Name = "Interface1", State = SimAccesibility.Interface };
+        var interfaceClass2 = new SimClass { Id = interfaceId2, Name = "Interface2", State = SimAccesibility.Interface };
+        var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(interfaceId1))
+            .Returns(interfaceClass1);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(interfaceId2))
+            .Returns(interfaceClass2);
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Returns(updatedClass);
+
+        var result = _simClassAdapter.UpdateSimClass(request, classId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Class updated successfully", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
+
+        _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(interfaceId1), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(interfaceId2), Times.Once);
+        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
 }
