@@ -514,4 +514,34 @@ public class SimClassAdapterTest
         _mockSimClassService.Verify(s => s.GetSimClassById(interfaceId2), Times.Once);
         _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
     }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicOccurs()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "InvalidClassName",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = []
+        };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute detected"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.UpdateSimClass(request, classId));
+
+        Assert.AreEqual("Invalid attribute detected", exception.Message);
+        _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
+    }
 }
