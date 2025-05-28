@@ -805,4 +805,24 @@ public class SimMethodTest
 
         method.Validate();
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Parameters_WhenSettingDuplicateParameterNames_ShouldThrowException()
+    {
+        var typeId = Guid.NewGuid();
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod"
+        };
+
+        var parameters = new List<Parameter>
+    {
+        new Parameter { Name = "param1", TypeId = typeId },
+        new Parameter { Name = "Param1", TypeId = typeId } // Duplicado (case-insensitive)
+    };
+
+        method.Parameters = parameters;
+    }
 }

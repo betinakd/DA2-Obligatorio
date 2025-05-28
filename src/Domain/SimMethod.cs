@@ -86,6 +86,17 @@ public class SimMethod
         get => _parameters;
         set
         {
+            var duplicateNames = value
+                .GroupBy(p => p.Name.ToLower())
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if(duplicateNames.Any())
+            {
+                throw new InvalidAttributeDomain($"Method cannot have parameters with the same name: {string.Join(", ", duplicateNames)}");
+            }
+
             _parameters = value;
         }
     }
@@ -235,7 +246,7 @@ public class SimMethod
 
         if(Accesibility == SimAccesibility.Abstract && (IsStatic || IsVirtual || IsOverride))
         {
-            throw new InvalidAttributeDomain("Interface methods cannot be static, virtual or override.");
+            throw new InvalidAttributeDomain("Abstract methods cannot be static, virtual or override.");
         }
     }
 }
