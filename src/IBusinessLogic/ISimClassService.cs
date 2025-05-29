@@ -12,4 +12,5 @@ public interface ISimClassService
     void DeleteSimClass(Guid id);
     SimClass AddInterface(Guid id, Guid interfaceId);
     public void ClassInheritAttribute(Guid idClass, Guid idAttribute);
+    void ValidPolymorphism(SimClass type, SimClass instance);
 }

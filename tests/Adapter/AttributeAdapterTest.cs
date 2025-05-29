@@ -274,6 +274,8 @@ public class AttributeAdapterTest
         _mockSimClassService!.Setup(s => s.GetSimClassById(classId)).Returns(relatedClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(typeId)).Returns(typeClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(instanceId)).Returns(instanceClass);
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
 
         _mockSimAttributeService!.Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
             .Throws(new InvalidAttributeDomain("Test domain validation error"));
@@ -376,6 +378,9 @@ public class AttributeAdapterTest
             .Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
             .Returns(updatedSimAttribute);
 
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
+
         var result = _simAttributeAdapter!.UpdateAttribute(attributeRequest);
 
         _mockSimClassService.Verify(s => s.GetSimClassById(relatedClassId), Times.Once);
@@ -420,7 +425,8 @@ public class AttributeAdapterTest
         _mockSimClassService!.Setup(s => s.GetSimClassById(relatedClassId)).Returns(relatedClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(typeId)).Returns(typeClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(instanceId)).Returns(instanceClass);
-
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
         _mockSimAttributeService!.Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
             .Throws(new InUseValueLogic("Attribute in use"));
 
@@ -453,7 +459,7 @@ public class AttributeAdapterTest
         _mockSimClassService!.Setup(s => s.GetSimClassById(relatedClassId)).Returns(relatedClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(typeId)).Returns(typeClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(instanceId)).Returns(instanceClass);
-
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
         _mockSimAttributeService!.Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
             .Throws(new InvalidAttributeLogic("Test logic validation error"));
 
