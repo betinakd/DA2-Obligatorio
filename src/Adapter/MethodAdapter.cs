@@ -131,6 +131,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
         try
         {
             var type = _simClassService.GetSimClassById(variable.ReferenceId);
+            var instance = _simClassService.GetSimClassById(variable.InstanceId);
             var method = _methodService.GetMethodById(idMethod);
             var localVariable = new LocalVariable()
             {
@@ -139,7 +140,9 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Reference = type,
                 ReferenceId = type.Id,
                 RelatedMethod = method,
-                RelatedMethodId = idMethod
+                RelatedMethodId = idMethod,
+                Instance = instance,
+                InstanceId = instance.Id
             };
             var newAttribute = _methodService.AddLocalVariable(idMethod, localVariable);
             var response = new CreatedVariableResponse

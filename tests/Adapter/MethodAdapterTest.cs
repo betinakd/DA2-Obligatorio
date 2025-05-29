@@ -93,30 +93,33 @@ public class MethodAdapterTest
     {
         var methodId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
+        var instanceId = Guid.NewGuid();
         var variableName = "ValidVariable";
 
         var request = new VariablesRequest
         {
             Name = variableName,
-            IdReference = classTypeId.ToString()
+            IdReference = classTypeId.ToString(),
+            IdInstance = instanceId.ToString()
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "string" };
+        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass" };
         var method = new SimMethod { Id = methodId, Name = "TestMethod" };
-        var localVariable = new VariablesRequest
-        {
-            Name = variableName,
-            IdReference = classTypeId.ToString()
-        };
         var localVar = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = variableName,
             Reference = simClass,
-            RelatedMethod = method
+            ReferenceId = classTypeId,
+            RelatedMethod = method,
+            RelatedMethodId = methodId,
+            Instance = instanceClass,
+            InstanceId = instanceId
         };
 
         _mockSimClassService.Setup(s => s.GetSimClassById(classTypeId)).Returns(simClass);
+        _mockSimClassService.Setup(s => s.GetSimClassById(instanceId)).Returns(instanceClass);
         _mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockMethodService.Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>())).Returns(localVar);
 
@@ -124,11 +127,12 @@ public class MethodAdapterTest
 
         var result = adapter.CreateVariable(methodId, request);
 
-        result.Should().NotBeNull();
-        result.Message.Should().Be("Variable created successfully");
-        result.Variable.Name.Should().Be(variableName);
-        result.Variable.MethodId.Should().Be(methodId);
-        result.Variable.ReferenceId.Should().Be(classTypeId);
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Variable created successfully", result.Message);
+        Assert.IsNotNull(result.Variable);
+        Assert.AreEqual(variableName, result.Variable.Name);
+        Assert.AreEqual(methodId, result.Variable.MethodId);
+        Assert.AreEqual(classTypeId, result.Variable.ReferenceId);
     }
 
     [TestMethod]
