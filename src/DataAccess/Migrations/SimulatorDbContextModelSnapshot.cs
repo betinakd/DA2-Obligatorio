@@ -22,6 +22,33 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.ApiKey", b =>
+                {
+                    b.Property<Guid>("KeyValue")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("KeyValue");
+
+                    b.ToTable("ApiKeys");
+
+                    b.HasData(
+                        new
+                        {
+                            KeyValue = new Guid("77777777-aaaa-1111-1111-111111111111"),
+                            Name = "validKey_1"
+                        },
+                        new
+                        {
+                            KeyValue = new Guid("77777777-bbbb-1111-1111-111111111111"),
+                            Name = "validKey_2"
+                        });
+                });
+
             modelBuilder.Entity("Domain.ExecutionLog", b =>
                 {
                     b.Property<Guid>("Id")

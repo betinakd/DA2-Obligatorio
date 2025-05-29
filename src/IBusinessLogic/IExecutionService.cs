@@ -8,4 +8,5 @@ public interface IExecutionService
     void ValidateMethodExistsInClass(SimClass classId, Signature methodName, bool isNotAbstract);
     public void SaveExecutionLog(string reference, string objCreate, string execution);
     bool IsReferenceBaseOfInstance(SimClass refer, SimClass obj);
+    public bool IsAuthorizedUser(Guid apiKey);
 }
