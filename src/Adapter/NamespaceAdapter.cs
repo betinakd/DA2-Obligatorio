@@ -15,10 +15,13 @@ public class NamespaceAdapter(INamespaceService namespaceService) : INamespaceAd
         {
             Id = newNamespace.Id,
             Name = newNamespace.Name,
-            BaseNamespaceId = namespaceRequest.BaseNamespaceId,
-            Classes = [],
-            Interfaces = []
         };
+        if(namespaceRequest.BaseNamespaceId != null)
+        {
+            var baseName = _namespaceService.GetNamespaceById(namespaceRequest.BaseNamespaceId);
+            response.BaseNamespaceId = newNamespace.BaseNamespaceId;
+            response.BaseNamespaceName = baseName.Name;
+        }
 
         return response;
     }
