@@ -13,4 +13,6 @@ public class AttributeResponse()
     public SimModelsPrivacity Privacity { get; set; }
 
     public Guid? RelatedClassId { get; set; }
+
+    public bool IsStatic { get; set; }
 }

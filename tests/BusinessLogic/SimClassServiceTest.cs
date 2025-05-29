@@ -514,4 +514,49 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(interfaceId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(It.IsAny<SimClass>()), Times.Never);
     }
+
+    [TestMethod]
+    public void ClassInheritAttribute_AttributeInherited_DoesNotThrowException()
+    {
+        var classId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
+            .Returns(true);
+
+        _simClassService!.ClassInheritAttribute(classId, attributeId);
+
+        _mockSimClassDataAccess.Verify(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void ClassInheritAttribute_AttributeNotInherited_ThrowsNonExistentValueLogic()
+    {
+        var classId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
+            .Returns(false);
+
+        _simClassService!.ClassInheritAttribute(classId, attributeId);
+    }
+
+    [TestMethod]
+    public void ClassInheritAttribute_VerifiesExceptionMessage()
+    {
+        var classId = Guid.NewGuid();
+        var attributeId = Guid.NewGuid();
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
+            .Returns(false);
+
+        var exception = Assert.ThrowsException<NonExistentValueLogic>(
+            () => _simClassService!.ClassInheritAttribute(classId, attributeId));
+
+        Assert.AreEqual("Attribute not reacheable from method.", exception.Message);
+    }
 }

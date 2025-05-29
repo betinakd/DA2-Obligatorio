@@ -424,11 +424,22 @@ public class SimMethodDataAccessTest
     {
         var parameterId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var type = new SimClass { Id = typeId, Name = "ParameterType" };
+        _context.SimClasses.Add(type);
+
+        var method = new SimMethod { Id = methodId, Name = "TestMethod" };
+        _context.SimMethods.Add(method);
+
         var parameter = new Parameter
         {
             Id = parameterId,
             Name = "TestParameter",
-            RelatedMethodId = methodId
+            RelatedMethodId = methodId,
+            TypeId = typeId,
+            Type = type,
+            RelatedMethod = method
         };
         _context.Parameters.Add(parameter);
         _context.SaveChanges();
@@ -1011,5 +1022,127 @@ public class SimMethodDataAccessTest
         var refThis = result.Reference as ReferenceThis;
         Assert.IsNotNull(refThis!.Reference);
         Assert.AreEqual(simClass.Name, refThis.Reference.Name);
+    }
+
+    [TestMethod]
+    public void MethodInUseByInvocations_ReturnsTrue_WhenMethodSignatureMatches()
+    {
+        var methodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        var simClass = new SimClass { Id = classId, Name = "TestClass" };
+        _context.SimClasses.Add(typeClass);
+        _context.SimClasses.Add(simClass);
+
+        var parameter = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Index = 0,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.ParameterSignatures.Add(parameter);
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            Parameters = [parameter]
+        };
+        _context.Signatures.Add(signature);
+
+        var referenceThis = new ReferenceThis { Id = Guid.NewGuid(), Reference = simClass };
+        _context.References.Add(referenceThis);
+
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethodId = methodId,
+            Reference = referenceThis,
+            Signature = signature
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "TestMethod",
+            Parameters = [new Parameter { Name = "param1", TypeId = typeId, Type = typeClass, Index = 0 }]
+        };
+
+        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void MethodInUseByInvocations_ReturnsFalse_WhenMethodSignatureDoesNotMatch()
+    {
+        var methodId = Guid.NewGuid();
+        var classId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        var simClass = new SimClass { Id = classId, Name = "TestClass" };
+        _context.SimClasses.Add(typeClass);
+        _context.SimClasses.Add(simClass);
+
+        var parameter = new ParameterSignature
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            Index = 0,
+            TypeId = typeId,
+            Type = typeClass
+        };
+        _context.ParameterSignatures.Add(parameter);
+
+        var signature = new Signature
+        {
+            Id = Guid.NewGuid(),
+            Name = "DifferentMethod",
+            Parameters = [parameter]
+        };
+        _context.Signatures.Add(signature);
+
+        var referenceThis = new ReferenceThis { Id = Guid.NewGuid(), Reference = simClass };
+        _context.References.Add(referenceThis);
+
+        var invocation = new Invocation
+        {
+            Id = Guid.NewGuid(),
+            RelatedMethodId = methodId,
+            Reference = referenceThis,
+            Signature = signature
+        };
+        _context.Invocations.Add(invocation);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod
+        {
+            Name = "TestMethod",
+            Parameters = [new Parameter { Name = "param1", TypeId = typeId, Type = typeClass, Index = 0 }]
+        };
+
+        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void MethodInUseByInvocations_ReturnsFalse_WhenNoInvocationsExist()
+    {
+        var methodToCheck = new SimMethod
+        {
+            Name = "TestMethod",
+            Parameters = []
+        };
+
+        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck);
+
+        Assert.IsFalse(result);
     }
 }

@@ -13,17 +13,88 @@ public class SimMethod
     public Guid RelatedClassId { get; set; }
 
     public SimClass RelatedClass { get; set; } = null!;
-    public SimPrivacity Privacity { get; set; }
-    public SimAccesibility Accesibility { get; set; }
+    public SimPrivacity Privacity { get; set; } = SimPrivacity.Public;
+    private SimAccesibility _accesibility = SimAccesibility.Normal;
+
+    public SimAccesibility Accesibility
+    {
+        get => _accesibility;
+        set
+        {
+            if(IsStatic && value != SimAccesibility.Normal)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be Abstract, Interface, Sealed accessibility.");
+            }
+
+            _accesibility = value;
+        }
+    }
+
+    private bool _isStatic = false;
+    public bool IsStatic
+    {
+        get => _isStatic;
+        set
+        {
+            if(value && Accesibility != SimAccesibility.Normal)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be Abstract, Interface or Sealed accessibility.");
+            }
+
+            _isStatic = value;
+        }
+    }
+
+    private bool _isVirtual = false;
+    public bool IsVirtual
+    {
+        get => _isVirtual;
+        set
+        {
+            if(value && IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot be virtual.");
+            }
+
+            if(value && Accesibility == SimAccesibility.Interface)
+            {
+                throw new InvalidAttributeDomain("Interface methods cannot be virtual.");
+            }
+
+            _isVirtual = value;
+        }
+    }
+
+    private bool _isOverride = false;
+    public bool IsOverride
+    {
+        get => _isOverride;
+        set
+        {
+            if(value && IsStatic)
+            {
+                throw new InvalidAttributeDomain("Static methods cannot override other methods.");
+            }
+
+            _isOverride = value;
+        }
+    }
+
     private List<Parameter> _parameters = [];
     public List<Parameter> Parameters
     {
         get => _parameters;
         set
         {
-            if(Accesibility == SimAccesibility.Interface && value.Any())
+            var duplicateNames = value
+                .GroupBy(p => p.Name.ToLower())
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if(duplicateNames.Any())
             {
-                throw new InvalidAttributeDomain("Interface methods cannot have parameters.");
+                throw new InvalidAttributeDomain($"Method cannot have parameters with the same name: {string.Join(", ", duplicateNames)}");
             }
 
             _parameters = value;
@@ -54,6 +125,11 @@ public class SimMethod
             if(Accesibility == SimAccesibility.Interface && value.Any())
             {
                 throw new InvalidAttributeDomain("Interface methods cannot have invocations.");
+            }
+
+            if(IsStatic && value.Any(i => i.Reference.GetReferenceTypeDescription() != "Static" && i.Reference.GetReferenceTypeDescription() != "StaticAttribute"))
+            {
+                throw new InvalidAttributeDomain("Static methods cannot have non-static invocations.");
             }
 
             _invocations = value;
@@ -154,5 +230,23 @@ public class SimMethod
     public override int GetHashCode()
     {
         throw new NotImplementedException();
+    }
+
+    public void Validate()
+    {
+        if(IsOverride && !IsVirtual)
+        {
+            throw new InvalidAttributeDomain("Only virtual methods can be overridden.");
+        }
+
+        if(IsOverride && Privacity == SimPrivacity.Private)
+        {
+            throw new InvalidAttributeDomain("Override methods cannot be private.");
+        }
+
+        if(Accesibility == SimAccesibility.Abstract && (IsStatic || IsVirtual || IsOverride))
+        {
+            throw new InvalidAttributeDomain("Abstract methods cannot be static, virtual or override.");
+        }
     }
 }

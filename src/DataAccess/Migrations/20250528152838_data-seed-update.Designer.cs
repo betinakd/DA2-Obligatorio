@@ -4,6 +4,7 @@ using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    partial class SimulatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250528152838_data-seed-update")]
+    partial class dataseedupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,33 +24,6 @@ namespace DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.ApiKey", b =>
-                {
-                    b.Property<Guid>("KeyValue")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("KeyValue");
-
-                    b.ToTable("ApiKeys");
-
-                    b.HasData(
-                        new
-                        {
-                            KeyValue = new Guid("77777777-aaaa-1111-1111-111111111111"),
-                            Name = "validKey_1"
-                        },
-                        new
-                        {
-                            KeyValue = new Guid("77777777-bbbb-1111-1111-111111111111"),
-                            Name = "validKey_2"
-                        });
-                });
 
             modelBuilder.Entity("Domain.ExecutionLog", b =>
                 {

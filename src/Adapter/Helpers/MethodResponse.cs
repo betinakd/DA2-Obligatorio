@@ -3,8 +3,9 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
-public static class MethodResponseMapper
+public class MethodResponseMapper
 {
     public static MethodResponse MapToMethodResponse(SimMethod domainMethod)
     {
@@ -18,9 +19,12 @@ public static class MethodResponseMapper
             Id = domainMethod.Id,
             Name = domainMethod.Name,
             IdClassOwner = domainMethod.RelatedClassId,
+            IsStatic = domainMethod.IsStatic,
             ReturnTypeId = domainMethod.ReturnTypeId,
             Privacity = EnumMapper.MapToModelPrivacity(domainMethod.Privacity),
             Accesibility = EnumMapper.MapToModelAccesibility(domainMethod.Accesibility),
+            IsVirtual = domainMethod.IsVirtual,
+            IsOverride = domainMethod.IsOverride,
             Parameters = domainMethod.Parameters.Select(p => new ParameterResponse
             {
                 Id = p.Id,

@@ -4,7 +4,7 @@ using Models.Response;
 
 namespace Adapter.Helpers;
 [ExcludeFromCodeCoverage]
-public static class ParameterResponseMapper
+public class ParameterResponseMapper
 {
     public static ParameterResponse MapToParameterResponse(Parameter domainParameter)
     {

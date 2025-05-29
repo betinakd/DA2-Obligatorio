@@ -7,8 +7,8 @@ public class Parameter
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
-    public SimClass? Type { get; set; }
-    public Guid? TypeId { get; set; }
+    public SimClass Type { get; set; } = null!;
+    public Guid TypeId { get; set; } = Guid.Empty;
     public Guid? RelatedMethodId { get; set; }
     public SimMethod? RelatedMethod { get; set; }
     public int Index { get; set; } = 0;

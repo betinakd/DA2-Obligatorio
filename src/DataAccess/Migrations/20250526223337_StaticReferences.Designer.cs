@@ -4,6 +4,7 @@ using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    partial class SimulatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250526223337_StaticReferences")]
+    partial class StaticReferences
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,33 +24,6 @@ namespace DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.ApiKey", b =>
-                {
-                    b.Property<Guid>("KeyValue")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("KeyValue");
-
-                    b.ToTable("ApiKeys");
-
-                    b.HasData(
-                        new
-                        {
-                            KeyValue = new Guid("77777777-aaaa-1111-1111-111111111111"),
-                            Name = "validKey_1"
-                        },
-                        new
-                        {
-                            KeyValue = new Guid("77777777-bbbb-1111-1111-111111111111"),
-                            Name = "validKey_2"
-                        });
-                });
 
             modelBuilder.Entity("Domain.ExecutionLog", b =>
                 {
@@ -116,7 +92,7 @@ namespace DataAccess.Migrations
                     b.Property<Guid?>("RelatedMethodId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TypeId")
+                    b.Property<Guid?>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -146,7 +122,7 @@ namespace DataAccess.Migrations
                     b.Property<Guid?>("RelatedMethodId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TypeId")
+                    b.Property<Guid?>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -478,13 +454,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("Accesibility")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsOverride")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsStatic")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVirtual")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -513,9 +483,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-1111-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "Equals",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -525,9 +493,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-2222-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "Equals",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -537,9 +503,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-3333-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "Finalize",
                             Privacity = 1,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -549,9 +513,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-4444-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "GetHashCode",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -561,9 +523,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-5555-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "GetType",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -573,9 +533,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-6666-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "MemberwiseClone",
                             Privacity = 1,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -585,9 +543,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-7777-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "ReferenceEquals",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -597,9 +553,7 @@ namespace DataAccess.Migrations
                         {
                             Id = new Guid("55555555-8888-1111-1111-111111111111"),
                             Accesibility = 2,
-                            IsOverride = true,
                             IsStatic = false,
-                            IsVirtual = true,
                             Name = "ToString",
                             Privacity = 2,
                             RelatedClassId = new Guid("11111111-1111-1111-1111-111111111111"),
@@ -769,8 +723,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Domain.SimClass", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("RelatedMethod");
 
@@ -787,8 +740,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Domain.SimClass", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("RelatedMethod");
 

@@ -383,4 +383,33 @@ public class AttributeAdapterTest
 
         _simAttributeAdapter!.UpdateAttribute(attributeRequest);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void UpdateAttribute_ThrowsInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
+    {
+        var attributeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var attributeRequest = new AttributeRequestUpdate
+        {
+            Id = attributeId.ToString(),
+            Name = "TestAttribute",
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            IdRelatedClass = relatedClassId.ToString(),
+            IdType = typeId.ToString()
+        };
+
+        var relatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+
+        _mockSimClassService!.Setup(s => s.GetSimClassById(relatedClassId)).Returns(relatedClass);
+        _mockSimClassService.Setup(s => s.GetSimClassById(typeId)).Returns(typeClass);
+
+        _mockSimAttributeService!.Setup(s => s.UpdateAttribute(attributeId, It.IsAny<SimAttribute>()))
+            .Throws(new InvalidAttributeLogic("Test logic validation error"));
+
+        _simAttributeAdapter!.UpdateAttribute(attributeRequest);
+    }
 }

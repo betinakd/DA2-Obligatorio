@@ -105,62 +105,87 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 simMethod.MatchSignature(i.Signature) && isAccessible));
     }
 
-    public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0)
+    public bool CanOverride(Guid classId, SimMethod methodToOverride)
     {
-        var currentClass = _context.SimClasses
-            .Include(c => c.Attributes)
-            .Include(c => c.BaseClass)
-            .FirstOrDefault(c => c.Id == classId);
-
-        if(currentClass == null)
+        if(methodToOverride == null)
         {
             return false;
         }
 
-        if(currentClass.Attributes.Any(a => a.Id == attributeId) && level == 0)
+        if(!methodToOverride.IsOverride)
         {
             return true;
         }
 
-        if(currentClass.Attributes.Any(a => a.Id == attributeId && (a.Privacity == SimPrivacity.Public || a.Privacity == SimPrivacity.Protected)) && level != 0)
+        var currentClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == classId))
+            .FirstOrDefault();
+
+        if(currentClass == null || !currentClass.BaseClassId.HasValue)
+        {
+            return false;
+        }
+
+        var baseClassId = currentClass.BaseClassId.Value;
+        var baseClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == baseClassId))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        var baseMethod = baseClass.Methods.FirstOrDefault(m =>
+            m.Equals(methodToOverride) &&
+            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
+            (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
+
+        if(baseMethod != null)
         {
             return true;
         }
 
-        if(currentClass.BaseClassId.HasValue)
+        if(baseClass.BaseClassId.HasValue && baseClass.BaseClassId.Value != baseClassId)
         {
-            return ClassInheritAttribute(currentClass.BaseClassId.Value, attributeId, level + 1);
+            return CanOverride(baseClass.Id, methodToOverride);
         }
 
         return false;
     }
 
-    public bool MethodIsOverridingSealed(Guid idClass, SimMethod methodSim)
+    public SimMethod FindSealedMethodInHierarchy(Guid classId, SimMethod methodToCheck)
     {
-        var ownerClass = GetFilteredClasses(query =>
-            query.Where(c => c.Id == idClass))
+        var baseClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == classId))
             .FirstOrDefault();
 
-        if(ownerClass == null)
+        if(baseClass == null)
         {
-            return false;
+            return null;
         }
 
-        if(ownerClass.Methods.Any(m =>
-            m.Accesibility == SimAccesibility.Sealed && m.Equals(methodSim)))
+        if(!methodToCheck.IsVirtual)
         {
-            return true;
+            // If the method is not virtual, it cannot be sealed.
+            return null;
         }
 
-        if(ownerClass.BaseClassId.HasValue)
+        var sealedMethod = baseClass.Methods.FirstOrDefault(m =>
+            m.Equals(methodToCheck) &&
+            m.Accesibility == SimAccesibility.Sealed);
+
+        if(sealedMethod != null)
         {
-            if(ownerClass.BaseClassId.Value != idClass)
-            {
-                return MethodIsOverridingSealed(ownerClass.BaseClassId.Value, methodSim);
-            }
+            return sealedMethod;
         }
 
-        return false;
+        if(baseClass.BaseClassId.HasValue)
+        {
+            return FindSealedMethodInHierarchy(baseClass.BaseClassId.Value, methodToCheck);
+        }
+
+        return null;
     }
 
     public void SaveExecutionLog(ExecutionLog executionLog)
@@ -222,6 +247,12 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 break;
             case ReferenceThis rt:
                 _context.Entry(rt).Reference(r => r.Reference).Load();
+                break;
+            case ReferenceStaticAttribute rsa:
+                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                break;
+            case ReferenceStatic rsv:
+                _context.Entry(rsv).Reference(r => r.Reference).Load();
                 break;
         }
     }

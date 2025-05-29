@@ -155,51 +155,6 @@ public class ExecutionServiceTest
     }
 
     [TestMethod]
-    public void ClassInheritAttribute_AttributeInherited_DoesNotThrowException()
-    {
-        var classId = Guid.NewGuid();
-        var attributeId = Guid.NewGuid();
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
-            .Returns(true);
-
-        _executionService!.ClassInheritAttribute(classId, attributeId);
-
-        _mockExecuteDataAccess.Verify(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()), Times.Once);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(NonExistentValueLogic))]
-    public void ClassInheritAttribute_AttributeNotInherited_ThrowsNonExistentValueLogic()
-    {
-        var classId = Guid.NewGuid();
-        var attributeId = Guid.NewGuid();
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
-            .Returns(false);
-
-        _executionService!.ClassInheritAttribute(classId, attributeId);
-    }
-
-    [TestMethod]
-    public void ClassInheritAttribute_VerifiesExceptionMessage()
-    {
-        var classId = Guid.NewGuid();
-        var attributeId = Guid.NewGuid();
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.ClassInheritAttribute(classId, attributeId, It.IsAny<int>()))
-            .Returns(false);
-
-        var exception = Assert.ThrowsException<NonExistentValueLogic>(
-            () => _executionService!.ClassInheritAttribute(classId, attributeId));
-
-        Assert.AreEqual("Attribute not reacheable from method.", exception.Message);
-    }
-
-    [TestMethod]
     public void SaveExecutionLog_CreatesLogAndCallsDataAccess()
     {
         var reference = "TestClass";
@@ -220,27 +175,6 @@ public class ExecutionServiceTest
             log.ObjectCreate == objCreate &&
             log.Execution == execution)),
             Times.Once());
-    }
-
-    [TestMethod]
-    public void MethodIsOverridingSealed_CallsDataAccess()
-    {
-        var classId = Guid.NewGuid();
-        var method = new SimMethod
-        {
-            Id = Guid.NewGuid(),
-            Name = "TestMethod",
-            Accesibility = SimAccesibility.Normal
-        };
-
-        _mockExecuteDataAccess!
-            .Setup(m => m.MethodIsOverridingSealed(classId, method))
-            .Returns(false)
-            .Verifiable();
-
-        _executionService!.MethodIsOverridingSealed(classId, method);
-
-        _mockExecuteDataAccess.Verify(m => m.MethodIsOverridingSealed(classId, method), Times.Once());
     }
 
     [TestMethod]
@@ -361,5 +295,178 @@ public class ExecutionServiceTest
 
         Assert.IsTrue(result);
         _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(validApikey), Times.Once);
+    }
+
+    [TestMethod]  
+    public void ExecuteMethod_DynamicDispatch_UsesObjRealClass()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            IsVirtual = true,
+            Invocations = [],
+            RelatedClass = simClass,
+            RelatedClassId = simClass.Id
+        };
+
+        var innerMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "InnerMethod",
+            Invocations = [],
+            RelatedClass = simClass,
+            RelatedClassId = simClass.Id
+        };
+        var innerSignature = new Signature { Name = "InnerMethod", Parameters = [] };
+
+        var thisRef = new Mock<ReferenceThis>();
+        thisRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        thisRef.Setup(r => r.GetSignature(It.IsAny<Signature>())).Returns("this.Method()");
+        thisRef.Setup(r => r.GetSignatureWithClassName(It.IsAny<Signature>())).Returns("TestClass.Method()");
+
+        var invocation = new Invocation
+        {
+            Reference = thisRef.Object,
+            Signature = innerSignature
+        };
+        method.Invocations.Add(invocation);
+
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Returns(method);
+
+        _mockExecuteDataAccess
+            .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, It.IsAny<int>()))
+            .Returns(innerMethod);
+
+        var result = _executionService!.ExecuteMethod(thisRef.Object, thisRef.Object, signature);
+
+        Assert.IsTrue(result.Contains("TestClass.Method()"));
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationLogic))]
+    public void ExecuteMethod_PrivateMethodFromDifferentClass_ThrowsException()
+    {
+        var referenceClass = new SimClass { Id = Guid.NewGuid(), Name = "ReferenceClass" };
+        var objClass = new SimClass { Id = Guid.NewGuid(), Name = "ObjectClass" };
+
+        var method = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "PrivateMethod",
+            Privacity = SimPrivacity.Private,
+            Invocations = []
+        };
+
+        var signature = new Signature { Name = "PrivateMethod", Parameters = [] };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(referenceClass);
+
+        var mockObjReal = new Mock<Reference>();
+        mockObjReal.Setup(r => r.GetSimClass()).Returns(objClass);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(referenceClass, signature, It.IsAny<int>()))
+            .Returns(method);
+
+        _executionService!.ExecuteMethod(mockRef.Object, mockObjReal.Object, signature);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationLogic))]
+    public void ExecuteMethod_MethodNotFound_ThrowsException()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "NonExistentMethod", Parameters = [] };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Returns((SimMethod?)null);
+
+        _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_NoBaseClassId_ReturnsFalse()
+    {
+        var refer = new SimClass { Id = Guid.NewGuid(), Name = "ReferClass" };
+        var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = null };
+
+        _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+
+        var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_BaseClassIdMatchesReferId_ReturnsTrue()
+    {
+        var refer = new SimClass { Id = Guid.NewGuid(), Name = "ReferClass" };
+        var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = refer.Id };
+
+        _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+
+        var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsReferenceBaseOfInstance_RecursiveBaseClass_ReturnsTrue()
+    {
+        var refer = new SimClass { Id = Guid.NewGuid(), Name = "ReferClass" };
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass", BaseClassId = refer.Id };
+        var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = baseClass.Id };
+
+        var mockDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
+
+        mockDataAccess
+            .Setup(m => m.GetFilteredClasses(It.Is<Func<IQueryable<SimClass>, IQueryable<SimClass>>>(f =>
+                f(new List<SimClass> { baseClass }.AsQueryable()).Any(c => c.Id == baseClass.Id))))
+            .Returns([baseClass]);
+
+        mockDataAccess
+            .Setup(m => m.GetFilteredClasses(It.Is<Func<IQueryable<SimClass>, IQueryable<SimClass>>>(f =>
+                f(new List<SimClass> { refer }.AsQueryable()).Any(c => c.Id == refer.Id))))
+            .Returns([refer]);
+
+        var service = new ExecutionService(mockDataAccess.Object);
+
+        var result = service.IsReferenceBaseOfInstance(refer, obj);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void ValidateMethodExistsInClass_AbstractMethodWithIsNotAbstractTrue_Throws()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "AbstractMethod", Parameters = [] };
+        var abstractMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "AbstractMethod",
+            RelatedClass = simClass,
+            Accesibility = SimAccesibility.Abstract
+        };
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0))
+            .Returns(abstractMethod);
+
+        _executionService!.ValidateMethodExistsInClass(simClass, signature, true);
     }
 }

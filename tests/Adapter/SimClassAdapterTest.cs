@@ -3,6 +3,7 @@ using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
+using Domain.Exceptions;
 using IBusinessLogic;
 using Models.Enums;
 using Models.Request;
@@ -15,15 +16,15 @@ namespace Tests.Adapter;
 public class SimClassAdapterTest
 {
     private Mock<ISimClassService>? _mockSimClassService;
-    private Mock<IExecutionService>? _mockExecutionService;
+    private Mock<IMethodService>? _mockMethodService;
     private SimClassAdapter? _simClassAdapter;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
     }
 
     [TestMethod]
@@ -263,8 +264,8 @@ public class SimClassAdapterTest
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -295,8 +296,8 @@ public class SimClassAdapterTest
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Sealed };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -326,8 +327,8 @@ public class SimClassAdapterTest
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -389,8 +390,8 @@ public class SimClassAdapterTest
         var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(baseClassId))
@@ -400,8 +401,8 @@ public class SimClassAdapterTest
             .Setup(s => s.GetSimClassById(objTypeId))
             .Returns(objectClass);
 
-        _mockExecutionService
-            .Setup(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()));
+        _mockMethodService
+            .Setup(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()));
 
         _mockSimClassService
             .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
@@ -417,7 +418,7 @@ public class SimClassAdapterTest
         Assert.AreEqual("UpdatedClass", result.SimClass.Name);
 
         _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-        _mockExecutionService.Verify(s => s.MethodIsOverridingSealed(classId, It.IsAny<SimMethod>()), Times.Once);
+        _mockMethodService.Verify(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()), Times.Once);
     }
 
     [TestMethod]
@@ -438,8 +439,8 @@ public class SimClassAdapterTest
         var objectClass = new SimClass { Id = objectId, Name = "Object" };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Default);
-        _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Default);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockExecutionService.Object);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Default);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
             .Setup(s => s.GetSimClassById(objectId))
@@ -452,5 +453,207 @@ public class SimClassAdapterTest
 
         Assert.IsNotNull(result);
         _mockSimClassService.Verify(s => s.GetSimClassById(objectId), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldProcessImplementsCorrectly()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+        var interfaceId1 = Guid.NewGuid();
+        var interfaceId2 = Guid.NewGuid();
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = [],
+            Implements =
+        [
+            new InterfaceRequestUpdate { IdInterface = interfaceId1.ToString() },
+            new InterfaceRequestUpdate { IdInterface = interfaceId2.ToString() }
+        ]
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
+        var interfaceClass1 = new SimClass { Id = interfaceId1, Name = "Interface1", State = SimAccesibility.Interface };
+        var interfaceClass2 = new SimClass { Id = interfaceId2, Name = "Interface2", State = SimAccesibility.Interface };
+        var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(interfaceId1))
+            .Returns(interfaceClass1);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(interfaceId2))
+            .Returns(interfaceClass2);
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Returns(updatedClass);
+
+        var result = _simClassAdapter.UpdateSimClass(request, classId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Class updated successfully", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
+
+        _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(interfaceId1), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(interfaceId2), Times.Once);
+        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicOccurs()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "InvalidClassName",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods = [],
+            Attributes = []
+        };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute detected"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.UpdateSimClass(request, classId));
+
+        Assert.AreEqual("Invalid attribute detected", exception.Message);
+        _mockSimClassService.Verify(s => s.GetSimClassById(baseClassId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldReturnSuccessResponse_WhenInterfaceIsAddedSuccessfully()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var simClass = new SimClass { Id = classId, Name = "UpdatedClass" };
+
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Returns(simClass);
+
+        var result = _simClassAdapter.AddInterface(classId, request);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Interface implemented successfully.", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
+
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowNonExistentValueAdapter_WhenInterfaceDoesNotExist()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new NonExistentValueLogic("Interface not found"));
+
+        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Interface not found", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowInUseValueAdapter_WhenInterfaceIsAlreadyInUse()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new InUseValueLogic("Interface is already in use"));
+
+        var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Interface is already in use", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeLogicOccurs()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new InvalidAttributeLogic("Invalid attribute detected"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Invalid attribute detected", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInterface_ShouldThrowInvalidAttributeAdapter_WhenInvalidAttributeDomainOccurs()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.AddInterface(classId, interfaceId))
+            .Throws(new InvalidAttributeDomain("Invalid domain attribute"));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.AddInterface(classId, request));
+
+        Assert.AreEqual("Invalid domain attribute", exception.Message);
+        _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
     }
 }

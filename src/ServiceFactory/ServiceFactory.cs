@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ServiceFactory;
+
 [ExcludeFromCodeCoverage]
 public static class SimulatorServiceFactory
 {

@@ -7,8 +7,8 @@ public class LocalVariable
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
-    public Guid? TypeId { get; set; }
-    public SimClass? Type { get; set; }
+    public Guid TypeId { get; set; } = Guid.Empty;
+    public SimClass Type { get; set; } = null!;
     public Guid? RelatedMethodId { get; set; }
     public SimMethod? RelatedMethod { get; set; }
 
