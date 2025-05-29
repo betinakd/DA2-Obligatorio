@@ -376,7 +376,7 @@ public class MethodAdapterTest
         var classTypeId = Guid.NewGuid();
         var parameterName = "param1";
 
-        var parameterRequest = new ParameterRequest
+        var parameterRequest = new ParameterSignatureRequest
         {
             Name = parameterName,
             IdReference = classTypeId.ToString()
@@ -441,7 +441,6 @@ public class MethodAdapterTest
         result.MethodName.Should().Be("CustomMethod");
         result.IdReference.Should().Be(classTypeId);
         result.Parameters.Should().HaveCount(1);
-        result.Parameters[0].Id.Should().Be(parameter.Id);
         result.Parameters[0].Name.Should().Be("customParam");
         result.Parameters[0].ReferenceId.Should().Be(classTypeId);
     }
@@ -525,10 +524,10 @@ public class MethodAdapterTest
         var stringType = new SimClass { Id = stringTypeId, Name = "string" };
         var referenceClass = new SimClass { Id = referenceId, Name = "TestClass" };
 
-        var parameters = new List<ParameterRequest>
+        var parameters = new List<ParameterSignatureRequest>
     {
-        new ParameterRequest { Name = "param1", IdReference = intTypeId.ToString() },
-        new ParameterRequest { Name = "param2",  IdReference = stringTypeId.ToString() }
+        new ParameterSignatureRequest { Name = "param1", IdReference = intTypeId.ToString() },
+        new ParameterSignatureRequest { Name = "param2",  IdReference = stringTypeId.ToString() }
     };
 
         var invocationRequest = new InvocationRequest

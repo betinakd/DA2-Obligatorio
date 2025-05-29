@@ -23,7 +23,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
             throw new InvalidOperationLogic($"Method not executable from reference.");
         }
 
-        var useDynamicDispatch = staticMethod.Accesibility == SimAccesibility.Abstract || staticMethod.IsVirtual;
+        var useDynamicDispatch = staticMethod.Accesibility == SimAccesibility.Abstract ||
+                                staticMethod.Accesibility == SimAccesibility.Interface
+                                || staticMethod.IsVirtual;
 
         return ExecuteMethodInternal(reference, objReal, signature, level, visited, useDynamicDispatch);
     }

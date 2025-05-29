@@ -42,8 +42,8 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceTypeId.ToString(),
             Parameters =
             [
-            new ParameterRequest { Name = "param1", IdReference = param1TypeId.ToString() },
-                new ParameterRequest { Name = "param2", IdReference = param2TypeId.ToString() }
+            new ParameterSignatureRequest { Name = "param1", IdReference = param1TypeId.ToString() },
+            new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString() }
             ]
         };
 
@@ -103,7 +103,7 @@ public class ExecutionAdapterTest
             IdReferenceType = Guid.NewGuid().ToString(),
             Parameters =
         [
-            new ParameterRequest { Name = "param1", IdReference = Guid.NewGuid().ToString() }
+            new ParameterSignatureRequest { Name = "param1", IdReference = Guid.NewGuid().ToString() }
         ]
         };
 
@@ -253,7 +253,7 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceId.ToString(),
             Parameters =
             [
-                new ParameterRequest { Name = "param1", IdReference = paramTypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString() }
             ]
         };
 
@@ -313,7 +313,7 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceId.ToString(),
             Parameters =
             [
-                new ParameterRequest { Name = "param1", IdClassType = paramTypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString() }
             ]
         };
 
@@ -372,7 +372,7 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceId.ToString(),
             Parameters =
             [
-                new ParameterRequest { Name = "param1", IdClassType = paramTypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString() }
             ]
         };
 
