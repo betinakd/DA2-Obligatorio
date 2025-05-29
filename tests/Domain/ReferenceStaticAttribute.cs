@@ -109,4 +109,29 @@ public class ReferenceStaticAttributeTest
 
         reference.Reference = nonStaticAttribute;
     }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReferenceInstance()
+    {
+        var expectedInstance = new SimClass { Name = "InstanceClass" };
+        var simClass = new SimClass { Name = "TestClass" };
+        var staticAttribute = new SimAttribute
+        {
+            Reference = simClass,
+            Name = "StaticAttr",
+            IsStatic = true,
+            Instance = expectedInstance
+        };
+        var reference = new ReferenceStaticAttribute
+        {
+            Reference = staticAttribute
+        };
+
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = reference.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(expectedInstance, result);
+    }
 }

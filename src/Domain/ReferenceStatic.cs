@@ -31,4 +31,9 @@ public class ReferenceStatic : Reference
     {
         return "Static";
     }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return Reference;
+    }
 }
