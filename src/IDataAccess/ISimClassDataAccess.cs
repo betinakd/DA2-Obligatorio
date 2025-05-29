@@ -13,5 +13,5 @@ public interface ISimClassDataAccess
     public bool InUseByOther(Guid id);
     public bool ExistSimClassName(string name);
     public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0);
-    bool IsClassBaseOfOrSameAs(SimClass attributeOwnerClass, SimClass callingClass);
+    bool IsClassBaseOfOrSameAs(SimClass potentialBase, SimClass potentialDerived);
 }
