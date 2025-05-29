@@ -30,6 +30,8 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             foreach(var parameter in request.Parameters)
             {
                 var typeParameter = _simClassService.GetSimClassById(parameter.ReferenceId);
+                var instance = _simClassService.GetSimClassById(parameter.InstanceId);
+
                 var par = new ParameterSignature()
                 {
                     Name = parameter.Name,
@@ -37,6 +39,8 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
                     ReferenceId = typeParameter.Id,
                     Signature = signature,
                     SignatureId = signature.Id,
+                    Instance = instance,
+                    InstanceId = instance.Id,
                     Index = index
                 };
                 index++;

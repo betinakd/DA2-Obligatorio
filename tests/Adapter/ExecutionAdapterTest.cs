@@ -34,6 +34,8 @@ public class ExecutionAdapterTest
         var referenceTypeId = Guid.NewGuid();
         var param1TypeId = Guid.NewGuid();
         var param2TypeId = Guid.NewGuid();
+        var param1InstanceId = Guid.NewGuid();
+        var param2InstanceId = Guid.NewGuid();
 
         var request = new MethodExecutionRequest
         {
@@ -42,8 +44,8 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceTypeId.ToString(),
             Parameters =
             [
-            new ParameterSignatureRequest { Name = "param1", IdReference = param1TypeId.ToString() },
-            new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = param1TypeId.ToString(), IdInstance = param1InstanceId.ToString() },
+            new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString(), IdInstance = param2InstanceId.ToString() }
             ]
         };
 
@@ -51,6 +53,8 @@ public class ExecutionAdapterTest
         var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
         var simClass1 = new SimClass { Id = param1TypeId, Name = "Type1" };
         var simClass2 = new SimClass { Id = param2TypeId, Name = "Type2" };
+        var simInstance1 = new SimClass { Id = param1InstanceId, Name = "Instance1" };
+        var simInstance2 = new SimClass { Id = param2InstanceId, Name = "Instance2" };
 
         _simClassService!
             .Setup(s => s.GetSimClassById(instanceTypeId))
@@ -67,6 +71,14 @@ public class ExecutionAdapterTest
         _simClassService
             .Setup(s => s.GetSimClassById(param2TypeId))
             .Returns(simClass2);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(param1InstanceId))
+            .Returns(simInstance1);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(param2InstanceId))
+            .Returns(simInstance2);
 
         _mockExecutionService!
             .Setup(s => s.ExecuteMethod(
@@ -243,6 +255,7 @@ public class ExecutionAdapterTest
         var mockTransformerService = new Mock<ITransformerService>();
 
         var paramTypeId = Guid.NewGuid();
+        var paramInstanceId = Guid.NewGuid();
         var referenceId = Guid.NewGuid();
         var instanceId = Guid.NewGuid();
 
@@ -253,15 +266,17 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceId.ToString(),
             Parameters =
             [
-                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString(), IdInstance = paramInstanceId.ToString() }
             ]
         };
 
         var simClass = new SimClass { Id = paramTypeId, Name = "ParamType", State = SimAccesibility.Normal };
+        var simInstanceParam = new SimClass { Id = paramInstanceId, Name = "ParamInstance", State = SimAccesibility.Normal };
         var simReference = new SimClass { Id = referenceId, Name = "Ref", State = SimAccesibility.Normal };
         var simInstance = new SimClass { Id = instanceId, Name = "Obj", State = SimAccesibility.Normal };
 
         mockSimClassService.Setup(x => x.GetSimClassById(paramTypeId)).Returns(simClass);
+        mockSimClassService.Setup(x => x.GetSimClassById(paramInstanceId)).Returns(simInstanceParam);
         mockSimClassService.Setup(x => x.GetSimClassById(referenceId)).Returns(simReference);
         mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
 
