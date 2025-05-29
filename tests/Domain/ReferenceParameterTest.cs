@@ -13,7 +13,7 @@ public class ReferenceParameterTest
         var parameter = new Parameter { Type = simClass, Name = "Param" };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
-        var result = referenceParameter.GetSimClass();
+        var result = referenceParameter.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -27,7 +27,7 @@ public class ReferenceParameterTest
         var parameter = new Parameter();
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
-        referenceParameter.GetSimClass();
+        referenceParameter.GetReferenceClass();
     }
 
     [TestMethod]

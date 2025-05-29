@@ -13,7 +13,7 @@ public class ReferenceStaticAttributeTest
         var attribute = new SimAttribute { Reference = simClass, Name = "StaticAttr", IsStatic = true };
         var referenceStaticAttribute = new ReferenceStaticAttribute { Reference = attribute };
 
-        var result = referenceStaticAttribute.GetSimClass();
+        var result = referenceStaticAttribute.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -27,7 +27,7 @@ public class ReferenceStaticAttributeTest
         var attribute = new SimAttribute { IsStatic = true };
         var referenceStaticAttribute = new ReferenceStaticAttribute { Reference = attribute };
 
-        referenceStaticAttribute.GetSimClass();
+        referenceStaticAttribute.GetReferenceClass();
     }
 
     [TestMethod]

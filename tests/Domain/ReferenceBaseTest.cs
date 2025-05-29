@@ -15,7 +15,7 @@ public class ReferenceBaseTest()
 
         var referenceBase = new ReferenceBase() { Reference = simClass };
 
-        var result = referenceBase.GetSimClass();
+        var result = referenceBase.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual("BaseClass", result.Name);
@@ -48,7 +48,7 @@ public class ReferenceBaseTest()
         var simClass = new SimClass { Name = "TestClass" };
         var referenceBase = new ReferenceBase() { Reference = simClass };
 
-        referenceBase.GetSimClass();
+        referenceBase.GetReferenceClass();
     }
 
     [TestMethod]

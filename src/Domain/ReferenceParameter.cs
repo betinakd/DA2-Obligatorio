@@ -19,7 +19,7 @@ public class ReferenceParameter : Reference
         return Reference.Type.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
-    public override SimClass GetSimClass()
+    public override SimClass GetReferenceClass()
     {
         if(Reference.Type == null)
         {

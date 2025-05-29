@@ -13,7 +13,7 @@ public class ReferenceAttributeTest
         var attribute = new SimAttribute { Reference = simClass, Name = "Atri" };
         var referenceAttribute = new ReferenceAttribute { Reference = attribute };
 
-        var result = referenceAttribute.GetSimClass();
+        var result = referenceAttribute.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -27,7 +27,7 @@ public class ReferenceAttributeTest
         var attribute = new SimAttribute();
         var referenceAttribute = new ReferenceAttribute { Reference = attribute };
 
-        referenceAttribute.GetSimClass();
+        referenceAttribute.GetReferenceClass();
     }
 
     [TestMethod]

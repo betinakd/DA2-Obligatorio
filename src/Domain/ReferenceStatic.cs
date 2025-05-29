@@ -17,7 +17,7 @@ public class ReferenceStatic : Reference
         return Reference.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
-    public override SimClass GetSimClass()
+    public override SimClass GetReferenceClass()
     {
         return Reference;
     }

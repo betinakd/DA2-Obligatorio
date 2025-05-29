@@ -11,7 +11,7 @@ public class ReferenceStaticTest
         var simClass = new SimClass { Name = "TestClass" };
         var referenceStatic = new ReferenceStatic { Reference = simClass };
 
-        var result = referenceStatic.GetSimClass();
+        var result = referenceStatic.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);

@@ -34,7 +34,7 @@ public class ExecutionServiceTest
         var signature = new Signature { Name = "TestMethod", Parameters = [] };
 
         var mockRef = new Mock<Reference>();
-        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
         mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
         mockRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.TestMethod()");
         _mockExecuteDataAccess!
@@ -73,7 +73,7 @@ public class ExecutionServiceTest
         var outerSignature = new Signature { Name = "OuterMethod", Parameters = [] };
 
         var thisRef = new Mock<ReferenceThis>();
-        thisRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        thisRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
         thisRef.Setup(r => r.GetSignature(innerSignature)).Returns("this.InnerMethod()");
         thisRef.Setup(r => r.GetSignatureWithClassName(outerSignature)).Returns("TestClass.OuterMethod()");
 
@@ -128,7 +128,7 @@ public class ExecutionServiceTest
         method.Invocations.Add(recursiveInvocation);
 
         var mockRef = new Mock<Reference>();
-        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
         mockRef.Setup(r => r.GetSignature(signature)).Returns("Recursive.RecursiveMethod()");
 
         _mockExecuteDataAccess!
@@ -276,7 +276,7 @@ public class ExecutionServiceTest
         var innerSignature = new Signature { Name = "InnerMethod", Parameters = [] };
 
         var thisRef = new Mock<ReferenceThis>();
-        thisRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        thisRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
         thisRef.Setup(r => r.GetSignature(It.IsAny<Signature>())).Returns("this.Method()");
         thisRef.Setup(r => r.GetSignatureWithClassName(It.IsAny<Signature>())).Returns("TestClass.Method()");
 
@@ -320,10 +320,10 @@ public class ExecutionServiceTest
         var signature = new Signature { Name = "PrivateMethod", Parameters = [] };
 
         var mockRef = new Mock<Reference>();
-        mockRef.Setup(r => r.GetSimClass()).Returns(referenceClass);
+        mockRef.Setup(r => r.GetReferenceClass()).Returns(referenceClass);
 
         var mockObjReal = new Mock<Reference>();
-        mockObjReal.Setup(r => r.GetSimClass()).Returns(objClass);
+        mockObjReal.Setup(r => r.GetReferenceClass()).Returns(objClass);
 
         _mockExecuteDataAccess!
             .Setup(m => m.FindMethodInHierarchy(referenceClass, signature, It.IsAny<int>()))
@@ -340,7 +340,7 @@ public class ExecutionServiceTest
         var signature = new Signature { Name = "NonExistentMethod", Parameters = [] };
 
         var mockRef = new Mock<Reference>();
-        mockRef.Setup(r => r.GetSimClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
 
         _mockExecuteDataAccess!
             .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))

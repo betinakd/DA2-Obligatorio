@@ -33,7 +33,7 @@ public class ReferenceStaticAttribute : Reference
         return Reference.Reference.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
-    public override SimClass GetSimClass()
+    public override SimClass GetReferenceClass()
     {
         if(Reference.Reference == null)
         {

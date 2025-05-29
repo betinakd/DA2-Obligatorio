@@ -19,7 +19,7 @@ public class ReferenceBase : Reference
         return Reference.BaseClass.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
-    public override SimClass GetSimClass()
+    public override SimClass GetReferenceClass()
     {
         if(Reference.BaseClass == null)
         {

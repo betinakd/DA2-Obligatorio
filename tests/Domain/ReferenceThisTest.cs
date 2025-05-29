@@ -11,7 +11,7 @@ public class ReferenceThisTest()
         var simClass = new SimClass { Name = "TestClass" };
         var referenceThis = new ReferenceThis() { Reference = simClass };
 
-        var result = referenceThis.GetSimClass();
+        var result = referenceThis.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);

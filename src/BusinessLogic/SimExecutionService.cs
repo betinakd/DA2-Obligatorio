@@ -14,7 +14,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
     {
         visited ??= [];
 
-        SimClass referenceClass = reference.GetSimClass();
+        SimClass referenceClass = reference.GetReferenceClass();
         SimMethod? staticMethod = _executionDA.FindMethodInHierarchy(referenceClass, signature);
 
         if(staticMethod == null)
@@ -35,15 +35,15 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
 
         if(useDynamicDispatch)
         {
-            SimClass objClass = objReal.GetSimClass();
+            SimClass objClass = objReal.GetReferenceClass();
             methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
         }
         else
         {
-            SimClass referenceClass = reference.GetSimClass();
+            SimClass referenceClass = reference.GetReferenceClass();
             methodToExecute = _executionDA.FindMethodInHierarchy(referenceClass, signature);
 
-            SimClass objClass = objReal.GetSimClass();
+            SimClass objClass = objReal.GetReferenceClass();
             if(methodToExecute != null &&
                methodToExecute.Privacity == SimPrivacity.Private &&
                referenceClass.Id != objClass.Id)

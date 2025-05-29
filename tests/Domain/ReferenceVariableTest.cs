@@ -13,7 +13,7 @@ public class ReferenceVariableTest
         var localVariable = new LocalVariable { Reference = simClass, Name = "Variable" };
         var referencelocalVariable = new ReferenceVariable { Reference = localVariable };
 
-        var result = referencelocalVariable.GetSimClass();
+        var result = referencelocalVariable.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -27,7 +27,7 @@ public class ReferenceVariableTest
         var localVariable = new LocalVariable();
         var referenceVariable = new ReferenceVariable { Reference = localVariable };
 
-        referenceVariable.GetSimClass();
+        referenceVariable.GetReferenceClass();
     }
 
     [TestMethod]
