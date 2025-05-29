@@ -91,4 +91,18 @@ public class ReferenceBaseTest()
 
         Assert.AreEqual(expectedId, actualId);
     }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnBaseClass()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        var simClass = new SimClass { Name = "ChildClass", BaseClass = baseClass, BaseClassId = baseClass.Id };
+        var referenceBase = new ReferenceBase { Reference = simClass };
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = referenceBase.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(baseClass, result);
+    }
 }

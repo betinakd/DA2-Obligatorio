@@ -7,6 +7,7 @@ public abstract class Reference
     public Guid RelatedInvocationId { get; set; }
 
     public abstract SimClass GetReferenceClass();
+    public abstract SimClass GetInstanceClass(Signature signature, SimClass executionInstance);
     public abstract string GetSignature(Signature signature);
     public abstract string GetSignatureWithClassName(Signature signature);
     public abstract Guid GetReferenceId();

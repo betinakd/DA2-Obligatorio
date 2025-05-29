@@ -38,4 +38,9 @@ public class ReferenceBase : Reference
     {
         return "Base";
     }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return Reference.BaseClass;
+    }
 }
