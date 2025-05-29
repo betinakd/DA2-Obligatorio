@@ -32,10 +32,11 @@ public class TransformersController(ITransformerService transformerService, IExe
 
     [HttpPost("execute")]
     public IActionResult ExecuteWithTransform(
+        [FromHeader(Name = "API_KEY")] Guid apiKey,
         [FromBody] MethodExecutionRequest request,
         [FromQuery] string transformerId = null)
     {
-        var result = _executionAdapter.ExecuteMethodWithTransform(request, transformerId);
+        var result = _executionAdapter.ExecuteMethodWithTransform(apiKey, request, transformerId);
         return Ok(result);
     }
 

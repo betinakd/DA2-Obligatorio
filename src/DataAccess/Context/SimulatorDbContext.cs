@@ -17,6 +17,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<ParameterSignature> ParameterSignatures { get; set; }
     public DbSet<ExecutionLog> ExecutionLogs { get; set; }
+    public DbSet<ApiKey> ApiKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -206,6 +207,12 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             .HasMany(c => c.Implements)
             .WithMany()
             .UsingEntity(j => j.ToTable("SimClassImplements"));
+
+        _ = modelBuilder.Entity<ApiKey>(entity =>
+            {
+                entity.HasKey(e => e.KeyValue);
+                entity.Property(e => e.Name).IsRequired();
+            });
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
@@ -530,5 +537,17 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             RelatedMethodId = referenceEqualsMethodId,
             Index = 1
         });
+
+        _ = modelBuilder.Entity<ApiKey>().HasData(
+            new ApiKey
+            {
+                KeyValue = Guid.Parse("77777777-aaaa-1111-1111-111111111111"),
+                Name = "validKey_1"
+            },
+            new ApiKey
+            {
+                KeyValue = Guid.Parse("77777777-bbbb-1111-1111-111111111111"),
+                Name = "validKey_2"
+            });
     }
 }

@@ -6,9 +6,10 @@ using IDataAccess;
 
 namespace BusinessLogic;
 
-public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecutionService
+public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyDataAccess apikeyDataAccess) : IExecutionService
 {
     private readonly IExecutionDataAccess _executionDA = executionDataAccess;
+    private readonly IApikeyDataAccess _apikeyDA = apikeyDataAccess;
 
     public string ExecuteMethod(Reference reference, Reference objReal, Signature signature, int level = 0, HashSet<Guid>? visited = null)
     {
@@ -137,5 +138,11 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess) : IExecu
         }
 
         return IsReferenceBaseOfInstance(refer, baseClass);
+    }
+
+    public bool IsAuthorizedUser(Guid apiKey)
+    {
+        var keyExists = _apikeyDA.ApiKeyExists(apiKey);
+        return keyExists && !(apiKey == Guid.Empty);
     }
 }

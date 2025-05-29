@@ -11,13 +11,15 @@ namespace Tests.BusinessLogic;
 public class ExecutionServiceTest
 {
     private Mock<IExecutionDataAccess>? _mockExecuteDataAccess;
+    private Mock<IApikeyDataAccess>? _mockApikeyDataAccess;
     private ExecutionService? _executionService;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Strict);
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _mockApikeyDataAccess = new Mock<IApikeyDataAccess>(MockBehavior.Strict);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
     }
 
     [TestMethod]
@@ -95,7 +97,7 @@ public class ExecutionServiceTest
             .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, It.IsAny<int>()))
             .Returns(innerMethod);
 
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = _executionService.ExecuteMethod(thisRef.Object, thisRef.Object, outerSignature);
 
@@ -197,7 +199,7 @@ public class ExecutionServiceTest
         };
 
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
         _mockExecuteDataAccess
             .Setup(m => m.GetFilteredClasses(It.Is<Func<IQueryable<SimClass>, IQueryable<SimClass>>>(
@@ -249,6 +251,50 @@ public class ExecutionServiceTest
             .Returns(abstractMethod);
 
         _executionService!.ValidateMethodExistsInClass(simClass, signature, false);
+    }
+
+    [TestMethod]
+    public void IsAuthorizedUser_EmptyApiKey_ReturnsFalse()
+    {
+        var apiKey = Guid.Empty;
+
+        _mockApikeyDataAccess!
+            .Setup(m => m.ApiKeyExists(apiKey))
+            .Returns(false);
+
+        var result = _executionService!.IsAuthorizedUser(apiKey);
+
+        Assert.IsFalse(result);
+        _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(apiKey), Times.Once);
+    }
+
+    [TestMethod]
+    public void IsAuthorizedUser_NonExistentApiKey_ReturnsFalse()
+    {
+        var apiKey = Guid.NewGuid();
+
+        _mockApikeyDataAccess!
+            .Setup(m => m.ApiKeyExists(apiKey))
+            .Returns(false);
+
+        var result = _executionService.IsAuthorizedUser(apiKey);
+
+        Assert.IsFalse(result);
+        _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(apiKey), Times.Once);
+    }
+
+    [TestMethod]
+    public void IsAuthorizedUser_ValidCase_ReturnsTrue()
+    {
+        var validApikey = new Guid("77777777-aaaa-1111-1111-111111111111");
+        _mockApikeyDataAccess!
+            .Setup(m => m.ApiKeyExists(validApikey))
+            .Returns(true);
+
+        var result = _executionService.IsAuthorizedUser(validApikey);
+
+        Assert.IsTrue(result);
+        _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(validApikey), Times.Once);
     }
 
     [TestMethod]
@@ -356,7 +402,7 @@ public class ExecutionServiceTest
         var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = null };
 
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
 
@@ -370,7 +416,7 @@ public class ExecutionServiceTest
         var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = refer.Id };
 
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
 
@@ -396,7 +442,7 @@ public class ExecutionServiceTest
                 f(new List<SimClass> { refer }.AsQueryable()).Any(c => c.Id == refer.Id))))
             .Returns([refer]);
 
-        var service = new ExecutionService(mockDataAccess.Object);
+        var service = new ExecutionService(mockDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = service.IsReferenceBaseOfInstance(refer, obj);
 
