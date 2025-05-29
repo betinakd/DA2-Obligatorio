@@ -41,7 +41,7 @@ public class AttributeControllerTest
         {
             Id = idToUpdate.ToString(),
             Name = "UpdatedAttribute",
-            IdType = Guid.NewGuid().ToString(),
+            IdReference = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,
             IdRelatedClass = Guid.NewGuid().ToString()
         };

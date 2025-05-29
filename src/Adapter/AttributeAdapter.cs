@@ -36,7 +36,8 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         try
         {
             var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
-            var type = _simClassService.GetSimClassById(attribute.TypeId);
+            var type = _simClassService.GetSimClassById(attribute.ReferenceId);
+            var instance = _simClassService.GetSimClassById(attribute.InstanceId);
             var updatedAttribute = new SimAttribute()
             {
                 Id = attribute.IdAttribute,
@@ -46,6 +47,8 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 RelatedClassId = relatedClass.Id,
                 Reference = type,
                 ReferenceId = type.Id,
+                Instance = instance,
+                InstanceId = instance.Id,
                 IsStatic = attribute.IsStatic
             };
             _simAttributeService.UpdateAttribute(attribute.IdAttribute, updatedAttribute);
@@ -82,6 +85,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         {
             var relatedClass = _simClassService.GetSimClassById(id);
             var type = _simClassService.GetSimClassById(attribute.ReferenceId);
+            var instance = _simClassService.GetSimClassById(attribute.InstanceId);
 
             var newAttribute = new SimAttribute()
             {
@@ -92,6 +96,9 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 RelatedClassId = relatedClass.Id,
                 Reference = type,
                 ReferenceId = type.Id,
+                Instance = instance,
+                InstanceId = instance.Id,
+                IsStatic = attribute.IsStatic
             };
 
             var createdAttribute = _simAttributeService.CreateAttribute(id, newAttribute);
