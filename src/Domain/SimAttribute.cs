@@ -10,6 +10,8 @@ public class SimAttribute
     private string _name = string.Empty;
     public Guid? ReferenceId { get; set; }
     public SimClass? Reference { get; set; }
+    public Guid? InstanceId { get; set; }
+    public SimClass? Instance { get; set; }
     public SimPrivacity? Privacity { get; set; } = SimPrivacity.Public;
     public bool IsStatic { get; set; } = false;
     public SimClass? RelatedClass { get; set; }

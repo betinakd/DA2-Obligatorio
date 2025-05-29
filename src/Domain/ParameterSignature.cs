@@ -8,7 +8,9 @@ public class ParameterSignature
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
     public SimClass? Reference { get; set; }
-    public Guid? ReferenceId { get; set; }
+    public Guid ReferenceId { get; set; }
+    public Guid InstanceId { get; set; }
+    public SimClass? Instance { get; set; }
     public Guid? SignatureId { get; set; }
     public Signature? Signature { get; set; }
     public int Index { get; set; }

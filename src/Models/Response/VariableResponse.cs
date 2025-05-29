@@ -6,4 +6,5 @@ public class VariableResponse()
     public string? Name { get; set; }
     public Guid? MethodId { get; set; }
     public Guid? ReferenceId { get; set; }
+    public Guid? InstanceId { get; set; }
 }

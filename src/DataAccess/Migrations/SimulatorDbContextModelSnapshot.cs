@@ -113,17 +113,17 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RelatedMethodId")
+                    b.Property<Guid>("ReferenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ReferenceId")
+                    b.Property<Guid?>("RelatedMethodId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RelatedMethodId");
-
                     b.HasIndex("ReferenceId");
+
+                    b.HasIndex("RelatedMethodId");
 
                     b.ToTable("LocalVariables");
                 });
@@ -146,14 +146,14 @@ namespace DataAccess.Migrations
                     b.Property<Guid?>("RelatedMethodId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ReferenceId")
+                    b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RelatedMethodId");
 
-                    b.HasIndex("ReferenceId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Parameters");
 
@@ -215,17 +215,17 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SignatureId")
+                    b.Property<Guid?>("ReferenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReferenceId")
+                    b.Property<Guid?>("SignatureId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SignatureId");
-
                     b.HasIndex("ReferenceId");
+
+                    b.HasIndex("SignatureId");
 
                     b.ToTable("ParameterSignatures");
                 });
@@ -290,17 +290,17 @@ namespace DataAccess.Migrations
                     b.Property<int?>("Privacity")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("RelatedClassId")
+                    b.Property<Guid?>("ReferenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReferenceId")
+                    b.Property<Guid?>("RelatedClassId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RelatedClassId");
-
                     b.HasIndex("ReferenceId");
+
+                    b.HasIndex("RelatedClassId");
 
                     b.ToTable("SimAttributes");
                 });
@@ -761,20 +761,20 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.LocalVariable", b =>
                 {
-                    b.HasOne("Domain.SimMethod", "RelatedMethod")
-                        .WithMany("LocalVariables")
-                        .HasForeignKey("RelatedMethodId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Domain.SimClass", "Reference")
                         .WithMany()
                         .HasForeignKey("ReferenceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("RelatedMethod");
+                    b.HasOne("Domain.SimMethod", "RelatedMethod")
+                        .WithMany("LocalVariables")
+                        .HasForeignKey("RelatedMethodId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Reference");
+
+                    b.Navigation("RelatedMethod");
                 });
 
             modelBuilder.Entity("Domain.Parameter", b =>
@@ -784,32 +784,32 @@ namespace DataAccess.Migrations
                         .HasForeignKey("RelatedMethodId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.SimClass", "Reference")
+                    b.HasOne("Domain.SimClass", "Type")
                         .WithMany()
-                        .HasForeignKey("ReferenceId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("RelatedMethod");
 
-                    b.Navigation("Reference");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Domain.ParameterSignature", b =>
                 {
-                    b.HasOne("Domain.Signature", "Signature")
-                        .WithMany("Parameters")
-                        .HasForeignKey("SignatureId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Domain.SimClass", "Reference")
                         .WithMany()
                         .HasForeignKey("ReferenceId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Signature");
+                    b.HasOne("Domain.Signature", "Signature")
+                        .WithMany("Parameters")
+                        .HasForeignKey("SignatureId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Reference");
+
+                    b.Navigation("Signature");
                 });
 
             modelBuilder.Entity("Domain.Signature", b =>
@@ -825,19 +825,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.SimAttribute", b =>
                 {
-                    b.HasOne("Domain.SimClass", "RelatedClass")
-                        .WithMany("Attributes")
-                        .HasForeignKey("RelatedClassId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Domain.SimClass", "Reference")
                         .WithMany()
                         .HasForeignKey("ReferenceId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("RelatedClass");
+                    b.HasOne("Domain.SimClass", "RelatedClass")
+                        .WithMany("Attributes")
+                        .HasForeignKey("RelatedClassId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Reference");
+
+                    b.Navigation("RelatedClass");
                 });
 
             modelBuilder.Entity("Domain.SimClass", b =>

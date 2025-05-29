@@ -36,6 +36,7 @@ public class SimClassResponseMapper
                     Id = v.Id,
                     Name = v.Name,
                     ReferenceId = v.ReferenceId,
+                    InstanceId = v.InstanceId,
                     MethodId = v.RelatedMethodId
                 }).ToList(),
                 Invocations = m.Invocations.Select(i => new InvocationResponse
@@ -44,12 +45,11 @@ public class SimClassResponseMapper
                     IdReference = i.Reference?.GetReferenceId() ?? i.ReferenceId ?? Guid.Empty,
                     TypeReference = i.Reference?.GetReferenceTypeDescription(),
                     MethodName = i.Signature?.Name,
-                    Parameters = i.Signature?.Parameters.Select(p => new ParameterResponse
+                    Parameters = i.Signature?.Parameters.Select(p => new ParameterSignatureResponse
                     {
-                        Id = p.Id,
-                        MethodId = i.RelatedMethodId,
                         Name = p.Name,
-                        ReferenceId = p.ReferenceId
+                        ReferenceId = p.ReferenceId,
+                        InstanceId = p.InstanceId
                     }).ToList() ?? []
                 }).ToList()
             }).ToList(),
@@ -58,6 +58,7 @@ public class SimClassResponseMapper
                 Id = a.Id,
                 Name = a.Name,
                 ReferenceId = a.ReferenceId,
+                InstanceId = a.InstanceId,
                 Privacity = EnumMapper.MapToModelPrivacity(a.Privacity),
                 RelatedClassId = a.RelatedClassId,
                 IsStatic = a.IsStatic

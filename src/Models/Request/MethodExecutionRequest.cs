@@ -9,7 +9,7 @@ public class MethodExecutionRequest
     [Required(ErrorMessage = "Name is required.")]
     public string MethodName { get; set; } = string.Empty;
 
-    public List<ParameterRequest>? Parameters { get; set; } = [];
+    public List<ParameterSignatureRequest>? Parameters { get; set; } = [];
 
     [Required(ErrorMessage = "IdReferenceType is required and should be a Guid.")]
     public string IdReferenceType { get; set; } = string.Empty;

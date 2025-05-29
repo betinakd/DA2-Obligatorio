@@ -9,6 +9,8 @@ public class LocalVariable
     private string _name = string.Empty;
     public Guid ReferenceId { get; set; } = Guid.Empty;
     public SimClass Reference { get; set; } = null!;
+    public Guid InstanceId { get; set; } = Guid.Empty;
+    public SimClass Instance { get; set; } = null!;
     public Guid? RelatedMethodId { get; set; }
     public SimMethod? RelatedMethod { get; set; }
 

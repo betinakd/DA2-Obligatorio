@@ -44,11 +44,11 @@ public class MethodResponseMapper
                 Id = i.Id,
                 IdReference = i.Reference.GetReferenceId(),
                 MethodName = i.Signature.Name,
-                Parameters = i.Signature.Parameters?.Select(p => new ParameterResponse
+                Parameters = i.Signature.Parameters?.Select(p => new ParameterSignatureResponse
                 {
-                    Id = p.Id,
                     Name = p.Name,
-                    ReferenceId = p.ReferenceId
+                    ReferenceId = p.ReferenceId,
+                    InstanceId = p.InstanceId
                 }).ToList() ?? []
             }).ToList() ?? []
         };

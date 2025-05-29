@@ -14,6 +14,18 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ApiKeys",
+                columns: table => new
+                {
+                    KeyValue = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiKeys", x => x.KeyValue);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ExecutionLogs",
                 columns: table => new
                 {
@@ -52,8 +64,9 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Privacity = table.Column<int>(type: "int", nullable: true),
+                    IsStatic = table.Column<bool>(type: "bit", nullable: false),
                     RelatedClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -61,14 +74,14 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_SimAttributes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SimAttributes_SimClasses_RelatedClassId",
-                        column: x => x.RelatedClassId,
+                        name: "FK_SimAttributes_SimClasses_ReferenceId",
+                        column: x => x.ReferenceId,
                         principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SimAttributes_SimClasses_TypeId",
-                        column: x => x.TypeId,
+                        name: "FK_SimAttributes_SimClasses_RelatedClassId",
+                        column: x => x.RelatedClassId,
                         principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -106,6 +119,9 @@ namespace DataAccess.Migrations
                     RelatedClassId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Privacity = table.Column<int>(type: "int", nullable: false),
                     Accesibility = table.Column<int>(type: "int", nullable: false),
+                    IsStatic = table.Column<bool>(type: "bit", nullable: false),
+                    IsVirtual = table.Column<bool>(type: "bit", nullable: false),
+                    IsOverride = table.Column<bool>(type: "bit", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -130,7 +146,7 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RelatedMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -138,8 +154,8 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_LocalVariables", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LocalVariables_SimClasses_TypeId",
-                        column: x => x.TypeId,
+                        name: "FK_LocalVariables_SimClasses_ReferenceId",
+                        column: x => x.ReferenceId,
                         principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -156,7 +172,7 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RelatedMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Index = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -184,10 +200,12 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RelatedInvocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReferenceType = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    ReferenceType = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReferenceBase_ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReferenceParameter_ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReferenceStatic_ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReferenceStaticAttribute_ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReferenceThis_ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReferenceVariable_ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -213,11 +231,23 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_References_SimAttributes_ReferenceStaticAttribute_ReferenceId",
+                        column: x => x.ReferenceStaticAttribute_ReferenceId,
+                        principalTable: "SimAttributes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_References_SimClasses_ReferenceBase_ReferenceId",
                         column: x => x.ReferenceBase_ReferenceId,
                         principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_References_SimClasses_ReferenceStatic_ReferenceId",
+                        column: x => x.ReferenceStatic_ReferenceId,
+                        principalTable: "SimClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_References_SimClasses_ReferenceThis_ReferenceId",
                         column: x => x.ReferenceThis_ReferenceId,
@@ -277,7 +307,7 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReferenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Index = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -292,11 +322,20 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ParameterSignatures_SimClasses_TypeId",
-                        column: x => x.TypeId,
+                        name: "FK_ParameterSignatures_SimClasses_ReferenceId",
+                        column: x => x.ReferenceId,
                         principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "ApiKeys",
+                columns: new[] { "KeyValue", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("77777777-aaaa-1111-1111-111111111111"), "validKey_1" },
+                    { new Guid("77777777-bbbb-1111-1111-111111111111"), "validKey_2" }
                 });
 
             migrationBuilder.InsertData(
@@ -328,22 +367,22 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "SimMethods",
-                columns: new[] { "Id", "Accesibility", "Name", "Privacity", "RelatedClassId", "ReturnTypeId" },
+                columns: new[] { "Id", "Accesibility", "IsOverride", "IsStatic", "IsVirtual", "Name", "Privacity", "RelatedClassId", "ReturnTypeId" },
                 values: new object[,]
                 {
-                    { new Guid("55555555-5555-1111-1111-111111111111"), 2, "GetType", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") },
-                    { new Guid("55555555-6666-1111-1111-111111111111"), 2, "MemberwiseClone", 1, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") },
-                    { new Guid("55555555-1111-1111-1111-111111111111"), 2, "Equals", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22223222-2222-2222-2222-222222222222") },
-                    { new Guid("55555555-2222-1111-1111-111111111111"), 2, "Equals", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22223222-2222-2222-2222-222222222222") },
-                    { new Guid("55555555-3333-1111-1111-111111111111"), 2, "Finalize", 1, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22222222-2222-2222-2222-222222222222") },
-                    { new Guid("55555555-4444-1111-1111-111111111111"), 2, "GetHashCode", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("33333333-7777-1111-1111-111111111111") },
-                    { new Guid("55555555-7777-1111-1111-111111111111"), 2, "ReferenceEquals", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22223222-2222-2222-2222-222222222222") },
-                    { new Guid("55555555-8888-1111-1111-111111111111"), 2, "ToString", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("44444444-1111-1111-1111-111111111111") }
+                    { new Guid("55555555-5555-1111-1111-111111111111"), 2, true, false, true, "GetType", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") },
+                    { new Guid("55555555-6666-1111-1111-111111111111"), 2, true, false, true, "MemberwiseClone", 1, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") },
+                    { new Guid("55555555-1111-1111-1111-111111111111"), 2, true, false, true, "Equals", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22223222-2222-2222-2222-222222222222") },
+                    { new Guid("55555555-2222-1111-1111-111111111111"), 2, true, false, true, "Equals", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22223222-2222-2222-2222-222222222222") },
+                    { new Guid("55555555-3333-1111-1111-111111111111"), 2, true, false, true, "Finalize", 1, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22222222-2222-2222-2222-222222222222") },
+                    { new Guid("55555555-4444-1111-1111-111111111111"), 2, true, false, true, "GetHashCode", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("33333333-7777-1111-1111-111111111111") },
+                    { new Guid("55555555-7777-1111-1111-111111111111"), 2, true, false, true, "ReferenceEquals", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("22223222-2222-2222-2222-222222222222") },
+                    { new Guid("55555555-8888-1111-1111-111111111111"), 2, true, false, true, "ToString", 2, new Guid("11111111-1111-1111-1111-111111111111"), new Guid("44444444-1111-1111-1111-111111111111") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Name", "RelatedMethodId", "ReferenceId" },
+                columns: new[] { "Id", "Name", "RelatedMethodId", "TypeId" },
                 values: new object[,]
                 {
                     { new Guid("66666666-1111-1111-1111-111111111111"), "obj", new Guid("55555555-1111-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") },
@@ -352,17 +391,17 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "ReferenceId" },
+                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "TypeId" },
                 values: new object[] { new Guid("66666666-3333-1111-1111-111111111111"), 1, "objB", new Guid("55555555-2222-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Name", "RelatedMethodId", "ReferenceId" },
+                columns: new[] { "Id", "Name", "RelatedMethodId", "TypeId" },
                 values: new object[] { new Guid("66666666-4444-1111-1111-111111111111"), "objA", new Guid("55555555-7777-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "ReferenceId" },
+                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "TypeId" },
                 values: new object[] { new Guid("66666666-5555-1111-1111-111111111111"), 1, "objB", new Guid("55555555-7777-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.CreateIndex(
@@ -378,14 +417,14 @@ namespace DataAccess.Migrations
                 column: "RelatedMethodId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LocalVariables_ReferenceId",
+                table: "LocalVariables",
+                column: "ReferenceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LocalVariables_RelatedMethodId",
                 table: "LocalVariables",
                 column: "RelatedMethodId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LocalVariables_TypeId",
-                table: "LocalVariables",
-                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parameters_RelatedMethodId",
@@ -395,17 +434,17 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Parameters_TypeId",
                 table: "Parameters",
+                column: "TypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParameterSignatures_ReferenceId",
+                table: "ParameterSignatures",
                 column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParameterSignatures_SignatureId",
                 table: "ParameterSignatures",
                 column: "SignatureId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ParameterSignatures_TypeId",
-                table: "ParameterSignatures",
-                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_References_ReferenceBase_ReferenceId",
@@ -421,6 +460,16 @@ namespace DataAccess.Migrations
                 name: "IX_References_ReferenceParameter_ReferenceId",
                 table: "References",
                 column: "ReferenceParameter_ReferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_References_ReferenceStatic_ReferenceId",
+                table: "References",
+                column: "ReferenceStatic_ReferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_References_ReferenceStaticAttribute_ReferenceId",
+                table: "References",
+                column: "ReferenceStaticAttribute_ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_References_ReferenceThis_ReferenceId",
@@ -439,14 +488,14 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_SimAttributes_ReferenceId",
+                table: "SimAttributes",
+                column: "ReferenceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SimAttributes_RelatedClassId",
                 table: "SimAttributes",
                 column: "RelatedClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SimAttributes_TypeId",
-                table: "SimAttributes",
-                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SimClasses_BaseClassId",
@@ -472,6 +521,9 @@ namespace DataAccess.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApiKeys");
+
             migrationBuilder.DropTable(
                 name: "ExecutionLogs");
 
