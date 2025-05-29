@@ -87,4 +87,28 @@ public class ReferenceVariableTest
 
         Assert.AreEqual(expectedId, actualId);
     }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReferenceInstance()
+    {
+        var expectedInstance = new SimClass { Name = "InstanceClass" };
+        var referenceClass = new SimClass { Name = "ReferenceClass" };
+        var localVariable = new LocalVariable
+        {
+            Name = "var1",
+            Reference = referenceClass,
+            Instance = expectedInstance
+        };
+        var referenceVariable = new ReferenceVariable
+        {
+            Reference = localVariable
+        };
+
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = referenceVariable.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(expectedInstance, result);
+    }
 }

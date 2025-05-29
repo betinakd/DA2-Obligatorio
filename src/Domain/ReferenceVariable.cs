@@ -38,4 +38,9 @@ public class ReferenceVariable : Reference
     {
         return "LocalVariable";
     }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return Reference.Instance;
+    }
 }
