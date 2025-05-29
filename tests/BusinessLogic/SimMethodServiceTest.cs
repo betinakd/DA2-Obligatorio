@@ -1058,9 +1058,9 @@ public class SimMethodServiceTest
             .Setup(m => m.GetMethodById(methodId))
             .Returns(method);
 
-        _mockExectuionDataAccess!
-            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
-            .Returns([baseClass]);
+        _mockSimClassDataAccess!
+            .Setup(m => m.IsClassBaseOfOrSameAs(It.IsAny<SimClass>(), It.IsAny<SimClass>()))
+            .Returns(true);
 
         _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
 
@@ -1112,9 +1112,9 @@ public class SimMethodServiceTest
             .Setup(m => m.GetMethodById(methodId))
             .Returns(method);
 
-        _mockExectuionDataAccess!
-            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
-            .Returns([]);
+        _mockSimClassDataAccess!
+            .Setup(m => m.IsClassBaseOfOrSameAs(It.IsAny<SimClass>(), It.IsAny<SimClass>()))
+            .Returns(false);
 
         _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
     }

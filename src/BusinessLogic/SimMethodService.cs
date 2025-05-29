@@ -159,40 +159,6 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         }
     }
 
-    private bool IsClassBaseOfOrSameAs(SimClass potentialBase, SimClass potentialDerived)
-    {
-        if(potentialBase == null || potentialDerived == null)
-        {
-            return false;
-        }
-
-        if(potentialBase.Id == potentialDerived.Id)
-        {
-            return true;
-        }
-
-        if(!potentialDerived.BaseClassId.HasValue)
-        {
-            return false;
-        }
-
-        if(potentialDerived.BaseClassId.Value == potentialBase.Id)
-        {
-            return true;
-        }
-
-        var baseClass = _executionDA.GetFilteredClasses(query =>
-            query.Where(c => c.Id == potentialDerived.BaseClassId.Value))
-            .FirstOrDefault();
-
-        if(baseClass == null)
-        {
-            return false;
-        }
-
-        return IsClassBaseOfOrSameAs(potentialBase, baseClass);
-    }
-
     public void ValidateStaticAttributeAccessibility(SimAttribute staticAttribute, Guid methodId)
     {
         var method = GetMethodById(methodId);
@@ -212,7 +178,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
             case SimPrivacity.Protected:
                 if(callingClass.Id != attributeOwnerClass.Id &&
-                    !IsClassBaseOfOrSameAs(attributeOwnerClass, callingClass))
+                    !_simClassDA.IsClassBaseOfOrSameAs(attributeOwnerClass, callingClass))
                 {
                     throw new InvalidAttributeLogic("Cannot access protected static attribute from a non-derived class.");
                 }

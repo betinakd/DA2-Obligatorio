@@ -300,4 +300,38 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         return false;
     }
+
+    public bool IsClassBaseOfOrSameAs(SimClass potentialBase, SimClass potentialDerived)
+    {
+        if(potentialBase == null || potentialDerived == null)
+        {
+            return false;
+        }
+
+        if(potentialBase.Id == potentialDerived.Id)
+        {
+            return true;
+        }
+
+        if(!potentialDerived.BaseClassId.HasValue)
+        {
+            return false;
+        }
+
+        if(potentialDerived.BaseClassId.Value == potentialBase.Id)
+        {
+            return true;
+        }
+
+        var baseClass = _context.SimClasses
+            .Include(c => c.BaseClass)
+            .FirstOrDefault(c => c.Id == potentialDerived.BaseClassId.Value);
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        return IsClassBaseOfOrSameAs(potentialBase, baseClass);
+    }
 }

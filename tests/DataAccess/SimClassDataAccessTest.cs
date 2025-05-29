@@ -879,4 +879,81 @@ public class SimClassDataAccessTest
 
         result.Should().BeTrue("Should find public attribute in the grandparent class");
     }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenPotentialBaseIsNull()
+    {
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived" };
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(null, derived);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenPotentialDerivedIsNull()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, null);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenSameClass()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, baseClass);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenDerivedHasNoBase()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var derived = new SimClass { BaseClassId = null, BaseClass = null, Id = Guid.NewGuid(), Name = "Derived" };
+        _context.SimClasses.AddRange(baseClass, derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, derived);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenDerivedDirectlyInheritsBase()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived", BaseClassId = baseClass.Id };
+        _context.SimClasses.AddRange(baseClass, derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, derived);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenBaseClassNotFound()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived", BaseClassId = Guid.NewGuid() };
+        _context.SimClasses.Add(baseClass);
+        _context.SimClasses.Add(derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, derived);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenDerivedInheritsIndirectly()
+    {
+        var grandBase = new SimClass { Id = Guid.NewGuid(), Name = "GrandBase" };
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base", BaseClassId = grandBase.Id, BaseClass = grandBase };
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived", BaseClassId = baseClass.Id, BaseClass = baseClass };
+        _context.SimClasses.AddRange(grandBase, baseClass, derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(grandBase, derived);
+        Assert.IsTrue(result);
+    }
 }
