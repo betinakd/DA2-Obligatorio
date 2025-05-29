@@ -30,17 +30,17 @@ public class ReferenceStaticAttribute : Reference
     public override string GetSignatureWithClassName(Signature signature)
     {
         var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
-        return Reference.Type.Name + "." + signature.Name + "(" + simParams + ")";
+        return Reference.Reference.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
     public override SimClass GetSimClass()
     {
-        if(Reference.Type == null)
+        if(Reference.Reference == null)
         {
             throw new InvalidAttributeDomain("Reference type cannot be null.");
         }
 
-        return Reference.Type;
+        return Reference.Reference;
     }
 
     public override Guid GetReferenceId()

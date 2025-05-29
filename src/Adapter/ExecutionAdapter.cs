@@ -29,12 +29,12 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             var index = 0;
             foreach(var parameter in request.Parameters)
             {
-                var typeParameter = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var typeParameter = _simClassService.GetSimClassById(parameter.ReferenceId);
                 var par = new ParameterSignature()
                 {
                     Name = parameter.Name,
-                    Type = typeParameter,
-                    TypeId = typeParameter.Id,
+                    Reference = typeParameter,
+                    ReferenceId = typeParameter.Id,
                     Signature = signature,
                     SignatureId = signature.Id,
                     Index = index

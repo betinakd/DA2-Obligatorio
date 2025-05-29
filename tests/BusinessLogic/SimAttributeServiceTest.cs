@@ -32,7 +32,7 @@ public class SimAttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = classId, Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -54,7 +54,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = relatedClass,
-            Type = typeClass,
+            Reference = typeClass,
             Privacity = SimPrivacity.Public
         };
 
@@ -72,7 +72,7 @@ public class SimAttributeServiceTest
         Assert.AreEqual("TestAttribute", result.Name);
         Assert.AreEqual(SimPrivacity.Public, result.Privacity);
         Assert.AreEqual(relatedClass, result.RelatedClass);
-        Assert.AreEqual(typeClass, result.Type);
+        Assert.AreEqual(typeClass, result.Reference);
     }
 
     [TestMethod]
@@ -85,7 +85,7 @@ public class SimAttributeServiceTest
             Id = Guid.NewGuid(),
             Name = "ExistingAttribute",
             RelatedClass = new SimClass { Id = classId, Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -141,7 +141,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -163,7 +163,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -186,7 +186,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "NonExistentClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -209,7 +209,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "DuplicateAttributeName",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -231,7 +231,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "ValidAttributeName",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 
@@ -240,7 +240,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "ValidAttributeName",
             RelatedClass = attribute.RelatedClass,
-            Type = attribute.Type,
+            Reference = attribute.Reference,
             Privacity = attribute.Privacity
         };
 
@@ -262,7 +262,7 @@ public class SimAttributeServiceTest
         Assert.AreEqual(attributeId, result.Id);
         Assert.AreEqual("ValidAttributeName", result.Name);
         Assert.AreEqual(attribute.RelatedClass, result.RelatedClass);
-        Assert.AreEqual(attribute.Type, result.Type);
+        Assert.AreEqual(attribute.Reference, result.Reference);
         Assert.AreEqual(attribute.Privacity, result.Privacity);
     }
 
@@ -276,7 +276,7 @@ public class SimAttributeServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
             Privacity = SimPrivacity.Public
         };
 

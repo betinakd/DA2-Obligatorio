@@ -88,9 +88,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<LocalVariable>()
-                    .HasOne(v => v.Type)
+                    .HasOne(v => v.Reference)
                     .WithMany()
-                    .HasForeignKey(v => v.TypeId)
+                    .HasForeignKey(v => v.ReferenceId)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<SimMethod>()
@@ -106,9 +106,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<SimAttribute>()
-                    .HasOne(a => a.Type)
+                    .HasOne(a => a.Reference)
                     .WithMany()
-                    .HasForeignKey(b => b.TypeId)
+                    .HasForeignKey(b => b.ReferenceId)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<Invocation>()
@@ -185,9 +185,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<ParameterSignature>()
-            .HasOne(ps => ps.Type)
+            .HasOne(ps => ps.Reference)
             .WithMany()
-            .HasForeignKey(ps => ps.TypeId)
+            .HasForeignKey(ps => ps.ReferenceId)
             .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<Invocation>()

@@ -47,7 +47,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdClassType = typeId.ToString()
+            IdReference = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
@@ -60,8 +60,8 @@ public class AttributeAdapterTest
             Privacity = SimPrivacity.Public,
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId,
-            Type = typeClass,
-            TypeId = typeId
+            Reference = typeClass,
+            ReferenceId = typeId
         };
 
         _mockSimClassService!
@@ -87,7 +87,7 @@ public class AttributeAdapterTest
         Assert.AreEqual("TestAttribute", result.Attribute.Name);
         Assert.AreEqual(Models.Enums.SimModelsPrivacity.Public, result.Attribute.Privacity);
         Assert.AreEqual(relatedClassId, result.Attribute.RelatedClassId);
-        Assert.AreEqual(typeId, result.Attribute.TypeId);
+        Assert.AreEqual(typeId, result.Attribute.ReferenceId);
         Assert.AreEqual("Attribute created successfully.", result.Message);
     }
 
@@ -130,7 +130,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdClassType = typeId.ToString()
+            IdReference = typeId.ToString()
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -160,7 +160,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdClassType = typeId.ToString()
+            IdReference = typeId.ToString()
         };
 
         _mockSimClassService!
@@ -181,7 +181,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdClassType = typeId.ToString(),
+            IdReference = typeId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -264,8 +264,8 @@ public class AttributeAdapterTest
             Id = id,
             Name = "TestAttribute",
             Privacity = SimPrivacity.Public,
-            Type = new SimClass { Id = typeId, Name = "string" },
-            TypeId = typeId,
+            Reference = new SimClass { Id = typeId, Name = "string" },
+            ReferenceId = typeId,
             RelatedClass = new SimClass { Id = relatedClassId, Name = "Owner" },
             RelatedClassId = relatedClassId
         };
@@ -281,7 +281,7 @@ public class AttributeAdapterTest
         Assert.AreEqual("TestAttribute", result.Name);
         Assert.AreEqual(Models.Enums.SimModelsPrivacity.Public, result.Privacity);
         Assert.AreEqual(relatedClassId, result.RelatedClassId);
-        Assert.AreEqual(typeId, result.TypeId);
+        Assert.AreEqual(typeId, result.ReferenceId);
 
         _mockSimAttributeService.Verify(s => s.GetSimAttribute(id), Times.Once);
     }
@@ -324,8 +324,8 @@ public class AttributeAdapterTest
             Privacity = SimPrivacity.Protected,
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId,
-            Type = typeClass,
-            TypeId = typeId
+            Reference = typeClass,
+            ReferenceId = typeId
         };
 
         _mockSimClassService!
@@ -351,7 +351,7 @@ public class AttributeAdapterTest
         Assert.AreEqual("UpdatedAttribute", result.Attribute.Name);
         Assert.AreEqual(Models.Enums.SimModelsPrivacity.Protected, result.Attribute.Privacity);
         Assert.AreEqual(relatedClassId, result.Attribute.RelatedClassId);
-        Assert.AreEqual(typeId, result.Attribute.TypeId);
+        Assert.AreEqual(typeId, result.Attribute.ReferenceId);
         Assert.AreEqual("Attribute updated successfully.", result.Message);
     }
 

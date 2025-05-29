@@ -28,8 +28,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "x", TypeId = intType.Id },
-                new ParameterSignature { Name = "y", TypeId = stringType.Id }
+                new ParameterSignature { Name = "x", ReferenceId = intType.Id },
+                new ParameterSignature { Name = "y", ReferenceId = stringType.Id }
             ]
         };
 
@@ -57,7 +57,7 @@ public class SimMethodTest
             Name = "DifferentMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "x", TypeId = intType.Id }
+                new ParameterSignature { Name = "x", ReferenceId = intType.Id }
             ]
         };
 
@@ -87,7 +87,7 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "x", TypeId = intType.Id }
+                new ParameterSignature { Name = "x", ReferenceId = intType.Id }
             ]
         };
 
@@ -118,8 +118,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "x", TypeId = intType.Id },
-                new ParameterSignature { Name = "y", TypeId = doubleType.Id } // Different type
+                new ParameterSignature { Name = "x", ReferenceId = intType.Id },
+                new ParameterSignature { Name = "y", ReferenceId = doubleType.Id } // Different type
             ]
         };
 
@@ -149,8 +149,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "y", TypeId = stringType.Id }, // Swapped order
-                new ParameterSignature { Name = "x", TypeId = intType.Id }
+                new ParameterSignature { Name = "y", ReferenceId = stringType.Id }, // Swapped order
+                new ParameterSignature { Name = "x", ReferenceId = intType.Id }
             ]
         };
 
@@ -173,8 +173,8 @@ public class SimMethodTest
             Name = "MyMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "a", TypeId = Guid.NewGuid() },
-                new ParameterSignature { Name = "b", TypeId = Guid.NewGuid() }
+                new ParameterSignature { Name = "a", ReferenceId = Guid.NewGuid() },
+                new ParameterSignature { Name = "b", ReferenceId = Guid.NewGuid() }
             ]
         };
 
@@ -388,7 +388,7 @@ public class SimMethodTest
 
         method.LocalVariables =
     [
-        new LocalVariable { Name = "localVar1", TypeId = Guid.NewGuid() }
+        new LocalVariable { Name = "localVar1", ReferenceId = Guid.NewGuid() }
     ];
     }
 
@@ -402,7 +402,7 @@ public class SimMethodTest
         };
         var localVariables = new List<LocalVariable>
     {
-        new LocalVariable { Name = "localVar1", TypeId = Guid.NewGuid() }
+        new LocalVariable { Name = "localVar1", ReferenceId = Guid.NewGuid() }
     };
 
         method.LocalVariables = localVariables;

@@ -343,7 +343,7 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Name", "RelatedMethodId", "TypeId" },
+                columns: new[] { "Id", "Name", "RelatedMethodId", "ReferenceId" },
                 values: new object[,]
                 {
                     { new Guid("66666666-1111-1111-1111-111111111111"), "obj", new Guid("55555555-1111-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") },
@@ -352,17 +352,17 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "TypeId" },
+                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "ReferenceId" },
                 values: new object[] { new Guid("66666666-3333-1111-1111-111111111111"), 1, "objB", new Guid("55555555-2222-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Name", "RelatedMethodId", "TypeId" },
+                columns: new[] { "Id", "Name", "RelatedMethodId", "ReferenceId" },
                 values: new object[] { new Guid("66666666-4444-1111-1111-111111111111"), "objA", new Guid("55555555-7777-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.InsertData(
                 table: "Parameters",
-                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "TypeId" },
+                columns: new[] { "Id", "Index", "Name", "RelatedMethodId", "ReferenceId" },
                 values: new object[] { new Guid("66666666-5555-1111-1111-111111111111"), 1, "objB", new Guid("55555555-7777-1111-1111-111111111111"), new Guid("11111111-1111-1111-1111-111111111111") });
 
             migrationBuilder.CreateIndex(
@@ -385,7 +385,7 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LocalVariables_TypeId",
                 table: "LocalVariables",
-                column: "TypeId");
+                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parameters_RelatedMethodId",
@@ -395,7 +395,7 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Parameters_TypeId",
                 table: "Parameters",
-                column: "TypeId");
+                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParameterSignatures_SignatureId",
@@ -405,7 +405,7 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ParameterSignatures_TypeId",
                 table: "ParameterSignatures",
-                column: "TypeId");
+                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_References_ReferenceBase_ReferenceId",
@@ -446,7 +446,7 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SimAttributes_TypeId",
                 table: "SimAttributes",
-                column: "TypeId");
+                column: "ReferenceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SimClasses_BaseClassId",

@@ -96,7 +96,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
     {
         var classes = _context.SimClasses
             .Include(c => c.Attributes)
-                .ThenInclude(a => a.Type)
+                .ThenInclude(a => a.Reference)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Parameters)
                     .ThenInclude(p => p.Type)
@@ -104,12 +104,12 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                 .ThenInclude(m => m.ReturnType)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.LocalVariables)
-                    .ThenInclude(v => v.Type)
+                    .ThenInclude(v => v.Reference)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Invocations)
                     .ThenInclude(i => i.Signature)
                         .ThenInclude(s => s.Parameters)
-                            .ThenInclude(p => p.Type)
+                            .ThenInclude(p => p.Reference)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Invocations)
                     .ThenInclude(i => i.Reference)
@@ -154,10 +154,10 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                             _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
                             break;
                         case ReferenceVariable rv:
-                            _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                            _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
                             break;
                         case ReferenceAttribute ra:
-                            _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                            _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                             break;
                         case ReferenceBase rb:
                             _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -178,10 +178,10 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
         var simClass = _context.SimClasses
             .Where(c => c.Id == id)
             .Include(c => c.BaseClass)
-            .Include(c => c.Attributes).ThenInclude(a => a.Type)
+            .Include(c => c.Attributes).ThenInclude(a => a.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
-            .Include(c => c.Methods).ThenInclude(m => m.LocalVariables).ThenInclude(v => v.Type)
-            .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.LocalVariables).ThenInclude(v => v.Reference)
+            .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(c => c.Implements).ThenInclude(i => i.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
             .Include(c => c.Methods).ThenInclude(m => m.ReturnType)
@@ -218,10 +218,10 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                         _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
                         break;
                     case ReferenceVariable rv:
-                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
                         break;
                     case ReferenceAttribute ra:
-                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                         break;
                     case ReferenceBase rb:
                         _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -230,7 +230,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                         _context.Entry(rt).Reference(r => r.Reference).Load();
                         break;
                     case ReferenceStaticAttribute rsa:
-                        _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                         break;
                     case ReferenceStatic rsv:
                         _context.Entry(rsv).Reference(r => r.Reference).Load();
@@ -245,10 +245,10 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
     public bool InUseByOther(Guid id)
     {
         var baseClass = _context.SimClasses.Any(c => c.BaseClassId == id);
-        var typeAttribute = _context.SimAttributes.Any(a => a.TypeId == id && a.RelatedClassId != id);
+        var typeAttribute = _context.SimAttributes.Any(a => a.ReferenceId == id && a.RelatedClassId != id);
         var typeParameter = _context.Parameters.Any(p => p.TypeId == id);
-        var typeLocalVar = _context.LocalVariables.Any(v => v.TypeId == id);
-        var parameter = _context.ParameterSignatures.Any(p => p.TypeId == id);
+        var typeLocalVar = _context.LocalVariables.Any(v => v.ReferenceId == id);
+        var parameter = _context.ParameterSignatures.Any(p => p.ReferenceId == id);
         var method = _context.SimMethods.Any(m => m.ReturnTypeId == id);
 
         var referenceThis = _context.References

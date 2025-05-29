@@ -55,7 +55,7 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
     public SimAttribute GetSimAttribute(Guid attributeId)
     {
         var attribute = _context.SimAttributes
-            .Include(a => a.Type)
+            .Include(a => a.Reference)
             .FirstOrDefault(a => a.Id == attributeId);
         return attribute;
     }

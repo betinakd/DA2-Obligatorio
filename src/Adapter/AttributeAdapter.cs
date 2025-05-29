@@ -44,8 +44,8 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
                 RelatedClass = relatedClass,
                 RelatedClassId = relatedClass.Id,
-                Type = type,
-                TypeId = type.Id,
+                Reference = type,
+                ReferenceId = type.Id,
                 IsStatic = attribute.IsStatic
             };
             _simAttributeService.UpdateAttribute(attribute.IdAttribute, updatedAttribute);
@@ -81,7 +81,7 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         try
         {
             var relatedClass = _simClassService.GetSimClassById(id);
-            var type = _simClassService.GetSimClassById(attribute.ClassTypeId);
+            var type = _simClassService.GetSimClassById(attribute.ReferenceId);
 
             var newAttribute = new SimAttribute()
             {
@@ -90,8 +90,8 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
                 RelatedClass = relatedClass,
                 RelatedClassId = relatedClass.Id,
-                Type = type,
-                TypeId = type.Id,
+                Reference = type,
+                ReferenceId = type.Id,
             };
 
             var createdAttribute = _simAttributeService.CreateAttribute(id, newAttribute);

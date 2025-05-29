@@ -12,10 +12,10 @@ public class AttributeRequest()
     public string? Name { get; set; }
 
     [JsonIgnore]
-    public Guid ClassTypeId => Guid.TryParse(IdClassType, out var guid) ? guid : Guid.Empty;
+    public Guid ReferenceId => Guid.TryParse(IdReference, out var guid) ? guid : Guid.Empty;
 
-    [Required(ErrorMessage = "IdClassType is required.")]
-    public string IdClassType { get; set; } = string.Empty;
+    [Required(ErrorMessage = "IdReference is required.")]
+    public string IdReference { get; set; } = string.Empty;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsPrivacity Privacity { get; set; }

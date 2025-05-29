@@ -145,7 +145,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(i => i.Reference)
             .Include(i => i.Signature)
                 .ThenInclude(s => s.Parameters)
-                    .ThenInclude(p => p.Type)
+                    .ThenInclude(p => p.Reference)
             .Include(i => i.RelatedMethod)
             .FirstOrDefault();
 
@@ -164,10 +164,10 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                     _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
                     break;
                 case ReferenceVariable rv:
-                    _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                    _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
                     break;
                 case ReferenceAttribute ra:
-                    _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                    _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                     break;
                 case ReferenceBase rb:
                     _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -176,7 +176,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                     _context.Entry(rt).Reference(r => r.Reference).Load();
                     break;
                 case ReferenceStaticAttribute rsa:
-                    _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                    _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                     break;
                 case ReferenceStatic rsv:
                     _context.Entry(rsv).Reference(r => r.Reference).Load();
@@ -198,7 +198,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Invocations)
                 .ThenInclude(i => i.Signature)
                     .ThenInclude(s => s.Parameters)
-                        .ThenInclude(p => p.Type)
+                        .ThenInclude(p => p.Reference)
             .Include(m => m.Invocations)
                 .ThenInclude(i => i.Reference)
             .FirstOrDefault();
@@ -223,10 +223,10 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                         _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
                         break;
                     case ReferenceVariable rv:
-                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                        _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
                         break;
                     case ReferenceAttribute ra:
-                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                         break;
                     case ReferenceBase rb:
                         _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -235,7 +235,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                         _context.Entry(rt).Reference(r => r.Reference).Load();
                         break;
                     case ReferenceStaticAttribute rsa:
-                        _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                         break;
                     case ReferenceStatic rsv:
                         _context.Entry(rsv).Reference(r => r.Reference).Load();
@@ -261,7 +261,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
     {
         var variable = _context.LocalVariables
             .Where(v => v.Id == id)
-            .Include(v => v.Type)
+            .Include(v => v.Reference)
             .Include(v => v.RelatedMethod)
             .FirstOrDefault();
         return variable;

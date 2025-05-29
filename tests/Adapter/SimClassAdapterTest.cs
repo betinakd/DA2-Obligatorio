@@ -368,7 +368,7 @@ public class SimClassAdapterTest
                 IdReturnType = objTypeId.ToString(),
                 Parameters =
                 [
-                    new ParameterRequest { Name = "param1", IdClassType = objTypeId.ToString() }
+                    new ParameterRequest { Name = "param1", IdReference = objTypeId.ToString() }
                 ]
             }
 
@@ -379,7 +379,7 @@ public class SimClassAdapterTest
             {
                 Name = "TestAttribute",
                 Privacity = SimModelsPrivacity.Private,
-                IdClassType = objTypeId.ToString()
+                IdReference = objTypeId.ToString()
             }
 
         ]

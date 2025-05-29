@@ -28,14 +28,14 @@ public class SimClassResponseMapper
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    ClassTypeId = p.TypeId,
+                    ReferenceId = p.TypeId,
                     MethodId = p.RelatedMethodId
                 }).ToList(),
                 Variables = m.LocalVariables.Select(v => new VariableResponse
                 {
                     Id = v.Id,
                     Name = v.Name,
-                    ClassTypeId = v.TypeId,
+                    ReferenceId = v.ReferenceId,
                     MethodId = v.RelatedMethodId
                 }).ToList(),
                 Invocations = m.Invocations.Select(i => new InvocationResponse
@@ -49,7 +49,7 @@ public class SimClassResponseMapper
                         Id = p.Id,
                         MethodId = i.RelatedMethodId,
                         Name = p.Name,
-                        ClassTypeId = p.TypeId
+                        ReferenceId = p.ReferenceId
                     }).ToList() ?? []
                 }).ToList()
             }).ToList(),
@@ -57,7 +57,7 @@ public class SimClassResponseMapper
             {
                 Id = a.Id,
                 Name = a.Name,
-                TypeId = a.TypeId,
+                ReferenceId = a.ReferenceId,
                 Privacity = EnumMapper.MapToModelPrivacity(a.Privacity),
                 RelatedClassId = a.RelatedClassId,
                 IsStatic = a.IsStatic
@@ -78,7 +78,7 @@ public class SimClassResponseMapper
                     {
                         Id = p.Id,
                         Name = p.Name,
-                        ClassTypeId = p.TypeId,
+                        ReferenceId = p.TypeId,
                         MethodId = p.RelatedMethodId
                     }).ToList()
                 }).ToList()

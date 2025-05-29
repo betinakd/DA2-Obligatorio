@@ -237,10 +237,10 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
                 break;
             case ReferenceVariable rv:
-                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
                 break;
             case ReferenceAttribute ra:
-                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                 break;
             case ReferenceBase rb:
                 _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -249,7 +249,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 _context.Entry(rt).Reference(r => r.Reference).Load();
                 break;
             case ReferenceStaticAttribute rsa:
-                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
                 break;
             case ReferenceStatic rsv:
                 _context.Entry(rsv).Reference(r => r.Reference).Load();
@@ -287,7 +287,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .Include(c => c.BaseClass)
             .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature)
-                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.ReturnType)
             .AsSplitQuery();

@@ -77,8 +77,8 @@ public class ExecutionDataAccessTest
         var paramSignature = new ParameterSignature
         {
             Name = "param1",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             SignatureId = signature.Id
         };
         signature.Parameters.Add(paramSignature);
@@ -673,7 +673,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [new ParameterSignature { Name = "methodParam", TypeId = intType.Id, Type = intType }] };
+        var signature = new Signature { Name = "TestMethod", Parameters = [new ParameterSignature { Name = "methodParam", ReferenceId = intType.Id, Reference = intType }] };
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
 
         result.Should().NotBeNull();
@@ -700,8 +700,8 @@ public class ExecutionDataAccessTest
         var variable = new LocalVariable
         {
             Name = "testVar",
-            TypeId = stringType.Id,
-            Type = stringType
+            ReferenceId = stringType.Id,
+            Reference = stringType
         };
         _context.LocalVariables.Add(variable);
         _context.SaveChanges();
@@ -744,8 +744,8 @@ public class ExecutionDataAccessTest
         result.Invocations[0].Reference.Should().BeOfType<ReferenceVariable>();
         var refVar = result.Invocations[0].Reference as ReferenceVariable;
         refVar.Reference.Should().NotBeNull();
-        refVar.Reference.Type.Should().NotBeNull();
-        refVar.Reference.Type.Name.Should().Be("string");
+        refVar.Reference.Reference.Should().NotBeNull();
+        refVar.Reference.Reference.Name.Should().Be("string");
     }
 
     [TestMethod]
@@ -762,8 +762,8 @@ public class ExecutionDataAccessTest
         var attribute = new SimAttribute
         {
             Name = "testAttr",
-            TypeId = boolType.Id,
-            Type = boolType,
+            ReferenceId = boolType.Id,
+            Reference = boolType,
             RelatedClassId = simClass.Id,
             RelatedClass = simClass
         };
@@ -808,8 +808,8 @@ public class ExecutionDataAccessTest
         result.Invocations[0].Reference.Should().BeOfType<ReferenceAttribute>();
         var refAttr = result.Invocations[0].Reference as ReferenceAttribute;
         refAttr.Reference.Should().NotBeNull();
-        refAttr.Reference.Type.Should().NotBeNull();
-        refAttr.Reference.Type.Name.Should().Be("bool");
+        refAttr.Reference.Reference.Should().NotBeNull();
+        refAttr.Reference.Reference.Name.Should().Be("bool");
     }
 
     [TestMethod]

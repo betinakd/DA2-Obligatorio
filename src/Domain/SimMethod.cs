@@ -145,7 +145,7 @@ public class SimMethod
 
         for(var i = 0; i < Parameters.Count; i++)
         {
-            if(Parameters[i].TypeId != signature.Parameters[i].TypeId)
+            if(Parameters[i].TypeId != signature.Parameters[i].ReferenceId)
             {
                 return false;
             }

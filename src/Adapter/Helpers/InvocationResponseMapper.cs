@@ -25,7 +25,7 @@ public class InvocationResponseMapper
                     Id = p.Id,
                     Name = p.Name,
                     MethodId = domainInvocation.RelatedMethodId,
-                    ClassTypeId = p.TypeId
+                    ReferenceId = p.ReferenceId
                 }).ToList() ?? []
         };
     }

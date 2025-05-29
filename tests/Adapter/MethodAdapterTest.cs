@@ -41,7 +41,7 @@ public class MethodAdapterTest
         var request = new ParameterRequest
         {
             Name = parameterName,
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "int" };
@@ -64,7 +64,7 @@ public class MethodAdapterTest
         result.Message.Should().Be("Parameter created successfully");
         result.Parameter.Name.Should().Be(parameterName);
         result.Parameter.MethodId.Should().Be(methodId);
-        result.Parameter.ClassTypeId.Should().Be(classTypeId);
+        result.Parameter.ReferenceId.Should().Be(classTypeId);
     }
 
     [TestMethod]
@@ -76,7 +76,7 @@ public class MethodAdapterTest
         var request = new ParameterRequest
         {
             Name = "Invalid",
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         var mockSimClassService = new Mock<ISimClassService>();
@@ -98,7 +98,7 @@ public class MethodAdapterTest
         var request = new VariablesRequest
         {
             Name = variableName,
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "string" };
@@ -106,13 +106,13 @@ public class MethodAdapterTest
         var localVariable = new VariablesRequest
         {
             Name = variableName,
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
         var localVar = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = variableName,
-            Type = simClass,
+            Reference = simClass,
             RelatedMethod = method
         };
 
@@ -128,7 +128,7 @@ public class MethodAdapterTest
         result.Message.Should().Be("Variable created successfully");
         result.Variable.Name.Should().Be(variableName);
         result.Variable.MethodId.Should().Be(methodId);
-        result.Variable.ClassTypeId.Should().Be(classTypeId);
+        result.Variable.ReferenceId.Should().Be(classTypeId);
     }
 
     [TestMethod]
@@ -140,7 +140,7 @@ public class MethodAdapterTest
         var request = new VariablesRequest
         {
             Name = " ",
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         _mockSimClassService!
@@ -177,7 +177,7 @@ public class MethodAdapterTest
         result.Id.Should().Be(parameterId);
         result.Name.Should().Be("param1");
         result.MethodId.Should().Be(methodId);
-        result.ClassTypeId.Should().Be(classTypeId);
+        result.ReferenceId.Should().Be(classTypeId);
     }
 
     [TestMethod]
@@ -204,8 +204,8 @@ public class MethodAdapterTest
         {
             Id = variableId,
             Name = "var1",
-            Type = simClass,
-            TypeId = classTypeId,
+            Reference = simClass,
+            ReferenceId = classTypeId,
             RelatedMethod = method,
             RelatedMethodId = methodId
         };
@@ -218,7 +218,7 @@ public class MethodAdapterTest
         result.Id.Should().Be(variableId);
         result.Name.Should().Be("var1");
         result.MethodId.Should().Be(methodId);
-        result.ClassTypeId.Should().Be(classTypeId);
+        result.ReferenceId.Should().Be(classTypeId);
     }
 
     [TestMethod]
@@ -379,7 +379,7 @@ public class MethodAdapterTest
         var parameterRequest = new ParameterRequest
         {
             Name = parameterName,
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         var invocationRequest = new InvocationRequest
@@ -409,8 +409,8 @@ public class MethodAdapterTest
         {
             Id = parameterId,
             Name = "customParam",
-            Type = simClass,
-            TypeId = classTypeId
+            Reference = simClass,
+            ReferenceId = classTypeId
         };
 
         var reference = new ReferenceThis() { Reference = simClass };
@@ -443,7 +443,7 @@ public class MethodAdapterTest
         result.Parameters.Should().HaveCount(1);
         result.Parameters[0].Id.Should().Be(parameter.Id);
         result.Parameters[0].Name.Should().Be("customParam");
-        result.Parameters[0].ClassTypeId.Should().Be(classTypeId);
+        result.Parameters[0].ReferenceId.Should().Be(classTypeId);
     }
 
     [TestMethod]
@@ -477,7 +477,7 @@ public class MethodAdapterTest
         {
             Id = attributeId,
             Name = "TestAttribute",
-            Type = simClass
+            Reference = simClass
         };
 
         var invocationRequest = new InvocationRequest
@@ -527,8 +527,8 @@ public class MethodAdapterTest
 
         var parameters = new List<ParameterRequest>
     {
-        new ParameterRequest { Name = "param1", IdClassType = intTypeId.ToString() },
-        new ParameterRequest { Name = "param2",  IdClassType = stringTypeId.ToString() }
+        new ParameterRequest { Name = "param1", IdReference = intTypeId.ToString() },
+        new ParameterRequest { Name = "param2",  IdReference = stringTypeId.ToString() }
     };
 
         var invocationRequest = new InvocationRequest
@@ -701,7 +701,7 @@ public class MethodAdapterTest
         var parameterRequest = new ParameterRequest
         {
             Name = "InvalidParameter",
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -721,7 +721,7 @@ public class MethodAdapterTest
         var parameterRequest = new ParameterRequest
         {
             Name = "NonExistentParameter",
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -755,7 +755,7 @@ public class MethodAdapterTest
         var variableRequest = new VariablesRequest
         {
             Name = "InvalidVariable",
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -775,7 +775,7 @@ public class MethodAdapterTest
         var variableRequest = new VariablesRequest
         {
             Name = "NonExistentVariable",
-            IdClassType = classTypeId.ToString()
+            IdReference = classTypeId.ToString()
         };
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
@@ -994,7 +994,7 @@ public class MethodAdapterTest
         {
             Id = variableId,
             Name = "testVar",
-            Type = variableType,
+            Reference = variableType,
             RelatedMethodId = methodId
         };
 
@@ -1068,7 +1068,7 @@ public class MethodAdapterTest
         {
             Id = variableId,
             Name = "testVar",
-            Type = variableType,
+            Reference = variableType,
             RelatedMethodId = differentMethodId
         };
 
@@ -1147,7 +1147,7 @@ public class MethodAdapterTest
         {
             Id = attributeId,
             Name = "TestAttr",
-            Type = attributeType
+            Reference = attributeType
         };
 
         var invocationRequest = new InvocationRequest
@@ -1283,7 +1283,7 @@ public class MethodAdapterTest
         {
             Id = staticAttributeId,
             Name = "StaticTestAttr",
-            Type = attributeType,
+            Reference = attributeType,
             IsStatic = true
         };
 

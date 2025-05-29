@@ -59,7 +59,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var parmeters = new List<Parameter>();
             foreach(var parameter in method.Parameters)
             {
-                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var type = _simClassService.GetSimClassById(parameter.ReferenceId);
                 parmeters.Add(new Parameter
                 {
                     Id = Guid.NewGuid(),
@@ -130,14 +130,14 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
     {
         try
         {
-            var type = _simClassService.GetSimClassById(variable.ClassTypeId);
+            var type = _simClassService.GetSimClassById(variable.ReferenceId);
             var method = _methodService.GetMethodById(idMethod);
             var localVariable = new LocalVariable()
             {
                 Id = Guid.NewGuid(),
                 Name = variable.Name,
-                Type = type,
-                TypeId = type.Id,
+                Reference = type,
+                ReferenceId = type.Id,
                 RelatedMethod = method,
                 RelatedMethodId = idMethod
             };
@@ -150,7 +150,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     Id = newAttribute.Id,
                     Name = newAttribute.Name,
                     MethodId = newAttribute.RelatedMethod.Id,
-                    ClassTypeId = newAttribute.Type.Id
+                    ReferenceId = newAttribute.Reference.Id
                 }
             };
             return response;
@@ -190,7 +190,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
     {
         try
         {
-            var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+            var type = _simClassService.GetSimClassById(parameter.ReferenceId);
             var method = _methodService.GetMethodById(idMethod);
             var parameterMethod = new Parameter()
             {
@@ -210,7 +210,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     Id = newAttribute.Id,
                     Name = newAttribute.Name,
                     MethodId = newAttribute.RelatedMethod.Id,
-                    ClassTypeId = newAttribute.Type.Id
+                    ReferenceId = newAttribute.Type.Id
                 }
             };
             return response;
@@ -245,14 +245,14 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var index = 0;
             foreach(var parameter in invocation.Parameters)
             {
-                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var type = _simClassService.GetSimClassById(parameter.ReferenceId);
                 var newParameter = new ParameterSignature()
                 {
                     Signature = signature,
                     SignatureId = signature.Id,
                     Name = parameter.Name,
-                    Type = type,
-                    TypeId = type.Id,
+                    Reference = type,
+                    ReferenceId = type.Id,
                     Index = index
                 };
 
@@ -261,7 +261,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 var newParameterResponse = new ParameterRequest()
                 {
                     Name = newParameter.Name,
-                    IdClassType = newParameter.Type.Id.ToString()
+                    IdReference = newParameter.Reference.Id.ToString()
                 };
 
                 signature.Parameters.Add(newParameter);

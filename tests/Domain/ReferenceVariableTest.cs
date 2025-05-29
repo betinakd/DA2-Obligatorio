@@ -10,7 +10,7 @@ public class ReferenceVariableTest
     public void TestGetSimClass_ShouldReturnParameterType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var localVariable = new LocalVariable { Type = simClass, Name = "Variable" };
+        var localVariable = new LocalVariable { Reference = simClass, Name = "Variable" };
         var referencelocalVariable = new ReferenceVariable { Reference = localVariable };
 
         var result = referencelocalVariable.GetSimClass();
@@ -43,7 +43,7 @@ public class ReferenceVariableTest
             ]
         };
 
-        var referenceVariable = new ReferenceVariable() { Reference = new LocalVariable { Type = new SimClass { Name = "TestClass" }, Name = "Variable" } };
+        var referenceVariable = new ReferenceVariable() { Reference = new LocalVariable { Reference = new SimClass { Name = "TestClass" }, Name = "Variable" } };
 
         var result = referenceVariable.GetSignature(signature);
 
@@ -63,7 +63,7 @@ public class ReferenceVariableTest
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
-        var localVariable = new LocalVariable { Type = simClass, Name = "Variable" };
+        var localVariable = new LocalVariable { Reference = simClass, Name = "Variable" };
         var referenceVariable = new ReferenceVariable { Reference = localVariable };
 
         var result = referenceVariable.GetSignatureWithClassName(signature);
@@ -79,7 +79,7 @@ public class ReferenceVariableTest
         {
             Id = expectedId,
             Name = "Variable",
-            Type = new SimClass { Name = "TestClass" }
+            Reference = new SimClass { Name = "TestClass" }
         };
         var referenceVariable = new ReferenceVariable { Reference = localVariable };
 

@@ -236,7 +236,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
         foreach(var localVariable in method.LocalVariables)
         {
-            if(_simClassDA.ClassInheritAttribute(localVariable.TypeId, attribute.Id))
+            if(_simClassDA.ClassInheritAttribute(localVariable.ReferenceId, attribute.Id))
             {
                 return;
             }

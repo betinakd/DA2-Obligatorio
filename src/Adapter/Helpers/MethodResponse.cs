@@ -30,14 +30,14 @@ public class MethodResponseMapper
                 Id = p.Id,
                 Name = p.Name,
                 MethodId = p.RelatedMethodId,
-                ClassTypeId = p.TypeId
+                ReferenceId = p.TypeId
             }).ToList(),
             Variables = domainMethod.LocalVariables?.Select(v => new VariableResponse
             {
                 Id = v.Id,
                 Name = v.Name,
                 MethodId = v.RelatedMethodId,
-                ClassTypeId = v.TypeId
+                ReferenceId = v.ReferenceId
             }).ToList() ?? [],
             Invocations = domainMethod.Invocations?.Select(i => new InvocationResponse
             {
@@ -48,7 +48,7 @@ public class MethodResponseMapper
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    ClassTypeId = p.TypeId
+                    ReferenceId = p.ReferenceId
                 }).ToList() ?? []
             }).ToList() ?? []
         };

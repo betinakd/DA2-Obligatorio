@@ -17,7 +17,7 @@ public class ParameterResponseMapper
         {
             Id = domainParameter.Id,
             Name = domainParameter.Name,
-            ClassTypeId = domainParameter.TypeId,
+            ReferenceId = domainParameter.TypeId,
             MethodId = domainParameter.RelatedMethodId
         };
     }

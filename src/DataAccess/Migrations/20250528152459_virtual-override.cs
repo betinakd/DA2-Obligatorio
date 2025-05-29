@@ -26,7 +26,7 @@ namespace DataAccess.Migrations
                 defaultValue: false);
 
             migrationBuilder.AlterColumn<Guid>(
-                name: "TypeId",
+                name: "ReferenceId",
                 table: "Parameters",
                 type: "uniqueidentifier",
                 nullable: false,
@@ -36,7 +36,7 @@ namespace DataAccess.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<Guid>(
-                name: "TypeId",
+                name: "ReferenceId",
                 table: "LocalVariables",
                 type: "uniqueidentifier",
                 nullable: false,
@@ -114,7 +114,7 @@ namespace DataAccess.Migrations
                 table: "SimMethods");
 
             migrationBuilder.AlterColumn<Guid>(
-                name: "TypeId",
+                name: "ReferenceId",
                 table: "Parameters",
                 type: "uniqueidentifier",
                 nullable: true,
@@ -122,7 +122,7 @@ namespace DataAccess.Migrations
                 oldType: "uniqueidentifier");
 
             migrationBuilder.AlterColumn<Guid>(
-                name: "TypeId",
+                name: "ReferenceId",
                 table: "LocalVariables",
                 type: "uniqueidentifier",
                 nullable: true,

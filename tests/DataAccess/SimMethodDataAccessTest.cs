@@ -42,9 +42,9 @@ public class SimMethodDataAccessTest
         var localVariable = new LocalVariable()
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "TestLocalVariable",
-            Type = new SimClass { Id = typeId, Name = "TestType" },
+            Reference = new SimClass { Id = typeId, Name = "TestType" },
         };
 
         var method = new SimMethod
@@ -63,7 +63,7 @@ public class SimMethodDataAccessTest
         var variableInDb = _context.LocalVariables.FirstOrDefault(v => v.Id == localVariable.Id);
         Assert.IsNotNull(variableInDb);
         Assert.AreEqual(localVariable.Name, variableInDb.Name);
-        Assert.AreEqual(localVariable.Type, variableInDb.Type);
+        Assert.AreEqual(localVariable.Reference, variableInDb.Reference);
         Assert.AreEqual(localVariable.RelatedMethodId, variableInDb.RelatedMethodId);
         Assert.AreEqual(localVariable.Id, result.Id);
     }
@@ -358,19 +358,19 @@ public class SimMethodDataAccessTest
         var localVariable = new LocalVariable()
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "TestLocalVariable",
             RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "TestType" },
+            Reference = new SimClass { Id = typeId, Name = "TestType" },
             RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
         };
         var localVariableRepeated = new LocalVariable()
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "TestLocalVariable",
             RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "TestType" },
+            Reference = new SimClass { Id = typeId, Name = "TestType" },
             RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
         };
         _context.LocalVariables.Add(localVariable);
@@ -403,10 +403,10 @@ public class SimMethodDataAccessTest
         var localVariable = new LocalVariable()
         {
             Id = variableId,
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "TestLocalVariable",
             RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "TestType" },
+            Reference = new SimClass { Id = typeId, Name = "TestType" },
             RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
         };
         _context.LocalVariables.Add(localVariable);
@@ -505,10 +505,10 @@ public class SimMethodDataAccessTest
         var localVariable = new LocalVariable()
         {
             Id = variableId,
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "TestLocalVariable",
             RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "TestType" },
+            Reference = new SimClass { Id = typeId, Name = "TestType" },
             RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" }
         };
         _context.LocalVariables.Add(localVariable);
@@ -671,8 +671,8 @@ public class SimMethodDataAccessTest
             Id = Guid.NewGuid(),
             Name = "localVar",
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.LocalVariables.Add(localVar);
 
@@ -681,8 +681,8 @@ public class SimMethodDataAccessTest
             Id = Guid.NewGuid(),
             Name = "testAttr",
             RelatedClassId = classId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.SimAttributes.Add(attribute);
 
@@ -695,8 +695,8 @@ public class SimMethodDataAccessTest
             Name = "sigParam1",
             Index = 2,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var sigParam2 = new ParameterSignature
         {
@@ -704,8 +704,8 @@ public class SimMethodDataAccessTest
             Name = "sigParam2",
             Index = 0,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var sigParam3 = new ParameterSignature
         {
@@ -713,8 +713,8 @@ public class SimMethodDataAccessTest
             Name = "sigParam3",
             Index = 1,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
 
         _context.ParameterSignatures.AddRange(sigParam1, sigParam2, sigParam3);
@@ -888,8 +888,8 @@ public class SimMethodDataAccessTest
         {
             Id = attributeId,
             Name = "TestAttr",
-            TypeId = typeId,
-            Type = typeClass,
+            ReferenceId = typeId,
+            Reference = typeClass,
             RelatedClassId = classId,
             RelatedClass = containingClass
         };
@@ -924,8 +924,8 @@ public class SimMethodDataAccessTest
         var refAttr = result.Reference as ReferenceAttribute;
         Assert.IsNotNull(refAttr!.Reference);
         Assert.AreEqual(attribute.Name, refAttr.Reference.Name);
-        Assert.IsNotNull(refAttr.Reference.Type);
-        Assert.AreEqual("TypeClass", refAttr.Reference.Type.Name);
+        Assert.IsNotNull(refAttr.Reference.Reference);
+        Assert.AreEqual("TypeClass", refAttr.Reference.Reference.Name);
     }
 
     [TestMethod]
@@ -1041,8 +1041,8 @@ public class SimMethodDataAccessTest
             Id = Guid.NewGuid(),
             Name = "param1",
             Index = 0,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.ParameterSignatures.Add(parameter);
 
@@ -1095,8 +1095,8 @@ public class SimMethodDataAccessTest
             Id = Guid.NewGuid(),
             Name = "param1",
             Index = 0,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.ParameterSignatures.Add(parameter);
 

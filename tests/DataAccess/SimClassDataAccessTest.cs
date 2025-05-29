@@ -111,11 +111,11 @@ public class SimClassDataAccessTest
         {
             Id = Guid.NewGuid(),
             RelatedClassId = simClassId,
-            TypeId = typeId,
+            ReferenceId = typeId,
             Privacity = SimPrivacity.Public,
             Name = "Vehiculo",
             RelatedClass = new SimClass { Id = simClassId, Name = "Test1" },
-            Type = new SimClass { Id = typeId, Name = "Test2" }
+            Reference = new SimClass { Id = typeId, Name = "Test2" }
         };
 
         _context.SimAttributes.Add(simAttribute);
@@ -153,10 +153,10 @@ public class SimClassDataAccessTest
         var localVariable = new LocalVariable()
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "Test Local Variable",
             RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "Test Type" },
+            Reference = new SimClass { Id = typeId, Name = "Test Reference" },
             RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
         };
 
@@ -435,8 +435,8 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "localVar",
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.LocalVariables.Add(localVar);
 
@@ -445,14 +445,14 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "testAttr",
             RelatedClassId = classId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.SimAttributes.Add(attribute);
 
         var signature = new Signature { Id = Guid.NewGuid(), Name = "TestSignature" };
-        var sigParam1 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam1", Index = 2, SignatureId = signature.Id, TypeId = typeId, Type = typeClass };
-        var sigParam2 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam2", Index = 0, SignatureId = signature.Id, TypeId = typeId, Type = typeClass };
+        var sigParam1 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam1", Index = 2, SignatureId = signature.Id, ReferenceId = typeId, Reference = typeClass };
+        var sigParam2 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam2", Index = 0, SignatureId = signature.Id, ReferenceId = typeId, Reference = typeClass };
         signature.Parameters = [sigParam1, sigParam2];
         _context.Signatures.Add(signature);
         _context.ParameterSignatures.AddRange(sigParam1, sigParam2);
@@ -561,24 +561,24 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "cVar",
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var localVar2 = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = "aVar",
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var localVar3 = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = "bVar",
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.LocalVariables.AddRange(localVar1, localVar2, localVar3);
 
@@ -587,8 +587,8 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "testAttr",
             RelatedClassId = classId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.SimAttributes.Add(attribute);
 
@@ -599,8 +599,8 @@ public class SimClassDataAccessTest
             Name = "sigParam1",
             Index = 1,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var sigParam2 = new ParameterSignature
         {
@@ -608,8 +608,8 @@ public class SimClassDataAccessTest
             Name = "sigParam2",
             Index = 0,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         signature.Parameters = [sigParam1, sigParam2];
         _context.Signatures.Add(signature);

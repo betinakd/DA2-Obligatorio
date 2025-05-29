@@ -25,7 +25,7 @@ public class LocalVariableTest
         _ = new LocalVariable()
         {
             Name = " ",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 
@@ -36,7 +36,7 @@ public class LocalVariableTest
         _ = new LocalVariable()
         {
             Name = "Invalid@Name",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 
@@ -47,7 +47,7 @@ public class LocalVariableTest
         _ = new LocalVariable()
         {
             Name = "123456",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 
@@ -58,7 +58,7 @@ public class LocalVariableTest
         _ = new LocalVariable()
         {
             Name = "class",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 }

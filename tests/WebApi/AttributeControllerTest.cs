@@ -49,7 +49,7 @@ public class AttributeControllerTest
         {
             Id = idToUpdate,
             Name = "UpdatedAttribute",
-            TypeId = Guid.NewGuid(),
+            ReferenceId = Guid.NewGuid(),
             Privacity = SimModelsPrivacity.Public,
             RelatedClassId = Guid.NewGuid()
         };
@@ -74,7 +74,7 @@ public class AttributeControllerTest
         {
             Id = idToGet,
             Name = "TestAttribute",
-            TypeId = Guid.NewGuid(),
+            ReferenceId = Guid.NewGuid(),
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             RelatedClassId = Guid.NewGuid()
         };
@@ -115,7 +115,7 @@ public class AttributeControllerTest
         {
             Id = id,
             Name = "Test Attribute",
-            TypeId = Guid.NewGuid(),
+            ReferenceId = Guid.NewGuid(),
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             RelatedClassId = Guid.NewGuid()
         };

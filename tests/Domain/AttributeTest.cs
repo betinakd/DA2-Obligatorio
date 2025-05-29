@@ -34,7 +34,7 @@ public class AttributeTest
         {
             Name = " ",
             Privacity = SimPrivacity.Public,
-            Type = simObject,
+            Reference = simObject,
             RelatedClass = simInt,
         };
     }
@@ -47,7 +47,7 @@ public class AttributeTest
         {
             Name = "Invalid@Name",
             Privacity = SimPrivacity.Public,
-            Type = simObject,
+            Reference = simObject,
             RelatedClass = simInt,
         };
     }
@@ -60,7 +60,7 @@ public class AttributeTest
         {
             Name = "123456",
             Privacity = SimPrivacity.Public,
-            Type = simObject,
+            Reference = simObject,
             RelatedClass = simInt,
         };
     }
@@ -73,7 +73,7 @@ public class AttributeTest
         {
             Name = "class",
             Privacity = SimPrivacity.Public,
-            Type = simObject,
+            Reference = simObject,
             RelatedClass = simInt,
         };
     }

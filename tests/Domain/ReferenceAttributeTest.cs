@@ -10,7 +10,7 @@ public class ReferenceAttributeTest
     public void TestGetSimClass_ShouldReturnAttributeType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
+        var attribute = new SimAttribute { Reference = simClass, Name = "Atri" };
         var referenceAttribute = new ReferenceAttribute { Reference = attribute };
 
         var result = referenceAttribute.GetSimClass();
@@ -43,7 +43,7 @@ public class ReferenceAttributeTest
             ]
         };
         var simClass = new SimClass { Name = "TestClass" };
-        var attribute = new SimAttribute { Type = simClass, Name = "Atri" };
+        var attribute = new SimAttribute { Reference = simClass, Name = "Atri" };
         var reference = new ReferenceAttribute { Reference = attribute };
         var result = reference.GetSignature(signature);
 
@@ -63,7 +63,7 @@ public class ReferenceAttributeTest
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
-        var attribute = new SimAttribute { Type = simClass, Name = "Attr" };
+        var attribute = new SimAttribute { Reference = simClass, Name = "Attr" };
         var reference = new ReferenceAttribute { Reference = attribute };
 
         var result = reference.GetSignatureWithClassName(signature);
@@ -90,7 +90,7 @@ public class ReferenceAttributeTest
         var simClass = new SimClass { Name = "TestClass" };
         var staticAttribute = new SimAttribute
         {
-            Type = simClass,
+            Reference = simClass,
             Name = "StaticAttr",
             IsStatic = true
         };

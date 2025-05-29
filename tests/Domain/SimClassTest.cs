@@ -467,9 +467,9 @@ public class SimClassTest
 
         simClass.Attributes =
         [
-            new SimAttribute { Name = "Attribute1", Type = stringClass },
-            new SimAttribute { Name = "Attribute2", Type = stringClass },
-            new SimAttribute { Name = "Attribute1", Type = boolClass }
+            new SimAttribute { Name = "Attribute1", Reference = stringClass },
+            new SimAttribute { Name = "Attribute2", Reference = stringClass },
+            new SimAttribute { Name = "Attribute1", Reference = boolClass }
         ];
     }
 
@@ -496,9 +496,9 @@ public class SimClassTest
         };
         var attributes = new List<SimAttribute>
         {
-            new SimAttribute { Name = "Attribute1", Type = stringClass },
-            new SimAttribute { Name = "Attribute2", Type = stringClass },
-            new SimAttribute { Name = "Attribute3", Type = boolClass }
+            new SimAttribute { Name = "Attribute1", Reference = stringClass },
+            new SimAttribute { Name = "Attribute2", Reference = stringClass },
+            new SimAttribute { Name = "Attribute3", Reference = boolClass }
         };
 
         simClass.Attributes = attributes;

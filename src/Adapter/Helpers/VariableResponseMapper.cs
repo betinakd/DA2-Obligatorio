@@ -18,7 +18,7 @@ public class VariableResponseMapper
         {
             Id = domainVariable.Id,
             Name = domainVariable.Name,
-            ClassTypeId = domainVariable.TypeId,
+            ReferenceId = domainVariable.ReferenceId,
             MethodId = domainVariable.RelatedMethodId
         };
     }
