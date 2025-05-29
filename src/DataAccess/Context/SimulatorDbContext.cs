@@ -539,16 +539,15 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         });
 
         _ = modelBuilder.Entity<ApiKey>().HasData(
-            new ApiKey
-            {
-                KeyValue = Guid.Parse("77777777-aaaa-1111-1111-111111111111"),
-                Name = "validKey_1"
-            },
-            new ApiKey
-            {
-                KeyValue = Guid.Parse("77777777-bbbb-1111-1111-111111111111"),
-                Name = "validKey_2"
-            }
-        );
+        new ApiKey
+        {
+            KeyValue = Guid.Parse("77777777-aaaa-1111-1111-111111111111"),
+            Name = "validKey_1"
+        },
+        new ApiKey
+        {
+           KeyValue = Guid.Parse("77777777-bbbb-1111-1111-111111111111"),
+           Name = "validKey_2"
+        });
     }
 }
