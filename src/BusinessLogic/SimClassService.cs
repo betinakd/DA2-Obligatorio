@@ -167,7 +167,5 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
         {
             throw new InvalidAttributeLogic("Reference class is not base of instance class.");
         }
-
-        derivedClass.BaseClass = baseClass;
     }
 }
