@@ -48,8 +48,32 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
                 Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
                 ReturnType = returnType,
-                ReturnTypeId = returnType.Id
+                ReturnTypeId = returnType.Id,
+                IsStatic = method.IsStatic,
+                IsVirtual = method.IsVirtual,
+                IsOverride = method.IsOverride,
             };
+
+            newMethod.Validate();
+            var index = 0;
+            var parmeters = new List<Parameter>();
+            foreach(var parameter in method.Parameters)
+            {
+                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                parmeters.Add(new Parameter
+                {
+                    Id = Guid.NewGuid(),
+                    Name = parameter.Name,
+                    Type = type,
+                    TypeId = type.Id,
+                    RelatedMethod = newMethod,
+                    RelatedMethodId = newMethod.Id,
+                    Index = index
+                });
+                index++;
+            }
+
+            newMethod.Parameters = parmeters;
 
             var createdMethod = _methodService.AddMethod(idClass, newMethod);
 
@@ -275,7 +299,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
                 case TypeReference.Attribute:
                     var attribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
-                    _executionService.ClassInheritAttribute(method.RelatedClassId, attribute.Id);
+                    _methodService.MethodInheritsAttribute(method, attribute);
                     reference = new ReferenceAttribute() { Reference = attribute, ReferenceId = attribute.Id };
                     var isNotAbstract = false;
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
@@ -301,6 +325,17 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     }
 
                     _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    break;
+                case TypeReference.StaticAttribute:
+                    var staticAttribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
+                    reference = new ReferenceStaticAttribute() { Reference = staticAttribute, ReferenceId = staticAttribute.Id };
+                    _methodService.ValidateStaticAttributeAccessibility(staticAttribute, idMethod);
+                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    break;
+                case TypeReference.Static:
+                    var staticClass = _simClassService.GetSimClassById(invocation.ReferenceId);
+                    reference = new ReferenceStatic() { Reference = staticClass, ReferenceId = staticClass.Id };
+                    _methodService.SignatureStaticExistsInClass(staticClass, idMethod, signature);
                     break;
 
                 default:

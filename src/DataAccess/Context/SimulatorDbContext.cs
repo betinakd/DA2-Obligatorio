@@ -142,7 +142,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .HasValue<ReferenceBase>("Base")
                     .HasValue<ReferenceAttribute>("Attribute")
                     .HasValue<ReferenceParameter>("Parameter")
-                    .HasValue<ReferenceVariable>("Variable");
+                    .HasValue<ReferenceVariable>("Variable")
+                    .HasValue<ReferenceStaticAttribute>("StaticAttribute")
+                    .HasValue<ReferenceStatic>("Static");
 
         _ = modelBuilder.Entity<Reference>()
             .HasKey(r => r.Id);
@@ -404,7 +406,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = boolTypeId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Public,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -413,7 +418,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = boolTypeId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Public,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -422,7 +430,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = voidTypeId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Protected,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -431,7 +442,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = intTypeId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Public,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -440,7 +454,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = objectClassId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Public,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -449,7 +466,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = objectClassId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Protected,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -458,7 +478,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = boolTypeId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Public,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             },
             new SimMethod
             {
@@ -467,7 +490,10 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 ReturnTypeId = stringTypeId,
                 RelatedClassId = objectClassId,
                 Privacity = SimPrivacity.Public,
-                Accesibility = SimAccesibility.Normal
+                Accesibility = SimAccesibility.Normal,
+                IsStatic = false,
+                IsVirtual = true,
+                IsOverride = true
             });
 
         _ = modelBuilder.Entity<Parameter>().HasData(

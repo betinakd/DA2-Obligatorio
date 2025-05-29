@@ -45,7 +45,8 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 RelatedClass = relatedClass,
                 RelatedClassId = relatedClass.Id,
                 Type = type,
-                TypeId = type.Id
+                TypeId = type.Id,
+                IsStatic = attribute.IsStatic
             };
             _simAttributeService.UpdateAttribute(attribute.IdAttribute, updatedAttribute);
 

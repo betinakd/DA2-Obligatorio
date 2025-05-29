@@ -1,7 +1,7 @@
 using Domain.Enums;
 using Models.Enums;
 
-public static class EnumMapper
+public class EnumMapper
 {
     public static SimModelsPrivacity MapToModelPrivacity(SimPrivacity? privacity)
     {

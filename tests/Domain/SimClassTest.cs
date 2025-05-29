@@ -182,7 +182,6 @@ public class SimClassTest
     [ExpectedException(typeof(InvalidAttributeDomain))]
     public void SetBaseClassShouldThrowExceptionWhenConcreteClassDoesNotImplementAllAbstractMethods()
     {
-        // Crear un tipo de retorno para los métodos
         var voidType = new SimClass
         {
             Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
@@ -191,7 +190,6 @@ public class SimClassTest
             BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
         };
 
-        // Inicializar la clase base abstracta con métodos completos
         var baseClass = new SimClass
         {
             Id = Guid.NewGuid(),
@@ -222,7 +220,6 @@ public class SimClassTest
             ]
         };
 
-        // Configurar la clase derivada con implementación parcial
         var derivedClass = new SimClass
         {
             Id = Guid.NewGuid(),
@@ -742,5 +739,22 @@ public class SimClassTest
         var collection = new List<SimClass> { class1 };
 
         Assert.IsTrue(collection.Contains(class2), "Collection should find an object with the same ID");
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void Methods_ShouldThrowException_WhenInterfaceHasStaticMethods()
+    {
+        var simClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+
+        simClass.Methods =
+        [
+            new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface },
+        new SimMethod { Name = "StaticMethod", Accesibility = SimAccesibility.Interface, IsStatic = true }
+        ];
     }
 }

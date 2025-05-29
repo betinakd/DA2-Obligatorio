@@ -11,6 +11,7 @@ public class SimAttribute
     public Guid? TypeId { get; set; }
     public SimClass? Type { get; set; }
     public SimPrivacity? Privacity { get; set; } = SimPrivacity.Public;
+    public bool IsStatic { get; set; } = false;
     public SimClass? RelatedClass { get; set; }
     public Guid? RelatedClassId { get; set; }
     public string Name

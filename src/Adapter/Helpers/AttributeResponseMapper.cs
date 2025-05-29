@@ -4,7 +4,7 @@ using Models.Response;
 
 namespace Adapter.Helpers;
 [ExcludeFromCodeCoverage]
-public static class AttributeResponseMapper
+public class AttributeResponseMapper
 {
     public static AttributeResponse MapToAttributeResponse(SimAttribute domainAttribute)
     {
@@ -19,7 +19,8 @@ public static class AttributeResponseMapper
             Name = domainAttribute.Name,
             TypeId = domainAttribute.TypeId,
             Privacity = EnumMapper.MapToModelPrivacity(domainAttribute.Privacity),
-            RelatedClassId = domainAttribute.RelatedClassId
+            RelatedClassId = domainAttribute.RelatedClassId,
+            IsStatic = domainAttribute.IsStatic
         };
     }
 }

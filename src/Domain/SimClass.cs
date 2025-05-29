@@ -8,6 +8,7 @@ public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private List<SimMethod> _methods = [];
+
     public List<SimMethod> Methods
     {
         get => _methods;
@@ -29,6 +30,11 @@ public class SimClass
             if(_methods.Any(m => m.Accesibility == SimAccesibility.Interface && State != SimAccesibility.Interface))
             {
                 throw new InvalidAttributeDomain("A non-interface class cannot have interface methods.");
+            }
+
+            if(_methods.Any(m => m.IsStatic && State == SimAccesibility.Interface))
+            {
+                throw new InvalidAttributeDomain("A interface class cannot have static methods.");
             }
 
             for(var i = 0; i < _methods.Count; i++)

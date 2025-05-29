@@ -175,6 +175,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                 case ReferenceThis rt:
                     _context.Entry(rt).Reference(r => r.Reference).Load();
                     break;
+                case ReferenceStaticAttribute rsa:
+                    _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                    break;
+                case ReferenceStatic rsv:
+                    _context.Entry(rsv).Reference(r => r.Reference).Load();
+                    break;
             }
         }
 
@@ -228,6 +234,12 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                     case ReferenceThis rt:
                         _context.Entry(rt).Reference(r => r.Reference).Load();
                         break;
+                    case ReferenceStaticAttribute rsa:
+                        _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                        break;
+                    case ReferenceStatic rsv:
+                        _context.Entry(rsv).Reference(r => r.Reference).Load();
+                        break;
                 }
             }
         }
@@ -257,9 +269,11 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
 
     public bool MethodIsInUse(Guid id)
     {
+        var method = GetMethodById(id);
         return _context.LocalVariables.Any(v => v.RelatedMethodId == id) ||
                _context.Parameters.Any(p => p.RelatedMethodId == id) ||
-               _context.Invocations.Any(i => i.RelatedMethodId == id);
+               _context.Invocations.Any(i => i.RelatedMethodId == id) ||
+               MethodInUseByInvocations(method);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
@@ -270,5 +284,36 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
     public bool MethodVariableRepeatedValues(Guid methodId, LocalVariable localVariable)
     {
         return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name.ToLower() == localVariable.Name.ToLower());
+    }
+
+    private List<Invocation> GetAllInvocations()
+    {
+        var invocationIds = _context.Invocations.Select(i => i.Id).ToList();
+        var invocations = new List<Invocation>();
+
+        foreach(var id in invocationIds)
+        {
+            var invocation = GetInvocationById(id);
+            if(invocation != null)
+            {
+                invocations.Add(invocation);
+            }
+        }
+
+        return invocations;
+    }
+
+    public bool MethodInUseByInvocations(SimMethod method)
+    {
+        var invocations = GetAllInvocations();
+        foreach(var invocation in invocations)
+        {
+            if(method.MatchSignature(invocation.Signature))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
