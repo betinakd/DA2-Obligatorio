@@ -52,4 +52,9 @@ public class ReferenceStaticAttribute : Reference
     {
         return "StaticAttribute";
     }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return Reference.Instance;
+    }
 }
