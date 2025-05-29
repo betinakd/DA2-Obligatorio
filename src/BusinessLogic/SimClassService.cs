@@ -150,4 +150,12 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("Attribute not reacheable from method.");
         }
     }
+
+    public void ValidPolymorphism(SimClass baseClass, SimClass derivedClass)
+    {
+        if(derivedClass.State == SimAccesibility.Interface)
+        {
+            throw new InvalidAttributeLogic("Polymorphic inheritance is not allowed when the derived type is an interface.");
+        }
+    }
 }

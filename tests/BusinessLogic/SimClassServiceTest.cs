@@ -559,4 +559,32 @@ public class SimClassServiceTest
 
         Assert.AreEqual("Attribute not reacheable from method.", exception.Message);
     }
+
+    [TestMethod]
+    public void ValidPolymorphism_ShouldThrow_WhenDerivedIsInterface()
+    {
+        var baseClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "BaseClass",
+            State = SimAccesibility.Normal
+        };
+
+        var derivedClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "DerivedInterface",
+            State = SimAccesibility.Interface
+        };
+
+        var service = new SimClassService(
+            _mockSimClassDataAccess!.Object,
+            _mockSimAttributeDataAccess!.Object,
+            _mockExecutionDataAccess!.Object);
+
+        var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            service.ValidPolymorphism(baseClass, derivedClass));
+
+        Assert.AreEqual("Polymorphic inheritance is not allowed when the derived type is an interface.", ex.Message);
+    }
 }
