@@ -157,5 +157,12 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
         {
             throw new InvalidAttributeLogic("Polymorphic inheritance is not allowed when the derived type is an interface.");
         }
+
+        if(derivedClass.State == SimAccesibility.Abstract)
+        {
+            throw new InvalidAttributeLogic("Polymorphic inheritance is not allowed when the base type is abstract.");
+        }
+
+        derivedClass.BaseClass = baseClass;
     }
 }
