@@ -522,16 +522,20 @@ public class MethodAdapterTest
         var referenceId = Guid.NewGuid();
         var intTypeId = Guid.NewGuid();
         var stringTypeId = Guid.NewGuid();
+        var intInstanceId = Guid.NewGuid();
+        var stringInstanceId = Guid.NewGuid();
 
         var method = new SimMethod { Id = methodId, Name = "TestMethod", RelatedClassId = referenceId };
         var intType = new SimClass { Id = intTypeId, Name = "int" };
         var stringType = new SimClass { Id = stringTypeId, Name = "string" };
+        var intInstance = new SimClass { Id = intInstanceId, Name = "IntInstance" };
+        var stringInstance = new SimClass { Id = stringInstanceId, Name = "StringInstance" };
         var referenceClass = new SimClass { Id = referenceId, Name = "TestClass" };
 
         var parameters = new List<ParameterSignatureRequest>
     {
-        new ParameterSignatureRequest { Name = "param1", IdReference = intTypeId.ToString() },
-        new ParameterSignatureRequest { Name = "param2",  IdReference = stringTypeId.ToString() }
+        new ParameterSignatureRequest { Name = "param1", IdReference = intTypeId.ToString(), IdInstance = intInstanceId.ToString() },
+        new ParameterSignatureRequest { Name = "param2", IdReference = stringTypeId.ToString(), IdInstance = stringInstanceId.ToString() }
     };
 
         var invocationRequest = new InvocationRequest
@@ -546,6 +550,8 @@ public class MethodAdapterTest
         _mockSimClassService.Setup(s => s.GetSimClassById(referenceId)).Returns(referenceClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(intTypeId)).Returns(intType);
         _mockSimClassService.Setup(s => s.GetSimClassById(stringTypeId)).Returns(stringType);
+        _mockSimClassService.Setup(s => s.GetSimClassById(intInstanceId)).Returns(intInstance);
+        _mockSimClassService.Setup(s => s.GetSimClassById(stringInstanceId)).Returns(stringInstance);
         _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
             .Returns((Guid id, Invocation inv) => inv);
 
@@ -557,7 +563,7 @@ public class MethodAdapterTest
                 sig.Parameters[0].Name == "param1" &&
                 sig.Parameters[1].Name == "param2"), true));
 
-        var result = adapter.CreateInvocation(methodId, invocationRequest);
+        var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
         _mockMethodService.VerifyAll();
         _mockSimClassService.VerifyAll();

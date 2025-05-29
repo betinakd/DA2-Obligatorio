@@ -249,6 +249,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             foreach(var parameter in invocation.Parameters)
             {
                 var type = _simClassService.GetSimClassById(parameter.ReferenceId);
+                var instance = _simClassService.GetSimClassById(parameter.InstanceId);
+
                 var newParameter = new ParameterSignature()
                 {
                     Signature = signature,
@@ -256,6 +258,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     Name = parameter.Name,
                     Reference = type,
                     ReferenceId = type.Id,
+                    Instance = instance,
+                    InstanceId = instance.Id,
                     Index = index
                 };
 
