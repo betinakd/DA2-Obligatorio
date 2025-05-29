@@ -73,7 +73,6 @@ public class ReferenceParameterTest
     [TestMethod]
     public void TestGetReferenceId_ShouldReturnParameterId()
     {
-        // Arrange
         var expectedId = Guid.NewGuid();
         var parameter = new Parameter
         {
@@ -86,5 +85,46 @@ public class ReferenceParameterTest
         var actualId = referenceParameter.GetReferenceId();
 
         Assert.AreEqual(expectedId, actualId);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnParameterInstance_WhenParameterIndexMatches()
+    {
+        var expectedInstance = new SimClass { Name = "InstanceClass" };
+        var typeClass = new SimClass { Name = "TypeClass" };
+        var parameter = new Parameter { Name = "param1", Index = 0, Type = typeClass };
+        var referenceParameter = new ReferenceParameter { Reference = parameter };
+
+        var signature = new Signature
+        {
+            Parameters = [
+                new ParameterSignature { Index = 0, Instance = expectedInstance }
+            ]
+        };
+        var executionInstance = new SimClass();
+
+        var result = referenceParameter.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(expectedInstance, result);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReferenceType_WhenParameterIndexNotFound()
+    {
+        var typeClass = new SimClass { Name = "TypeClass" };
+        var parameter = new Parameter { Name = "param1", Index = 1, Type = typeClass };
+        var referenceParameter = new ReferenceParameter { Reference = parameter };
+
+        var signature = new Signature
+        {
+            Parameters = [
+                new ParameterSignature { Index = 0, Instance = new SimClass() }
+            ]
+        };
+        var executionInstance = new SimClass();
+
+        var result = referenceParameter.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(typeClass, result);
     }
 }

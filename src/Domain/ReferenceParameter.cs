@@ -38,4 +38,18 @@ public class ReferenceParameter : Reference
     {
         return "Parameter";
     }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        if(signature.Parameters != null)
+        {
+            var param = signature.Parameters.FirstOrDefault(p => p.Index == Reference.Index);
+            if(param != null)
+            {
+                return param.Instance;
+            }
+        }
+
+        return Reference.Type;
+    }
 }
