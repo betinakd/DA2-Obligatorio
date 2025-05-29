@@ -297,7 +297,7 @@ public class ExecutionServiceTest
         _mockApikeyDataAccess.Verify(m => m.ApiKeyExists(validApikey), Times.Once);
     }
 
-    [TestMethod]  
+    [TestMethod]
     public void ExecuteMethod_DynamicDispatch_UsesObjRealClass()
     {
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
@@ -402,7 +402,7 @@ public class ExecutionServiceTest
         var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = null };
 
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
 
@@ -416,7 +416,7 @@ public class ExecutionServiceTest
         var obj = new SimClass { Id = Guid.NewGuid(), Name = "ObjClass", BaseClassId = refer.Id };
 
         _mockExecuteDataAccess = new Mock<IExecutionDataAccess>(MockBehavior.Loose);
-        _executionService = new ExecutionService(_mockExecuteDataAccess.Object);
+        _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = _executionService.IsReferenceBaseOfInstance(refer, obj);
 
@@ -442,7 +442,7 @@ public class ExecutionServiceTest
                 f(new List<SimClass> { refer }.AsQueryable()).Any(c => c.Id == refer.Id))))
             .Returns([refer]);
 
-        var service = new ExecutionService(mockDataAccess.Object);
+        var service = new ExecutionService(mockDataAccess.Object, _mockApikeyDataAccess.Object);
 
         var result = service.IsReferenceBaseOfInstance(refer, obj);
 

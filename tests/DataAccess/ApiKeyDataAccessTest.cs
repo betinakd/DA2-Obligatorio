@@ -1,7 +1,6 @@
 using DataAccess;
 using DataAccess.Context;
 using Domain;
-using IDataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace Tests.DataAccess;
