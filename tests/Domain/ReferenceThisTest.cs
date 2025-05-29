@@ -57,4 +57,18 @@ public class ReferenceThisTest()
 
         Assert.AreEqual("TestClass.TestMethod(param1, param2)", result);
     }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReferenceInstance_ForReferenceThis()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        var referenceThis = new ReferenceThis { Reference = simClass };
+
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = referenceThis.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(executionInstance, result);
+    }
 }

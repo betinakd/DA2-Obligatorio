@@ -31,4 +31,9 @@ public class ReferenceThis : Reference
     {
         return "This";
     }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return executionInstance;
+    }
 }
