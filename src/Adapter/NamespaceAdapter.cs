@@ -25,4 +25,14 @@ public class NamespaceAdapter(INamespaceService namespaceService) : INamespaceAd
 
         return response;
     }
+
+    public string AddClassInNamespace(Guid id, NamespaceElementAdd_Request request)
+    {
+        return _namespaceService.AddClassInNamespace(id, request);
+    }
+
+    public string AddInterfaceInNamespace(Guid id, NamespaceElementAdd_Request request)
+    {
+        return _namespaceService.AddInterfaceInNamespace(id, request);
+    }
 }

@@ -45,4 +45,33 @@ public class NamespaceControllerTest
         Assert.AreEqual("GetNamespaceById", result.Location);
         Assert.AreEqual(response, result.Value);
     }
+
+    [TestMethod]
+    public void AddClassInNamespace_ShouldReturnOk_WhenRequestIsValid()
+    {
+        var id = Guid.NewGuid();
+        var request = new NamespaceElementAdd_Request { ClassId = Guid.Parse("11111111-1111-1111-1111-111111111111") };
+        _mockNamespaceAdapter.Setup(x => x.AddClassInNamespace(id, request)).Returns("Class added successfully");
+
+        var result = _namespaceController.AddClassInNamespace(id, request) as OkObjectResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Class added successfully", result.Value);
+    }
+
+    [TestMethod]
+    public void AddInterfaceInNamespace_ShouldReturnOk_WhenRequestIsValid()
+    {
+        var id = Guid.NewGuid();
+        var request = new NamespaceElementAdd_Request
+        {
+            InterfaceId = Guid.NewGuid(),
+        };
+        _mockNamespaceAdapter.Setup(x => x.AddInterfaceInNamespace(id, request)).Returns("Interface added successfully");
+
+        var result = _namespaceController.AddInterfaceInNamespace(id, request) as OkObjectResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Interface added successfully", result.Value);
+    }
 }
