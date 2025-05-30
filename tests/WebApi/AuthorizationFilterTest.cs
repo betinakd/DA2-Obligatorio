@@ -122,6 +122,24 @@ public class AuthorizationFilterTest
         _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(Guid.Empty), Times.Once);
     }
 
+    [TestMethod]
+    public void OnAuthorization_ApiKeyFromRequirements_Succeeds()
+    {
+        var apiKey = Guid.Parse("9C0FF0B1-4ABD-45C6-8A4A-831748FB7A20");
+        var headers = new HeaderDictionary
+        {
+            { "API_KEY", apiKey.ToString() }
+        };
+        var context = CreateContext(headers);
+
+        _mockExecutionAdapter.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(true);
+
+        _authorizationFilter.OnAuthorization(context);
+
+        Assert.IsNull(context.Result);
+        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
+    }
+
     private void AssertUnauthorizedResult(AuthorizationFilterContext context, string expectedMessage)
     {
         Assert.IsNotNull(context.Result);
