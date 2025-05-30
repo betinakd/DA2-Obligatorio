@@ -501,10 +501,10 @@ public class SimMethodTest
         staticMethod.Invocations =
         [
             new Invocation
-        {
-            RelatedMethodId = Guid.NewGuid(),
-            Reference = nonStaticReference
-        }
+            {
+                RelatedMethodId = Guid.NewGuid(),
+                Reference = nonStaticReference
+            }
 
         ];
     }
@@ -522,10 +522,10 @@ public class SimMethodTest
         staticMethod.Invocations =
         [
             new Invocation
-        {
-            RelatedMethodId = Guid.NewGuid(),
-            Reference = staticReference
-        }
+            {
+                RelatedMethodId = Guid.NewGuid(),
+                Reference = staticReference
+            }
 
         ];
 
