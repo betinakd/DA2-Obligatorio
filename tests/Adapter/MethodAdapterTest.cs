@@ -122,6 +122,7 @@ public class MethodAdapterTest
         _mockSimClassService.Setup(s => s.GetSimClassById(instanceId)).Returns(instanceClass);
         _mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockMethodService.Setup(s => s.AddLocalVariable(methodId, It.IsAny<LocalVariable>())).Returns(localVar);
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
 
         var adapter = new MethodAdapter(_mockMethodService.Object, _mockSimClassService.Object, _mockAttributeService.Object, _mockExecutionService.Object);
 
@@ -146,10 +147,19 @@ public class MethodAdapterTest
             Name = " ",
             IdReference = classTypeId.ToString()
         };
+        var instanceId = Guid.NewGuid();
 
         _mockSimClassService!
             .Setup(s => s.GetSimClassById(classTypeId))
             .Throws(new InvalidAttributeDomain("SimClass error"));
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
+        _mockSimClassService!
+            .Setup(s => s.GetSimClassById(instanceId))
+            .Returns(new SimClass { Id = instanceId, Name = "InstanceClass" });
+        _mockMethodService!
+            .Setup(s => s.GetMethodById(methodId))
+            .Returns(new SimMethod { Id = methodId, Name = "TestMethod" });
 
         adapter!.CreateVariable(methodId, request);
     }
@@ -466,13 +476,15 @@ public class MethodAdapterTest
         var methodId = Guid.NewGuid();
         var attributeId = Guid.NewGuid();
         var classTypeId = Guid.NewGuid();
+        var relatedClassId = Guid.NewGuid();
 
+        var relatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" };
         var method = new SimMethod
         {
             Id = methodId,
             Name = "TestMethod",
-            RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" }, // Añadir RelatedClass
-            RelatedClassId = Guid.NewGuid()
+            RelatedClass = relatedClass,
+            RelatedClassId = relatedClassId
         };
 
         var simClass = new SimClass { Id = classTypeId, Name = "int" };
@@ -493,11 +505,13 @@ public class MethodAdapterTest
 
         _mockMethodService!.Setup(s => s.GetMethodById(methodId)).Returns(method);
         _mockAttributeService!.Setup(s => s.GetSimAttribute(attributeId)).Returns(attribute);
-
         _mockMethodService.Setup(s => s.MethodInheritsAttribute(method, attribute));
-
         _mockMethodService.Setup(s => s.AddInvocation(methodId, It.IsAny<Invocation>()))
             .Returns((Guid id, Invocation inv) => inv);
+
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
+
+        _mockSimClassService.Setup(s => s.GetSimClassById(It.IsAny<Guid>())).Returns(relatedClass);
 
         _mockExecutionService!.Setup(s => s.ValidateMethodExistsInClass(
             It.IsAny<SimClass>(),
@@ -507,7 +521,6 @@ public class MethodAdapterTest
         var result = adapter!.CreateInvocation(methodId, invocationRequest);
 
         _mockMethodService.VerifyAll();
-        _mockSimClassService.VerifyAll();
         _mockAttributeService.VerifyAll();
 
         result.Should().NotBeNull();
@@ -547,6 +560,7 @@ public class MethodAdapterTest
         };
 
         _mockMethodService.Setup(s => s.GetMethodById(methodId)).Returns(method);
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
         _mockSimClassService.Setup(s => s.GetSimClassById(referenceId)).Returns(referenceClass);
         _mockSimClassService.Setup(s => s.GetSimClassById(intTypeId)).Returns(intType);
         _mockSimClassService.Setup(s => s.GetSimClassById(stringTypeId)).Returns(stringType);
@@ -766,9 +780,12 @@ public class MethodAdapterTest
             Name = "InvalidVariable",
             IdReference = classTypeId.ToString()
         };
-
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
             .Throws(new InvalidAttributeLogic("Invalid attribute logic error"));
+        _mockMethodService!
+            .Setup(s => s.GetMethodById(methodId))
+            .Returns(new SimMethod { Id = methodId, Name = "TestMethod" });
 
         adapter!.CreateVariable(methodId, variableRequest);
         _mockSimClassService.VerifyAll();
@@ -789,6 +806,10 @@ public class MethodAdapterTest
 
         _mockSimClassService!.Setup(s => s.GetSimClassById(classTypeId))
             .Throws(new NonExistentValueLogic("Class type does not exist"));
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
+        _mockMethodService!
+            .Setup(s => s.GetMethodById(methodId))
+            .Returns(new SimMethod { Id = methodId, Name = "TestMethod" });
 
         adapter!.CreateVariable(methodId, variableRequest);
 

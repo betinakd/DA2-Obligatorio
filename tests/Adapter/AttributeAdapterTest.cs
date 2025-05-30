@@ -79,10 +79,11 @@ public class AttributeAdapterTest
         _mockSimClassService!
             .Setup(s => s.GetSimClassById(instanceId))
             .Returns(instanceClass);
-
         _mockSimAttributeService!
             .Setup(s => s.CreateAttribute(relatedClassId, It.IsAny<SimAttribute>()))
             .Returns(createdSimAttribute);
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
 
         var result = _simAttributeAdapter!.CreateAttribute(relatedClassId, attributeRequest);
 
@@ -161,6 +162,8 @@ public class AttributeAdapterTest
         _mockSimAttributeService!
             .Setup(s => s.CreateAttribute(classId, It.IsAny<SimAttribute>()))
             .Throws(new InUseValueLogic("Exception message"));
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
 
         var ex = Assert.ThrowsException<InUseValueAdapter>(() =>
             _simAttributeAdapter!.CreateAttribute(classId, attributeRequest));
@@ -221,6 +224,8 @@ public class AttributeAdapterTest
         _mockSimAttributeService!
             .Setup(s => s.CreateAttribute(classId, It.IsAny<SimAttribute>()))
             .Throws(new InvalidAttributeDomain("Exception message"));
+        _mockSimClassService!
+            .Setup(s => s.ValidPolymorphism(It.IsAny<SimClass>(), It.IsAny<SimClass>()));
 
         _simAttributeAdapter!.CreateAttribute(classId, attributeRequest);
     }

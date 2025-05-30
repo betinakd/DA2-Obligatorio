@@ -90,6 +90,8 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
             var type = _simClassService.GetSimClassById(attribute.ReferenceId);
             var instance = _simClassService.GetSimClassById(attribute.InstanceId);
 
+            _simClassService.ValidPolymorphism(type, instance);
+
             var newAttribute = new SimAttribute()
             {
                 Id = Guid.NewGuid(),

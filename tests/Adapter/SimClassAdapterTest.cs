@@ -348,10 +348,11 @@ public class SimClassAdapterTest
     [TestMethod]
     public void UpdateSimClass_ShouldReturnSuccessResponse_WhenUpdateIsSuccessful()
     {
-        // Arrange
         var classId = Guid.NewGuid();
         var baseClassId = Guid.NewGuid();
         var objTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var instanceId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
 
         var request = new SimClassRequestUpdate
         {
@@ -359,8 +360,8 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
             Methods =
-        [
-            new MethodRequest
+            [
+                new MethodRequest
             {
                 Name = "TestMethod",
                 Privacity = SimModelsPrivacity.Public,
@@ -372,21 +373,24 @@ public class SimClassAdapterTest
                 ]
             }
 
-        ],
+            ],
             Attributes =
-        [
-            new AttributeRequest
+            [
+                new AttributeRequest
             {
                 Name = "TestAttribute",
                 Privacity = SimModelsPrivacity.Private,
-                IdReference = objTypeId.ToString()
+                IdReference = typeId.ToString(),
+                IdInstance = instanceId.ToString()
             }
 
-        ]
+            ]
         };
 
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
         var objectClass = new SimClass { Id = objTypeId, Name = "Object" };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass" };
         var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
@@ -400,6 +404,16 @@ public class SimClassAdapterTest
         _mockSimClassService
             .Setup(s => s.GetSimClassById(objTypeId))
             .Returns(objectClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(typeId))
+            .Returns(typeClass);
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(instanceId))
+            .Returns(instanceClass);
+
+        _mockSimClassService
+            .Setup(s => s.ValidPolymorphism(typeClass, instanceClass));
 
         _mockMethodService
             .Setup(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()));

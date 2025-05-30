@@ -130,9 +130,13 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
     {
         try
         {
+            var method = _methodService.GetMethodById(idMethod);
+
             var type = _simClassService.GetSimClassById(variable.ReferenceId);
             var instance = _simClassService.GetSimClassById(variable.InstanceId);
-            var method = _methodService.GetMethodById(idMethod);
+
+            _simClassService.ValidPolymorphism(type, instance);
+
             var localVariable = new LocalVariable()
             {
                 Id = Guid.NewGuid(),
@@ -148,13 +152,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var response = new CreatedVariableResponse
             {
                 Message = "Variable created successfully",
-                Variable = new VariableResponse()
-                {
-                    Id = newAttribute.Id,
-                    Name = newAttribute.Name,
-                    MethodId = newAttribute.RelatedMethod.Id,
-                    ReferenceId = newAttribute.Reference.Id
-                }
+                Variable = VariableResponseMapper.MapToVariableResponse(newAttribute)
             };
             return response;
         }
@@ -251,6 +249,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 var type = _simClassService.GetSimClassById(parameter.ReferenceId);
                 var instance = _simClassService.GetSimClassById(parameter.InstanceId);
 
+                _simClassService.ValidPolymorphism(type, instance);
+
                 var newParameter = new ParameterSignature()
                 {
                     Signature = signature,
@@ -265,14 +265,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
 
                 index++;
 
-                var newParameterResponse = new ParameterRequest()
-                {
-                    Name = newParameter.Name,
-                    IdReference = newParameter.Reference.Id.ToString()
-                };
-
                 signature.Parameters.Add(newParameter);
-                parametersResponses.Add(newParameterResponse);
             }
 
             switch(invocation.TypeReference)

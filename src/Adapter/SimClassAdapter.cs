@@ -71,6 +71,10 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
             foreach(var atri in request.Attributes)
             {
                 var typeClass = _simClassService.GetSimClassById(atri.ReferenceId);
+                var instance = _simClassService.GetSimClassById(atri.InstanceId);
+
+                _simClassService.ValidPolymorphism(typeClass, instance);
+
                 var newAttribute = new SimAttribute()
                 {
                     Name = atri.Name,
@@ -79,6 +83,8 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
                     RelatedClass = classToUpdate,
                     Reference = typeClass,
                     ReferenceId = typeClass.Id,
+                    Instance = instance,
+                    InstanceId = instance.Id,
                     IsStatic = atri.IsStatic
                 };
                 attributesNewClas.Add(newAttribute);
