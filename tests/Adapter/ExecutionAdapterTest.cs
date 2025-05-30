@@ -324,4 +324,19 @@ public class ExecutionAdapterTest
         Assert.IsFalse(result);
         _mockExecutionService.Verify(s => s.IsAuthorizedUser(invalidApiKey), Times.Once);
     }
+
+    [TestMethod]
+    public void IsAuthorizedUser_WithEmptyApiKey_ReturnsFalse()
+    {
+        var emptyApiKey = Guid.Empty;
+
+        _mockExecutionService!
+            .Setup(s => s.IsAuthorizedUser(emptyApiKey))
+            .Returns(false);
+
+        var result = _executionAdapter!.IsAuthorizedUser(emptyApiKey);
+
+        Assert.IsFalse(result);
+        _mockExecutionService.Verify(s => s.IsAuthorizedUser(emptyApiKey), Times.Once);
+    }
 }
