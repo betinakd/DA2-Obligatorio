@@ -1,3 +1,5 @@
+using Adapter.Exceptions;
+using BusinessLogic.Exceptions;
 using IAdapter;
 using IBusinessLogic;
 using Models.Request;
@@ -28,11 +30,25 @@ public class NamespaceAdapter(INamespaceService namespaceService) : INamespaceAd
 
     public string AddClassInNamespace(Guid id, NamespaceElementAdd_Request request)
     {
-        return _namespaceService.AddClassInNamespace(id, request);
+        try
+        {
+            return _namespaceService.AddClassInNamespace(id, request);
+        }
+        catch(NonExistentValueLogic e)
+        {
+            throw new NonExistentValueAdapter(e.Message);
+        }
     }
 
     public string AddInterfaceInNamespace(Guid id, NamespaceElementAdd_Request request)
     {
-        return _namespaceService.AddInterfaceInNamespace(id, request);
+        try
+        {
+            return _namespaceService.AddInterfaceInNamespace(id, request);
+        }
+        catch(NonExistentValueLogic e)
+        {
+            throw new NonExistentValueAdapter(e.Message);
+        }
     }
 }
