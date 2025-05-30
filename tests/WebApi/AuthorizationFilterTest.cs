@@ -105,6 +105,23 @@ public class AuthorizationFilterTest
         _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
     }
 
+    [TestMethod]
+    public void OnAuthorization_EmptyApiKey_ReturnsUnauthorized()
+    {
+        var headers = new HeaderDictionary
+        {
+            { "API_KEY", Guid.Empty.ToString() }
+        };
+        var context = CreateContext(headers);
+
+        _mockExecutionAdapter.Setup(x => x.IsAuthorizedUser(Guid.Empty)).Returns(false);
+
+        _authorizationFilter.OnAuthorization(context);
+
+        AssertUnauthorizedResult(context, "Invalid or missing API key");
+        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(Guid.Empty), Times.Once);
+    }
+
     private void AssertUnauthorizedResult(AuthorizationFilterContext context, string expectedMessage)
     {
         Assert.IsNotNull(context.Result);
