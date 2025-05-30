@@ -1135,22 +1135,22 @@ public class SimMethodServiceTest
             RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
             Parameters = [
                 new Parameter
-            {
-                Id = Guid.NewGuid(),
-                Name = "param1",
-                TypeId = parameterTypeId,
-                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "param1",
+                    TypeId = parameterTypeId,
+                    Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                }
 
             ],
             LocalVariables = [
                 new LocalVariable
-            {
-                Id = Guid.NewGuid(),
-                Name = "localVar1",
-                TypeId = variableTypeId,
-                Type = new SimClass { Id = variableTypeId, Name = "VarType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "localVar1",
+                    TypeId = variableTypeId,
+                    Type = new SimClass { Id = variableTypeId, Name = "VarType" }
+                }
 
             ]
         };
@@ -1215,12 +1215,12 @@ public class SimMethodServiceTest
             RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
             Parameters = [
                 new Parameter
-            {
-                Id = Guid.NewGuid(),
-                Name = "param1",
-                TypeId = parameterTypeId,
-                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "param1",
+                    TypeId = parameterTypeId,
+                    Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                }
 
             ],
             LocalVariables = []
@@ -1256,12 +1256,12 @@ public class SimMethodServiceTest
             Parameters = [],
             LocalVariables = [
                 new LocalVariable
-            {
-                Id = Guid.NewGuid(),
-                Name = "localVar1",
-                TypeId = variableTypeId,
-                Type = new SimClass { Id = variableTypeId, Name = "VarType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "localVar1",
+                    TypeId = variableTypeId,
+                    Type = new SimClass { Id = variableTypeId, Name = "VarType" }
+                }
 
             ]
         };
