@@ -5,6 +5,5 @@ public interface ITransformerService
 {
     void LoadTransformers();
     IEnumerable<TransformerInfo> GetAvailableTransformers();
-    TransformedResponse TransformExecution(string executionResult, string transformerId = null);
-    IResponseTransformer GetTransformerById(string id);
+    TransformedResponse TransformExecution(string executionResult, string transformerId);
 }
