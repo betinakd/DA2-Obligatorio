@@ -105,4 +105,19 @@ public class NamespaceServiceTest
 
         Assert.ThrowsException<NonExistentValueLogic>(() => _namespaceService!.AddClassInNamespace(namespaceId, request));
     }
+
+    [TestMethod]
+    public void GetNamespaceById_ShouldReturnNamespace_WhenExists()
+    {
+        var namespaceId = Guid.NewGuid();
+        var expectedNamespace = new SimNamespace { Id = namespaceId, Name = "TestNamespace" };
+
+        _mockNamespaceDataAccess!.Setup(x => x.GetNamespaceById(namespaceId)).Returns(expectedNamespace);
+
+        var result = _namespaceService!.GetNamespaceById(namespaceId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedNamespace.Id, result.Id);
+        Assert.AreEqual(expectedNamespace.Name, result.Name);
+    }
 }
