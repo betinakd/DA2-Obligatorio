@@ -9,7 +9,7 @@ namespace BusinessLogic;
 public class NamespaceService(INamespaceDataAccess namespaceDataAccess, ISimClassDataAccess simClassDataAccess) : INamespaceService
 {
     private readonly INamespaceDataAccess _namespaceDataAccess = namespaceDataAccess;
-    private readonly ISimClassDataAccess _simClassDataAccess = simClassDataAccess;
+    // private readonly ISimClassDataAccess _simClassDataAccess = simClassDataAccess;
 
     public SimNamespace CreateNamespace(NamespaceRequest simNamespace)
     {
@@ -46,7 +46,15 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess, ISimClas
 
     public string AddClassInNamespace(Guid id, NamespaceElementAdd_Request request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _namespaceDataAccess.AddClassInNamespace(id, request.ClassId);
+            return $"Class with ID {request.ClassId} added to namespace with ID {id}.";
+        }
+        catch(Exception)
+        {
+            throw;
+        }
     }
 
     public string AddInterfaceInNamespace(Guid id, NamespaceElementAdd_Request request)
