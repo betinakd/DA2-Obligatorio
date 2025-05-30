@@ -82,4 +82,27 @@ public class NamespaceServiceTest
 
         Assert.AreEqual($"Class with ID {classId} added to namespace with ID {namespaceId}.", result);
     }
+
+    [TestMethod]
+    public void AddClassInNamespace_ShouldThrowNonExistentValueLogic_WhenNamespaceDoesNotExist()
+    {
+        var namespaceId = Guid.NewGuid();
+        var request = new NamespaceElementAdd_Request { ClassId = Guid.NewGuid() };
+
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsById(namespaceId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() => _namespaceService!.AddClassInNamespace(namespaceId, request));
+    }
+
+    [TestMethod]
+    public void AddClassInNamespace_ShouldThrowNonExistentValueLogic_WhenClassDoesNotExist()
+    {
+        var namespaceId = Guid.NewGuid();
+        var request = new NamespaceElementAdd_Request { ClassId = Guid.NewGuid() };
+
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsById(namespaceId)).Returns(true);
+        _mockSimClassDataAccess!.Setup(x => x.ExistSimClassById(request.ClassId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() => _namespaceService!.AddClassInNamespace(namespaceId, request));
+    }
 }
