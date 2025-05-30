@@ -120,4 +120,14 @@ public class NamespaceServiceTest
         Assert.AreEqual(expectedNamespace.Id, result.Id);
         Assert.AreEqual(expectedNamespace.Name, result.Name);
     }
+
+    [TestMethod]
+    public void GetNamespaceById_ShouldThrowInvalidAttributeLogic_WhenIsEmpty()
+    {
+        Guid? namespaceId = null;
+
+        _mockNamespaceDataAccess!.Setup(x => x.GetNamespaceById(namespaceId)).Throws(new NonExistentValueLogic("Namespace does not exist."));
+
+        Assert.ThrowsException<InvalidAttributeLogic>(() => _namespaceService!.GetNamespaceById(namespaceId));
+    }
 }

@@ -41,6 +41,11 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess, ISimClas
 
     public SimNamespace GetNamespaceById(Guid? id)
     {
+        if(id == null)
+        {
+            throw new InvalidAttributeLogic("Namespace ID cannot be null.");
+        }
+
         return _namespaceDataAccess.GetNamespaceById(id.Value);
     }
 
