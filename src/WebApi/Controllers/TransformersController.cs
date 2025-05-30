@@ -19,11 +19,10 @@ public class TransformersController(ITransformerAdapter transformerService, IExe
 
     [HttpPost]
     public IActionResult ExecuteWithTransform(
-        [FromHeader(Name = "API_KEY")] Guid apiKey,
         [FromBody] MethodExecutionRequest request,
         [FromQuery] string transformerId)
     {
-        var result = _executionAdapter.ExecuteMethodWithTransform(apiKey, request, transformerId);
+        var result = _executionAdapter.ExecuteMethodWithTransform(request, transformerId);
         return Ok(result);
     }
 }

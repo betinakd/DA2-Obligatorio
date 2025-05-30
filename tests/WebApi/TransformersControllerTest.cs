@@ -41,9 +41,9 @@ public class TransformersControllerTest
         var request = new MethodExecutionRequest();
         var response = new TransformedResponse();
         var validKey = new Guid("77777777-aaaa-1111-1111-111111111111");
-        _mockExecutionAdapter.Setup(x => x.ExecuteMethodWithTransform(validKey, request, null)).Returns(response);
+        _mockExecutionAdapter.Setup(x => x.ExecuteMethodWithTransform(request, null)).Returns(response);
 
-        var result = _controller.ExecuteWithTransform(validKey, request, null);
+        var result = _controller.ExecuteWithTransform(request, null);
 
         var okResult = result as OkObjectResult;
         Assert.IsNotNull(okResult);
