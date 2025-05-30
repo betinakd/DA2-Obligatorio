@@ -147,7 +147,7 @@ public class AuthorizationFilterTest
 
         var errorResponse = objectResult.Value as ErrorResponse;
         Assert.IsNotNull(errorResponse);
-        Assert.AreEqual(7, errorResponse.InnerCode);
+        Assert.AreEqual(8, errorResponse.InnerCode);
         Assert.AreEqual(expectedMessage, errorResponse.Message);
     }
 }
