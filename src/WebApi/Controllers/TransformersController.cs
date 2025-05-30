@@ -1,6 +1,7 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
+using WebApi.Filters;
 
 namespace WebApi.Controllers;
 
@@ -18,12 +19,12 @@ public class TransformersController(ITransformerAdapter transformerService, IExe
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(AuthorizationFilter))]
     public IActionResult ExecuteWithTransform(
-        [FromHeader(Name = "API_KEY")] Guid apiKey,
         [FromBody] MethodExecutionRequest request,
         [FromQuery] string transformerId)
     {
-        var result = _executionAdapter.ExecuteMethodWithTransform(apiKey, request, transformerId);
+        var result = _executionAdapter.ExecuteMethodWithTransform(request, transformerId);
         return Ok(result);
     }
 }
