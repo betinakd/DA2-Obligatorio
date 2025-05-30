@@ -35,7 +35,7 @@ public class AuthorizationFilter(IExecutionAdapter executionAdapter) : IAuthoriz
     {
         context.Result = new ObjectResult(new ErrorResponse
         {
-            InnerCode = 7,
+            InnerCode = 8,
             Message = message
         })
         {

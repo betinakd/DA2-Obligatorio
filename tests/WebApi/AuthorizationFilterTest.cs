@@ -37,10 +37,8 @@ public class AuthorizationFilterTest
             new ActionContext(
                 httpContext,
                 new RouteData(),
-                new ActionDescriptor()
-            ),
-            []
-        );
+                new ActionDescriptor()),
+            []);
     }
 
     [TestMethod]
