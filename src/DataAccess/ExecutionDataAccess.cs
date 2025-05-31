@@ -138,7 +138,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         var baseMethod = baseClass.Methods.FirstOrDefault(m =>
             m.Equals(methodToOverride) &&
-            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
+            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract || m.Accesibility == SimAccesibility.Interface) &&
             (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
 
         if(baseMethod != null)
@@ -167,7 +167,6 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         if(!methodToCheck.IsVirtual)
         {
-            // If the method is not virtual, it cannot be sealed.
             return null;
         }
 
@@ -237,10 +236,10 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
                 break;
             case ReferenceVariable rv:
-                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
+                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Include(b => b.Instance).Load();
                 break;
             case ReferenceAttribute ra:
-                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
+                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Include(b => b.Instance).Load();
                 break;
             case ReferenceBase rb:
                 _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -249,7 +248,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 _context.Entry(rt).Reference(r => r.Reference).Load();
                 break;
             case ReferenceStaticAttribute rsa:
-                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Load();
+                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Include(b => b.Instance).Load();
                 break;
             case ReferenceStatic rsv:
                 _context.Entry(rsv).Reference(r => r.Reference).Load();
