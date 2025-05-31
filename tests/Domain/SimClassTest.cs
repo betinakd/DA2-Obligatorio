@@ -819,4 +819,33 @@ public class SimClassTest
 
         derivedClass.SetBaseClass(baseClass);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void SetImplements_ShouldThrowException_WhenDuplicateInterfaceIds()
+    {
+        var interfaceId = Guid.NewGuid();
+
+        var interface1 = new SimClass
+        {
+            Id = interfaceId,
+            Name = "IInterface1",
+            State = SimAccesibility.Interface
+        };
+
+        var interface2 = new SimClass
+        {
+            Id = interfaceId,
+            Name = "IInterface2",
+            State = SimAccesibility.Interface
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "ImplementingClass",
+            State = SimAccesibility.Normal
+        };
+
+        simClass.SetImplements([interface1, interface2]);
+    }
 }

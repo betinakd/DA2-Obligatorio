@@ -212,6 +212,12 @@ public class SimClass
 
     public void SetImplements(List<SimClass> value)
     {
+        var duplicateIds = value.GroupBy(i => i.Id).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+        if(duplicateIds.Any())
+        {
+            throw new InvalidAttributeDomain($"Duplicate interface Ids found in implements: {string.Join(", ", duplicateIds)}");
+        }
+
         var interfaceMethods = new List<SimMethod>();
         foreach(var interfaceClass in value)
         {
