@@ -134,4 +134,22 @@ public class NamespaceAdapterTest
         Assert.AreEqual(expectedNamespace.Name, response.Name);
         Assert.IsNull(response.BaseNamespaceId);
     }
+
+    [TestMethod]
+    public void GetNamespaceById_ShouldThrowNonExistentValueAdapter_WhenNamespaceDoesNotExist()
+    {
+        var namespaceId = Guid.NewGuid();
+        _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId)).Throws(new NonExistentValueLogic("Namespace does not exist."));
+
+        Assert.ThrowsException<NonExistentValueAdapter>(() => _namespaceAdapter?.GetNamespaceById(namespaceId));
+    }
+
+    [TestMethod]
+    public void GetNamespaceById_ShouldThrowInvalidAttributeAdapter_WhenNamespaceIdEmpty()
+    {
+        var namespaceId = Guid.NewGuid();
+        _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId)).Throws(new InvalidAttributeLogic("Namespace can't be empty."));
+
+        Assert.ThrowsException<InvalidAttributeAdapter>(() => _namespaceAdapter?.GetNamespaceById(namespaceId));
+    }
 }
