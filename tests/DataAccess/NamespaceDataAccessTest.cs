@@ -71,4 +71,25 @@ public class NamespaceDataAccessTest
         Assert.AreEqual(simNamespace.Id, namespaces[0].Id);
         Assert.AreEqual(simNamespace.Name, namespaces[0].Name);
     }
+
+    [TestMethod]
+    public void NamespaceExistsById_ShouldReturnTrue_WhenNamespaceExists()
+    {
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "ExistingNamespace", BaseNamespaceId = null };
+        _namespaceDataAccess.CreateNamespace(simNamespace);
+
+        var exists = _namespaceDataAccess.NamespaceExistsById(simNamespace.Id);
+
+        Assert.IsTrue(exists);
+    }
+
+    [TestMethod]
+    public void NamespaceExistsById_ShouldReturnFalse_WhenNamespaceNonExists()
+    {
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "ExistingNamespace", BaseNamespaceId = null };
+
+        var exists = _namespaceDataAccess.NamespaceExistsById(simNamespace.Id);
+
+        Assert.IsFalse(exists);
+    }
 }
