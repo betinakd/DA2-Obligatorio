@@ -90,4 +90,39 @@ public class NamespaceServiceTest
 
         Assert.ThrowsException<InvalidAttributeLogic>(() => _namespaceService!.GetNamespaceById(namespaceId));
     }
+
+    [TestMethod]
+    public void GetAllNamespaces_ShouldReturnAllNamespaces()
+    {
+        var namespace1Id = Guid.NewGuid();
+        var expectedNamespaces = new List<SimNamespace>
+        {
+            new SimNamespace { Id = namespace1Id, Name = "Namespace1", BaseNamespaceId =  null },
+            new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace2", BaseNamespaceId =  namespace1Id }
+        };
+
+        _mockNamespaceDataAccess!.Setup(x => x.GetAllNamespaces()).Returns(expectedNamespaces);
+
+        var result = _namespaceService!.GetAllNamespaces();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedNamespaces.Count, result.Count);
+        for(var i = 0; i < result.Count; i++)
+        {
+            Assert.AreEqual(expectedNamespaces[i].Id, result[i].Id);
+            Assert.AreEqual(expectedNamespaces[i].Name, result[i].Name);
+            Assert.AreEqual(expectedNamespaces[i].BaseNamespaceId, result[i].BaseNamespaceId);
+        }
+    }
+
+    [TestMethod]
+    public void GetAllNamespaces_ShouldReturnAllNamespaces_EmptyListCase()
+    {
+        _mockNamespaceDataAccess!.Setup(x => x.GetAllNamespaces()).Returns(new List<SimNamespace>());
+
+        var result = _namespaceService!.GetAllNamespaces();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
+    }
 }
