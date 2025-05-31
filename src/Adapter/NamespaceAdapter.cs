@@ -34,28 +34,4 @@ public class NamespaceAdapter(INamespaceService namespaceService) : INamespaceAd
             throw new NonExistentValueAdapter(e.Message);
         }
     }
-
-    public string AddClassInNamespace(Guid id, NamespaceElementAdd_Request request)
-    {
-        try
-        {
-            return _namespaceService.AddClassInNamespace(id, request);
-        }
-        catch(NonExistentValueLogic e)
-        {
-            throw new NonExistentValueAdapter(e.Message);
-        }
-    }
-
-    public string AddInterfaceInNamespace(Guid id, NamespaceElementAdd_Request request)
-    {
-        try
-        {
-            return _namespaceService.AddInterfaceInNamespace(id, request);
-        }
-        catch(NonExistentValueLogic e)
-        {
-            throw new NonExistentValueAdapter(e.Message);
-        }
-    }
 }

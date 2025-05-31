@@ -32,7 +32,7 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
                 request.IdBaseClass = "11111111-1111-1111-1111-111111111111";
             }
 
-            var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId);
+            var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId, request.BaseNamespaceId);
             return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
         }
         catch(InUseValueLogic ex)

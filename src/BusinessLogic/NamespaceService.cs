@@ -6,10 +6,9 @@ using Models.Request;
 
 namespace BusinessLogic;
 
-public class NamespaceService(INamespaceDataAccess namespaceDataAccess, ISimClassDataAccess simClassDataAccess) : INamespaceService
+public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INamespaceService
 {
     private readonly INamespaceDataAccess _namespaceDataAccess = namespaceDataAccess;
-    private readonly ISimClassDataAccess _simClassDataAccess = simClassDataAccess;
 
     public SimNamespace CreateNamespace(NamespaceRequest simNamespace)
     {
@@ -49,31 +48,15 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess, ISimClas
         return _namespaceDataAccess.GetNamespaceById(id.Value);
     }
 
-    public string AddClassInNamespace(Guid id, NamespaceElementAdd_Request request)
+    public bool NameAlreadyInNamespace_Validation(Guid? id, string className)
     {
-        if(!_namespaceDataAccess.NamespaceExistsById(id))
+        var namespaceExists = _namespaceDataAccess.NamespaceExistsById(id);
+        if(!namespaceExists)
         {
             throw new NonExistentValueLogic("Namespace does not exist.");
         }
 
-        if(!_simClassDataAccess.ExistSimClassById(request.ClassId))
-        {
-            throw new NonExistentValueLogic("Class does not exist.");
-        }
-
-        try
-        {
-            _namespaceDataAccess.AddClassInNamespace(id, request.ClassId);
-            return $"Class with ID {request.ClassId} added to namespace with ID {id}.";
-        }
-        catch(Exception)
-        {
-            throw;
-        }
-    }
-
-    public string AddInterfaceInNamespace(Guid id, NamespaceElementAdd_Request request)
-    {
-        throw new NotImplementedException();
+        var elements = GetNamespaceById(id).Elements;
+        return elements.Any(e => e.Name == className);
     }
 }

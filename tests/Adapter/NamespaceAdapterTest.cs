@@ -29,8 +29,7 @@ public class NamespaceAdapterTest
             Id = Guid.NewGuid(),
             Name = "BaseNamespace_Test",
             BaseNamespaceId = null,
-            Classes = [],
-            Interfaces = []
+            Elements = [],
         };
         var request = new Models.Request.NamespaceRequest
         {
@@ -43,8 +42,7 @@ public class NamespaceAdapterTest
             Id = Guid.NewGuid(),
             Name = request.Name,
             BaseNamespaceId = request.BaseNamespaceId,
-            Classes = [],
-            Interfaces = []
+            Elements = [],
         };
         _mockNamespaceService?.Setup(x => x.CreateNamespace(request)).Returns(expectedNamespace);
         _mockNamespaceService?.Setup(x => x.GetNamespaceById(baseNamespace.Id)).Returns(baseNamespace);
@@ -56,8 +54,7 @@ public class NamespaceAdapterTest
         Assert.AreEqual(expectedNamespace.Name, response.Name);
         Assert.AreEqual(expectedNamespace.BaseNamespaceId, response.BaseNamespaceId);
         Assert.AreEqual(response.BaseNamespaceName, baseNamespace.Name);
-        Assert.AreEqual(0, response.Classes.Count);
-        Assert.AreEqual(0, response.Interfaces.Count);
+        Assert.AreEqual(0, response.Elements.Count);
     }
 
     [TestMethod]
@@ -86,8 +83,7 @@ public class NamespaceAdapterTest
         {
             Id = Guid.NewGuid(),
             Name = request1.Name,
-            Classes = [],
-            Interfaces = []
+            Elements = []
         };
         _mockNamespaceService?.Setup(x => x.CreateNamespace(request1)).Returns(expectedNamespace1);
         var firstCallResponse = _namespaceAdapter?.CreateNamespace(request1);

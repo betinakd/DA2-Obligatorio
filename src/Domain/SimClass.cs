@@ -7,6 +7,7 @@ namespace Domain;
 public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid? NamespaceId { get; set; } = Guid.Empty;
     private List<SimMethod> _methods = [];
 
     public List<SimMethod> Methods

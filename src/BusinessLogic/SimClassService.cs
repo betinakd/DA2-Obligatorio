@@ -7,13 +7,13 @@ using IDataAccess;
 
 namespace BusinessLogic;
 
-public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAccess simAttributeDA, IExecutionDataAccess executionDataAccess) : ISimClassService
+public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAccess simAttributeDA, IExecutionDataAccess executionDataAccess, INamespaceService namespaceService) : ISimClassService
 {
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
     private readonly ISimAttributeDataAccess _simAttributeDA = simAttributeDA;
     private readonly IExecutionDataAccess _executionDataAccess = executionDataAccess;
-
-    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId)
+    private readonly INamespaceService _namespaceService = namespaceService;
+    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId, Guid? namespaceId = null)
     {
         if(_simClassDA.ExistSimClassName(name))
         {
@@ -25,6 +25,11 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("Base class not found.");
         }
 
+        if(_namespaceService.NameAlreadyInNamespace_Validation(namespaceId, name))
+        {
+            throw new InUseValueLogic("Class name already exists in the namespace.");
+        }
+
         try
         {
             var baseClass = _simClassDA.GetSimClassById(baseClassId);
@@ -34,7 +39,8 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
                 Name = name,
                 State = simAccesibility,
                 BaseClass = baseClass,
-                BaseClassId = baseClass.Id
+                BaseClassId = baseClass.Id,
+                NamespaceId = namespaceId,
             };
             _simClassDA.CreateSimClass(simClass);
             return simClass;
