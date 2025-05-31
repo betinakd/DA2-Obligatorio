@@ -45,7 +45,13 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
             throw new InvalidAttributeLogic("Namespace can't be empty.");
         }
 
-        return _namespaceDataAccess.GetNamespaceById(id.Value);
+        var result = _namespaceDataAccess.GetNamespaceById(id.Value);
+        if(result == null)
+        {
+            throw new NonExistentValueLogic($"Namespace with {id} ID name does not exist.");
+        }
+
+        return result;
     }
 
     public bool NameAlreadyInNamespace_Validation(Guid? id, string className)
