@@ -501,4 +501,48 @@ public class ExecutionServiceTest
 
         _executionService!.ValidateMethodExistsInClass(simClass, signature, true);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationLogic))]
+    public void ExecuteMethod_DynamicDispatch_AbstractMethod_ThrowsException()
+    {
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+
+        var virtualMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Normal,
+            IsVirtual = true,
+            RelatedClass = simClass,
+            Invocations = []
+        };
+
+        var abstractMethod = new SimMethod
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestMethod",
+            Accesibility = SimAccesibility.Abstract,
+            RelatedClass = simClass,
+            Invocations = []
+        };
+
+        var mockRef = new Mock<Reference>();
+        mockRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
+        mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
+        mockRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.TestMethod()");
+        _mockExecuteDataAccess!
+            .SetupSequence(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Returns(virtualMethod)
+            .Returns(abstractMethod);
+
+        _executionService!.ExecuteMethod(
+            simClass,
+            simClass,
+            mockRef.Object,
+            signature,
+            null,
+            0);
+    }
 }
