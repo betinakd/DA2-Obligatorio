@@ -21,7 +21,7 @@ public class NamespaceDataAccess(SimulatorDbContext context) : INamespaceDataAcc
 
     public SimNamespace GetNamespaceById(Guid? id)
     {
-        throw new NotImplementedException();
+        return _context.SimNamespaces.FirstOrDefault(c => c.Id == id);
     }
 
     public List<SimNamespace> GetAllNamespaces()
