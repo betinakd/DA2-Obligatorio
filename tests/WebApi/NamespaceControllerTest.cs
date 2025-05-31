@@ -115,4 +115,44 @@ public class NamespaceControllerTest
         Action act = () => _namespaceController.CreateNamespace(request);
         act.Should().Throw<NonExistentValueAdapter>().WithMessage("Base namespace does not exist.");
     }
+
+    [TestMethod]
+    public void GetAllNamespaces_ShouldReturnOk_WhenNamespacesExist()
+    {
+        var expectedAdapterResponse = new List<NamespaceResponse>
+        {
+            new NamespaceResponse
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestNamespace1",
+                BaseNamespaceId = null,
+                Elements = []
+            },
+            new NamespaceResponse
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestNamespace2",
+                BaseNamespaceId = null,
+                Elements = []
+            }
+        };
+
+        _mockNamespaceAdapter.Setup(x => x.GetAllNamespaces()).Returns(expectedAdapterResponse);
+
+        var result = _namespaceController.GetAllNamespaces() as OkObjectResult;
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedAdapterResponse, result.Value);
+    }
+
+    [TestMethod]
+    public void GetAllNamespaces_ShouldReturnEmptyList_WhenNoNamespacesExist()
+    {
+        _mockNamespaceAdapter.Setup(x => x.GetAllNamespaces()).Returns(new List<NamespaceResponse>());
+
+        var result = _namespaceController.GetAllNamespaces() as OkObjectResult;
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result.Value, typeof(List<NamespaceResponse>));
+        Assert.AreEqual(0, ((List<NamespaceResponse>)result.Value).Count);
+    }
 }
