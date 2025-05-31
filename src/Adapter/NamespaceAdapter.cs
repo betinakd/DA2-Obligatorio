@@ -69,12 +69,19 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
 
     private List<SimClassResponse> MapClassesToResponses(List<SimClass> classes)
     {
-        return classes.Select(c => new SimClassResponse
+        if(classes == null || !classes.Any())
         {
-            Id = c.Id,
-            Name = c.Name,
-            State = (Models.Enums.SimModelsAccesibility)c.State,
-            IdBaseClass = c.BaseClassId,
-        }).ToList();
+            return [];
+        }
+        else
+        {
+            return [.. classes.Select(c => new SimClassResponse
+            {
+                Id = c.Id,
+                Name = c.Name,
+                State = (Models.Enums.SimModelsAccesibility)c.State,
+                IdBaseClass = c.BaseClassId,
+            })];
+        }
     }
 }

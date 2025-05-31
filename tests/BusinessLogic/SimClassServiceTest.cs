@@ -647,4 +647,19 @@ public class SimClassServiceTest
         _mockNamespaceService?.Verify(ns => ns.GetNamespaceById(namespaceId), Times.Once);
         _mockSimClassDataAccess?.Verify(da => da.GetAllSimClasses(), Times.Never);
     }
+
+    [TestMethod]
+    public void GetClassesOfNamespaces_ShouldReturnEmptyList_WhenNamespaceExists()
+    {
+        var namespaceId = Guid.NewGuid();
+        var classes = new List<SimClass>();
+
+        _mockNamespaceService?.Setup(ns => ns.GetNamespaceById(namespaceId)).Returns(new SimNamespace { Id = namespaceId });
+        _mockSimClassDataAccess?.Setup(da => da.GetAllSimClasses()).Returns(classes);
+
+        var result = _simClassService?.GetClassesOfNamespaces(namespaceId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
+    }
 }
