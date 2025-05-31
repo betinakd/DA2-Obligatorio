@@ -164,6 +164,20 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
     public List<SimClass> GetClassesOfNamespaces(Guid id)
     {
-        throw new NotImplementedException();
+        if(_namespaceService.GetNamespaceById(id) == null)
+        {
+            throw new NonExistentValueLogic("Namespace not found.");
+        }
+
+        try
+        {
+            var allClasses = _simClassDA.GetAllSimClasses();
+            var classesInNamespace = allClasses.Where(c => c.NamespaceId == id).ToList();
+            return classesInNamespace;
+        }
+        catch(InvalidAttributeLogic e)
+        {
+            throw new InvalidAttributeLogic(e.Message);
+        }
     }
 }

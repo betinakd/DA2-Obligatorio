@@ -600,4 +600,51 @@ public class SimClassServiceTest
 
         Assert.AreEqual("Attribute not reacheable from method.", exception.Message);
     }
+
+    [TestMethod]
+    public void GetClassesOfNamespaces_ShouldReturnClasses_WhenNamespaceExists()
+    {
+        var namespaceId = Guid.NewGuid();
+        var classes = new List<SimClass>
+        {
+            new SimClass { Id = Guid.NewGuid(), Name = "Class1", NamespaceId = namespaceId },
+            new SimClass { Id = Guid.NewGuid(), Name = "Class2", NamespaceId = namespaceId },
+            new SimClass { Id = Guid.NewGuid(), Name = "Class3", NamespaceId = Guid.NewGuid() }
+        };
+
+        _mockNamespaceService?.Setup(ns => ns.GetNamespaceById(namespaceId)).Returns(new SimNamespace { Id = namespaceId });
+        _mockSimClassDataAccess?.Setup(da => da.GetAllSimClasses()).Returns(classes);
+
+        var result = _simClassService?.GetClassesOfNamespaces(namespaceId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Count);
+        Assert.IsTrue(result.All(c => c.NamespaceId == namespaceId));
+    }
+
+    [TestMethod]
+    public void GetClassesOfNamespaces_ShouldThrowNonExistentValueLogic_WhenNamespaceDoesNotExist()
+    {
+        var namespaceId = Guid.NewGuid();
+        _mockNamespaceService?.Setup(ns => ns.GetNamespaceById(namespaceId)).Returns((SimNamespace)null);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() => _simClassService?.GetClassesOfNamespaces(namespaceId));
+
+        _mockNamespaceService?.Verify(ns => ns.GetNamespaceById(namespaceId), Times.Once);
+        _mockSimClassDataAccess?.Verify(da => da.GetAllSimClasses(), Times.Never);
+    }
+
+    [TestMethod]
+    public void GetClassesOfNamespaces_ShouldThrowInvalidAttributeLogic_WhenIdIsNull()
+    {
+        var namespaceId = Guid.Empty;
+
+        _mockNamespaceService?.Setup(ns => ns.GetNamespaceById(namespaceId))
+            .Throws(new InvalidAttributeLogic("Namespace can't be empty."));
+
+        Assert.ThrowsException<InvalidAttributeLogic>(() => _simClassService?.GetClassesOfNamespaces(namespaceId));
+
+        _mockNamespaceService?.Verify(ns => ns.GetNamespaceById(namespaceId), Times.Once);
+        _mockSimClassDataAccess?.Verify(da => da.GetAllSimClasses(), Times.Never);
+    }
 }

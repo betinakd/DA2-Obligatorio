@@ -48,7 +48,10 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
                 Id = _namespace.Id,
                 Name = _namespace.Name,
                 BaseNamespaceId = _namespace.BaseNamespaceId,
-                BaseNamespaceName = _namespace.BaseNamespaceId != null ? _namespaceService.GetNamespaceById(_namespace.BaseNamespaceId.Value).Name : null,
+                BaseNamespaceName =
+                    _namespace.BaseNamespaceId != null
+                        ? _namespaceService.GetNamespaceById(_namespace.BaseNamespaceId.Value).Name
+                        : null,
                 Elements = MapClassesToResponses(classes)
             };
 
@@ -57,6 +60,10 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
         catch(InvalidAttributeLogic e)
         {
             throw new InvalidAttributeAdapter(e.Message);
+        }
+        catch(NonExistentValueLogic e)
+        {
+            throw new NonExistentValueAdapter(e.Message);
         }
     }
 
