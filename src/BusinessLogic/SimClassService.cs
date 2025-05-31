@@ -161,4 +161,9 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("Attribute not reacheable from method.");
         }
     }
+
+    public List<SimClass> GetClassesOfNamespaces(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

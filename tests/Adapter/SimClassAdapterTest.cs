@@ -714,10 +714,6 @@ public class SimClassAdapterTest
             ?.Setup(service => service.GetNamespaceById(Guid.Empty))
             .Throws(new InvalidAttributeLogic("Namespace ID cannot be null."));
 
-        /*_mockNamespaceService
-           ?.Setup(service => service.NameAlreadyInNamespace_Validation(request.BaseNamespaceId, request.Name))
-           .Throws(new NonExistentValueLogic($"Namespace with ID {request.BaseNamespaceId} does not exist."));
-        */
         _mockSimClassService
         .Setup(s => s.CreateSimClass(
             "TestClass",

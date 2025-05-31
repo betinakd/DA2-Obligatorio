@@ -13,12 +13,14 @@ public class NamespaceAdapterTest
 {
     private Mock<INamespaceService>? _mockNamespaceService;
     private NamespaceAdapter? _namespaceAdapter;
+    private Mock<ISimClassService>? _simClassService;
 
     [TestInitialize]
     public void Setup()
     {
         _mockNamespaceService = new Mock<INamespaceService>();
-        _namespaceAdapter = new NamespaceAdapter(_mockNamespaceService.Object);
+        _simClassService = new Mock<ISimClassService>();
+        _namespaceAdapter = new NamespaceAdapter(_mockNamespaceService.Object, _simClassService.Object);
     }
 
     [TestMethod]
@@ -104,5 +106,32 @@ public class NamespaceAdapterTest
         _mockNamespaceService?.Setup(x => x.CreateNamespace(request)).Throws(new NonExistentValueLogic("Base namespace does not exist."));
 
         Assert.ThrowsException<NonExistentValueAdapter>(() => _namespaceAdapter?.CreateNamespace(request));
+    }
+
+    [TestMethod]
+    public void GetNamespaceById_ShouldReturnNamespaceResponse_WhenIdIsValid()
+    {
+        var namespaceId = Guid.NewGuid();
+        var namespaceClasses = new List<SimClass>
+        {
+            new SimClass { Id = Guid.NewGuid(), Name = "TestClass1", NamespaceId = namespaceId },
+            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId }
+        };
+        var expectedNamespace = new SimNamespace
+        {
+            Id = namespaceId,
+            Name = "TestNamespace",
+            BaseNamespaceId = null,
+            Elements = namespaceClasses
+        };
+        _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId)).Returns(expectedNamespace);
+        _simClassService?.Setup(x => x.GetClassesOfNamespaces(namespaceId)).Returns(expectedNamespace.Elements);
+
+        var response = _namespaceAdapter?.GetNamespaceById(namespaceId);
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(expectedNamespace.Id, response.Id);
+        Assert.AreEqual(expectedNamespace.Name, response.Name);
+        Assert.IsNull(response.BaseNamespaceId);
     }
 }

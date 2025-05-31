@@ -1,5 +1,6 @@
 using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
+using Domain;
 using IAdapter;
 using IBusinessLogic;
 using Models.Request;
@@ -7,9 +8,10 @@ using Models.Response;
 
 namespace Adapter;
 
-public class NamespaceAdapter(INamespaceService namespaceService) : INamespaceAdapter
+public class NamespaceAdapter(INamespaceService namespaceService, ISimClassService simClassService) : INamespaceAdapter
 {
     private readonly INamespaceService _namespaceService = namespaceService;
+    private readonly ISimClassService _simClassService = simClassService;
     public NamespaceResponse CreateNamespace(NamespaceRequest namespaceRequest)
     {
         try
@@ -33,5 +35,39 @@ public class NamespaceAdapter(INamespaceService namespaceService) : INamespaceAd
         {
             throw new NonExistentValueAdapter(e.Message);
         }
+    }
+
+    public NamespaceResponse GetNamespaceById(Guid id)
+    {
+        try
+        {
+            var _namespace = _namespaceService.GetNamespaceById(id);
+            var classes = _simClassService.GetClassesOfNamespaces(id);
+            var response = new NamespaceResponse
+            {
+                Id = _namespace.Id,
+                Name = _namespace.Name,
+                BaseNamespaceId = _namespace.BaseNamespaceId,
+                BaseNamespaceName = _namespace.BaseNamespaceId != null ? _namespaceService.GetNamespaceById(_namespace.BaseNamespaceId.Value).Name : null,
+                Elements = MapClassesToResponses(classes)
+            };
+
+            return response;
+        }
+        catch(InvalidAttributeLogic e)
+        {
+            throw new InvalidAttributeAdapter(e.Message);
+        }
+    }
+
+    private List<SimClassResponse> MapClassesToResponses(List<SimClass> classes)
+    {
+        return classes.Select(c => new SimClassResponse
+        {
+            Id = c.Id,
+            Name = c.Name,
+            State = (Models.Enums.SimModelsAccesibility)c.State,
+            IdBaseClass = c.BaseClassId,
+        }).ToList();
     }
 }
