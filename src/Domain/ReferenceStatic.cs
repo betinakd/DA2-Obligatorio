@@ -36,4 +36,9 @@ public class ReferenceStatic : Reference
     {
         return Reference;
     }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return false;
+    }
 }

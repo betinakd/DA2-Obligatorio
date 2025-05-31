@@ -43,4 +43,9 @@ public class ReferenceBase : Reference
     {
         return Reference.BaseClass;
     }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return false;
+    }
 }

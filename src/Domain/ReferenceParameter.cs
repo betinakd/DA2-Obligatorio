@@ -52,4 +52,9 @@ public class ReferenceParameter : Reference
 
         return Reference.Type;
     }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return true;
+    }
 }

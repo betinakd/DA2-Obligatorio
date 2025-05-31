@@ -57,4 +57,9 @@ public class ReferenceStaticAttribute : Reference
     {
         return Reference.Instance;
     }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return true;
+    }
 }

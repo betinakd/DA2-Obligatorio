@@ -36,4 +36,9 @@ public class ReferenceThis : Reference
     {
         return executionInstance;
     }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return true;
+    }
 }
