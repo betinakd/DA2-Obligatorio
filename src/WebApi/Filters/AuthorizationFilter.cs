@@ -1,0 +1,45 @@
+using System.Net;
+using IAdapter;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace WebApi.Filters;
+
+public class AuthorizationFilter(IExecutionAdapter executionAdapter) : IAuthorizationFilter
+{
+    private readonly IExecutionAdapter _executionAdapter = executionAdapter;
+
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        if(!context.HttpContext.Request.Headers.TryGetValue("API_KEY", out var apiKeyHeader))
+        {
+            SetUnauthorizedResult(context, "Invalid or missing API key");
+            return;
+        }
+
+        if(!Guid.TryParse(apiKeyHeader, out var apiKeyValue))
+        {
+            SetUnauthorizedResult(context, "Invalid or missing API key");
+            return;
+        }
+
+        var isValidApiKey = _executionAdapter.IsAuthorizedUser(apiKeyValue);
+        if(!isValidApiKey)
+        {
+            SetUnauthorizedResult(context, "Invalid or missing API key");
+            return;
+        }
+    }
+
+    private static void SetUnauthorizedResult(AuthorizationFilterContext context, string message)
+    {
+        context.Result = new ObjectResult(new ErrorResponse
+        {
+            InnerCode = 8,
+            Message = message
+        })
+        {
+            StatusCode = (int)HttpStatusCode.Unauthorized
+        };
+    }
+}

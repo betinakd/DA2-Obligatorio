@@ -80,13 +80,8 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         }
     }
 
-    public TransformedResponse ExecuteMethodWithTransform(Guid apiKey, MethodExecutionRequest request, string transformerId = null)
+    public TransformedResponse ExecuteMethodWithTransform(MethodExecutionRequest request, string transformerId)
     {
-        if(!IsAuthorizedUser(apiKey))
-        {
-            throw new InvalidApikeyAdapter("API Key inválida o ausente");
-        }
-
         var executionResult = ExecuteMethod(request);
         return _transformerService.TransformExecution(executionResult, transformerId);
     }
