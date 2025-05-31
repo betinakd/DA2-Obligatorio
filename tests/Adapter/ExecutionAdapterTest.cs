@@ -90,12 +90,6 @@ public class ExecutionAdapterTest
                 It.IsAny<int>()))
             .Returns("expectedResult");
 
-        _mockExecutionService!
-            .Setup(s => s.IsReferenceBaseOfInstance(
-                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
-                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
-            .Returns(true);
-
         _mockExecutionService!.Setup(s => s.SaveExecutionLog("ReferenceType", "InstanceType", "expectedResult"));
         var result = _executionAdapter!.ExecuteMethod(request);
 
@@ -155,10 +149,14 @@ public class ExecutionAdapterTest
             .Returns(referenceTypeClass);
 
         _mockExecutionService!
-            .Setup(s => s.IsReferenceBaseOfInstance(
-                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
-                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
-            .Returns(false);
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+                .Throws(new InvalidExecutionAdapter("No se puede ejecutar sobre una clase abstracta."));
 
         _executionAdapter!.ExecuteMethod(request);
     }
@@ -243,6 +241,16 @@ public class ExecutionAdapterTest
         _simClassService
             .Setup(s => s.GetSimClassById(referenceTypeId))
             .Returns(referenceTypeClass);
+
+        _mockExecutionService!
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+        .Throws(new InvalidExecutionAdapter("No se puede ejecutar sobre una clase abstracta."));
 
         _executionAdapter!.ExecuteMethod(request);
     }
@@ -444,5 +452,44 @@ public class ExecutionAdapterTest
             adapter.ExecuteMethodWithTransform(invalidKey, request, "test");
         });
         Assert.AreEqual("API Key inválida o ausente", ex.Message);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void ExecuteMethod_WhenInvalidAttributeLogicThrown_ShouldThrowInvalidAttributeAdapter()
+    {
+        var instanceTypeId = Guid.NewGuid();
+        var referenceTypeId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceTypeId.ToString(),
+            IdReferenceType = referenceTypeId.ToString(),
+            Parameters = []
+        };
+
+        var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
+        var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
+
+        _simClassService!
+            .Setup(s => s.GetSimClassById(instanceTypeId))
+            .Returns(instanceTypeClass);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(referenceTypeId))
+            .Returns(referenceTypeClass);
+
+        _mockExecutionService!
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+            .Throws(new InvalidAttributeLogic("Invalid attribute"));
+
+        _executionAdapter!.ExecuteMethod(request);
     }
 }
