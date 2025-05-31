@@ -18,12 +18,15 @@ public class SimClassAdapterTest
     private Mock<ISimClassService>? _mockSimClassService;
     private Mock<IMethodService>? _mockMethodService;
     private SimClassAdapter? _simClassAdapter;
+    private Mock<INamespaceService>? _mockNamespaceService;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
         _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _mockNamespaceService = new Mock<INamespaceService>(MockBehavior.Strict);
+        _mockNamespaceService = new Mock<INamespaceService>(MockBehavior.Strict);
         _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
     }
 
@@ -55,16 +58,26 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldReturnCreatedSimClassResponse_WhenValidRequest()
     {
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
+        _mockNamespaceService
+            ?.Setup(service => service.CreateNamespace(@namespace))
+                .Returns(expectedNamespace);
+
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ValidClass" };
         var request = new SimClassRequestCreate
         {
             Name = "ValidClass",
             IdBaseClass = Guid.NewGuid().ToString(),
-            State = SimModelsAccesibility.Normal
+            State = SimModelsAccesibility.Normal,
+            BaseNamespaceId = expectedNamespace.Id
         };
-
         _mockSimClassService
-            ?.Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            ?.Setup(service => service.CreateSimClass(
+                request.Name,
+                SimAccesibility.Normal,
+                request.BaseClassId,
+                expectedNamespace.Id))
             .Returns(simClass);
 
         var result = _simClassAdapter?.CreateSimClass(request);
@@ -74,7 +87,7 @@ public class SimClassAdapterTest
         Assert.AreEqual(simClass.Id, result.SimClass?.Id);
         Assert.AreEqual(simClass.Name, result.SimClass?.Name);
 
-        _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+        _mockSimClassService?.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId, expectedNamespace.Id), Times.Once);
     }
 
     [TestMethod]
@@ -145,15 +158,25 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldThrowInUseException_WhenServiceThrowsInUseValueLogic()
     {
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
+        _mockNamespaceService
+            ?.Setup(service => service.CreateNamespace(@namespace))
+            .Returns(expectedNamespace);
+
         var request = new SimClassRequestCreate
         {
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
-            IdBaseClass = Guid.NewGuid().ToString()
+            IdBaseClass = Guid.NewGuid().ToString(),
+            BaseNamespaceId = expectedNamespace.Id
         };
-
         _mockSimClassService!
-            .Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            .Setup(service => service.CreateSimClass(
+                request.Name,
+                SimAccesibility.Normal,
+                request.BaseClassId,
+                expectedNamespace.Id))
             .Throws(new InUseValueLogic("Class is already in use."));
 
         var exception = Assert.ThrowsException<InUseValueAdapter>(() =>
@@ -161,7 +184,7 @@ public class SimClassAdapterTest
 
         Assert.AreEqual("Class is already in use.", exception.Message);
 
-        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId, expectedNamespace.Id), Times.Once);
     }
 
     [TestMethod]
@@ -184,15 +207,25 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldThrowInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
     {
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
+        _mockNamespaceService
+            ?.Setup(service => service.CreateNamespace(@namespace))
+            .Returns(expectedNamespace);
+
         var request = new SimClassRequestCreate
         {
             Name = "Invalid-Name-With-Chars",
             State = SimModelsAccesibility.Normal,
-            IdBaseClass = Guid.NewGuid().ToString()
+            IdBaseClass = Guid.NewGuid().ToString(),
+            BaseNamespaceId = expectedNamespace.Id
         };
-
         _mockSimClassService!
-            .Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            .Setup(service => service.CreateSimClass(
+                request.Name,
+                SimAccesibility.Normal,
+                request.BaseClassId,
+                expectedNamespace.Id))
             .Throws(new InvalidAttributeLogic("Name contains invalid characters."));
 
         var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
@@ -200,27 +233,36 @@ public class SimClassAdapterTest
 
         Assert.AreEqual("Name contains invalid characters.", exception.Message);
 
-        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId, expectedNamespace.Id), Times.Once);
     }
 
     [TestMethod]
     [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateSimClass_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
     {
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
+        _mockNamespaceService
+            ?.Setup(service => service.CreateNamespace(@namespace))
+            .Returns(expectedNamespace);
+
         var request = new SimClassRequestCreate
         {
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
-            IdBaseClass = Guid.NewGuid().ToString()
+            IdBaseClass = Guid.NewGuid().ToString(),
+            BaseNamespaceId = expectedNamespace.Id
         };
-
         _mockSimClassService!
-            .Setup(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId))
+            .Setup(service => service.CreateSimClass(
+                request.Name,
+                SimAccesibility.Normal,
+                request.BaseClassId,
+                expectedNamespace.Id))
             .Throws(new NonExistentValueLogic("Base class not found."));
-
         _simClassAdapter!.CreateSimClass(request);
 
-        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId), Times.Once);
+        _mockSimClassService.Verify(service => service.CreateSimClass(request.Name, SimAccesibility.Normal, request.BaseClassId, expectedNamespace.Id), Times.Once);
     }
 
     [TestMethod]
@@ -655,5 +697,64 @@ public class SimClassAdapterTest
 
         Assert.AreEqual("Invalid domain attribute", exception.Message);
         _mockSimClassService.Verify(s => s.AddInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_InvalidAttributeAdapter_WhenNamespaceIdIsNull()
+    {
+        var request = new SimClassRequestCreate
+        {
+            Name = "TestClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = Guid.NewGuid().ToString(),
+            BaseNamespaceId = Guid.Empty
+        };
+        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
+        _mockNamespaceService
+            ?.Setup(service => service.GetNamespaceById(Guid.Empty))
+            .Throws(new InvalidAttributeLogic("Namespace ID cannot be null."));
+
+        _mockSimClassService
+        .Setup(s => s.CreateSimClass(
+            "TestClass",
+            SimAccesibility.Normal,
+            It.IsAny<Guid>(),
+            Guid.Empty))
+        .Throws(new InvalidAttributeLogic("Namespace ID cannot be null."));
+
+        var exception = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simClassAdapter.CreateSimClass(request));
+
+        Assert.AreEqual("Namespace ID cannot be null.", exception.Message);
+    }
+
+    [TestMethod]
+    public void CreateSimClass_NonExistentValueAdapter_WhenNamespaceDoesNotExist()
+    {
+        var baseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var request = new SimClassRequestCreate
+        {
+            Name = "TestClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            BaseNamespaceId = Guid.NewGuid()
+        };
+
+        _mockNamespaceService
+            ?.Setup(service => service.GetNamespaceById(request.BaseNamespaceId))
+            .Returns((SimNamespace)null);
+        _mockNamespaceService
+            ?.Setup(service => service.NameAlreadyInNamespace_Validation(request.BaseNamespaceId, request.Name))
+            .Throws(new NonExistentValueLogic($"Namespace with ID {request.BaseNamespaceId} does not exist."));
+        _mockSimClassService
+            .Setup(s => s.CreateSimClass(
+                "TestClass",
+                SimAccesibility.Normal,
+                baseClassId,
+                request.BaseNamespaceId))
+            .Throws(new NonExistentValueLogic($"Namespace with ID {request.BaseNamespaceId} does not exist."));
+
+        var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
+            _simClassAdapter.CreateSimClass(request));
     }
 }

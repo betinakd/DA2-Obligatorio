@@ -7,13 +7,13 @@ using IDataAccess;
 
 namespace BusinessLogic;
 
-public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAccess simAttributeDA, IExecutionDataAccess executionDataAccess) : ISimClassService
+public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAccess simAttributeDA, IExecutionDataAccess executionDataAccess, INamespaceService namespaceService) : ISimClassService
 {
     private readonly ISimClassDataAccess _simClassDA = simClassDA;
     private readonly ISimAttributeDataAccess _simAttributeDA = simAttributeDA;
     private readonly IExecutionDataAccess _executionDataAccess = executionDataAccess;
-
-    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId)
+    private readonly INamespaceService _namespaceService = namespaceService;
+    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId, Guid? namespaceId = null)
     {
         if(_simClassDA.ExistSimClassName(name))
         {
@@ -25,6 +25,16 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("Base class not found.");
         }
 
+        if(_namespaceService.GetNamespaceById(namespaceId) == null)
+        {
+            throw new NonExistentValueLogic("Namespace not found.");
+        }
+
+        if(_namespaceService.NameAlreadyInNamespace_Validation(namespaceId, name))
+        {
+            throw new InUseValueLogic("Class name already exists in the namespace.");
+        }
+
         try
         {
             var baseClass = _simClassDA.GetSimClassById(baseClassId);
@@ -34,7 +44,8 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
                 Name = name,
                 State = simAccesibility,
                 BaseClass = baseClass,
-                BaseClassId = baseClass.Id
+                BaseClassId = baseClass.Id,
+                NamespaceId = namespaceId,
             };
             _simClassDA.CreateSimClass(simClass);
             return simClass;
@@ -148,6 +159,25 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
         if(!_simClassDA.ClassInheritAttribute(idClass, idAttribute))
         {
             throw new NonExistentValueLogic("Attribute not reacheable from method.");
+        }
+    }
+
+    public List<SimClass> GetClassesOfNamespaces(Guid id)
+    {
+        if(_namespaceService.GetNamespaceById(id) == null)
+        {
+            throw new NonExistentValueLogic("Namespace not found.");
+        }
+
+        try
+        {
+            var allClasses = _simClassDA.GetAllSimClasses();
+            var classesInNamespace = allClasses.Where(c => c.NamespaceId == id).ToList();
+            return classesInNamespace;
+        }
+        catch(InvalidAttributeLogic e)
+        {
+            throw new InvalidAttributeLogic(e.Message);
         }
     }
 }
