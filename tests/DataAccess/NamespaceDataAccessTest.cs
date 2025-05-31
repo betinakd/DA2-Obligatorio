@@ -56,4 +56,19 @@ public class NamespaceDataAccessTest
         Assert.IsTrue(namespaces.Any(ns => ns.Id == simNamespace1.Id));
         Assert.IsTrue(namespaces.Any(ns => ns.Id == simNamespace2.Id));
     }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldAddNamespace_WhenValidNamespaceProvided()
+    {
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NewNamespace", BaseNamespaceId = null };
+
+        _namespaceDataAccess.CreateNamespace(simNamespace);
+
+        var namespaces = _namespaceDataAccess.GetAllNamespaces();
+
+        Assert.IsNotNull(namespaces);
+        Assert.AreEqual(1, namespaces.Count);
+        Assert.AreEqual(simNamespace.Id, namespaces[0].Id);
+        Assert.AreEqual(simNamespace.Name, namespaces[0].Name);
+    }
 }

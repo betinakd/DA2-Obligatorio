@@ -10,7 +10,8 @@ public class NamespaceDataAccess(SimulatorDbContext context) : INamespaceDataAcc
 
     public void CreateNamespace(SimNamespace simNamespace)
     {
-        throw new NotImplementedException();
+        _context.SimNamespaces.Add(simNamespace);
+        _context.SaveChanges();
     }
 
     public bool NamespaceExistsById(Guid? id)
