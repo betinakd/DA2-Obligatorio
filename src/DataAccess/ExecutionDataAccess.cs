@@ -338,4 +338,36 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         return baseClass == null ? null : FindMethodInHierarchyPublicOrProtected(baseClass, signature, level + 1);
     }
+
+    public SimMethod? FindOverrideOrReferenceMethod(SimClass instanceClass, SimClass referenceClass, Signature signature)
+    {
+        SimClass? current = instanceClass;
+        while(current != null)
+        {
+            var methods = GetFilteredMethods(query => query.Where(m =>
+                m.RelatedClassId == current.Id &&
+                m.Name == signature.Name));
+
+            var overrideMethod = methods.FirstOrDefault(m => m.MatchSignature(signature) && m.IsOverride);
+            if(overrideMethod != null)
+            {
+                return overrideMethod;
+            }
+
+            if(!current.BaseClassId.HasValue)
+            {
+                break;
+            }
+
+            current = _context.SimClasses
+                .Include(c => c.BaseClass)
+                .FirstOrDefault(c => c.Id == current.BaseClassId.Value);
+        }
+
+        var referenceMethods = GetFilteredMethods(query => query.Where(m =>
+            m.RelatedClassId == referenceClass.Id &&
+            m.Name == signature.Name));
+
+        return referenceMethods.FirstOrDefault(m => m.MatchSignature(signature));
+    }
 }

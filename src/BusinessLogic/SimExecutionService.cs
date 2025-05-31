@@ -37,9 +37,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
 
         if(useDynamicDispatch)
         {
-            methodToExecute = _executionDA.FindMethodInHierarchy(instanceClass, signature);
+            methodToExecute = _executionDA.FindOverrideOrReferenceMethod(instanceClass, referenceClass, signature);
 
-            if(methodToExecute.Accesibility == SimAccesibility.Abstract ||
+            if(methodToExecute == null || methodToExecute.Accesibility == SimAccesibility.Abstract ||
                methodToExecute.Accesibility == SimAccesibility.Interface)
             {
                 throw new InvalidOperationLogic($"Method '{signature.Name}' cannot be executed because is abstract or in interface.");

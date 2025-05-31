@@ -253,7 +253,7 @@ public class SimClassTest
             State = SimAccesibility.Abstract,
             Methods =
             [
-                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract},
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
             ]
         };

@@ -351,11 +351,15 @@ public class ExecutionServiceTest
         var signature = new Signature { Name = "TestMethod", Parameters = [] };
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Setup(m => m.FindOverrideOrReferenceMethod(simClass, simClass, signature))
             .Returns(method);
 
-        _mockExecuteDataAccess
-            .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, It.IsAny<int>()))
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Returns(method);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, 0))
             .Returns(innerMethod);
 
         var result = _executionService!.ExecuteMethod(
@@ -532,9 +536,13 @@ public class ExecutionServiceTest
         mockRef.Setup(r => r.GetReferenceClass()).Returns(simClass);
         mockRef.Setup(r => r.GetSignature(signature)).Returns("TestClass.TestMethod()");
         mockRef.Setup(r => r.GetSignatureWithClassName(signature)).Returns("TestClass.TestMethod()");
+
         _mockExecuteDataAccess!
-            .SetupSequence(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
-            .Returns(virtualMethod)
+            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Returns(virtualMethod);
+
+        _mockExecuteDataAccess!
+            .Setup(m => m.FindOverrideOrReferenceMethod(simClass, simClass, signature))
             .Returns(abstractMethod);
 
         _executionService!.ExecuteMethod(
