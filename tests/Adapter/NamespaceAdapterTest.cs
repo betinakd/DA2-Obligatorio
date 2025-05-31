@@ -211,4 +211,15 @@ public class NamespaceAdapterTest
             Assert.AreEqual(element.Name, response[0].Name);
         }
     }
+
+    [TestMethod]
+    public void GetAllNamespaces_WhenNoNamespacesExist_ShouldReturnEmptyList()
+    {
+        _mockNamespaceService?.Setup(x => x.GetAllNamespaces()).Returns(new List<SimNamespace>());
+
+        var response = _namespaceAdapter?.GetAllNamespaces();
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(0, response.Count);
+    }
 }
