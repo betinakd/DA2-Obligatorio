@@ -85,4 +85,34 @@ public class NamespaceControllerTest
         Action act = () => _namespaceController.GetNamespaceById(Guid.Empty);
         act.Should().Throw<InvalidAttributeAdapter>().WithMessage("Namespace can't be empty.");
     }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldReturnBadRequest_NameIsEmpty()
+    {
+        var request = new NamespaceRequest
+        {
+            Name = null,
+            BaseNamespaceId = null
+        };
+
+        _mockNamespaceAdapter.Setup(x => x.CreateNamespace(request)).Throws(new InvalidAttributeAdapter("Namespace name can't be empty."));
+
+        Action act = () => _namespaceController.CreateNamespace(request);
+        act.Should().Throw<InvalidAttributeAdapter>().WithMessage("Namespace name can't be empty.");
+    }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldThrowException_WhenBaseNamespaceIdNonExists()
+    {
+        var request = new NamespaceRequest
+        {
+            Name = "TestNamespace",
+            BaseNamespaceId = Guid.NewGuid()
+        };
+
+        _mockNamespaceAdapter.Setup(x => x.CreateNamespace(request)).Throws(new NonExistentValueAdapter("Base namespace does not exist."));
+
+        Action act = () => _namespaceController.CreateNamespace(request);
+        act.Should().Throw<NonExistentValueAdapter>().WithMessage("Base namespace does not exist.");
+    }
 }
