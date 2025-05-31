@@ -6,14 +6,20 @@ using IDataAccess;
 
 namespace BusinessLogic;
 
-public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyDataAccess apikeyDataAccess) : IExecutionService
+public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyDataAccess apikeyDataAccess, ISimClassDataAccess simClassDataAccess) : IExecutionService
 {
     private readonly IExecutionDataAccess _executionDA = executionDataAccess;
+    private readonly ISimClassDataAccess _simClassDA = simClassDataAccess;
     private readonly IApikeyDataAccess _apikeyDA = apikeyDataAccess;
 
     public string ExecuteMethod(SimClass referenceClass, SimClass instanceClass, Reference reference, Signature signature, HashSet<Guid>? visited, int level = 0)
     {
         visited ??= [];
+
+        if(!_simClassDA.IsClassBaseOfOrSameAs(referenceClass, instanceClass))
+        {
+            throw new InvalidOperationLogic($"Reference class '{referenceClass.Name}' is not a base of or the same as instance class '{instanceClass.Name}'.");
+        }
 
         SimMethod? staticMethod = _executionDA.FindMethodInHierarchy(referenceClass, signature);
 
@@ -22,9 +28,9 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
             throw new InvalidOperationLogic($"Method not executable from reference.");
         }
 
-        var useDynamicDispatch = staticMethod.Accesibility == SimAccesibility.Abstract ||
+        var useDynamicDispatch = reference.UsesDynamicDispatch() && (staticMethod.Accesibility == SimAccesibility.Abstract ||
                                 staticMethod.Accesibility == SimAccesibility.Interface
-                                || staticMethod.IsVirtual;
+                                || staticMethod.IsVirtual);
 
         return ExecuteMethodInternal(referenceClass, instanceClass, reference, signature, level, visited, useDynamicDispatch);
     }
@@ -39,8 +45,8 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
         {
             methodToExecute = _executionDA.FindOverrideOrReferenceMethod(instanceClass, referenceClass, signature);
 
-            if(methodToExecute == null || methodToExecute.Accesibility == SimAccesibility.Abstract ||
-               methodToExecute.Accesibility == SimAccesibility.Interface)
+            if(methodToExecute != null && (methodToExecute.Accesibility == SimAccesibility.Abstract ||
+               methodToExecute.Accesibility == SimAccesibility.Interface))
             {
                 throw new InvalidOperationLogic($"Method '{signature.Name}' cannot be executed because is abstract or in interface.");
             }

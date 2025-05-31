@@ -364,10 +364,8 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 .FirstOrDefault(c => c.Id == current.BaseClassId.Value);
         }
 
-        var referenceMethods = GetFilteredMethods(query => query.Where(m =>
-            m.RelatedClassId == referenceClass.Id &&
-            m.Name == signature.Name));
+        var referenceMethods = FindMethodInHierarchy(referenceClass, signature);
 
-        return referenceMethods.FirstOrDefault(m => m.MatchSignature(signature));
+        return referenceMethods;
     }
 }
