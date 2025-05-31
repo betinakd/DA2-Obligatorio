@@ -253,7 +253,7 @@ public class SimClassTest
             State = SimAccesibility.Abstract,
             Methods =
             [
-                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract},
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
             ]
         };
@@ -264,9 +264,9 @@ public class SimClassTest
             State = SimAccesibility.Normal,
             Methods =
             [
-                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal },
-                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal },
-                new SimMethod { Name = "AdditionalMethod", Accesibility = SimAccesibility.Normal }
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal, IsOverride = true, IsVirtual = true },
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal, IsOverride = true, IsVirtual = true },
+                new SimMethod { Name = "AdditionalMethod", Accesibility = SimAccesibility.Normal, IsOverride = true, IsVirtual = true }
             ]
         };
 
@@ -787,5 +787,36 @@ public class SimClassTest
         };
 
         simClass.SetImplements([interfaceClass]);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void SetBaseClass_ShouldThrowException_WhenImplementedAbstractMethodsAreNotOverride()
+    {
+        var voidType = new SimClass { Name = "void", State = SimAccesibility.Normal };
+
+        var baseClass = new SimClass
+        {
+            Name = "AbstractBaseClass",
+            State = SimAccesibility.Abstract,
+            Methods =
+            [
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract, ReturnType = voidType },
+            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract, ReturnType = voidType }
+            ]
+        };
+
+        var derivedClass = new SimClass
+        {
+            Name = "DerivedClass",
+            State = SimAccesibility.Normal,
+            Methods =
+            [
+                new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal, IsOverride = true, ReturnType = voidType },
+            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
+            ]
+        };
+
+        derivedClass.SetBaseClass(baseClass);
     }
 }

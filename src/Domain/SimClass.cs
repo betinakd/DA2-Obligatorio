@@ -195,6 +195,16 @@ public class SimClass
             {
                 throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
             }
+
+            var notOverrideMethods = abstractMethods
+                .Select(am => Methods.FirstOrDefault(m => m.Name == am.Name))
+                .Where(m => m != null && !m.IsOverride)
+                .ToList();
+
+            if(notOverrideMethods.Any())
+            {
+                throw new InvalidAttributeDomain($"The following abstract methods are implemented but not marked as override: {string.Join(", ", notOverrideMethods.Select(m => m.ToString()))}");
+            }
         }
 
         _baseClassField = value;
