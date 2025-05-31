@@ -43,7 +43,7 @@ public class NamespaceDataAccessTest
     {
         var simNamespace1Id = Guid.NewGuid();
         var simNamespace1 = new SimNamespace { Id = simNamespace1Id, Name = "Namespace1", BaseNamespaceId = null };
-        var simNamespace2 = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace2" , BaseNamespaceId = simNamespace1Id };
+        var simNamespace2 = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace2", BaseNamespaceId = simNamespace1Id };
 
         _context.SimNamespaces.Add(simNamespace1);
         _context.SimNamespaces.Add(simNamespace2);

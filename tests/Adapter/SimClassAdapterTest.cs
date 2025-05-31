@@ -58,10 +58,10 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldReturnCreatedSimClassResponse_WhenValidRequest()
     {
-        var _namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
         var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
         _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(_namespace))
+            ?.Setup(service => service.CreateNamespace(@namespace))
                 .Returns(expectedNamespace);
 
         var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ValidClass" };
@@ -158,10 +158,10 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldThrowInUseException_WhenServiceThrowsInUseValueLogic()
     {
-        var _namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
         var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
         _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(_namespace))
+            ?.Setup(service => service.CreateNamespace(@namespace))
             .Returns(expectedNamespace);
 
         var request = new SimClassRequestCreate
@@ -207,10 +207,10 @@ public class SimClassAdapterTest
     [TestMethod]
     public void CreateSimClass_ShouldThrowInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
     {
-        var _namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
         var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
         _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(_namespace))
+            ?.Setup(service => service.CreateNamespace(@namespace))
             .Returns(expectedNamespace);
 
         var request = new SimClassRequestCreate
@@ -240,10 +240,10 @@ public class SimClassAdapterTest
     [ExpectedException(typeof(NonExistentValueAdapter))]
     public void CreateSimClass_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
     {
-        var _namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
+        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
         var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
         _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(_namespace))
+            ?.Setup(service => service.CreateNamespace(@namespace))
             .Returns(expectedNamespace);
 
         var request = new SimClassRequestCreate

@@ -121,20 +121,8 @@ public class NamespaceControllerTest
     {
         var expectedAdapterResponse = new List<NamespaceResponse>
         {
-            new NamespaceResponse
-            {
-                Id = Guid.NewGuid(),
-                Name = "TestNamespace1",
-                BaseNamespaceId = null,
-                Elements = []
-            },
-            new NamespaceResponse
-            {
-                Id = Guid.NewGuid(),
-                Name = "TestNamespace2",
-                BaseNamespaceId = null,
-                Elements = []
-            }
+            new NamespaceResponse { Id = Guid.NewGuid(), Name = "TestNamespace1", BaseNamespaceId = null, Elements = [] },
+            new NamespaceResponse { Id = Guid.NewGuid(), Name = "TestNamespace2", BaseNamespaceId = null, Elements = [] }
         };
 
         _mockNamespaceAdapter.Setup(x => x.GetAllNamespaces()).Returns(expectedAdapterResponse);
@@ -147,7 +135,7 @@ public class NamespaceControllerTest
     [TestMethod]
     public void GetAllNamespaces_ShouldReturnEmptyList_WhenNoNamespacesExist()
     {
-        _mockNamespaceAdapter.Setup(x => x.GetAllNamespaces()).Returns(new List<NamespaceResponse>());
+        _mockNamespaceAdapter.Setup(x => x.GetAllNamespaces()).Returns([]);
 
         var result = _namespaceController.GetAllNamespaces() as OkObjectResult;
 

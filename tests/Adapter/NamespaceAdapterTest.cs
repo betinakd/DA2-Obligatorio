@@ -215,7 +215,7 @@ public class NamespaceAdapterTest
     [TestMethod]
     public void GetAllNamespaces_WhenNoNamespacesExist_ShouldReturnEmptyList()
     {
-        _mockNamespaceService?.Setup(x => x.GetAllNamespaces()).Returns(new List<SimNamespace>());
+        _mockNamespaceService?.Setup(x => x.GetAllNamespaces()).Returns([]);
 
         var response = _namespaceAdapter?.GetAllNamespaces();
 

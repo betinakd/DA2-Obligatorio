@@ -41,16 +41,16 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
     {
         try
         {
-            var _namespace = _namespaceService.GetNamespaceById(id);
+            var @namespace = _namespaceService.GetNamespaceById(id);
             var classes = _simClassService.GetClassesOfNamespaces(id);
             var response = new NamespaceResponse
             {
-                Id = _namespace.Id,
-                Name = _namespace.Name,
-                BaseNamespaceId = _namespace.BaseNamespaceId,
+                Id = @namespace.Id,
+                Name = @namespace.Name,
+                BaseNamespaceId = @namespace.BaseNamespaceId,
                 BaseNamespaceName =
-                    _namespace.BaseNamespaceId != null
-                        ? _namespaceService.GetNamespaceById(_namespace.BaseNamespaceId.Value).Name
+                    @namespace.BaseNamespaceId != null
+                        ? _namespaceService.GetNamespaceById(@namespace.BaseNamespaceId.Value).Name
                         : null,
                 Elements = MapClassesToResponses(classes)
             };
