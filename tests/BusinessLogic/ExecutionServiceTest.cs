@@ -43,8 +43,14 @@ public class ExecutionServiceTest
             .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
             .Returns(method);
 
-        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
-
+        var result = _executionService!.ExecuteMethod(
+            simClass,
+            simClass,
+            mockRef.Object,
+            signature,
+            null,
+            0
+        );
         Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
     }
 
@@ -99,8 +105,14 @@ public class ExecutionServiceTest
 
         _executionService = new ExecutionService(_mockExecuteDataAccess.Object, _mockApikeyDataAccess.Object);
 
-        var result = _executionService.ExecuteMethod(thisRef.Object, thisRef.Object, outerSignature);
-
+        var result = _executionService.ExecuteMethod(
+            simClass,
+            simClass,
+            thisRef.Object,
+            outerSignature,
+            null,
+            0
+        );
         Assert.IsTrue(result.Contains("TestClass.OuterMethod()"));
         Assert.IsTrue(result.Contains("this.InnerMethod()"));
 
@@ -137,8 +149,14 @@ public class ExecutionServiceTest
             .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
             .Returns(method);
 
-        var result = _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
-
+        var result = _executionService!.ExecuteMethod(
+            simClass,
+            simClass,
+            mockRef.Object,
+            signature,
+            null,
+            0
+        );
         Assert.IsTrue(result.Contains("Recursive.RecursiveMethod()\n"));
     }
 
@@ -343,8 +361,14 @@ public class ExecutionServiceTest
             .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, It.IsAny<int>()))
             .Returns(innerMethod);
 
-        var result = _executionService!.ExecuteMethod(thisRef.Object, thisRef.Object, signature);
-
+        var result = _executionService!.ExecuteMethod(
+            simClass,
+            simClass,
+            thisRef.Object,
+            signature,
+            null,
+            0
+        );
         Assert.IsTrue(result.Contains("TestClass.Method()"));
     }
 
@@ -375,7 +399,14 @@ public class ExecutionServiceTest
             .Setup(m => m.FindMethodInHierarchy(referenceClass, signature, It.IsAny<int>()))
             .Returns(method);
 
-        _executionService!.ExecuteMethod(mockRef.Object, mockObjReal.Object, signature);
+        _executionService!.ExecuteMethod(
+            referenceClass,
+            objClass,
+            mockRef.Object,
+            signature,
+            null,
+            0
+        );
     }
 
     [TestMethod]
@@ -392,7 +423,14 @@ public class ExecutionServiceTest
             .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
             .Returns((SimMethod?)null);
 
-        _executionService!.ExecuteMethod(mockRef.Object, mockRef.Object, signature);
+        _executionService!.ExecuteMethod(
+            simClass,
+            simClass,
+            mockRef.Object,
+            signature,
+            null,
+            0
+        );
     }
 
     [TestMethod]

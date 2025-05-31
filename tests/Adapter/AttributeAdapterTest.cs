@@ -470,4 +470,38 @@ public class AttributeAdapterTest
 
         _simAttributeAdapter!.UpdateAttribute(attributeRequest);
     }
+
+    [TestMethod]
+    public void CreateAttribute_ThrowsInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
+    {
+        var classId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+        var instanceId = Guid.NewGuid();
+
+        var attributeRequest = new AttributeRequest
+        {
+            Name = "TestAttribute",
+            Privacity = Models.Enums.SimModelsPrivacity.Public,
+            IdReference = typeId.ToString(),
+            IdInstance = instanceId.ToString(),
+            IsStatic = false
+        };
+
+        var relatedClass = new SimClass { Id = classId, Name = "RelatedClass" };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
+        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass" };
+
+        _mockSimClassService!.Setup(s => s.GetSimClassById(classId)).Returns(relatedClass);
+        _mockSimClassService.Setup(s => s.GetSimClassById(typeId)).Returns(typeClass);
+        _mockSimClassService.Setup(s => s.GetSimClassById(instanceId)).Returns(instanceClass);
+        _mockSimClassService!.Setup(s => s.ValidPolymorphism(typeClass, instanceClass));
+        _mockSimAttributeService!
+            .Setup(s => s.CreateAttribute(classId, It.IsAny<SimAttribute>()))
+            .Throws(new InvalidAttributeLogic("Test logic validation error"));
+
+        var ex = Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _simAttributeAdapter!.CreateAttribute(classId, attributeRequest));
+
+        Assert.AreEqual("Test logic validation error", ex.Message);
+    }
 }

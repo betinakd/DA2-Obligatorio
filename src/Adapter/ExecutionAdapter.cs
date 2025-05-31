@@ -66,11 +66,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             {
                 Reference = refer
             };
-            var objToCreate = new ReferenceThis()
-            {
-                Reference = obj
-            };
-            var execution = _executionService.ExecuteMethod(reference, objToCreate, signature);
+            var execution = _executionService.ExecuteMethod(refer, obj, reference, signature);
             _executionService.SaveExecutionLog(refer.Name, obj.Name, execution);
             return execution;
         }

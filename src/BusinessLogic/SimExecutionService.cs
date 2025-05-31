@@ -11,11 +11,10 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
     private readonly IExecutionDataAccess _executionDA = executionDataAccess;
     private readonly IApikeyDataAccess _apikeyDA = apikeyDataAccess;
 
-    public string ExecuteMethod(Reference reference, Reference objReal, Signature signature, int level = 0, HashSet<Guid>? visited = null)
+    public string ExecuteMethod(SimClass referenceClass, SimClass instanceClass, Reference reference, Signature signature, HashSet<Guid>? visited, int level = 0)
     {
         visited ??= [];
 
-        SimClass referenceClass = reference.GetReferenceClass();
         SimMethod? staticMethod = _executionDA.FindMethodInHierarchy(referenceClass, signature);
 
         if(staticMethod == null)
@@ -27,10 +26,10 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
                                 staticMethod.Accesibility == SimAccesibility.Interface
                                 || staticMethod.IsVirtual;
 
-        return ExecuteMethodInternal(reference, objReal, signature, level, visited, useDynamicDispatch);
+        return ExecuteMethodInternal(referenceClass, instanceClass, reference, signature, level, visited, useDynamicDispatch);
     }
 
-    private string ExecuteMethodInternal(Reference reference, Reference objReal, Signature signature, int level, HashSet<Guid> visited, bool useDynamicDispatch)
+    private string ExecuteMethodInternal(SimClass referenceClass, SimClass instanceClass, Reference reference, Signature signature, int level, HashSet<Guid> visited, bool useDynamicDispatch)
     {
         var identation = new string(' ', level * 4);
 
@@ -38,18 +37,15 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
 
         if(useDynamicDispatch)
         {
-            SimClass objClass = objReal.GetReferenceClass();
-            methodToExecute = _executionDA.FindMethodInHierarchy(objClass, signature);
+            methodToExecute = _executionDA.FindMethodInHierarchy(instanceClass, signature);
         }
         else
         {
-            SimClass referenceClass = reference.GetReferenceClass();
             methodToExecute = _executionDA.FindMethodInHierarchy(referenceClass, signature);
 
-            SimClass objClass = objReal.GetReferenceClass();
             if(methodToExecute != null &&
                methodToExecute.Privacity == SimPrivacity.Private &&
-               referenceClass.Id != objClass.Id)
+               referenceClass.Id != instanceClass.Id)
             {
                 throw new InvalidOperationLogic($"Private method '{signature.Name}' not accessible from this context.");
             }
@@ -74,10 +70,10 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
         foreach(var invocation in methodToExecute.Invocations)
         {
             Reference invocRef = invocation.Reference;
-            var isReferenceThis = invocation.Reference is ReferenceThis;
-            Reference invocObj = isReferenceThis ? objReal : invocation.Reference;
+            SimClass invocInstance = invocRef.GetInstanceClass(signature, instanceClass);
+            SimClass invocReference = invocRef.GetReferenceClass();
 
-            result += ExecuteMethod(invocRef, invocObj, invocation.Signature, level + 1, [.. visited]);
+            result += ExecuteMethod(invocReference, invocInstance, invocRef, invocation.Signature, [.. visited], level + 1);
         }
 
         return result;

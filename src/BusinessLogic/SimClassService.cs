@@ -163,7 +163,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new InvalidAttributeLogic("Polymorphic inheritance is not allowed when the base type is abstract.");
         }
 
-        if(_simClassDA.IsClassBaseOfOrSameAs(baseClass, derivedClass))
+        if(!_simClassDA.IsClassBaseOfOrSameAs(baseClass, derivedClass))
         {
             throw new InvalidAttributeLogic("Reference class is not base of instance class.");
         }

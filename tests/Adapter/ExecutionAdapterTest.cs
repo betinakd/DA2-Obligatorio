@@ -82,13 +82,12 @@ public class ExecutionAdapterTest
 
         _mockExecutionService!
             .Setup(s => s.ExecuteMethod(
-                It.Is<Reference>(r => r is ReferenceThis &&
-                    ((ReferenceThis)r).Reference.Id == referenceTypeId),
-                It.Is<Reference>(r => r is ReferenceThis &&
-                    ((ReferenceThis)r).Reference.Id == instanceTypeId),
+                It.Is<SimClass>(c => c.Id == referenceTypeId),
+                It.Is<SimClass>(c => c.Id == instanceTypeId),
+                It.Is<Reference>(r => r is ReferenceThis && ((ReferenceThis)r).Reference.Id == referenceTypeId),
                 It.Is<Signature>(s => s.Name == "TestMethod" && s.Parameters.Count == 2),
-                It.IsAny<int>(),
-                It.IsAny<HashSet<Guid>>()))
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Returns("expectedResult");
 
         _mockExecutionService!
@@ -198,11 +197,12 @@ public class ExecutionAdapterTest
 
         _mockExecutionService
             .Setup(s => s.ExecuteMethod(
-                It.IsAny<Reference>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
                 It.IsAny<Reference>(),
                 It.IsAny<Signature>(),
-                It.IsAny<int>(),
-                It.IsAny<HashSet<Guid>>()))
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Throws(new NonExistentValueLogic("Method not found"));
 
         _executionAdapter!.ExecuteMethod(request);
@@ -282,7 +282,13 @@ public class ExecutionAdapterTest
 
         mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
 
-        mockExecutionService.Setup(x => x.ExecuteMethod(It.IsAny<ReferenceThis>(), It.IsAny<ReferenceThis>(), It.IsAny<Signature>(), It.IsAny<int>(), It.IsAny<HashSet<Guid>>()))
+        mockExecutionService.Setup(x => x.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Returns("resultado");
 
         mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
@@ -341,7 +347,13 @@ public class ExecutionAdapterTest
         mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
 
         mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
-        mockExecutionService.Setup(x => x.ExecuteMethod(It.IsAny<ReferenceThis>(), It.IsAny<ReferenceThis>(), It.IsAny<Signature>(), It.IsAny<int>(), It.IsAny<HashSet<Guid>>()))
+        mockExecutionService.Setup(x => x.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Returns("resultado");
         mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
@@ -400,7 +412,13 @@ public class ExecutionAdapterTest
         mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
 
         mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
-        mockExecutionService.Setup(x => x.ExecuteMethod(It.IsAny<ReferenceThis>(), It.IsAny<ReferenceThis>(), It.IsAny<Signature>(), It.IsAny<int>(), It.IsAny<HashSet<Guid>>()))
+        mockExecutionService.Setup(x => x.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Returns("resultado");
         mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 

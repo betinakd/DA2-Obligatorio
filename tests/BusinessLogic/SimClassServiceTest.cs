@@ -635,7 +635,7 @@ public class SimClassServiceTest
 
         _mockSimClassDataAccess!
             .Setup(m => m.IsClassBaseOfOrSameAs(baseClass, derivedClass))
-            .Returns(true);
+            .Returns(false);
 
         var service = new SimClassService(
             _mockSimClassDataAccess!.Object,

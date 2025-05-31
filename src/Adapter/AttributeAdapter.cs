@@ -128,6 +128,10 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
     }
 
     public AttributeResponse GetAttribute(Guid id)
