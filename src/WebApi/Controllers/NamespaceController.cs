@@ -21,4 +21,11 @@ public class NamespaceController(INamespaceAdapter namespaceAdapter) : Controlle
     {
         return Ok(_namespaceAdapter.GetNamespaceById(id));
     }
+
+    [HttpGet]
+    public IActionResult GetAllNamespaces()
+    {
+        var namespaces = _namespaceAdapter.GetAllNamespaces();
+        return Ok(namespaces);
+    }
 }

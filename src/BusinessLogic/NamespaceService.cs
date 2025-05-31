@@ -62,4 +62,9 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
             throw new NonExistentValueLogic($"Namespace with ID {id} does not exist.");
         }
     }
+
+    public List<SimNamespace> GetAllNamespaces()
+    {
+        return _namespaceDataAccess.GetAllNamespaces();
+    }
 }

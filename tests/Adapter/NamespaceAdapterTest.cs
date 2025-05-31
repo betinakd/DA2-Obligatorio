@@ -145,11 +145,70 @@ public class NamespaceAdapterTest
     }
 
     [TestMethod]
-    public void GetNamespaceById_ShouldThrowInvalidAttributeAdapter_WhenNamespaceIdEmpty()
+    public void GetAllNamespaces_ShouldReturnListOfNamespaceResponses()
     {
-        var namespaceId = Guid.NewGuid();
-        _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId)).Throws(new InvalidAttributeLogic("Namespace can't be empty."));
+        var namespaceId1 = Guid.NewGuid();
+        var namespaceId2 = Guid.NewGuid();
+        var namespaceId3 = Guid.NewGuid();
+        var namespaces = new List<SimNamespace>
+        {
+            new SimNamespace { Id = namespaceId1, Name = "Namespace1", BaseNamespaceId = null, Elements = [] },
+            new SimNamespace { Id = namespaceId2, Name = "Namespace2", BaseNamespaceId = namespaceId1, Elements = [] },
+            new SimNamespace { Id = namespaceId3, Name = "Namespace3", BaseNamespaceId = null, Elements = [] }
+        };
+        _mockNamespaceService?.Setup(x => x.GetAllNamespaces()).Returns(namespaces);
 
-        Assert.ThrowsException<InvalidAttributeAdapter>(() => _namespaceAdapter?.GetNamespaceById(namespaceId));
+        _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId1))
+            .Returns(namespaces[0]);
+
+        // Mock para clases vacías
+        foreach(var ns in namespaces)
+        {
+            _simClassService?.Setup(x => x.GetClassesOfNamespaces(ns.Id)).Returns([]);
+        }
+
+        var response = _namespaceAdapter?.GetAllNamespaces();
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(namespaces.Count, response.Count);
+
+        for(var i = 0; i < namespaces.Count; i++)
+        {
+            Assert.AreEqual(namespaces[i].Id, response[i].Id);
+            Assert.AreEqual(namespaces[i].Name, response[i].Name);
+            Assert.AreEqual(namespaces[i].BaseNamespaceId, response[i].BaseNamespaceId);
+            Assert.AreEqual(0, response[i].Elements.Count);
+        }
+    }
+
+    public void GetAllNamespaces_ShouldReturnListOfNamespaceResponses_NamespaceContainsClassesCase()
+    {
+        var namespaceId1 = Guid.NewGuid();
+        var namespaceClasses = new List<SimClass>
+        {
+            new SimClass { Id = Guid.NewGuid(), Name = "TestClass1", NamespaceId = namespaceId1 },
+            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId1 }
+        };
+        var namespaces = new List<SimNamespace>
+        {
+            new SimNamespace { Id = namespaceId1, Name = "Namespace1", BaseNamespaceId = null, Elements = namespaceClasses },
+        };
+        _mockNamespaceService?.Setup(x => x.GetAllNamespaces()).Returns(namespaces);
+
+        _simClassService?.Setup(x => x.GetClassesOfNamespaces(namespaceId1)).Returns(namespaceClasses);
+        var response = _namespaceAdapter?.GetAllNamespaces();
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(namespaces.Count, response.Count);
+
+        Assert.AreEqual(namespaces[0].Id, response[0].Id);
+        Assert.AreEqual(namespaces[0].Name, response[0].Name);
+        Assert.AreEqual(namespaces[0].BaseNamespaceId, response[0].BaseNamespaceId);
+
+        foreach(var element in response[0].Elements)
+        {
+            Assert.AreEqual(element.Id, response[0].Id);
+            Assert.AreEqual(element.Name, response[0].Name);
+        }
     }
 }

@@ -67,6 +67,21 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
         }
     }
 
+    public List<NamespaceResponse> GetAllNamespaces()
+    {
+        return _namespaceService.GetAllNamespaces()
+            .Select(n => new NamespaceResponse
+            {
+                Id = n.Id,
+                Name = n.Name,
+                BaseNamespaceId = n.BaseNamespaceId,
+                BaseNamespaceName = n.BaseNamespaceId != null
+                    ? _namespaceService.GetNamespaceById(n.BaseNamespaceId.Value).Name
+                    : null,
+                Elements = MapClassesToResponses(_simClassService.GetClassesOfNamespaces(n.Id))
+            }).ToList();
+    }
+
     private List<SimClassResponse> MapClassesToResponses(List<SimClass> classes)
     {
         if(classes == null || !classes.Any())

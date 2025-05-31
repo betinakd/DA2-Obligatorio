@@ -7,4 +7,5 @@ public interface INamespaceAdapter
 {
     NamespaceResponse CreateNamespace(NamespaceRequest namespaceRequest);
     NamespaceResponse GetNamespaceById(Guid id);
+    List<NamespaceResponse> GetAllNamespaces();
 }
