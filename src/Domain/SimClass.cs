@@ -215,6 +215,16 @@ public class SimClass
             throw new InvalidAttributeDomain($"The following interface methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
         }
 
+        var notOverrideMethods = interfaceMethods
+            .Select(im => Methods.FirstOrDefault(m => m.Equals(im)))
+            .Where(m => m != null && !m.IsOverride)
+            .ToList();
+
+        if(notOverrideMethods.Any())
+        {
+            throw new InvalidAttributeDomain($"The following interface methods are implemented but not marked as override: {string.Join(", ", notOverrideMethods.Select(m => m.ToString()))}");
+        }
+
         Implements = value;
     }
 

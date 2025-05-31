@@ -677,9 +677,9 @@ public class SimClassTest
             State = SimAccesibility.Normal,
             Methods =
             [
-                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal },
-            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal },
-            new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal }
+                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true },
+            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = true },
+            new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal, IsOverride = true }
             ]
         };
 
@@ -756,5 +756,36 @@ public class SimClassTest
             new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface },
         new SimMethod { Name = "StaticMethod", Accesibility = SimAccesibility.Interface, IsStatic = true }
         ];
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
+    public void SetImplements_ShouldThrowException_WhenImplementedMethodsAreNotOverride()
+    {
+        var voidType = new SimClass { Name = "void", State = SimAccesibility.Normal };
+
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+            Methods =
+            [
+                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface, ReturnType = voidType },
+        new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface, ReturnType = voidType }
+            ]
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "ImplementingClass",
+            State = SimAccesibility.Normal,
+            Methods =
+            [
+                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true, ReturnType = voidType },
+        new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
+            ]
+        };
+
+        simClass.SetImplements([interfaceClass]);
     }
 }

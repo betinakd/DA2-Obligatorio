@@ -49,8 +49,7 @@ public class ExecutionServiceTest
             mockRef.Object,
             signature,
             null,
-            0
-        );
+            0);
         Assert.AreEqual("TestClass.TestMethod() -> TestClass.TestMethod()\n", result);
     }
 
@@ -111,8 +110,7 @@ public class ExecutionServiceTest
             thisRef.Object,
             outerSignature,
             null,
-            0
-        );
+            0);
         Assert.IsTrue(result.Contains("TestClass.OuterMethod()"));
         Assert.IsTrue(result.Contains("this.InnerMethod()"));
 
@@ -155,8 +153,7 @@ public class ExecutionServiceTest
             mockRef.Object,
             signature,
             null,
-            0
-        );
+            0);
         Assert.IsTrue(result.Contains("Recursive.RecursiveMethod()\n"));
     }
 
@@ -367,8 +364,7 @@ public class ExecutionServiceTest
             thisRef.Object,
             signature,
             null,
-            0
-        );
+            0);
         Assert.IsTrue(result.Contains("TestClass.Method()"));
     }
 
@@ -405,8 +401,7 @@ public class ExecutionServiceTest
             mockRef.Object,
             signature,
             null,
-            0
-        );
+            0);
     }
 
     [TestMethod]
@@ -429,8 +424,7 @@ public class ExecutionServiceTest
             mockRef.Object,
             signature,
             null,
-            0
-        );
+            0);
     }
 
     [TestMethod]
