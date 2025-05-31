@@ -18,6 +18,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<ParameterSignature> ParameterSignatures { get; set; }
     public DbSet<ExecutionLog> ExecutionLogs { get; set; }
     public DbSet<ApiKey> ApiKeys { get; set; }
+    public DbSet<SimNamespace> SimNamespaces { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -212,6 +213,12 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             {
                 entity.HasKey(e => e.KeyValue);
                 entity.Property(e => e.Name).IsRequired();
+            });
+        _ = modelBuilder.Entity<SimNamespace>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.BaseNamespaceId);
             });
     }
 
