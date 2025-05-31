@@ -46,10 +46,9 @@ public class SimClassServiceTest
 
         var _namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
         var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
-        _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(_namespace))
-                .Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
+        _mockNamespaceService?.Setup(service => service.CreateNamespace(_namespace)).Returns(expectedNamespace);
+        _mockNamespaceService?.Setup(s=> s.GetNamespaceById(expectedNamespace.Id)).Returns(expectedNamespace);
+        _mockNamespaceService?.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
 
         var result = _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id);
 
@@ -126,6 +125,7 @@ public class SimClassServiceTest
         _mockNamespaceService
             ?.Setup(service => service.CreateNamespace(_namespace))
                 .Returns(expectedNamespace);
+        _mockNamespaceService.Setup(s => s.GetNamespaceById(expectedNamespace.Id)).Returns(expectedNamespace);
         _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
 
         Assert.ThrowsException<InvalidAttributeLogic>(() =>
@@ -152,6 +152,7 @@ public class SimClassServiceTest
         _mockNamespaceService
             ?.Setup(service => service.CreateNamespace(_namespace))
                 .Returns(expectedNamespace);
+        _mockNamespaceService.Setup(s => s.GetNamespaceById(expectedNamespace.Id)).Returns(expectedNamespace);
         _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
 
         var result = _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id);

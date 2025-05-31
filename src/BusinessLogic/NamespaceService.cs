@@ -42,7 +42,7 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
     {
         if(id == null)
         {
-            throw new InvalidAttributeLogic("Namespace ID cannot be null.");
+            throw new InvalidAttributeLogic("Namespace can't be empty.");
         }
 
         return _namespaceDataAccess.GetNamespaceById(id.Value);
@@ -50,13 +50,16 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
 
     public bool NameAlreadyInNamespace_Validation(Guid? id, string className)
     {
-        var namespaceExists = _namespaceDataAccess.NamespaceExistsById(id);
-        if(!namespaceExists)
+        try
         {
-            throw new NonExistentValueLogic("Namespace does not exist.");
-        }
+            var namespaceExists = _namespaceDataAccess.NamespaceExistsById(id);
 
-        var elements = GetNamespaceById(id).Elements;
-        return elements.Any(e => e.Name == className);
+            var elements = GetNamespaceById(id).Elements;
+            return elements.Any(e => e.Name == className);
+        }
+        catch(InvalidAttributeLogic)
+        {
+            throw new NonExistentValueLogic($"Namespace with ID {id} does not exist.");
+        }
     }
 }
