@@ -1,0 +1,136 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened class="sidenav">
+      <div class="logo-container">
+        <h2>Simulator</h2>
+      </div>
+      
+      <div class="custom-nav-buttons">
+        <button mat-flat-button class="nav-button" routerLink="/logging">
+          <mat-icon>key</mat-icon>
+          <span>Logging</span>
+        </button>
+        
+        <button mat-flat-button class="nav-button highlight-button" routerLink="/execute">
+          <mat-icon>play_arrow</mat-icon>
+          <span>Execute method</span>
+        </button>
+  
+        <button mat-flat-button class="nav-button" routerLink="/dashboard">
+          <mat-icon>transformers</mat-icon>
+          <span>Transformers</span>
+        </button>
+        
+        <mat-expansion-panel class="nav-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>class</mat-icon>
+              <span>Classes</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <button mat-flat-button class="nav-button" routerLink="/create-class">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Class</span>
+          </button>
+          
+          <button mat-flat-button class="nav-button" routerLink="/update-class">
+            <mat-icon>edit</mat-icon>
+            <span>Update Class</span>
+          </button>
+          
+          <button mat-flat-button class="nav-button" routerLink="/delete-class">
+            <mat-icon>delete</mat-icon>
+            <span>Delete Class</span>
+          </button>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel class="nav-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>format_list_bulleted</mat-icon>
+              <span>Attributes</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <button mat-flat-button class="nav-button" routerLink="/create-attribute">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Attribute</span>
+          </button>
+          
+          <button mat-flat-button class="nav-button" routerLink="/update-attribute">
+            <mat-icon>edit</mat-icon>
+            <span>Update Attribute</span>
+          </button>
+          
+          <button mat-flat-button class="nav-button" routerLink="/delete-attribute">
+            <mat-icon>delete</mat-icon>
+            <span>Delete Attribute</span>
+          </button>
+        </mat-expansion-panel>        
+        
+        <mat-expansion-panel class="nav-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>functions</mat-icon>
+              <span>Methods</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <button mat-flat-button class="nav-button" routerLink="/create-method">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Method</span>
+          </button>
+          
+          <button mat-flat-button class="nav-button" routerLink="/delete-method">
+            <mat-icon>delete</mat-icon>
+            <span>Delete Method</span>
+          </button>
+        </mat-expansion-panel>
+        
+        <mat-expansion-panel class="nav-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>input</mat-icon>
+              <span>Parameters</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <button mat-flat-button class="nav-button" routerLink="/create-parameter">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Parameter</span>
+          </button>
+        </mat-expansion-panel>
+        
+        <mat-expansion-panel class="nav-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>code</mat-icon>
+              <span>Local Variables</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <button mat-flat-button class="nav-button" routerLink="/create-local-variable">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Local Variable</span>
+          </button>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel class="nav-expansion-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>call_made</mat-icon>
+              <span>Invocations</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <button mat-flat-button class="nav-button" routerLink="/create-invocation">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Invocation</span>
+          </button>
+        </mat-expansion-panel>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
