@@ -16,6 +16,9 @@ public static class SimulatorServiceFactory
 {
     public static IServiceCollection AddServices(this IServiceCollection services, string? connectionString)
     {
+        services.AddScoped<INamespaceAdapter, NamespaceAdapter>();
+        services.AddScoped<INamespaceService, NamespaceService>();
+        services.AddScoped<INamespaceDataAccess, NamespaceDataAccess>();
         services.AddScoped<ISimClassAdapter, SimClassAdapter>();
         services.AddScoped<ISimClassService, SimClassService>();
         services.AddScoped<ISimClassDataAccess, SimClassDataAccess>();
@@ -30,6 +33,7 @@ public static class SimulatorServiceFactory
         services.AddScoped<IApikeyDataAccess, ApikeyDataAccess>();
         services.AddScoped<IExecutionDataAccess, ExecutionDataAccess>();
         services.AddScoped<ITransformerAdapter, TransformerAdapter>();
+        services.AddScoped<ITransformerService, TransformerService>();
         services.AddDbContext<DbContext, SimulatorDbContext>(options =>
             options.UseSqlServer(connectionString, sqlOptions =>
             {

@@ -10,7 +10,7 @@ public class ParameterSignatureTest
     public void Constructor_ShouldInitializeWithNewGuid()
     {
         var type = new SimClass() { Id = Guid.NewGuid(), Name = "typeP" };
-        var parameter = new ParameterSignature() { Id = Guid.NewGuid(), Name = "parameter", SignatureId = Guid.NewGuid(), Type = type, TypeId = type.Id };
+        var parameter = new ParameterSignature() { Id = Guid.NewGuid(), Name = "parameter", SignatureId = Guid.NewGuid(), Reference = type, ReferenceId = type.Id };
 
         Assert.AreNotEqual(Guid.Empty, parameter.Id);
     }

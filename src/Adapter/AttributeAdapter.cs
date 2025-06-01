@@ -36,7 +36,11 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         try
         {
             var relatedClass = _simClassService.GetSimClassById(attribute.RelatedClassId);
-            var type = _simClassService.GetSimClassById(attribute.TypeId);
+            var type = _simClassService.GetSimClassById(attribute.ReferenceId);
+            var instance = _simClassService.GetSimClassById(attribute.InstanceId);
+
+            _simClassService.ValidPolymorphism(type, instance);
+
             var updatedAttribute = new SimAttribute()
             {
                 Id = attribute.IdAttribute,
@@ -44,8 +48,10 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
                 RelatedClass = relatedClass,
                 RelatedClassId = relatedClass.Id,
-                Type = type,
-                TypeId = type.Id,
+                Reference = type,
+                ReferenceId = type.Id,
+                Instance = instance,
+                InstanceId = instance.Id,
                 IsStatic = attribute.IsStatic
             };
             _simAttributeService.UpdateAttribute(attribute.IdAttribute, updatedAttribute);
@@ -81,7 +87,10 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
         try
         {
             var relatedClass = _simClassService.GetSimClassById(id);
-            var type = _simClassService.GetSimClassById(attribute.ClassTypeId);
+            var type = _simClassService.GetSimClassById(attribute.ReferenceId);
+            var instance = _simClassService.GetSimClassById(attribute.InstanceId);
+
+            _simClassService.ValidPolymorphism(type, instance);
 
             var newAttribute = new SimAttribute()
             {
@@ -90,8 +99,11 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
                 Privacity = EnumMapper.MapToDomainPrivacity(attribute.Privacity),
                 RelatedClass = relatedClass,
                 RelatedClassId = relatedClass.Id,
-                Type = type,
-                TypeId = type.Id,
+                Reference = type,
+                ReferenceId = type.Id,
+                Instance = instance,
+                InstanceId = instance.Id,
+                IsStatic = attribute.IsStatic
             };
 
             var createdAttribute = _simAttributeService.CreateAttribute(id, newAttribute);
@@ -113,6 +125,10 @@ public class AttributeAdapter(ISimAttributeService simAttributeService, ISimClas
             throw new NonExistentValueAdapter(ex.Message);
         }
         catch(InvalidAttributeDomain ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
         {
             throw new InvalidAttributeAdapter(ex.Message);
         }

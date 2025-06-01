@@ -10,10 +10,10 @@ public class ReferenceVariableTest
     public void TestGetSimClass_ShouldReturnParameterType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var localVariable = new LocalVariable { Type = simClass, Name = "Variable" };
+        var localVariable = new LocalVariable { Reference = simClass, Name = "Variable" };
         var referencelocalVariable = new ReferenceVariable { Reference = localVariable };
 
-        var result = referencelocalVariable.GetSimClass();
+        var result = referencelocalVariable.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -27,7 +27,7 @@ public class ReferenceVariableTest
         var localVariable = new LocalVariable();
         var referenceVariable = new ReferenceVariable { Reference = localVariable };
 
-        referenceVariable.GetSimClass();
+        referenceVariable.GetReferenceClass();
     }
 
     [TestMethod]
@@ -43,7 +43,7 @@ public class ReferenceVariableTest
             ]
         };
 
-        var referenceVariable = new ReferenceVariable() { Reference = new LocalVariable { Type = new SimClass { Name = "TestClass" }, Name = "Variable" } };
+        var referenceVariable = new ReferenceVariable() { Reference = new LocalVariable { Reference = new SimClass { Name = "TestClass" }, Name = "Variable" } };
 
         var result = referenceVariable.GetSignature(signature);
 
@@ -63,7 +63,7 @@ public class ReferenceVariableTest
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
-        var localVariable = new LocalVariable { Type = simClass, Name = "Variable" };
+        var localVariable = new LocalVariable { Reference = simClass, Name = "Variable" };
         var referenceVariable = new ReferenceVariable { Reference = localVariable };
 
         var result = referenceVariable.GetSignatureWithClassName(signature);
@@ -79,12 +79,36 @@ public class ReferenceVariableTest
         {
             Id = expectedId,
             Name = "Variable",
-            Type = new SimClass { Name = "TestClass" }
+            Reference = new SimClass { Name = "TestClass" }
         };
         var referenceVariable = new ReferenceVariable { Reference = localVariable };
 
         var actualId = referenceVariable.GetReferenceId();
 
         Assert.AreEqual(expectedId, actualId);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReferenceInstance()
+    {
+        var expectedInstance = new SimClass { Name = "InstanceClass" };
+        var referenceClass = new SimClass { Name = "ReferenceClass" };
+        var localVariable = new LocalVariable
+        {
+            Name = "var1",
+            Reference = referenceClass,
+            Instance = expectedInstance
+        };
+        var referenceVariable = new ReferenceVariable
+        {
+            Reference = localVariable
+        };
+
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = referenceVariable.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(expectedInstance, result);
     }
 }

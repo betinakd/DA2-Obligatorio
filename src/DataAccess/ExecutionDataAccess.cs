@@ -138,7 +138,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         var baseMethod = baseClass.Methods.FirstOrDefault(m =>
             m.Equals(methodToOverride) &&
-            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
+            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract || m.Accesibility == SimAccesibility.Interface) &&
             (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
 
         if(baseMethod != null)
@@ -167,7 +167,6 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         if(!methodToCheck.IsVirtual)
         {
-            // If the method is not virtual, it cannot be sealed.
             return null;
         }
 
@@ -234,13 +233,13 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         switch(inv.Reference)
         {
             case ReferenceParameter rp:
-                _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Reference).Load();
                 break;
             case ReferenceVariable rv:
-                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Type).Load();
+                _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Include(b => b.Instance).Load();
                 break;
             case ReferenceAttribute ra:
-                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                _context.Entry(ra).Reference(r => r.Reference).Query().Include(a => a.Reference).Include(b => b.Instance).Load();
                 break;
             case ReferenceBase rb:
                 _context.Entry(rb).Reference(r => r.Reference).Query().Include(c => c.BaseClass).Load();
@@ -249,7 +248,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 _context.Entry(rt).Reference(r => r.Reference).Load();
                 break;
             case ReferenceStaticAttribute rsa:
-                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Type).Load();
+                _context.Entry(rsa).Reference(r => r.Reference).Query().Include(a => a.Reference).Include(b => b.Instance).Load();
                 break;
             case ReferenceStatic rsv:
                 _context.Entry(rsv).Reference(r => r.Reference).Load();
@@ -260,7 +259,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     private List<SimMethod> GetFilteredMethods(Func<IQueryable<SimMethod>, IQueryable<SimMethod>> filter)
     {
         var query = _context.SimMethods
-            .Include(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(m => m.Parameters).ThenInclude(p => p.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Signature)
                 .ThenInclude(s => s.Parameters)
@@ -285,9 +284,9 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     {
         var query = _context.SimClasses
             .Include(c => c.BaseClass)
-            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature)
-                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Type)
+                .ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.ReturnType)
             .AsSplitQuery();
@@ -338,5 +337,35 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             .FirstOrDefault(c => c.Id == simClass.BaseClassId.Value);
 
         return baseClass == null ? null : FindMethodInHierarchyPublicOrProtected(baseClass, signature, level + 1);
+    }
+
+    public SimMethod? FindOverrideOrReferenceMethod(SimClass instanceClass, SimClass referenceClass, Signature signature)
+    {
+        SimClass? current = instanceClass;
+        while(current != null)
+        {
+            var methods = GetFilteredMethods(query => query.Where(m =>
+                m.RelatedClassId == current.Id &&
+                m.Name == signature.Name));
+
+            var overrideMethod = methods.FirstOrDefault(m => m.MatchSignature(signature) && m.IsOverride);
+            if(overrideMethod != null)
+            {
+                return overrideMethod;
+            }
+
+            if(!current.BaseClassId.HasValue)
+            {
+                break;
+            }
+
+            current = _context.SimClasses
+                .Include(c => c.BaseClass)
+                .FirstOrDefault(c => c.Id == current.BaseClassId.Value);
+        }
+
+        var referenceMethods = FindMethodInHierarchy(referenceClass, signature);
+
+        return referenceMethods;
     }
 }

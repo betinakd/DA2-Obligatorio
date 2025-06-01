@@ -14,7 +14,7 @@ public class InvocationRequest()
     [Required(ErrorMessage = "IdReference is required and a Guid Type.")]
     public string IdReference { get; set; } = string.Empty;
     public string? MethodName { get; set; }
-    public List<ParameterRequest>? Parameters { get; set; }
+    public List<ParameterSignatureRequest>? Parameters { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [Required(ErrorMessage = "TypeReference is required and their values should be: Base, This, LocalVariable, Attribute, Parameter.")]

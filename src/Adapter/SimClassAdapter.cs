@@ -70,15 +70,21 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
 
             foreach(var atri in request.Attributes)
             {
-                var typeClass = _simClassService.GetSimClassById(atri.ClassTypeId);
+                var typeClass = _simClassService.GetSimClassById(atri.ReferenceId);
+                var instance = _simClassService.GetSimClassById(atri.InstanceId);
+
+                _simClassService.ValidPolymorphism(typeClass, instance);
+
                 var newAttribute = new SimAttribute()
                 {
                     Name = atri.Name,
                     Privacity = EnumMapper.MapToDomainPrivacity(atri.Privacity),
                     RelatedClassId = idSimClass,
                     RelatedClass = classToUpdate,
-                    Type = typeClass,
-                    TypeId = typeClass.Id,
+                    Reference = typeClass,
+                    ReferenceId = typeClass.Id,
+                    Instance = instance,
+                    InstanceId = instance.Id,
                     IsStatic = atri.IsStatic
                 };
                 attributesNewClas.Add(newAttribute);
@@ -104,12 +110,12 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
                 var index = 0;
                 foreach(var param in method.Parameters)
                 {
-                    var parameterType = _simClassService.GetSimClassById(param.ClassTypeId);
+                    var parameterType = _simClassService.GetSimClassById(param.ReferenceId);
                     var newParam = new Parameter()
                     {
                         Name = param.Name,
-                        Type = parameterType,
-                        TypeId = param.ClassTypeId,
+                        Reference = parameterType,
+                        ReferenceId = param.ReferenceId,
                         RelatedMethod = newMethod,
                         RelatedMethodId = newMethod.Id,
                         Index = index

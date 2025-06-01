@@ -273,14 +273,14 @@ public class SimMethodServiceTest
             Id = localVariableId,
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
             Name = "TestVariable",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
         var expectedAttribute = new LocalVariable()
         {
             Id = localVariableId,
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
             Name = "TestVariable",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -309,7 +309,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
             Name = "TestVariable",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
         };
         _mockSimMethodDataAccess!
             .Setup(m => m.ExistMethodById(methodId))
@@ -331,7 +331,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
             Name = "TestVariable",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
         };
         _mockSimMethodDataAccess!
             .Setup(m => m.ExistMethodById(methodId))
@@ -353,7 +353,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
             Name = "TestVariable",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -381,7 +381,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -401,7 +401,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -423,7 +423,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -736,7 +736,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -1058,9 +1058,9 @@ public class SimMethodServiceTest
             .Setup(m => m.GetMethodById(methodId))
             .Returns(method);
 
-        _mockExectuionDataAccess!
-            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
-            .Returns([baseClass]);
+        _mockSimClassDataAccess!
+            .Setup(m => m.IsClassBaseOfOrSameAs(It.IsAny<SimClass>(), It.IsAny<SimClass>()))
+            .Returns(true);
 
         _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
 
@@ -1112,9 +1112,9 @@ public class SimMethodServiceTest
             .Setup(m => m.GetMethodById(methodId))
             .Returns(method);
 
-        _mockExectuionDataAccess!
-            .Setup(m => m.GetFilteredClasses(It.IsAny<Func<IQueryable<SimClass>, IQueryable<SimClass>>>()))
-            .Returns([]);
+        _mockSimClassDataAccess!
+            .Setup(m => m.IsClassBaseOfOrSameAs(It.IsAny<SimClass>(), It.IsAny<SimClass>()))
+            .Returns(false);
 
         _simMethodService!.ValidateStaticAttributeAccessibility(protectedStaticAttribute, methodId);
     }
@@ -1138,19 +1138,19 @@ public class SimMethodServiceTest
                 {
                     Id = Guid.NewGuid(),
                     Name = "param1",
-                    TypeId = parameterTypeId,
-                    Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                    ReferenceId = parameterTypeId,
+                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" }
                 }
 
             ],
             LocalVariables = [
                 new LocalVariable
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "localVar1",
-                    TypeId = variableTypeId,
-                    Type = new SimClass { Id = variableTypeId, Name = "VarType" }
-                }
+            {
+                Id = Guid.NewGuid(),
+                Name = "localVar1",
+                ReferenceId = variableTypeId,
+                Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
+            }
 
             ]
         };
@@ -1218,8 +1218,8 @@ public class SimMethodServiceTest
                 {
                     Id = Guid.NewGuid(),
                     Name = "param1",
-                    TypeId = parameterTypeId,
-                    Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                    ReferenceId = parameterTypeId,
+                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" }
                 }
 
             ],
@@ -1256,12 +1256,12 @@ public class SimMethodServiceTest
             Parameters = [],
             LocalVariables = [
                 new LocalVariable
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "localVar1",
-                    TypeId = variableTypeId,
-                    Type = new SimClass { Id = variableTypeId, Name = "VarType" }
-                }
+            {
+                Id = Guid.NewGuid(),
+                Name = "localVar1",
+                ReferenceId = variableTypeId,
+                Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
+            }
 
             ]
         };

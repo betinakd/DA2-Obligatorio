@@ -59,13 +59,13 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var parmeters = new List<Parameter>();
             foreach(var parameter in method.Parameters)
             {
-                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var type = _simClassService.GetSimClassById(parameter.ReferenceId);
                 parmeters.Add(new Parameter
                 {
                     Id = Guid.NewGuid(),
                     Name = parameter.Name,
-                    Type = type,
-                    TypeId = type.Id,
+                    Reference = type,
+                    ReferenceId = type.Id,
                     RelatedMethod = newMethod,
                     RelatedMethodId = newMethod.Id,
                     Index = index
@@ -130,28 +130,29 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
     {
         try
         {
-            var type = _simClassService.GetSimClassById(variable.ClassTypeId);
             var method = _methodService.GetMethodById(idMethod);
+
+            var type = _simClassService.GetSimClassById(variable.ReferenceId);
+            var instance = _simClassService.GetSimClassById(variable.InstanceId);
+
+            _simClassService.ValidPolymorphism(type, instance);
+
             var localVariable = new LocalVariable()
             {
                 Id = Guid.NewGuid(),
                 Name = variable.Name,
-                Type = type,
-                TypeId = type.Id,
+                Reference = type,
+                ReferenceId = type.Id,
                 RelatedMethod = method,
-                RelatedMethodId = idMethod
+                RelatedMethodId = idMethod,
+                Instance = instance,
+                InstanceId = instance.Id
             };
             var newAttribute = _methodService.AddLocalVariable(idMethod, localVariable);
             var response = new CreatedVariableResponse
             {
                 Message = "Variable created successfully",
-                Variable = new VariableResponse()
-                {
-                    Id = newAttribute.Id,
-                    Name = newAttribute.Name,
-                    MethodId = newAttribute.RelatedMethod.Id,
-                    ClassTypeId = newAttribute.Type.Id
-                }
+                Variable = VariableResponseMapper.MapToVariableResponse(newAttribute)
             };
             return response;
         }
@@ -190,16 +191,16 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
     {
         try
         {
-            var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+            var type = _simClassService.GetSimClassById(parameter.ReferenceId);
             var method = _methodService.GetMethodById(idMethod);
             var parameterMethod = new Parameter()
             {
                 Id = Guid.NewGuid(),
                 Name = parameter.Name,
-                Type = type,
+                Reference = type,
                 RelatedMethod = method,
                 RelatedMethodId = idMethod,
-                TypeId = type.Id,
+                ReferenceId = type.Id,
             };
             var newAttribute = _methodService.AddMethodParameter(idMethod, parameterMethod);
             var response = new CreatedParameterResponse
@@ -210,7 +211,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     Id = newAttribute.Id,
                     Name = newAttribute.Name,
                     MethodId = newAttribute.RelatedMethod.Id,
-                    ClassTypeId = newAttribute.Type.Id
+                    ReferenceId = newAttribute.Reference.Id
                 }
             };
             return response;
@@ -245,27 +246,26 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var index = 0;
             foreach(var parameter in invocation.Parameters)
             {
-                var type = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var type = _simClassService.GetSimClassById(parameter.ReferenceId);
+                var instance = _simClassService.GetSimClassById(parameter.InstanceId);
+
+                _simClassService.ValidPolymorphism(type, instance);
+
                 var newParameter = new ParameterSignature()
                 {
                     Signature = signature,
                     SignatureId = signature.Id,
                     Name = parameter.Name,
-                    Type = type,
-                    TypeId = type.Id,
+                    Reference = type,
+                    ReferenceId = type.Id,
+                    Instance = instance,
+                    InstanceId = instance.Id,
                     Index = index
                 };
 
                 index++;
 
-                var newParameterResponse = new ParameterRequest()
-                {
-                    Name = newParameter.Name,
-                    IdClassType = newParameter.Type.Id.ToString()
-                };
-
                 signature.Parameters.Add(newParameter);
-                parametersResponses.Add(newParameterResponse);
             }
 
             switch(invocation.TypeReference)
@@ -273,12 +273,12 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 case TypeReference.This:
                     var simClass = _simClassService.GetSimClassById(invocation.ReferenceId);
                     reference = new ReferenceThis() { Reference = simClass, ReferenceId = simClass.Id };
-                    if(method.RelatedClassId != reference.GetSimClass().Id)
+                    if(method.RelatedClassId != reference.GetReferenceClass().Id)
                     {
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    _executionService.ValidateMethodExistsInClass(reference.GetReferenceClass(), signature, false);
                     break;
 
                 case TypeReference.Base:
@@ -302,7 +302,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     _methodService.MethodInheritsAttribute(method, attribute);
                     reference = new ReferenceAttribute() { Reference = attribute, ReferenceId = attribute.Id };
                     var isNotAbstract = false;
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    _executionService.ValidateMethodExistsInClass(reference.GetReferenceClass(), signature, false);
                     break;
 
                 case TypeReference.Parameter:
@@ -313,7 +313,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    _executionService.ValidateMethodExistsInClass(reference.GetReferenceClass(), signature, false);
                     break;
 
                 case TypeReference.LocalVariable:
@@ -324,13 +324,13 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                         throw new InvalidAttributeAdapter("Method's related class ID does not match the reference class ID.");
                     }
 
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    _executionService.ValidateMethodExistsInClass(reference.GetReferenceClass(), signature, false);
                     break;
                 case TypeReference.StaticAttribute:
                     var staticAttribute = _simAttributeService.GetSimAttribute(invocation.ReferenceId);
                     reference = new ReferenceStaticAttribute() { Reference = staticAttribute, ReferenceId = staticAttribute.Id };
                     _methodService.ValidateStaticAttributeAccessibility(staticAttribute, idMethod);
-                    _executionService.ValidateMethodExistsInClass(reference.GetSimClass(), signature, false);
+                    _executionService.ValidateMethodExistsInClass(reference.GetReferenceClass(), signature, false);
                     break;
                 case TypeReference.Static:
                     var staticClass = _simClassService.GetSimClassById(invocation.ReferenceId);

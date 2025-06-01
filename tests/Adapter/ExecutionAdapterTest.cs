@@ -34,6 +34,8 @@ public class ExecutionAdapterTest
         var referenceTypeId = Guid.NewGuid();
         var param1TypeId = Guid.NewGuid();
         var param2TypeId = Guid.NewGuid();
+        var param1InstanceId = Guid.NewGuid();
+        var param2InstanceId = Guid.NewGuid();
 
         var request = new MethodExecutionRequest
         {
@@ -42,8 +44,8 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceTypeId.ToString(),
             Parameters =
             [
-            new ParameterRequest { Name = "param1", IdClassType = param1TypeId.ToString() },
-                new ParameterRequest { Name = "param2", IdClassType = param2TypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = param1TypeId.ToString(), IdInstance = param1InstanceId.ToString() },
+            new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString(), IdInstance = param2InstanceId.ToString() }
             ]
         };
 
@@ -51,6 +53,8 @@ public class ExecutionAdapterTest
         var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
         var simClass1 = new SimClass { Id = param1TypeId, Name = "Type1" };
         var simClass2 = new SimClass { Id = param2TypeId, Name = "Type2" };
+        var simInstance1 = new SimClass { Id = param1InstanceId, Name = "Instance1" };
+        var simInstance2 = new SimClass { Id = param2InstanceId, Name = "Instance2" };
 
         _simClassService!
             .Setup(s => s.GetSimClassById(instanceTypeId))
@@ -68,22 +72,23 @@ public class ExecutionAdapterTest
             .Setup(s => s.GetSimClassById(param2TypeId))
             .Returns(simClass2);
 
-        _mockExecutionService!
-            .Setup(s => s.ExecuteMethod(
-                It.Is<Reference>(r => r is ReferenceThis &&
-                    ((ReferenceThis)r).Reference.Id == referenceTypeId),
-                It.Is<Reference>(r => r is ReferenceThis &&
-                    ((ReferenceThis)r).Reference.Id == instanceTypeId),
-                It.Is<Signature>(s => s.Name == "TestMethod" && s.Parameters.Count == 2),
-                It.IsAny<int>(),
-                It.IsAny<HashSet<Guid>>()))
-            .Returns("expectedResult");
+        _simClassService
+            .Setup(s => s.GetSimClassById(param1InstanceId))
+            .Returns(simInstance1);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(param2InstanceId))
+            .Returns(simInstance2);
 
         _mockExecutionService!
-            .Setup(s => s.IsReferenceBaseOfInstance(
-                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
-                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
-            .Returns(true);
+            .Setup(s => s.ExecuteMethod(
+                It.Is<SimClass>(c => c.Id == referenceTypeId),
+                It.Is<SimClass>(c => c.Id == instanceTypeId),
+                It.Is<Reference>(r => r is ReferenceThis && ((ReferenceThis)r).Reference.Id == referenceTypeId),
+                It.Is<Signature>(s => s.Name == "TestMethod" && s.Parameters.Count == 2),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+            .Returns("expectedResult");
 
         _mockExecutionService!.Setup(s => s.SaveExecutionLog("ReferenceType", "InstanceType", "expectedResult"));
         var result = _executionAdapter!.ExecuteMethod(request);
@@ -103,7 +108,7 @@ public class ExecutionAdapterTest
             IdReferenceType = Guid.NewGuid().ToString(),
             Parameters =
         [
-            new ParameterRequest { Name = "param1", IdClassType = Guid.NewGuid().ToString() }
+            new ParameterSignatureRequest { Name = "param1", IdReference = Guid.NewGuid().ToString() }
         ]
         };
 
@@ -144,10 +149,14 @@ public class ExecutionAdapterTest
             .Returns(referenceTypeClass);
 
         _mockExecutionService!
-            .Setup(s => s.IsReferenceBaseOfInstance(
-                It.Is<SimClass>(c => c.Id == referenceTypeClass.Id),
-                It.Is<SimClass>(c => c.Id == instanceTypeClass.Id)))
-            .Returns(false);
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+                .Throws(new InvalidExecutionAdapter("No se puede ejecutar sobre una clase abstracta."));
 
         _executionAdapter!.ExecuteMethod(request);
     }
@@ -186,11 +195,12 @@ public class ExecutionAdapterTest
 
         _mockExecutionService
             .Setup(s => s.ExecuteMethod(
-                It.IsAny<Reference>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
                 It.IsAny<Reference>(),
                 It.IsAny<Signature>(),
-                It.IsAny<int>(),
-                It.IsAny<HashSet<Guid>>()))
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Throws(new NonExistentValueLogic("Method not found"));
 
         _executionAdapter!.ExecuteMethod(request);
@@ -232,6 +242,16 @@ public class ExecutionAdapterTest
             .Setup(s => s.GetSimClassById(referenceTypeId))
             .Returns(referenceTypeClass);
 
+        _mockExecutionService!
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+        .Throws(new InvalidExecutionAdapter("No se puede ejecutar sobre una clase abstracta."));
+
         _executionAdapter!.ExecuteMethod(request);
     }
 
@@ -243,6 +263,7 @@ public class ExecutionAdapterTest
         var mockTransformerService = new Mock<ITransformerService>();
 
         var paramTypeId = Guid.NewGuid();
+        var paramInstanceId = Guid.NewGuid();
         var referenceId = Guid.NewGuid();
         var instanceId = Guid.NewGuid();
 
@@ -253,21 +274,29 @@ public class ExecutionAdapterTest
             IdReferenceType = referenceId.ToString(),
             Parameters =
             [
-                new ParameterRequest { Name = "param1", IdClassType = paramTypeId.ToString() }
+                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString(), IdInstance = paramInstanceId.ToString() }
             ]
         };
 
         var simClass = new SimClass { Id = paramTypeId, Name = "ParamType", State = SimAccesibility.Normal };
+        var simInstanceParam = new SimClass { Id = paramInstanceId, Name = "ParamInstance", State = SimAccesibility.Normal };
         var simReference = new SimClass { Id = referenceId, Name = "Ref", State = SimAccesibility.Normal };
         var simInstance = new SimClass { Id = instanceId, Name = "Obj", State = SimAccesibility.Normal };
 
         mockSimClassService.Setup(x => x.GetSimClassById(paramTypeId)).Returns(simClass);
+        mockSimClassService.Setup(x => x.GetSimClassById(paramInstanceId)).Returns(simInstanceParam);
         mockSimClassService.Setup(x => x.GetSimClassById(referenceId)).Returns(simReference);
         mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
 
         mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
 
-        mockExecutionService.Setup(x => x.ExecuteMethod(It.IsAny<ReferenceThis>(), It.IsAny<ReferenceThis>(), It.IsAny<Signature>(), It.IsAny<int>(), It.IsAny<HashSet<Guid>>()))
+        mockExecutionService.Setup(x => x.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
             .Returns("resultado");
 
         mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
@@ -296,47 +325,41 @@ public class ExecutionAdapterTest
     }
 
     [TestMethod]
-    public void IsAuthorizedUser_WithValidApiKey_ReturnsTrue()
+    [ExpectedException(typeof(InvalidAttributeAdapter))]
+    public void ExecuteMethod_WhenInvalidAttributeLogicThrown_ShouldThrowInvalidAttributeAdapter()
     {
-        var validApiKey = Guid.Parse("77777777-aaaa-1111-1111-111111111111");
+        var instanceTypeId = Guid.NewGuid();
+        var referenceTypeId = Guid.NewGuid();
+
+        var request = new MethodExecutionRequest
+        {
+            MethodName = "TestMethod",
+            IdInstanceType = instanceTypeId.ToString(),
+            IdReferenceType = referenceTypeId.ToString(),
+            Parameters = []
+        };
+
+        var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
+        var referenceTypeClass = new SimClass { Id = referenceTypeId, Name = "ReferenceType" };
+
+        _simClassService!
+            .Setup(s => s.GetSimClassById(instanceTypeId))
+            .Returns(instanceTypeClass);
+
+        _simClassService
+            .Setup(s => s.GetSimClassById(referenceTypeId))
+            .Returns(referenceTypeClass);
 
         _mockExecutionService!
-            .Setup(s => s.IsAuthorizedUser(validApiKey))
-            .Returns(true);
+            .Setup(s => s.ExecuteMethod(
+                It.IsAny<SimClass>(),
+                It.IsAny<SimClass>(),
+                It.IsAny<Reference>(),
+                It.IsAny<Signature>(),
+                It.IsAny<HashSet<Guid>>(),
+                It.IsAny<int>()))
+            .Throws(new InvalidAttributeLogic("Invalid attribute"));
 
-        var result = _executionAdapter!.IsAuthorizedUser(validApiKey);
-
-        Assert.IsTrue(result);
-        _mockExecutionService.Verify(s => s.IsAuthorizedUser(validApiKey), Times.Once);
-    }
-
-    [TestMethod]
-    public void IsAuthorizedUser_WithInvalidApiKey_ReturnsFalse()
-    {
-        var invalidApiKey = Guid.Parse("00000000-0000-0000-0000-000000000001");
-
-        _mockExecutionService!
-            .Setup(s => s.IsAuthorizedUser(invalidApiKey))
-            .Returns(false);
-
-        var result = _executionAdapter!.IsAuthorizedUser(invalidApiKey);
-
-        Assert.IsFalse(result);
-        _mockExecutionService.Verify(s => s.IsAuthorizedUser(invalidApiKey), Times.Once);
-    }
-
-    [TestMethod]
-    public void IsAuthorizedUser_WithEmptyApiKey_ReturnsFalse()
-    {
-        var emptyApiKey = Guid.Empty;
-
-        _mockExecutionService!
-            .Setup(s => s.IsAuthorizedUser(emptyApiKey))
-            .Returns(false);
-
-        var result = _executionAdapter!.IsAuthorizedUser(emptyApiKey);
-
-        Assert.IsFalse(result);
-        _mockExecutionService.Verify(s => s.IsAuthorizedUser(emptyApiKey), Times.Once);
+        _executionAdapter!.ExecuteMethod(request);
     }
 }

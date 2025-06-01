@@ -3,6 +3,7 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
 public class AttributeResponseMapper
 {
@@ -17,7 +18,8 @@ public class AttributeResponseMapper
         {
             Id = domainAttribute.Id,
             Name = domainAttribute.Name,
-            TypeId = domainAttribute.TypeId,
+            ReferenceId = domainAttribute.ReferenceId,
+            InstanceId = domainAttribute.InstanceId,
             Privacity = EnumMapper.MapToModelPrivacity(domainAttribute.Privacity),
             RelatedClassId = domainAttribute.RelatedClassId,
             IsStatic = domainAttribute.IsStatic

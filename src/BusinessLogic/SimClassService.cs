@@ -162,6 +162,24 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
         }
     }
 
+    public void ValidPolymorphism(SimClass baseClass, SimClass derivedClass)
+    {
+        if(derivedClass.State == SimAccesibility.Interface)
+        {
+            throw new InvalidAttributeLogic("Polymorphic inheritance is not allowed when the derived type is an interface.");
+        }
+
+        if(derivedClass.State == SimAccesibility.Abstract)
+        {
+            throw new InvalidAttributeLogic("Polymorphic inheritance is not allowed when the base type is abstract.");
+        }
+
+        if(!_simClassDA.IsClassBaseOfOrSameAs(baseClass, derivedClass))
+        {
+            throw new InvalidAttributeLogic("Reference class is not base of instance class.");
+        }
+    }
+
     public List<SimClass> GetClassesOfNamespaces(Guid id)
     {
         if(_namespaceService.GetNamespaceById(id) == null)

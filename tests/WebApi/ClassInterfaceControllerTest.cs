@@ -56,7 +56,7 @@ public class ClassInterfaceControllerTest
         result.Should().BeOfType<CreatedAtRouteResult>();
 
         var createdResult = result as CreatedAtRouteResult;
-        createdResult!.RouteName.Should().Be("GetSimClass");
+        createdResult!.RouteName.Should().Be("GetReferenceClass");
         createdResult.RouteValues!["classId"].Should().Be(classId);
         createdResult.Value.Should().Be(expectedResponseCreated);
     }

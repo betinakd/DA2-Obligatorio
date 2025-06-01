@@ -18,10 +18,16 @@ public class AttributeRequestUpdate()
     public string? Name { get; set; }
 
     [JsonIgnore]
-    public Guid TypeId => Guid.TryParse(IdType, out var guid) ? guid : Guid.Empty;
+    public Guid ReferenceId => Guid.TryParse(IdReference, out var guid) ? guid : Guid.Empty;
 
-    [Required(ErrorMessage = "IdType is required.")]
-    public string IdType { get; set; } = string.Empty;
+    [Required(ErrorMessage = "IdReference is required.")]
+    public string IdReference { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public Guid InstanceId => Guid.TryParse(IdInstance, out var guid) ? guid : Guid.Empty;
+
+    [Required(ErrorMessage = "IdInstance is required.")]
+    public string IdInstance { get; set; } = string.Empty;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SimModelsPrivacity Privacity { get; set; }

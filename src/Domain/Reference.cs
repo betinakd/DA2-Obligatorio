@@ -6,10 +6,11 @@ public abstract class Reference
     public Invocation? RelatedInvocation { get; set; }
     public Guid RelatedInvocationId { get; set; }
 
-    public abstract SimClass GetSimClass();
+    public abstract SimClass GetReferenceClass();
+    public abstract SimClass GetInstanceClass(Signature signature, SimClass executionInstance);
     public abstract string GetSignature(Signature signature);
     public abstract string GetSignatureWithClassName(Signature signature);
     public abstract Guid GetReferenceId();
-
     public abstract string GetReferenceTypeDescription();
+    public abstract bool UsesDynamicDispatch();
 }

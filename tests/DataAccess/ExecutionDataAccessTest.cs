@@ -63,8 +63,8 @@ public class ExecutionDataAccessTest
         var parameter = new Parameter
         {
             Name = "param1",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod
         };
@@ -77,8 +77,8 @@ public class ExecutionDataAccessTest
         var paramSignature = new ParameterSignature
         {
             Name = "param1",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             SignatureId = signature.Id
         };
         signature.Parameters.Add(paramSignature);
@@ -628,8 +628,8 @@ public class ExecutionDataAccessTest
         var methodParameter = new Parameter
         {
             Name = "methodParam",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             Index = 1
         };
 
@@ -646,8 +646,8 @@ public class ExecutionDataAccessTest
         var invocationParameter = new Parameter
         {
             Name = "invocationParam",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             Index = 0
         };
 
@@ -673,7 +673,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [new ParameterSignature { Name = "methodParam", TypeId = intType.Id, Type = intType }] };
+        var signature = new Signature { Name = "TestMethod", Parameters = [new ParameterSignature { Name = "methodParam", ReferenceId = intType.Id, Reference = intType }] };
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
 
         result.Should().NotBeNull();
@@ -682,8 +682,8 @@ public class ExecutionDataAccessTest
         result.Invocations[0].Reference.Should().BeOfType<ReferenceParameter>();
         var refParam = result.Invocations[0].Reference as ReferenceParameter;
         refParam.Reference.Should().NotBeNull();
-        refParam.Reference.Type.Should().NotBeNull();
-        refParam.Reference.Type.Name.Should().Be("int");
+        refParam.Reference.Reference.Should().NotBeNull();
+        refParam.Reference.Reference.Name.Should().Be("int");
     }
 
     [TestMethod]
@@ -700,8 +700,8 @@ public class ExecutionDataAccessTest
         var variable = new LocalVariable
         {
             Name = "testVar",
-            TypeId = stringType.Id,
-            Type = stringType
+            ReferenceId = stringType.Id,
+            Reference = stringType
         };
         _context.LocalVariables.Add(variable);
         _context.SaveChanges();
@@ -744,8 +744,8 @@ public class ExecutionDataAccessTest
         result.Invocations[0].Reference.Should().BeOfType<ReferenceVariable>();
         var refVar = result.Invocations[0].Reference as ReferenceVariable;
         refVar.Reference.Should().NotBeNull();
-        refVar.Reference.Type.Should().NotBeNull();
-        refVar.Reference.Type.Name.Should().Be("string");
+        refVar.Reference.Reference.Should().NotBeNull();
+        refVar.Reference.Reference.Name.Should().Be("string");
     }
 
     [TestMethod]
@@ -762,8 +762,8 @@ public class ExecutionDataAccessTest
         var attribute = new SimAttribute
         {
             Name = "testAttr",
-            TypeId = boolType.Id,
-            Type = boolType,
+            ReferenceId = boolType.Id,
+            Reference = boolType,
             RelatedClassId = simClass.Id,
             RelatedClass = simClass
         };
@@ -808,8 +808,8 @@ public class ExecutionDataAccessTest
         result.Invocations[0].Reference.Should().BeOfType<ReferenceAttribute>();
         var refAttr = result.Invocations[0].Reference as ReferenceAttribute;
         refAttr.Reference.Should().NotBeNull();
-        refAttr.Reference.Type.Should().NotBeNull();
-        refAttr.Reference.Type.Name.Should().Be("bool");
+        refAttr.Reference.Reference.Should().NotBeNull();
+        refAttr.Reference.Reference.Name.Should().Be("bool");
     }
 
     [TestMethod]
@@ -1418,5 +1418,126 @@ public class ExecutionDataAccessTest
         result.Should().NotBeNull("Method should find sealed method in grandparent class");
         result.Id.Should().Be(sealedMethod.Id);
         result.Accesibility.Should().Be(SimAccesibility.Sealed);
+    }
+
+    [TestMethod]
+    public void ReturnsOverrideMethod_FromInstanceHierarchy()
+    {
+        var baseClass = new SimClass { Name = "Base" };
+        var childClass = new SimClass { Name = "Child", BaseClass = baseClass };
+        _context.SimClasses.AddRange(baseClass, childClass);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod" };
+
+        var overrideMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = childClass.Id,
+            RelatedClass = childClass,
+            IsOverride = true
+        };
+        _context.SimMethods.Add(overrideMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.FindOverrideOrReferenceMethod(childClass, baseClass, signature);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(overrideMethod.Id);
+    }
+
+    [TestMethod]
+    public void ReturnsReferenceMethod_WhenNoOverrideFound()
+    {
+        var baseClass = new SimClass { Name = "Base" };
+        var childClass = new SimClass { Name = "Child", BaseClass = baseClass };
+        _context.SimClasses.AddRange(baseClass, childClass);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod" };
+
+        var referenceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            IsOverride = false
+        };
+        _context.SimMethods.Add(referenceMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.FindOverrideOrReferenceMethod(childClass, baseClass, signature);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(referenceMethod.Id);
+    }
+
+    [TestMethod]
+    public void ReturnsNull_WhenNoMethodFoundAnywhere()
+    {
+        var baseClass = new SimClass { Name = "Base" };
+        var childClass = new SimClass { Name = "Child", BaseClass = baseClass };
+        _context.SimClasses.AddRange(baseClass, childClass);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "NonExistentMethod" };
+
+        var result = _executionDataAccess.FindOverrideOrReferenceMethod(childClass, baseClass, signature);
+
+        result.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void ReturnsOverrideMethod_FromIntermediateBaseClass()
+    {
+        var grandparent = new SimClass { Name = "Grandparent" };
+        var parent = new SimClass { Name = "Parent", BaseClass = grandparent };
+        var child = new SimClass { Name = "Child", BaseClass = parent };
+        _context.SimClasses.AddRange(grandparent, parent, child);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod" };
+
+        var overrideMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = parent.Id,
+            RelatedClass = parent,
+            IsOverride = true
+        };
+        _context.SimMethods.Add(overrideMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.FindOverrideOrReferenceMethod(child, grandparent, signature);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(overrideMethod.Id);
+    }
+
+    [TestMethod]
+    public void FindOverrideOrReferenceMethod_BreaksWhenNoBaseClassId()
+    {
+        var instanceClass = new SimClass { Name = "InstanceClass", BaseClass = null, BaseClassId = null };
+        var referenceClass = new SimClass { Name = "ReferenceClass", BaseClass = null, BaseClassId = null };
+        _context.SimClasses.AddRange(instanceClass, referenceClass);
+        _context.SaveChanges();
+
+        var signature = new Signature { Name = "TestMethod" };
+
+        var referenceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = referenceClass.Id,
+            RelatedClass = referenceClass,
+            IsOverride = false,
+            IsVirtual = true
+        };
+        _context.SimMethods.Add(referenceMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess.FindOverrideOrReferenceMethod(instanceClass, referenceClass, signature);
+
+        result.Should().NotBeNull();
+        result.Id.Should().Be(referenceMethod.Id);
     }
 }

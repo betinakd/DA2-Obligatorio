@@ -15,7 +15,7 @@ public class ReferenceBaseTest()
 
         var referenceBase = new ReferenceBase() { Reference = simClass };
 
-        var result = referenceBase.GetSimClass();
+        var result = referenceBase.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual("BaseClass", result.Name);
@@ -48,7 +48,7 @@ public class ReferenceBaseTest()
         var simClass = new SimClass { Name = "TestClass" };
         var referenceBase = new ReferenceBase() { Reference = simClass };
 
-        referenceBase.GetSimClass();
+        referenceBase.GetReferenceClass();
     }
 
     [TestMethod]
@@ -90,5 +90,19 @@ public class ReferenceBaseTest()
         var actualId = referenceBase.GetReferenceId();
 
         Assert.AreEqual(expectedId, actualId);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnBaseClass()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        var simClass = new SimClass { Name = "ChildClass", BaseClass = baseClass, BaseClassId = baseClass.Id };
+        var referenceBase = new ReferenceBase { Reference = simClass };
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = referenceBase.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(baseClass, result);
     }
 }

@@ -8,8 +8,10 @@ public class SimAttribute
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     private string _name = string.Empty;
-    public Guid? TypeId { get; set; }
-    public SimClass? Type { get; set; }
+    public Guid? ReferenceId { get; set; }
+    public SimClass? Reference { get; set; }
+    public Guid? InstanceId { get; set; }
+    public SimClass? Instance { get; set; }
     public SimPrivacity? Privacity { get; set; } = SimPrivacity.Public;
     public bool IsStatic { get; set; } = false;
     public SimClass? RelatedClass { get; set; }

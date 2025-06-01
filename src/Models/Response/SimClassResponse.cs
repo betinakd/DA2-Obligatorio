@@ -14,4 +14,5 @@ public class SimClassResponse()
     public List<MethodResponse> Methods { get; set; } = [];
     public List<AttributeResponse> Attributes { get; set; } = [];
     public List<InterfaceResponse> Implements { get; set; } = [];
+    public NamespaceResponse? BaseNamespace { get; set; }
 }

@@ -55,7 +55,6 @@ public class NamespaceAdapterTest
         Assert.AreEqual(expectedNamespace.Id, response.Id);
         Assert.AreEqual(expectedNamespace.Name, response.Name);
         Assert.AreEqual(expectedNamespace.BaseNamespaceId, response.BaseNamespaceId);
-        Assert.AreEqual(response.BaseNamespaceName, baseNamespace.Name);
         Assert.AreEqual(0, response.Elements.Count);
     }
 

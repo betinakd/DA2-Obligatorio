@@ -10,10 +10,10 @@ public class ReferenceParameterTest
     public void TestGetSimClass_ShouldReturnParameterType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var parameter = new Parameter { Type = simClass, Name = "Param" };
+        var parameter = new Parameter { Reference = simClass, Name = "Param" };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
-        var result = referenceParameter.GetSimClass();
+        var result = referenceParameter.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -27,7 +27,7 @@ public class ReferenceParameterTest
         var parameter = new Parameter();
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
-        referenceParameter.GetSimClass();
+        referenceParameter.GetReferenceClass();
     }
 
     [TestMethod]
@@ -42,7 +42,7 @@ public class ReferenceParameterTest
                 new ParameterSignature { Name = "param2" }
             ]
         };
-        var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Type = new SimClass { Name = "TestClass" }, Name = "Param" } };
+        var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Reference = new SimClass { Name = "TestClass" }, Name = "Param" } };
 
         var result = referenceParameter.GetSignature(signature);
 
@@ -62,7 +62,7 @@ public class ReferenceParameterTest
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
-        var parameter = new Parameter { Type = simClass, Name = "Param" };
+        var parameter = new Parameter { Reference = simClass, Name = "Param" };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var result = referenceParameter.GetSignatureWithClassName(signature);
@@ -73,18 +73,58 @@ public class ReferenceParameterTest
     [TestMethod]
     public void TestGetReferenceId_ShouldReturnParameterId()
     {
-        // Arrange
         var expectedId = Guid.NewGuid();
         var parameter = new Parameter
         {
             Id = expectedId,
             Name = "Param",
-            Type = new SimClass { Name = "TestClass" }
+            Reference = new SimClass { Name = "TestClass" }
         };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var actualId = referenceParameter.GetReferenceId();
 
         Assert.AreEqual(expectedId, actualId);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnParameterInstance_WhenParameterIndexMatches()
+    {
+        var expectedInstance = new SimClass { Name = "InstanceClass" };
+        var typeClass = new SimClass { Name = "TypeClass" };
+        var parameter = new Parameter { Name = "param1", Index = 0, Reference = typeClass };
+        var referenceParameter = new ReferenceParameter { Reference = parameter };
+
+        var signature = new Signature
+        {
+            Parameters = [
+                new ParameterSignature { Index = 0, Instance = expectedInstance }
+            ]
+        };
+        var executionInstance = new SimClass();
+
+        var result = referenceParameter.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(expectedInstance, result);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReferenceType_WhenParameterIndexNotFound()
+    {
+        var typeClass = new SimClass { Name = "TypeClass" };
+        var parameter = new Parameter { Name = "param1", Index = 1, Reference = typeClass };
+        var referenceParameter = new ReferenceParameter { Reference = parameter };
+
+        var signature = new Signature
+        {
+            Parameters = [
+                new ParameterSignature { Index = 0, Instance = new SimClass() }
+            ]
+        };
+        var executionInstance = new SimClass();
+
+        var result = referenceParameter.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(typeClass, result);
     }
 }

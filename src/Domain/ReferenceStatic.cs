@@ -17,7 +17,7 @@ public class ReferenceStatic : Reference
         return Reference.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
-    public override SimClass GetSimClass()
+    public override SimClass GetReferenceClass()
     {
         return Reference;
     }
@@ -30,5 +30,15 @@ public class ReferenceStatic : Reference
     public override string GetReferenceTypeDescription()
     {
         return "Static";
+    }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return Reference;
+    }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return false;
     }
 }

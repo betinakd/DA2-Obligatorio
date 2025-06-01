@@ -602,6 +602,79 @@ public class SimClassServiceTest
     }
 
     [TestMethod]
+    public void ValidPolymorphism_ShouldThrow_WhenDerivedIsInterface()
+    {
+        var baseClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "BaseClass",
+            State = SimAccesibility.Normal
+        };
+
+        var derivedClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "DerivedInterface",
+            State = SimAccesibility.Interface
+        };
+
+        var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simClassService.ValidPolymorphism(baseClass, derivedClass));
+
+        Assert.AreEqual("Polymorphic inheritance is not allowed when the derived type is an interface.", ex.Message);
+    }
+
+    [TestMethod]
+    public void ValidPolymorphism_ShouldThrow_WhenDerivedIsAbstract()
+    {
+        var baseClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "BaseClass",
+            State = SimAccesibility.Normal
+        };
+
+        var derivedClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "DerivedAbstract",
+            State = SimAccesibility.Abstract
+        };
+
+        var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simClassService.ValidPolymorphism(baseClass, derivedClass));
+
+        Assert.AreEqual("Polymorphic inheritance is not allowed when the base type is abstract.", ex.Message);
+    }
+
+    [TestMethod]
+    public void ValidPolymorphism_ShouldThrow_WhenReferenceClassIsBaseOfInstanceClass()
+    {
+        var baseClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "BaseClass",
+            State = SimAccesibility.Normal
+        };
+
+        var derivedClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "DerivedClass",
+            State = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(m => m.IsClassBaseOfOrSameAs(baseClass, derivedClass))
+            .Returns(false);
+
+        var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simClassService.ValidPolymorphism(baseClass, derivedClass));
+
+        Assert.AreEqual("Reference class is not base of instance class.", ex.Message);
+    }
+
+    [TestMethod]
     public void GetClassesOfNamespaces_ShouldReturnClasses_WhenNamespaceExists()
     {
         var namespaceId = Guid.NewGuid();

@@ -5,6 +5,8 @@ using IDataAccess;
 using Models.Request;
 using Moq;
 
+namespace Tests.BusinessLogic;
+
 [TestClass]
 public class NamespaceServiceTest
 {

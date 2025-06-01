@@ -1,7 +1,6 @@
 using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
-using Domain.Enums;
 using IAdapter;
 using IBusinessLogic;
 using Models.Request;
@@ -29,14 +28,18 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             var index = 0;
             foreach(var parameter in request.Parameters)
             {
-                var typeParameter = _simClassService.GetSimClassById(parameter.ClassTypeId);
+                var typeParameter = _simClassService.GetSimClassById(parameter.ReferenceId);
+                var instance = _simClassService.GetSimClassById(parameter.InstanceId);
+
                 var par = new ParameterSignature()
                 {
                     Name = parameter.Name,
-                    Type = typeParameter,
-                    TypeId = typeParameter.Id,
+                    Reference = typeParameter,
+                    ReferenceId = typeParameter.Id,
                     Signature = signature,
                     SignatureId = signature.Id,
+                    Instance = instance,
+                    InstanceId = instance.Id,
                     Index = index
                 };
                 index++;
@@ -48,25 +51,12 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             var refer = _simClassService.GetSimClassById(request.ReferenceTypeId);
             var obj = _simClassService.GetSimClassById(request.InstanceTypeId);
 
-            if(obj.State == SimAccesibility.Abstract)
-            {
-                throw new InvalidExecutionAdapter("Cannot create an instance of the abstract type.");
-            }
-
-            if(!_executionService.IsReferenceBaseOfInstance(refer, obj))
-            {
-                throw new InvalidExecutionAdapter("Reference is not base of the instance");
-            }
-
             var reference = new ReferenceThis()
             {
                 Reference = refer
             };
-            var objToCreate = new ReferenceThis()
-            {
-                Reference = obj
-            };
-            var execution = _executionService.ExecuteMethod(reference, objToCreate, signature);
+
+            var execution = _executionService.ExecuteMethod(refer, obj, reference, signature);
             _executionService.SaveExecutionLog(refer.Name, obj.Name, execution);
             return execution;
         }
@@ -77,6 +67,14 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         catch(NonExistentValueLogic ex)
         {
             throw new NonExistentValueAdapter(ex.Message);
+        }
+        catch(InvalidAttributeLogic ex)
+        {
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InvalidExecutionAdapter ex)
+        {
+            throw new InvalidExecutionAdapter(ex.Message);
         }
     }
 

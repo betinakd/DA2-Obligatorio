@@ -29,4 +29,10 @@ public class SimClassRequestUpdate()
     public List<AttributeRequest> Attributes { get; set; } = [];
 
     public List<InterfaceRequestUpdate> Implements { get; set; } = [];
+
+    [JsonIgnore]
+    public Guid BaseNamespaceId => Guid.TryParse(IdBaseNamespace, out var guid) ? guid : Guid.Empty;
+
+    [Required(ErrorMessage = "IdBaseNamespace is required.")]
+    public string IdBaseNamespace { get; set; } = string.Empty;
 }

@@ -3,6 +3,7 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
 public class InvocationResponseMapper
 {
@@ -20,12 +21,11 @@ public class InvocationResponseMapper
             TypeReference = domainInvocation.Reference?.GetReferenceTypeDescription(),
             MethodName = domainInvocation.Signature?.Name,
             Parameters = domainInvocation.Signature?.Parameters
-                .Select(p => new ParameterResponse
+                .Select(p => new ParameterSignatureResponse
                 {
-                    Id = p.Id,
                     Name = p.Name,
-                    MethodId = domainInvocation.RelatedMethodId,
-                    ClassTypeId = p.TypeId
+                    ReferenceId = p.ReferenceId,
+                    InstanceId = p.InstanceId
                 }).ToList() ?? []
         };
     }

@@ -38,7 +38,7 @@ public class SimClassController(ISimClassAdapter simClassAdapter) : ControllerBa
         return NoContent();
     }
 
-    [HttpGet("{classId}", Name = "GetSimClass")]
+    [HttpGet("{classId}", Name = "GetReferenceClass")]
     public IActionResult GetInfoClass([FromRoute] Guid classId)
     {
         var simClassResponse = _simClassAdapter.GetSimClassInfo(classId);

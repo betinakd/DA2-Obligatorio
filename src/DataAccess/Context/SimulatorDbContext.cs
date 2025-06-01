@@ -78,9 +78,9 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<Parameter>()
-                    .HasOne(p => p.Type)
+                    .HasOne(p => p.Reference)
                     .WithMany()
-                    .HasForeignKey(p => p.TypeId)
+                    .HasForeignKey(p => p.ReferenceId)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<LocalVariable>()
@@ -90,10 +90,16 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<LocalVariable>()
-                    .HasOne(v => v.Type)
+                    .HasOne(v => v.Reference)
                     .WithMany()
-                    .HasForeignKey(v => v.TypeId)
+                    .HasForeignKey(v => v.ReferenceId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<LocalVariable>()
+            .HasOne(v => v.Instance)
+            .WithMany()
+            .HasForeignKey(v => v.InstanceId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<SimMethod>()
                     .HasMany(i => i.Invocations)
@@ -108,10 +114,16 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                     .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<SimAttribute>()
-                    .HasOne(a => a.Type)
+                    .HasOne(a => a.Reference)
                     .WithMany()
-                    .HasForeignKey(b => b.TypeId)
+                    .HasForeignKey(b => b.ReferenceId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<SimAttribute>()
+            .HasOne(a => a.Instance)
+            .WithMany()
+            .HasForeignKey(b => b.InstanceId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<Invocation>()
                     .HasOne(i => i.RelatedMethod)
@@ -187,9 +199,15 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<ParameterSignature>()
-            .HasOne(ps => ps.Type)
+            .HasOne(ps => ps.Reference)
             .WithMany()
-            .HasForeignKey(ps => ps.TypeId)
+            .HasForeignKey(ps => ps.ReferenceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<ParameterSignature>()
+            .HasOne(ps => ps.Instance)
+            .WithMany()
+            .HasForeignKey(ps => ps.InstanceId)
             .OnDelete(DeleteBehavior.Restrict);
 
         _ = modelBuilder.Entity<Invocation>()
@@ -214,12 +232,18 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 entity.HasKey(e => e.KeyValue);
                 entity.Property(e => e.Name).IsRequired();
             });
-        _ = modelBuilder.Entity<SimNamespace>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired();
-                entity.Property(e => e.BaseNamespaceId);
-            });
+
+        _ = modelBuilder.Entity<SimNamespace>()
+            .HasOne(ns => ns.BaseNamespace)
+            .WithMany()
+            .HasForeignKey(ns => ns.BaseNamespaceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<SimNamespace>()
+            .HasMany(ns => ns.Elements)
+            .WithOne(c => c.Namespace)
+            .HasForeignKey(c => c.NamespaceId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)
@@ -246,13 +270,24 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         var delegateTypeId = Guid.Parse("44444444-2222-1111-1111-111111111111");
         var dynamicTypeId = Guid.Parse("44444444-3333-1111-1111-111111111111");
 
+        var systemNamespaceId = Guid.Parse("00000000-1111-0000-0000-000000000001");
+
+        _ = modelBuilder.Entity<SimNamespace>().HasData(
+            new SimNamespace
+            {
+                Id = systemNamespaceId,
+                Name = "System",
+                BaseNamespaceId = null
+            });
+
         _ = modelBuilder.Entity<SimClass>().HasData(
             new SimClass
             {
                 Id = objectClassId,
                 Name = "Object",
                 State = SimAccesibility.Normal,
-                BaseClassId = null
+                BaseClassId = null,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -260,6 +295,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "void",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             });
 
         _ = modelBuilder.Entity<SimClass>().HasData(
@@ -269,6 +305,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "bool",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -276,6 +313,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "byte",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -283,6 +321,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "sbyte",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -290,6 +329,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "char",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -297,6 +337,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "decimal",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -304,6 +345,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "double",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -311,6 +353,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "float",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -318,6 +361,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "int",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -325,6 +369,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "uint",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -332,6 +377,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "nint",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -339,6 +385,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "nuint",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -346,6 +393,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "long",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -353,6 +401,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "ulong",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -360,6 +409,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "short",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -367,6 +417,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "ushort",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -374,6 +425,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "string",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -381,6 +433,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "delegate",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             },
             new SimClass
             {
@@ -388,6 +441,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
                 Name = "dynamic",
                 BaseClassId = objectClassId,
                 State = SimAccesibility.Normal,
+                NamespaceId = systemNamespaceId
             });
 
         var equalsMethodId = Guid.Parse("55555555-1111-1111-1111-111111111111");
@@ -508,7 +562,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         {
             Id = equalsObjParamId,
             Name = "obj",
-            TypeId = objectClassId,
+            ReferenceId = objectClassId,
             RelatedMethodId = equalsMethodId,
             Index = 0
         },
@@ -516,7 +570,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         {
             Id = equalsStaticObj1ParamId,
             Name = "objA",
-            TypeId = objectClassId,
+            ReferenceId = objectClassId,
             RelatedMethodId = equalsStaticMethodId,
             Index = 0
         },
@@ -524,7 +578,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         {
             Id = equalsStaticObj2ParamId,
             Name = "objB",
-            TypeId = objectClassId,
+            ReferenceId = objectClassId,
             RelatedMethodId = equalsStaticMethodId,
             Index = 1
         },
@@ -532,7 +586,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         {
             Id = referenceEqualsObj1ParamId,
             Name = "objA",
-            TypeId = objectClassId,
+            ReferenceId = objectClassId,
             RelatedMethodId = referenceEqualsMethodId,
             Index = 0
         },
@@ -540,7 +594,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
         {
             Id = referenceEqualsObj2ParamId,
             Name = "objB",
-            TypeId = objectClassId,
+            ReferenceId = objectClassId,
             RelatedMethodId = referenceEqualsMethodId,
             Index = 1
         });

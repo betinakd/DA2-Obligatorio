@@ -13,6 +13,11 @@ public class SimClassResponseMapper
         {
             Id = domainClass.Id,
             Name = domainClass.Name,
+            BaseNamespace = new NamespaceResponse
+            {
+                Id = domainClass.Namespace.Id,
+                Name = domainClass.Namespace.Name,
+            },
             State = EnumMapper.MapToModelAccesibility(domainClass.State),
             IdBaseClass = domainClass.BaseClassId,
             Methods = domainClass.Methods.Select(m => new MethodResponse
@@ -28,14 +33,15 @@ public class SimClassResponseMapper
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    ClassTypeId = p.TypeId,
+                    ReferenceId = p.ReferenceId,
                     MethodId = p.RelatedMethodId
                 }).ToList(),
                 Variables = m.LocalVariables.Select(v => new VariableResponse
                 {
                     Id = v.Id,
                     Name = v.Name,
-                    ClassTypeId = v.TypeId,
+                    ReferenceId = v.ReferenceId,
+                    InstanceId = v.InstanceId,
                     MethodId = v.RelatedMethodId
                 }).ToList(),
                 Invocations = m.Invocations.Select(i => new InvocationResponse
@@ -44,12 +50,11 @@ public class SimClassResponseMapper
                     IdReference = i.Reference?.GetReferenceId() ?? i.ReferenceId ?? Guid.Empty,
                     TypeReference = i.Reference?.GetReferenceTypeDescription(),
                     MethodName = i.Signature?.Name,
-                    Parameters = i.Signature?.Parameters.Select(p => new ParameterResponse
+                    Parameters = i.Signature?.Parameters.Select(p => new ParameterSignatureResponse
                     {
-                        Id = p.Id,
-                        MethodId = i.RelatedMethodId,
                         Name = p.Name,
-                        ClassTypeId = p.TypeId
+                        ReferenceId = p.ReferenceId,
+                        InstanceId = p.InstanceId
                     }).ToList() ?? []
                 }).ToList()
             }).ToList(),
@@ -57,7 +62,8 @@ public class SimClassResponseMapper
             {
                 Id = a.Id,
                 Name = a.Name,
-                TypeId = a.TypeId,
+                ReferenceId = a.ReferenceId,
+                InstanceId = a.InstanceId,
                 Privacity = EnumMapper.MapToModelPrivacity(a.Privacity),
                 RelatedClassId = a.RelatedClassId,
                 IsStatic = a.IsStatic
@@ -78,7 +84,7 @@ public class SimClassResponseMapper
                     {
                         Id = p.Id,
                         Name = p.Name,
-                        ClassTypeId = p.TypeId,
+                        ReferenceId = p.ReferenceId,
                         MethodId = p.RelatedMethodId
                     }).ToList()
                 }).ToList()

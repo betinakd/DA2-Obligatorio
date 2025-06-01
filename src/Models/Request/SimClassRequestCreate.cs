@@ -24,6 +24,9 @@ public class SimClassRequestCreate()
     public List<MethodRequest> Methods { get; set; } = [];
     public List<AttributeRequest> Attributes { get; set; } = [];
 
-    [Required(ErrorMessage = "Namespace ig is required.")]
-    public Guid BaseNamespaceId { get; set; } = Guid.Empty;
+    [JsonIgnore]
+    public Guid BaseNamespaceId => Guid.TryParse(IdBaseNamespace, out var guid) ? guid : Guid.Empty;
+
+    [Required(ErrorMessage = "IdBaseNamespace is required.")]
+    public string IdBaseNamespace { get; set; } = string.Empty;
 }

@@ -48,8 +48,8 @@ public class SimAttributeDataAccessTest
             Name = "Test Attribute",
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId,
-            Type = relatedClass,
-            TypeId = relatedClassId
+            Reference = relatedClass,
+            ReferenceId = relatedClassId
         };
 
         var result = _simAttributeDataAccess.CreateAttribute(relatedClassId, attribute);
@@ -59,7 +59,7 @@ public class SimAttributeDataAccessTest
         result.GetType().Should().Be(typeof(SimAttribute));
         Assert.AreEqual(attribute.Name, result.Name);
         Assert.AreEqual(relatedClassId, result.RelatedClassId);
-        Assert.AreEqual(relatedClassId, result.TypeId);
+        Assert.AreEqual(relatedClassId, result.ReferenceId);
     }
 
     [TestMethod]
@@ -158,8 +158,8 @@ public class SimAttributeDataAccessTest
         {
             Id = attributeId,
             Name = "Test Attribute",
-            Type = relatedClass,
-            TypeId = relatedClassId,
+            Reference = relatedClass,
+            ReferenceId = relatedClassId,
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId
         };
@@ -181,8 +181,8 @@ public class SimAttributeDataAccessTest
         existingAttribute.Name = newName;
         existingAttribute.RelatedClass = newRelatedClass;
         existingAttribute.RelatedClassId = newRelatedClassId;
-        existingAttribute.Type = newRelatedClass;
-        existingAttribute.TypeId = newRelatedClassId;
+        existingAttribute.Reference = newRelatedClass;
+        existingAttribute.ReferenceId = newRelatedClassId;
 
         var result = _simAttributeDataAccess.UpdateAttribute(attributeId, existingAttribute);
         result.GetType().Should().Be(typeof(SimAttribute));
@@ -197,7 +197,7 @@ public class SimAttributeDataAccessTest
         var invocationId = Guid.NewGuid();
 
         // Crear la signature
-        var signature = new Signature { Name = "Test Signature", Parameters = [new ParameterSignature { TypeId = attributeId }] };
+        var signature = new Signature { Name = "Test Signature", Parameters = [new ParameterSignature { ReferenceId = attributeId }] };
 
         // Crear invocación primero con ID fijo
         var invocation = new Invocation
@@ -241,8 +241,8 @@ public class SimAttributeDataAccessTest
             Name = attributeName,
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId,
-            Type = relatedClass,
-            TypeId = relatedClassId
+            Reference = relatedClass,
+            ReferenceId = relatedClassId
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
@@ -253,6 +253,6 @@ public class SimAttributeDataAccessTest
         Assert.AreEqual(attributeId, result.Id);
         Assert.AreEqual(attributeName, result.Name);
         Assert.AreEqual(relatedClassId, result.RelatedClassId);
-        Assert.AreEqual(relatedClassId, result.TypeId);
+        Assert.AreEqual(relatedClassId, result.ReferenceId);
     }
 }

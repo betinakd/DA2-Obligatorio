@@ -111,11 +111,11 @@ public class SimClassDataAccessTest
         {
             Id = Guid.NewGuid(),
             RelatedClassId = simClassId,
-            TypeId = typeId,
+            ReferenceId = typeId,
             Privacity = SimPrivacity.Public,
             Name = "Vehiculo",
             RelatedClass = new SimClass { Id = simClassId, Name = "Test1" },
-            Type = new SimClass { Id = typeId, Name = "Test2" }
+            Reference = new SimClass { Id = typeId, Name = "Test2" }
         };
 
         _context.SimAttributes.Add(simAttribute);
@@ -133,7 +133,7 @@ public class SimClassDataAccessTest
         var parameter = new Parameter
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "Test Parameter"
         };
 
@@ -153,10 +153,10 @@ public class SimClassDataAccessTest
         var localVariable = new LocalVariable()
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "Test Local Variable",
             RelatedMethodId = methodId,
-            Type = new SimClass { Id = typeId, Name = "Test Type" },
+            Reference = new SimClass { Id = typeId, Name = "Test Reference" },
             RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
         };
 
@@ -407,8 +407,8 @@ public class SimClassDataAccessTest
             Name = "param1",
             Index = 2,
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param2 = new Parameter
         {
@@ -416,8 +416,8 @@ public class SimClassDataAccessTest
             Name = "param2",
             Index = 1,
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param3 = new Parameter
         {
@@ -425,8 +425,8 @@ public class SimClassDataAccessTest
             Name = "param3",
             Index = 0,
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.Parameters.AddRange(param1, param2, param3);
 
@@ -435,8 +435,8 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "localVar",
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.LocalVariables.Add(localVar);
 
@@ -445,14 +445,14 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "testAttr",
             RelatedClassId = classId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.SimAttributes.Add(attribute);
 
         var signature = new Signature { Id = Guid.NewGuid(), Name = "TestSignature" };
-        var sigParam1 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam1", Index = 2, SignatureId = signature.Id, TypeId = typeId, Type = typeClass };
-        var sigParam2 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam2", Index = 0, SignatureId = signature.Id, TypeId = typeId, Type = typeClass };
+        var sigParam1 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam1", Index = 2, SignatureId = signature.Id, ReferenceId = typeId, Reference = typeClass };
+        var sigParam2 = new ParameterSignature { Id = Guid.NewGuid(), Name = "sigParam2", Index = 0, SignatureId = signature.Id, ReferenceId = typeId, Reference = typeClass };
         signature.Parameters = [sigParam1, sigParam2];
         _context.Signatures.Add(signature);
         _context.ParameterSignatures.AddRange(sigParam1, sigParam2);
@@ -533,8 +533,8 @@ public class SimClassDataAccessTest
             Name = "param1",
             Index = 2,
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param2 = new Parameter
         {
@@ -542,8 +542,8 @@ public class SimClassDataAccessTest
             Name = "param2",
             Index = 0,
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param3 = new Parameter
         {
@@ -551,8 +551,8 @@ public class SimClassDataAccessTest
             Name = "param3",
             Index = 1,
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.Parameters.AddRange(param1, param2, param3);
 
@@ -561,24 +561,24 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "cVar",
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var localVar2 = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = "aVar",
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var localVar3 = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = "bVar",
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.LocalVariables.AddRange(localVar1, localVar2, localVar3);
 
@@ -587,8 +587,8 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "testAttr",
             RelatedClassId = classId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.SimAttributes.Add(attribute);
 
@@ -599,8 +599,8 @@ public class SimClassDataAccessTest
             Name = "sigParam1",
             Index = 1,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var sigParam2 = new ParameterSignature
         {
@@ -608,8 +608,8 @@ public class SimClassDataAccessTest
             Name = "sigParam2",
             Index = 0,
             SignatureId = signature.Id,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         signature.Parameters = [sigParam1, sigParam2];
         _context.Signatures.Add(signature);
@@ -878,5 +878,82 @@ public class SimClassDataAccessTest
         var result = _simClassDataAccess.ClassInheritAttribute(childClass.Id, attribute.Id);
 
         result.Should().BeTrue("Should find public attribute in the grandparent class");
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenPotentialBaseIsNull()
+    {
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived" };
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(null, derived);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenPotentialDerivedIsNull()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, null);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenSameClass()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, baseClass);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenDerivedHasNoBase()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var derived = new SimClass { BaseClassId = null, BaseClass = null, Id = Guid.NewGuid(), Name = "Derived" };
+        _context.SimClasses.AddRange(baseClass, derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, derived);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenDerivedDirectlyInheritsBase()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived", BaseClassId = baseClass.Id };
+        _context.SimClasses.AddRange(baseClass, derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, derived);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsFalse_WhenBaseClassNotFound()
+    {
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base" };
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived", BaseClassId = Guid.NewGuid() };
+        _context.SimClasses.Add(baseClass);
+        _context.SimClasses.Add(derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(baseClass, derived);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenDerivedInheritsIndirectly()
+    {
+        var grandBase = new SimClass { Id = Guid.NewGuid(), Name = "GrandBase" };
+        var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "Base", BaseClassId = grandBase.Id, BaseClass = grandBase };
+        var derived = new SimClass { Id = Guid.NewGuid(), Name = "Derived", BaseClassId = baseClass.Id, BaseClass = baseClass };
+        _context.SimClasses.AddRange(grandBase, baseClass, derived);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(grandBase, derived);
+        Assert.IsTrue(result);
     }
 }

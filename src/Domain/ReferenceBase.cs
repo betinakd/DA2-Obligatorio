@@ -19,7 +19,7 @@ public class ReferenceBase : Reference
         return Reference.BaseClass.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
-    public override SimClass GetSimClass()
+    public override SimClass GetReferenceClass()
     {
         if(Reference.BaseClass == null)
         {
@@ -37,5 +37,15 @@ public class ReferenceBase : Reference
     public override string GetReferenceTypeDescription()
     {
         return "Base";
+    }
+
+    public override SimClass GetInstanceClass(Signature signature, SimClass executionInstance)
+    {
+        return Reference.BaseClass;
+    }
+
+    public override bool UsesDynamicDispatch()
+    {
+        return false;
     }
 }

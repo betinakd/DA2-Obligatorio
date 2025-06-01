@@ -11,7 +11,7 @@ public class ReferenceStaticTest
         var simClass = new SimClass { Name = "TestClass" };
         var referenceStatic = new ReferenceStatic { Reference = simClass };
 
-        var result = referenceStatic.GetSimClass();
+        var result = referenceStatic.GetReferenceClass();
 
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
@@ -94,5 +94,18 @@ public class ReferenceStaticTest
         var result = referenceStatic.GetReferenceTypeDescription();
 
         Assert.AreEqual("Static", result);
+    }
+
+    [TestMethod]
+    public void GetInstanceClass_ShouldReturnReference()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        var referenceStatic = new ReferenceStatic { Reference = simClass };
+        var signature = new Signature();
+        var executionInstance = new SimClass();
+
+        var result = referenceStatic.GetInstanceClass(signature, executionInstance);
+
+        Assert.AreEqual(simClass, result);
     }
 }

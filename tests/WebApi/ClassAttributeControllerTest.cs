@@ -28,7 +28,7 @@ public class ClassAttributeControllerTest
         var request = new AttributeRequest()
         {
             Name = "DummyAttribute",
-            IdClassType = Guid.NewGuid().ToString(),
+            IdReference = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,
         };
 
@@ -39,7 +39,7 @@ public class ClassAttributeControllerTest
             {
                 Id = id,
                 Name = "DummyAttribute",
-                TypeId = Guid.NewGuid(),
+                ReferenceId = Guid.NewGuid(),
                 Privacity = SimModelsPrivacity.Public,
                 RelatedClassId = Guid.NewGuid()
             }

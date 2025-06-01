@@ -8,6 +8,7 @@ public class SimClass
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid? NamespaceId { get; set; } = Guid.Empty;
+    public SimNamespace? Namespace { get; set; } = null;
     private List<SimMethod> _methods = [];
 
     public List<SimMethod> Methods
@@ -196,6 +197,16 @@ public class SimClass
             {
                 throw new InvalidAttributeDomain($"The following abstract methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
             }
+
+            var notOverrideMethods = abstractMethods
+                .Select(am => Methods.FirstOrDefault(m => m.Name == am.Name))
+                .Where(m => m != null && !m.IsOverride)
+                .ToList();
+
+            if(notOverrideMethods.Any())
+            {
+                throw new InvalidAttributeDomain($"The following abstract methods are implemented but not marked as override: {string.Join(", ", notOverrideMethods.Select(m => m.ToString()))}");
+            }
         }
 
         _baseClassField = value;
@@ -203,6 +214,12 @@ public class SimClass
 
     public void SetImplements(List<SimClass> value)
     {
+        var duplicateIds = value.GroupBy(i => i.Id).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+        if(duplicateIds.Any())
+        {
+            throw new InvalidAttributeDomain($"Duplicate interface Ids found in implements: {string.Join(", ", duplicateIds)}");
+        }
+
         var interfaceMethods = new List<SimMethod>();
         foreach(var interfaceClass in value)
         {
@@ -214,6 +231,16 @@ public class SimClass
         if(missingMethods.Any())
         {
             throw new InvalidAttributeDomain($"The following interface methods are not implemented: {string.Join(", ", missingMethods.Select(m => m.ToString()))}");
+        }
+
+        var notOverrideMethods = interfaceMethods
+            .Select(im => Methods.FirstOrDefault(m => m.Equals(im)))
+            .Where(m => m != null && !m.IsOverride)
+            .ToList();
+
+        if(notOverrideMethods.Any())
+        {
+            throw new InvalidAttributeDomain($"The following interface methods are implemented but not marked as override: {string.Join(", ", notOverrideMethods.Select(m => m.ToString()))}");
         }
 
         Implements = value;

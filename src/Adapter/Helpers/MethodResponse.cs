@@ -30,25 +30,25 @@ public class MethodResponseMapper
                 Id = p.Id,
                 Name = p.Name,
                 MethodId = p.RelatedMethodId,
-                ClassTypeId = p.TypeId
+                ReferenceId = p.ReferenceId
             }).ToList(),
             Variables = domainMethod.LocalVariables?.Select(v => new VariableResponse
             {
                 Id = v.Id,
                 Name = v.Name,
                 MethodId = v.RelatedMethodId,
-                ClassTypeId = v.TypeId
+                ReferenceId = v.ReferenceId
             }).ToList() ?? [],
             Invocations = domainMethod.Invocations?.Select(i => new InvocationResponse
             {
                 Id = i.Id,
                 IdReference = i.Reference.GetReferenceId(),
                 MethodName = i.Signature.Name,
-                Parameters = i.Signature.Parameters?.Select(p => new ParameterResponse
+                Parameters = i.Signature.Parameters?.Select(p => new ParameterSignatureResponse
                 {
-                    Id = p.Id,
                     Name = p.Name,
-                    ClassTypeId = p.TypeId
+                    ReferenceId = p.ReferenceId,
+                    InstanceId = p.InstanceId
                 }).ToList() ?? []
             }).ToList() ?? []
         };
