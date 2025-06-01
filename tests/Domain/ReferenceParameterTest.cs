@@ -10,7 +10,7 @@ public class ReferenceParameterTest
     public void TestGetSimClass_ShouldReturnParameterType()
     {
         var simClass = new SimClass { Name = "TestClass" };
-        var parameter = new Parameter { Type = simClass, Name = "Param" };
+        var parameter = new Parameter { Reference = simClass, Name = "Param" };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var result = referenceParameter.GetReferenceClass();
@@ -42,7 +42,7 @@ public class ReferenceParameterTest
                 new ParameterSignature { Name = "param2" }
             ]
         };
-        var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Type = new SimClass { Name = "TestClass" }, Name = "Param" } };
+        var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Reference = new SimClass { Name = "TestClass" }, Name = "Param" } };
 
         var result = referenceParameter.GetSignature(signature);
 
@@ -62,7 +62,7 @@ public class ReferenceParameterTest
             ]
         };
         var simClass = new SimClass { Name = "MyClass" };
-        var parameter = new Parameter { Type = simClass, Name = "Param" };
+        var parameter = new Parameter { Reference = simClass, Name = "Param" };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var result = referenceParameter.GetSignatureWithClassName(signature);
@@ -78,7 +78,7 @@ public class ReferenceParameterTest
         {
             Id = expectedId,
             Name = "Param",
-            Type = new SimClass { Name = "TestClass" }
+            Reference = new SimClass { Name = "TestClass" }
         };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
@@ -92,7 +92,7 @@ public class ReferenceParameterTest
     {
         var expectedInstance = new SimClass { Name = "InstanceClass" };
         var typeClass = new SimClass { Name = "TypeClass" };
-        var parameter = new Parameter { Name = "param1", Index = 0, Type = typeClass };
+        var parameter = new Parameter { Name = "param1", Index = 0, Reference = typeClass };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var signature = new Signature
@@ -112,7 +112,7 @@ public class ReferenceParameterTest
     public void GetInstanceClass_ShouldReturnReferenceType_WhenParameterIndexNotFound()
     {
         var typeClass = new SimClass { Name = "TypeClass" };
-        var parameter = new Parameter { Name = "param1", Index = 1, Type = typeClass };
+        var parameter = new Parameter { Name = "param1", Index = 1, Reference = typeClass };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
         var signature = new Signature

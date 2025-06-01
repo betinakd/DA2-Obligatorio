@@ -13,6 +13,11 @@ public class SimClassResponseMapper
         {
             Id = domainClass.Id,
             Name = domainClass.Name,
+            BaseNamespace = new NamespaceResponse
+            {
+                Id = domainClass.Namespace.Id,
+                Name = domainClass.Namespace.Name,
+            },
             State = EnumMapper.MapToModelAccesibility(domainClass.State),
             IdBaseClass = domainClass.BaseClassId,
             Methods = domainClass.Methods.Select(m => new MethodResponse
@@ -28,7 +33,7 @@ public class SimClassResponseMapper
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    ReferenceId = p.TypeId,
+                    ReferenceId = p.ReferenceId,
                     MethodId = p.RelatedMethodId
                 }).ToList(),
                 Variables = m.LocalVariables.Select(v => new VariableResponse
@@ -79,7 +84,7 @@ public class SimClassResponseMapper
                     {
                         Id = p.Id,
                         Name = p.Name,
-                        ReferenceId = p.TypeId,
+                        ReferenceId = p.ReferenceId,
                         MethodId = p.RelatedMethodId
                     }).ToList()
                 }).ToList()

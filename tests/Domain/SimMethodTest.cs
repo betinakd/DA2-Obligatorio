@@ -18,8 +18,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new Parameter { Name = "param1", TypeId = intType.Id, Type = intType },
-                new Parameter { Name = "param2", TypeId = stringType.Id, Type = stringType }
+                new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
+                new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
             ]
         };
 
@@ -48,7 +48,7 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new Parameter { Name = "param1", TypeId = intType.Id, Type = intType }
+                new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType }
             ]
         };
 
@@ -77,8 +77,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new Parameter { Name = "param1", TypeId = intType.Id, Type = intType },
-                new Parameter { Name = "param2", TypeId = stringType.Id, Type = stringType }
+                new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
+                new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
             ]
         };
 
@@ -108,8 +108,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new Parameter { Name = "param1", TypeId = intType.Id, Type = intType },
-                new Parameter { Name = "param2", TypeId = stringType.Id, Type = stringType }
+                new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
+                new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
             ]
         };
 
@@ -139,8 +139,8 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters =
             [
-                new Parameter { Name = "param1", TypeId = intType.Id, Type = intType },
-                new Parameter { Name = "param2", TypeId = stringType.Id, Type = stringType }
+                new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
+                new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
             ]
         };
 
@@ -213,15 +213,15 @@ public class SimMethodTest
         var method1 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", TypeId = typeId }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId }]
         };
 
         var method2 = new SimMethod
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", TypeId = typeId },
-                new Parameter { Name = "param2", TypeId = typeId }
+                new Parameter { Name = "param1", ReferenceId = typeId },
+                new Parameter { Name = "param2", ReferenceId = typeId }
             ]
         };
 
@@ -238,13 +238,13 @@ public class SimMethodTest
         var method1 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", TypeId = typeId }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId }]
         };
 
         var method2 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "differentParam", TypeId = typeId }]
+            Parameters = [new Parameter { Name = "differentParam", ReferenceId = typeId }]
         };
 
         var result = method1.Equals(method2);
@@ -261,13 +261,13 @@ public class SimMethodTest
         var method1 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", TypeId = typeId1 }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId1 }]
         };
 
         var method2 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", TypeId = typeId2 }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId2 }]
         };
 
         var result = method1.Equals(method2);
@@ -285,7 +285,7 @@ public class SimMethodTest
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", TypeId = typeId1 }
+                new Parameter { Name = "param1", ReferenceId = typeId1 }
             ]
         };
 
@@ -293,7 +293,7 @@ public class SimMethodTest
         {
             Name = "TestMethod",
             Parameters = [
-                new Parameter { Name = "param1", TypeId = typeId2 }
+                new Parameter { Name = "param1", ReferenceId = typeId2 }
             ]
         };
 
@@ -368,7 +368,7 @@ public class SimMethodTest
         };
         var parameters = new List<Parameter>
     {
-        new Parameter { Name = "param1", TypeId = Guid.NewGuid() }
+        new Parameter { Name = "param1", ReferenceId = Guid.NewGuid() }
     };
 
         method.Parameters = parameters;
@@ -466,7 +466,7 @@ public class SimMethodTest
             ReturnTypeId = Guid.NewGuid(),
             Parameters =
         [
-            new Parameter { Name = "param1", TypeId = paramTypeId }
+            new Parameter { Name = "param1", ReferenceId = paramTypeId }
         ]
         };
 
@@ -476,7 +476,7 @@ public class SimMethodTest
             ReturnTypeId = Guid.NewGuid(),
             Parameters =
         [
-            new Parameter { Name = "differentParamName", TypeId = paramTypeId }
+            new Parameter { Name = "differentParamName", ReferenceId = paramTypeId }
         ]
         };
 
@@ -501,10 +501,10 @@ public class SimMethodTest
         staticMethod.Invocations =
         [
             new Invocation
-        {
-            RelatedMethodId = Guid.NewGuid(),
-            Reference = nonStaticReference
-        }
+            {
+                RelatedMethodId = Guid.NewGuid(),
+                Reference = nonStaticReference
+            }
 
         ];
     }
@@ -522,10 +522,10 @@ public class SimMethodTest
         staticMethod.Invocations =
         [
             new Invocation
-        {
-            RelatedMethodId = Guid.NewGuid(),
-            Reference = staticReference
-        }
+            {
+                RelatedMethodId = Guid.NewGuid(),
+                Reference = staticReference
+            }
 
         ];
 
@@ -819,8 +819,8 @@ public class SimMethodTest
 
         var parameters = new List<Parameter>
     {
-        new Parameter { Name = "param1", TypeId = typeId },
-        new Parameter { Name = "Param1", TypeId = typeId } // Duplicado (case-insensitive)
+        new Parameter { Name = "param1", ReferenceId = typeId },
+        new Parameter { Name = "Param1", ReferenceId = typeId } // Duplicado (case-insensitive)
     };
 
         method.Parameters = parameters;

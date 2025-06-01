@@ -6,6 +6,6 @@ namespace IAdapter;
 public interface IExecutionAdapter
 {
     string ExecuteMethod(MethodExecutionRequest request);
-    TransformedResponse ExecuteMethodWithTransform(Guid apiKey, MethodExecutionRequest request, string transformerId = null);
+    TransformedResponse ExecuteMethodWithTransform(MethodExecutionRequest request, string transformerId);
     public bool IsAuthorizedUser(Guid apiKey);
 }

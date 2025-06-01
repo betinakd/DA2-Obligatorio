@@ -111,7 +111,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
     {
         var methodsClass = _context.SimMethods
             .Include(m => m.Parameters)
-                .ThenInclude(p => p.Type)
+                .ThenInclude(p => p.Reference)
             .Where(a => a.RelatedClassId == idClass)
             .Include(m => m.ReturnType)
             .ToList();
@@ -161,7 +161,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             switch(invocation.Reference)
             {
                 case ReferenceParameter rp:
-                    _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                    _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Reference).Load();
                     break;
                 case ReferenceVariable rv:
                     _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Include(b => b.Instance).Load();
@@ -194,7 +194,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(a => a.RelatedClass)
             .Include(b => b.ReturnType)
             .Include(m => m.Parameters)
-                .ThenInclude(p => p.Type)
+                .ThenInclude(p => p.Reference)
             .Include(m => m.Invocations)
                 .ThenInclude(i => i.Signature)
                     .ThenInclude(s => s.Parameters)
@@ -220,7 +220,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
                 switch(inv.Reference)
                 {
                     case ReferenceParameter rp:
-                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Reference).Load();
                         break;
                     case ReferenceVariable rv:
                         _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Include(b => b.Instance).Load();
@@ -251,7 +251,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
     {
         var parameter = _context.Parameters
             .Where(p => p.Id == id)
-            .Include(p => p.Type)
+            .Include(p => p.Reference)
             .Include(p => p.RelatedMethod)
             .FirstOrDefault();
         return parameter;

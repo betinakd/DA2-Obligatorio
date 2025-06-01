@@ -194,7 +194,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
     {
         foreach(var parameter in method.Parameters)
         {
-            if(_simClassDA.ClassInheritAttribute(parameter.TypeId, attribute.Id))
+            if(_simClassDA.ClassInheritAttribute(parameter.ReferenceId, attribute.Id))
             {
                 return;
             }

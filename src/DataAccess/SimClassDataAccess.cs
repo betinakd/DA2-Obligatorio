@@ -78,6 +78,9 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                 .State = EntityState.Deleted;
         }
 
+        simClass.NamespaceId = null;
+        simClass.Namespace = null;
+
         _context.SimClasses.Remove(simClass);
         _context.SaveChanges();
     }
@@ -99,7 +102,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                 .ThenInclude(a => a.Reference)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.Parameters)
-                    .ThenInclude(p => p.Type)
+                    .ThenInclude(p => p.Reference)
             .Include(c => c.Methods)
                 .ThenInclude(m => m.ReturnType)
             .Include(c => c.Methods)
@@ -117,7 +120,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             .Include(c => c.Implements)
                 .ThenInclude(i => i.Methods)
                     .ThenInclude(m => m.Parameters)
-                        .ThenInclude(p => p.Type)
+                        .ThenInclude(p => p.Reference)
             .AsSplitQuery()
             .ToList();
 
@@ -151,7 +154,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                     switch(inv.Reference)
                     {
                         case ReferenceParameter rp:
-                            _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                            _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Reference).Load();
                             break;
                         case ReferenceVariable rv:
                             _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
@@ -179,11 +182,11 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             .Where(c => c.Id == id)
             .Include(c => c.BaseClass)
             .Include(c => c.Attributes).ThenInclude(a => a.Reference)
-            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.LocalVariables).ThenInclude(v => v.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)
-            .Include(c => c.Implements).ThenInclude(i => i.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Implements).ThenInclude(i => i.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.ReturnType)
             .AsSplitQuery()
             .FirstOrDefault();
@@ -215,7 +218,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
                 switch(inv.Reference)
                 {
                     case ReferenceParameter rp:
-                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                        _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Reference).Load();
                         break;
                     case ReferenceVariable rv:
                         _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Load();
@@ -246,7 +249,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
     {
         var baseClass = _context.SimClasses.Any(c => c.BaseClassId == id);
         var typeAttribute = _context.SimAttributes.Any(a => a.ReferenceId == id && a.RelatedClassId != id);
-        var typeParameter = _context.Parameters.Any(p => p.TypeId == id);
+        var typeParameter = _context.Parameters.Any(p => p.ReferenceId == id);
         var typeLocalVar = _context.LocalVariables.Any(v => v.ReferenceId == id);
         var parameter = _context.ParameterSignatures.Any(p => p.ReferenceId == id);
         var method = _context.SimMethods.Any(m => m.ReturnTypeId == id);

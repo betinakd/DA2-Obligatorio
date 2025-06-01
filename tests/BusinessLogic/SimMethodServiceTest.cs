@@ -381,7 +381,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -401,7 +401,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -423,7 +423,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -736,7 +736,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Type = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" }
         };
 
         _mockSimMethodDataAccess!
@@ -1135,12 +1135,12 @@ public class SimMethodServiceTest
             RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
             Parameters = [
                 new Parameter
-            {
-                Id = Guid.NewGuid(),
-                Name = "param1",
-                TypeId = parameterTypeId,
-                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "param1",
+                    ReferenceId = parameterTypeId,
+                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                }
 
             ],
             LocalVariables = [
@@ -1215,12 +1215,12 @@ public class SimMethodServiceTest
             RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
             Parameters = [
                 new Parameter
-            {
-                Id = Guid.NewGuid(),
-                Name = "param1",
-                TypeId = parameterTypeId,
-                Type = new SimClass { Id = parameterTypeId, Name = "ParamType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "param1",
+                    ReferenceId = parameterTypeId,
+                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                }
 
             ],
             LocalVariables = []

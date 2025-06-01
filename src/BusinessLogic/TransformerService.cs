@@ -16,17 +16,13 @@ public class TransformerService : ITransformerService
 
     public IEnumerable<TransformerInfo> GetAvailableTransformers()
     {
+        LoadTransformers();
         return _transformers.Select(t => new TransformerInfo
         {
             Id = t.Id,
             Name = t.Name,
             ContentType = t.ContentType
         });
-    }
-
-    public IResponseTransformer GetTransformerById(string id)
-    {
-        return _transformers.FirstOrDefault(t => t.Id == id);
     }
 
     public void LoadTransformers()

@@ -30,7 +30,7 @@ public class MethodResponseMapper
                 Id = p.Id,
                 Name = p.Name,
                 MethodId = p.RelatedMethodId,
-                ReferenceId = p.TypeId
+                ReferenceId = p.ReferenceId
             }).ToList(),
             Variables = domainMethod.LocalVariables?.Select(v => new VariableResponse
             {

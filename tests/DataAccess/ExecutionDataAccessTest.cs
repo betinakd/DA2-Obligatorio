@@ -63,8 +63,8 @@ public class ExecutionDataAccessTest
         var parameter = new Parameter
         {
             Name = "param1",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod
         };
@@ -628,8 +628,8 @@ public class ExecutionDataAccessTest
         var methodParameter = new Parameter
         {
             Name = "methodParam",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             Index = 1
         };
 
@@ -646,8 +646,8 @@ public class ExecutionDataAccessTest
         var invocationParameter = new Parameter
         {
             Name = "invocationParam",
-            TypeId = intType.Id,
-            Type = intType,
+            ReferenceId = intType.Id,
+            Reference = intType,
             Index = 0
         };
 
@@ -682,8 +682,8 @@ public class ExecutionDataAccessTest
         result.Invocations[0].Reference.Should().BeOfType<ReferenceParameter>();
         var refParam = result.Invocations[0].Reference as ReferenceParameter;
         refParam.Reference.Should().NotBeNull();
-        refParam.Reference.Type.Should().NotBeNull();
-        refParam.Reference.Type.Name.Should().Be("int");
+        refParam.Reference.Reference.Should().NotBeNull();
+        refParam.Reference.Reference.Name.Should().Be("int");
     }
 
     [TestMethod]

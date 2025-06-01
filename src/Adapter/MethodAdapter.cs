@@ -64,8 +64,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 {
                     Id = Guid.NewGuid(),
                     Name = parameter.Name,
-                    Type = type,
-                    TypeId = type.Id,
+                    Reference = type,
+                    ReferenceId = type.Id,
                     RelatedMethod = newMethod,
                     RelatedMethodId = newMethod.Id,
                     Index = index
@@ -197,10 +197,10 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             {
                 Id = Guid.NewGuid(),
                 Name = parameter.Name,
-                Type = type,
+                Reference = type,
                 RelatedMethod = method,
                 RelatedMethodId = idMethod,
-                TypeId = type.Id,
+                ReferenceId = type.Id,
             };
             var newAttribute = _methodService.AddMethodParameter(idMethod, parameterMethod);
             var response = new CreatedParameterResponse
@@ -211,7 +211,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                     Id = newAttribute.Id,
                     Name = newAttribute.Name,
                     MethodId = newAttribute.RelatedMethod.Id,
-                    ReferenceId = newAttribute.Type.Id
+                    ReferenceId = newAttribute.Reference.Id
                 }
             };
             return response;

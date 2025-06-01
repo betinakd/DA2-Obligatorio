@@ -133,7 +133,7 @@ public class SimClassDataAccessTest
         var parameter = new Parameter
         {
             Id = Guid.NewGuid(),
-            TypeId = typeId,
+            ReferenceId = typeId,
             Name = "Test Parameter"
         };
 
@@ -407,8 +407,8 @@ public class SimClassDataAccessTest
             Name = "param1",
             Index = 2,
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param2 = new Parameter
         {
@@ -416,8 +416,8 @@ public class SimClassDataAccessTest
             Name = "param2",
             Index = 1,
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param3 = new Parameter
         {
@@ -425,8 +425,8 @@ public class SimClassDataAccessTest
             Name = "param3",
             Index = 0,
             RelatedMethodId = methodId,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.Parameters.AddRange(param1, param2, param3);
 
@@ -533,8 +533,8 @@ public class SimClassDataAccessTest
             Name = "param1",
             Index = 2,
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param2 = new Parameter
         {
@@ -542,8 +542,8 @@ public class SimClassDataAccessTest
             Name = "param2",
             Index = 0,
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         var param3 = new Parameter
         {
@@ -551,8 +551,8 @@ public class SimClassDataAccessTest
             Name = "param3",
             Index = 1,
             RelatedMethodId = methodId1,
-            TypeId = typeId,
-            Type = typeClass
+            ReferenceId = typeId,
+            Reference = typeClass
         };
         _context.Parameters.AddRange(param1, param2, param3);
 

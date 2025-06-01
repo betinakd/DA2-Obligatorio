@@ -25,7 +25,7 @@ public class ParameterTest
         _ = new Parameter()
         {
             Name = " ",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 
@@ -36,7 +36,7 @@ public class ParameterTest
         _ = new Parameter()
         {
             Name = "Invalid@Name",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 
@@ -47,7 +47,7 @@ public class ParameterTest
         _ = new Parameter()
         {
             Name = "123456",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 
@@ -58,7 +58,7 @@ public class ParameterTest
         _ = new Parameter()
         {
             Name = "class",
-            Type = simObject,
+            Reference = simObject,
         };
     }
 }

@@ -233,7 +233,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         switch(inv.Reference)
         {
             case ReferenceParameter rp:
-                _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Type).Load();
+                _context.Entry(rp).Reference(r => r.Reference).Query().Include(p => p.Reference).Load();
                 break;
             case ReferenceVariable rv:
                 _context.Entry(rv).Reference(r => r.Reference).Query().Include(v => v.Reference).Include(b => b.Instance).Load();
@@ -259,7 +259,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     private List<SimMethod> GetFilteredMethods(Func<IQueryable<SimMethod>, IQueryable<SimMethod>> filter)
     {
         var query = _context.SimMethods
-            .Include(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(m => m.Parameters).ThenInclude(p => p.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Reference)
             .Include(m => m.Invocations).ThenInclude(i => i.Signature)
                 .ThenInclude(s => s.Parameters)
@@ -284,7 +284,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
     {
         var query = _context.SimClasses
             .Include(c => c.BaseClass)
-            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Type)
+            .Include(c => c.Methods).ThenInclude(m => m.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Signature)
                 .ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
             .Include(c => c.Methods).ThenInclude(m => m.Invocations).ThenInclude(i => i.Reference)

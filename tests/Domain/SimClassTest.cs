@@ -200,22 +200,22 @@ public class SimClassTest
             [
                 new SimMethod
                 {
-                Name = "AbstractMethod1",
-                Accesibility = SimAccesibility.Abstract,
-                ReturnType = voidType,
-                ReturnTypeId = voidType.Id,
-                Parameters = [],
-                Privacity = SimPrivacity.Public
-            },
-            new SimMethod
-            {
-                Name = "AbstractMethod2",
-                Accesibility = SimAccesibility.Abstract,
-                ReturnType = voidType,
-                ReturnTypeId = voidType.Id,
-                Parameters = [],
-                Privacity = SimPrivacity.Public
-            }
+                    Name = "AbstractMethod1",
+                    Accesibility = SimAccesibility.Abstract,
+                    ReturnType = voidType,
+                    ReturnTypeId = voidType.Id,
+                    Parameters = [],
+                    Privacity = SimPrivacity.Public
+                },
+                new SimMethod
+                {
+                    Name = "AbstractMethod2",
+                    Accesibility = SimAccesibility.Abstract,
+                    ReturnType = voidType,
+                    ReturnTypeId = voidType.Id,
+                    Parameters = [],
+                    Privacity = SimPrivacity.Public
+                }
 
             ]
         };
@@ -230,13 +230,13 @@ public class SimClassTest
             [
                 new SimMethod
                 {
-                Name = "AbstractMethod1",
-                Accesibility = SimAccesibility.Normal,
-                ReturnType = voidType,
-                ReturnTypeId = voidType.Id,
-                Parameters = [],
-                Privacity = SimPrivacity.Public
-            }
+                    Name = "AbstractMethod1",
+                    Accesibility = SimAccesibility.Normal,
+                    ReturnType = voidType,
+                    ReturnTypeId = voidType.Id,
+                    Parameters = [],
+                    Privacity = SimPrivacity.Public
+                }
 
             ]
         };
@@ -364,7 +364,7 @@ public class SimClassTest
         simClass.Methods =
         [
             new SimMethod { Name = "NormalMethod", Accesibility = SimAccesibility.Normal },
-        new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface }
+            new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface }
         ];
     }
 
@@ -613,22 +613,22 @@ public class SimClassTest
             [
                 new SimMethod
                 {
-                Name = "Method1",
-                Accesibility = SimAccesibility.Interface,
-                ReturnType = voidType,
-                ReturnTypeId = voidType.Id,
-                Parameters = [],
-                Privacity = SimPrivacity.Public
-            },
-            new SimMethod
-            {
-                Name = "Method2",
-                Accesibility = SimAccesibility.Interface,
-                ReturnType = voidType,
-                ReturnTypeId = voidType.Id,
-                Parameters = [],
-                Privacity = SimPrivacity.Public
-            }
+                    Name = "Method1",
+                    Accesibility = SimAccesibility.Interface,
+                    ReturnType = voidType,
+                    ReturnTypeId = voidType.Id,
+                    Parameters = [],
+                    Privacity = SimPrivacity.Public
+                },
+                new SimMethod
+                {
+                    Name = "Method2",
+                    Accesibility = SimAccesibility.Interface,
+                    ReturnType = voidType,
+                    ReturnTypeId = voidType.Id,
+                    Parameters = [],
+                    Privacity = SimPrivacity.Public
+                }
 
             ]
         };
@@ -643,13 +643,13 @@ public class SimClassTest
             [
                 new SimMethod
                 {
-                Name = "Method1",
-                Accesibility = SimAccesibility.Normal,
-                ReturnType = voidType,
-                ReturnTypeId = voidType.Id,
-                Parameters = [],
-                Privacity = SimPrivacity.Public
-            }
+                    Name = "Method1",
+                    Accesibility = SimAccesibility.Normal,
+                    ReturnType = voidType,
+                    ReturnTypeId = voidType.Id,
+                    Parameters = [],
+                    Privacity = SimPrivacity.Public
+                }
 
             ]
         };
@@ -667,7 +667,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface },
-            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface }
+                new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface }
             ]
         };
 
@@ -677,7 +677,7 @@ public class SimClassTest
             State = SimAccesibility.Normal,
             Methods =
             [
-                new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true },
+            new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true },
             new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = true },
             new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal, IsOverride = true }
             ]
@@ -754,7 +754,7 @@ public class SimClassTest
         simClass.Methods =
         [
             new SimMethod { Name = "InterfaceMethod", Accesibility = SimAccesibility.Interface },
-        new SimMethod { Name = "StaticMethod", Accesibility = SimAccesibility.Interface, IsStatic = true }
+            new SimMethod { Name = "StaticMethod", Accesibility = SimAccesibility.Interface, IsStatic = true }
         ];
     }
 

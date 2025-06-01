@@ -50,7 +50,7 @@ public class MethodAdapterTest
         {
             Id = Guid.NewGuid(),
             Name = parameterName,
-            Type = simClass,
+            Reference = simClass,
             RelatedMethod = method
         };
 
@@ -177,8 +177,8 @@ public class MethodAdapterTest
         {
             Id = parameterId,
             Name = "param1",
-            Type = simClass,
-            TypeId = classTypeId,
+            Reference = simClass,
+            ReferenceId = classTypeId,
             RelatedMethod = method,
             RelatedMethodId = methodId
         };
@@ -985,7 +985,7 @@ public class MethodAdapterTest
         {
             Id = parameterId,
             Name = "testParam",
-            Type = parameterType,
+            Reference = parameterType,
             RelatedMethodId = methodId
         };
 
@@ -1065,7 +1065,7 @@ public class MethodAdapterTest
         {
             Id = parameterId,
             Name = "testParam",
-            Type = parameterType,
+            Reference = parameterType,
             RelatedMethodId = differentMethodId
         };
 
@@ -1402,8 +1402,8 @@ public class MethodAdapterTest
             {
                 Id = Guid.NewGuid(),
                 Name = parameterName,
-                Type = paramType,
-                TypeId = paramTypeId,
+                Reference = paramType,
+                ReferenceId = paramTypeId,
                 Index = 0
             }
 
