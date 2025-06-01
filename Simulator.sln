@@ -3,33 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4D065489-2749-4753-AC08-E0A87B497A49}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{4D065489-2749-4753-AC08-E0A87B497A49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{B5920205-EBD3-47B8-826B-B749C3333201}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "backend\src\Domain\Domain.csproj", "{B5920205-EBD3-47B8-826B-B749C3333201}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBusinessLogic", "src\IBusinessLogic\IBusinessLogic.csproj", "{8826BE24-83D9-4063-982E-88DC36CD6CBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBusinessLogic", "backend\src\IBusinessLogic\IBusinessLogic.csproj", "{8826BE24-83D9-4063-982E-88DC36CD6CBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "src\Models\Models.csproj", "{46C4BE04-396C-4AD4-BF34-D1E59DA334F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "backend\src\Models\Models.csproj", "{46C4BE04-396C-4AD4-BF34-D1E59DA334F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{881BA8AE-B0E2-486E-88A1-00643F2FDBA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\WebApi\WebApi.csproj", "{4102D8A9-FE44-4B1F-89FA-1A80D566C05A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "backend\src\WebApi\WebApi.csproj", "{4102D8A9-FE44-4B1F-89FA-1A80D566C05A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "tests\Tests.csproj", "{A659707F-40F4-4A16-BBDF-E536B6ECDFAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "backend\tests\Tests.csproj", "{A659707F-40F4-4A16-BBDF-E536B6ECDFAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adapter", "src\Adapter\Adapter.csproj", "{58A69A48-97E4-49EA-A51D-D6039F41D95D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adapter", "backend\src\Adapter\Adapter.csproj", "{58A69A48-97E4-49EA-A51D-D6039F41D95D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAdapter", "src\IAdapter\IAdapter.csproj", "{0312520B-E508-45DF-9B66-1B14F5A05B85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAdapter", "backend\src\IAdapter\IAdapter.csproj", "{0312520B-E508-45DF-9B66-1B14F5A05B85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDataAccess", "src\IDataAccess\IDataAccess.csproj", "{C5FD91A0-E80F-437B-8E10-B8C9B8913928}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDataAccess", "backend\src\IDataAccess\IDataAccess.csproj", "{C5FD91A0-E80F-437B-8E10-B8C9B8913928}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "src\BusinessLogic\BusinessLogic.csproj", "{5B39BD9D-B9B3-444D-9CD6-433EA9ADF24F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "backend\src\BusinessLogic\BusinessLogic.csproj", "{5B39BD9D-B9B3-444D-9CD6-433EA9ADF24F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "src\DataAccess\DataAccess.csproj", "{20D7AD08-A82B-4A6A-8382-23C62CF490F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "backend\src\DataAccess\DataAccess.csproj", "{20D7AD08-A82B-4A6A-8382-23C62CF490F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFactory", "src\ServiceFactory\ServiceFactory.csproj", "{1DCBCD9F-0EC4-429F-B507-FD186DD0F419}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFactory", "backend\src\ServiceFactory\ServiceFactory.csproj", "{1DCBCD9F-0EC4-429F-B507-FD186DD0F419}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformers.Abstractions", "src\Transformers.Abstractions\Transformers.Abstractions.csproj", "{9C0728C0-1151-4905-A917-3C2E463D5724}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformers.Abstractions", "backend\src\Transformers.Abstractions\Transformers.Abstractions.csproj", "{9C0728C0-1151-4905-A917-3C2E463D5724}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
