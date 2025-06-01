@@ -22,7 +22,6 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
             {
                 var baseName = _namespaceService.GetNamespaceById(namespaceRequest.BaseNamespaceId);
                 response.BaseNamespaceId = newNamespace.BaseNamespaceId;
-                response.BaseNamespaceName = baseName.Name;
             }
 
             return response;
@@ -41,17 +40,13 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
     {
         try
         {
-            var @namespace = _namespaceService.GetNamespaceById(id);
+            var simNamespace = _namespaceService.GetNamespaceById(id);
             var classes = _simClassService.GetClassesOfNamespaces(id);
             var response = new NamespaceResponse
             {
-                Id = @namespace.Id,
-                Name = @namespace.Name,
-                BaseNamespaceId = @namespace.BaseNamespaceId,
-                BaseNamespaceName =
-                    @namespace.BaseNamespaceId != null
-                        ? _namespaceService.GetNamespaceById(@namespace.BaseNamespaceId.Value).Name
-                        : null,
+                Id = simNamespace.Id,
+                Name = simNamespace.Name,
+                BaseNamespaceId = simNamespace.BaseNamespaceId,
                 Elements = MapClassesToResponses(classes)
             };
 
@@ -75,9 +70,6 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
                 Id = n.Id,
                 Name = n.Name,
                 BaseNamespaceId = n.BaseNamespaceId,
-                BaseNamespaceName = n.BaseNamespaceId != null
-                    ? _namespaceService.GetNamespaceById(n.BaseNamespaceId.Value).Name
-                    : null,
                 Elements = MapClassesToResponses(_simClassService.GetClassesOfNamespaces(n.Id))
             }).ToList();
     }

@@ -33,10 +33,12 @@ public class SimClassAdapterTest
     [TestMethod]
     public void GetAllSimClasses_ShouldReturnListOfSimClassResponses()
     {
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceB", BaseNamespaceId = null };
+
         var simClasses = new List<SimClass>
         {
-            new SimClass { Id = Guid.NewGuid(), Name = "ClassA" },
-            new SimClass { Id = Guid.NewGuid(), Name = "ClassB" }
+            new SimClass { Id = Guid.NewGuid(), Name = "ClassA", Namespace = simNamespace, NamespaceId = simNamespace.Id },
+            new SimClass { Id = Guid.NewGuid(), Name = "ClassB", Namespace = simNamespace, NamespaceId = simNamespace.Id }
         };
 
         _mockSimClassService
@@ -108,7 +110,9 @@ public class SimClassAdapterTest
     public void GetExistentClass_ShouldReturnSimClassResponse()
     {
         var simClassId = Guid.NewGuid();
-        var simClass = new SimClass { Id = simClassId, Name = "ExistingClass" };
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceB", BaseNamespaceId = null };
+
+        var simClass = new SimClass { Id = simClassId, Name = "ExistingClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
         var simClassResponse = new SimClassResponse() { Id = simClass.Id, Name = simClass.Name, State = SimModelsAccesibility.Normal };
 
         _mockSimClassService
@@ -396,6 +400,8 @@ public class SimClassAdapterTest
         var instanceId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
 
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceA" };
+
         var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
@@ -429,11 +435,22 @@ public class SimClassAdapterTest
             ]
         };
 
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
-        var objectClass = new SimClass { Id = objTypeId, Name = "Object" };
-        var typeClass = new SimClass { Id = typeId, Name = "TypeClass" };
-        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass" };
-        var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal, Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var objectClass = new SimClass { Id = objTypeId, Name = "Object", Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
+
+        var updatedClass = new SimClass
+        {
+            Id = classId,
+            Name = "UpdatedClass",
+            BaseClassId = baseClassId,
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+            Methods = [],
+            Attributes = [],
+            Implements = []
+        };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
         _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
@@ -462,8 +479,15 @@ public class SimClassAdapterTest
 
         _mockSimClassService
             .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
-            .Callback<SimClass>(c => updatedClass = c)
-            .Returns(updatedClass);
+            .Callback<SimClass>(c =>
+            {
+                c.Methods ??= [];
+                c.Attributes ??= [];
+                c.Implements ??= [];
+                c.Namespace ??= simNamespace;
+                updatedClass = c;
+            })
+            .Returns(() => updatedClass);
 
         var result = _simClassAdapter.UpdateSimClass(request, classId);
 
@@ -483,6 +507,18 @@ public class SimClassAdapterTest
         var classId = Guid.NewGuid();
         var objectId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceObject" };
+        var objectClass = new SimClass
+        {
+            Id = objectId,
+            Name = "Object",
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+            Methods = [],
+            Attributes = [],
+            Implements = []
+        };
+
         var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
@@ -492,10 +528,8 @@ public class SimClassAdapterTest
             Attributes = []
         };
 
-        var objectClass = new SimClass { Id = objectId, Name = "Object" };
-
-        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Default);
-        _mockMethodService = new Mock<IMethodService>(MockBehavior.Default);
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
         _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
@@ -503,12 +537,23 @@ public class SimClassAdapterTest
             .Returns(objectClass);
 
         _mockSimClassService
-            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()));
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Callback<SimClass>(c =>
+            {
+                c.Methods ??= [];
+                c.Attributes ??= [];
+                c.Implements ??= [];
+                c.Namespace ??= simNamespace;
+            })
+            .Returns((SimClass c) => c);
 
         var result = _simClassAdapter.UpdateSimClass(request, classId);
 
         Assert.IsNotNull(result);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
         _mockSimClassService.Verify(s => s.GetSimClassById(objectId), Times.Once);
+        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
     }
 
     [TestMethod]
@@ -519,6 +564,8 @@ public class SimClassAdapterTest
         var interfaceId1 = Guid.NewGuid();
         var interfaceId2 = Guid.NewGuid();
 
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceA" };
+
         var request = new SimClassRequestUpdate
         {
             Name = "UpdatedClass",
@@ -527,16 +574,27 @@ public class SimClassAdapterTest
             Methods = [],
             Attributes = [],
             Implements =
-        [
-            new InterfaceRequestUpdate { IdInterface = interfaceId1.ToString() },
+            [
+                new InterfaceRequestUpdate { IdInterface = interfaceId1.ToString() },
             new InterfaceRequestUpdate { IdInterface = interfaceId2.ToString() }
-        ]
+            ]
         };
 
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
-        var interfaceClass1 = new SimClass { Id = interfaceId1, Name = "Interface1", State = SimAccesibility.Interface };
-        var interfaceClass2 = new SimClass { Id = interfaceId2, Name = "Interface2", State = SimAccesibility.Interface };
-        var updatedClass = new SimClass { Id = classId, Name = "UpdatedClass", BaseClassId = baseClassId };
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal, Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var interfaceClass1 = new SimClass { Id = interfaceId1, Name = "Interface1", State = SimAccesibility.Interface, Namespace = simNamespace, NamespaceId = simNamespace.Id, Methods = [] };
+        var interfaceClass2 = new SimClass { Id = interfaceId2, Name = "Interface2", State = SimAccesibility.Interface, Namespace = simNamespace, NamespaceId = simNamespace.Id, Methods = [] };
+
+        var updatedClass = new SimClass
+        {
+            Id = classId,
+            Name = "UpdatedClass",
+            BaseClassId = baseClassId,
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+            Methods = [],
+            Attributes = [],
+            Implements = [interfaceClass1, interfaceClass2]
+        };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
         _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
@@ -556,6 +614,13 @@ public class SimClassAdapterTest
 
         _mockSimClassService
             .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Callback<SimClass>(c =>
+            {
+                c.Methods ??= [];
+                c.Attributes ??= [];
+                c.Implements ??= [interfaceClass1, interfaceClass2];
+                c.Namespace ??= simNamespace;
+            })
             .Returns(updatedClass);
 
         var result = _simClassAdapter.UpdateSimClass(request, classId);
@@ -607,11 +672,23 @@ public class SimClassAdapterTest
     {
         var classId = Guid.NewGuid();
         var interfaceId = Guid.NewGuid();
-        var simClass = new SimClass { Id = classId, Name = "UpdatedClass" };
+
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceA" };
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "UpdatedClass",
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+            Methods = [],
+            Attributes = [],
+            Implements = []
+        };
 
         var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
         _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
 
         _mockSimClassService
