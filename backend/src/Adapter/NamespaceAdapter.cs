@@ -19,7 +19,7 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
         {
             var newNamespace = _namespaceService.CreateNamespace(namespaceRequest);
             var response = new NamespaceResponse { Id = newNamespace.Id, Name = newNamespace.Name, };
-            if(namespaceRequest.BaseNamespaceId != null)
+            if(namespaceRequest.BaseNamespaceId != Guid.Empty)
             {
                 var baseName = _namespaceService.GetNamespaceById(namespaceRequest.BaseNamespaceId);
                 response.BaseNamespaceId = newNamespace.BaseNamespaceId;

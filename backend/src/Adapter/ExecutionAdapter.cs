@@ -19,10 +19,13 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
     {
         try
         {
+            var returnType = _simClassService.GetSimClassById(request.ReturnTypeId);
             var parameters = new List<ParameterSignature>();
             var signature = new Signature()
             {
-                Name = request.MethodName
+                Name = request.MethodName,
+                ReturnTypeId = returnType.Id,
+                ReturnType = returnType,
             };
 
             var index = 0;

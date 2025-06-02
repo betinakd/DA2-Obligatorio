@@ -17,7 +17,7 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
             throw new InvalidAttributeLogic("Namespace name cannot be empty.");
         }
 
-        if(simNamespace.BaseNamespaceId != null && !_namespaceDataAccess.NamespaceExistsById(simNamespace.BaseNamespaceId.Value))
+        if(simNamespace.BaseNamespaceId != null && !_namespaceDataAccess.NamespaceExistsById(simNamespace.BaseNamespaceId))
         {
             throw new NonExistentValueLogic("Base namespace does not exist.");
         }
