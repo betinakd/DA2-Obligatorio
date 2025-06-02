@@ -239,7 +239,8 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
             var signature = new Signature()
             {
                 Name = invocation.MethodName,
-                Parameters = []
+                Parameters = [],
+                ReturnTypeId = invocation.ReturnTypeId,
             };
 
             var parametersResponses = new List<ParameterRequest>();

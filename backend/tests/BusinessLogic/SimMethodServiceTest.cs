@@ -30,6 +30,15 @@ public class SimMethodServiceTest
     {
         var methodId = Guid.NewGuid();
         var invocation = new Invocation();
+        var returnTypeId = Guid.NewGuid();
+        invocation.Signature = new Signature
+        {
+            ReturnTypeId = returnTypeId,
+            Name = "TestInvocation",
+            Parameters = [],
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true); // Mock para ReturnTypeId
 
         _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(false);
 
@@ -42,15 +51,27 @@ public class SimMethodServiceTest
     public void AddInvocation_ShouldReturnInvocation_WhenMethodExists()
     {
         var methodId = Guid.NewGuid();
-        var newInvocation = new Invocation();
+        var returnTypeId = Guid.NewGuid();
+        var newInvocation = new Invocation
+        {
+            Signature = new Signature
+            {
+                ReturnTypeId = returnTypeId,
+                Name = "TestInvocation",
+                Parameters = [],
+            }
+        };
         var expectedInvocation = new Invocation();
 
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
         _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
         _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, newInvocation)).Returns(expectedInvocation);
 
         var result = _simMethodService!.AddInvocation(methodId, newInvocation);
 
         Assert.AreEqual(expectedInvocation, result);
+        _mockSimClassDataAccess.Verify(m => m.ExistSimClassById(returnTypeId), Times.Once);
+        _mockSimMethodDataAccess.Verify(m => m.ExistMethodById(methodId), Times.Once);
         _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, newInvocation), Times.Once);
     }
 
