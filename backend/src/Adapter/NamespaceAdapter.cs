@@ -17,7 +17,12 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
     {
         try
         {
-            var newNamespace = _namespaceService.CreateNamespace(namespaceRequest);
+            var simNamespace = new SimNamespace
+            {
+                Name = namespaceRequest.Name,
+                BaseNamespaceId = namespaceRequest.BaseNamespaceId != Guid.Empty ? namespaceRequest.BaseNamespaceId : null
+            };
+            var newNamespace = _namespaceService.CreateNamespace(simNamespace);
             var response = new NamespaceResponse { Id = newNamespace.Id, Name = newNamespace.Name, };
             if(namespaceRequest.BaseNamespaceId != Guid.Empty)
             {

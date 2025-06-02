@@ -144,4 +144,9 @@ public class NamespaceDataAccess(SimulatorDbContext context) : INamespaceDataAcc
 
         return namespaces;
     }
+
+    public bool NamespaceExistsByName(string name)
+    {
+        return _context.SimNamespaces.Any(c => c.Name == name);
+    }
 }
