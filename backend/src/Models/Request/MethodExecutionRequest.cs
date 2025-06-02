@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.Request;
+
 [ExcludeFromCodeCoverage]
 public class MethodExecutionRequest
 {
@@ -22,4 +23,9 @@ public class MethodExecutionRequest
 
     [JsonIgnore]
     public Guid InstanceTypeId => Guid.TryParse(IdInstanceType, out var guid) ? guid : Guid.Empty;
+    [JsonIgnore]
+    public Guid ReturnTypeId => Guid.TryParse(IdReturnType, out var guid) ? guid : Guid.Empty;
+
+    [Required(ErrorMessage = "IdReturnType is required and a Guid Type.")]
+    public string IdReturnType { get; set; } = string.Empty;
 }

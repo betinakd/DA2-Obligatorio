@@ -14,7 +14,7 @@ public class TransformerAdapterTest
         var expectedTransformers = new List<TransformerInfo>
             {
                 new TransformerInfo { Id = "test1", Name = "Test 1", ContentType = "text/plain" },
-                new TransformerInfo { Id = "test2", Name = "Test 2", ContentType = "text/html" }
+                new TransformerInfo { Id = "test2", Name = "Test 2", ContentType = "text/html" },
             };
 
         var mockTransformerService = new Mock<ITransformerService>();
@@ -54,7 +54,7 @@ public class TransformerAdapterTest
             AvailableTransformers =
                 [
                     new TransformerInfo { Id = transformerId, Name = "Test", ContentType = "text/html" }
-                ]
+                ],
         };
 
         var mockTransformerService = new Mock<ITransformerService>();
@@ -87,7 +87,7 @@ public class TransformerAdapterTest
             OriginalResult = executionResult,
             TransformedResult = "resultado transformado por defecto",
             ContentType = "text/plain",
-            TransformerId = defaultTransformerId
+            TransformerId = defaultTransformerId,
         };
 
         var mockTransformerService = new Mock<ITransformerService>();

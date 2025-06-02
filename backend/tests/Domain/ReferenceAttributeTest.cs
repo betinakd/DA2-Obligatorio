@@ -40,7 +40,7 @@ public class ReferenceAttributeTest
             [
                 new ParameterSignature { Name = "param1" },
                 new ParameterSignature { Name = "param2" }
-            ]
+            ],
         };
         var simClass = new SimClass { Name = "TestClass" };
         var attribute = new SimAttribute { Reference = simClass, Name = "Atri" };
@@ -60,7 +60,7 @@ public class ReferenceAttributeTest
             [
                 new ParameterSignature { Name = "x" },
                 new ParameterSignature { Name = "y" }
-            ]
+            ],
         };
         var simClass = new SimClass { Name = "MyClass" };
         var attribute = new SimAttribute { Reference = simClass, Name = "Attr" };
@@ -92,7 +92,7 @@ public class ReferenceAttributeTest
         {
             Reference = simClass,
             Name = "StaticAttr",
-            IsStatic = true
+            IsStatic = true,
         };
         var reference = new ReferenceAttribute();
 
@@ -108,11 +108,11 @@ public class ReferenceAttributeTest
         {
             Reference = simClass,
             Name = "Attr",
-            Instance = expectedInstance
+            Instance = expectedInstance,
         };
         var reference = new ReferenceAttribute
         {
-            Reference = attribute
+            Reference = attribute,
         };
 
         var signature = new Signature();

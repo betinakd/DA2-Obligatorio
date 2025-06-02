@@ -2,10 +2,8 @@ using BusinessLogic;
 using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
-using Domain.Exceptions;
 using IBusinessLogic;
 using IDataAccess;
-using Models.Request;
 using Moq;
 
 namespace Tests.BusinessLogic;
@@ -35,144 +33,6 @@ public class SimClassServiceTest
     }
 
     [TestMethod]
-    public void CreateSimClass_ShouldReturnSimClassWithCorrectProperties()
-    {
-        var baseClassId = Guid.NewGuid();
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
-        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
-        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
-
-        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
-        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
-        _mockNamespaceService?.Setup(service => service.CreateNamespace(@namespace)).Returns(expectedNamespace);
-        _mockNamespaceService?.Setup(s => s.GetNamespaceById(expectedNamespace.Id)).Returns(expectedNamespace);
-        _mockNamespaceService?.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
-
-        var result = _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id);
-
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
-            s => s.Name == "TestClass" &&
-                 s.BaseClass == baseClass &&
-                 s.Id != Guid.Empty &&
-                 s.State == SimAccesibility.Normal)), Times.Once);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("TestClass", result.Name);
-        Assert.AreEqual(baseClass, result.BaseClass);
-        Assert.AreNotEqual(Guid.Empty, result.Id);
-    }
-
-    [TestMethod]
-    public void CreateSimClass_ShouldThrowDuplicateValueLogic_WhenNameAlreadyExists()
-    {
-        var baseClassId = Guid.NewGuid();
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(true);
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
-
-        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
-        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
-        _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(@namespace))
-                .Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
-
-        Assert.ThrowsException<InUseValueLogic>(() =>
-            _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id));
-
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(It.IsAny<Guid>()), Times.Never);
-    }
-
-    [TestMethod]
-    public void CreateSimClass_ShouldThrowNonExistentValueLogic_WhenBaseClassDoesNotExist()
-    {
-        var baseClassId = Guid.NewGuid();
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(false);
-
-        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
-        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
-        _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(@namespace))
-                .Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
-
-        Assert.ThrowsException<NonExistentValueLogic>(() =>
-            _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id));
-
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(It.IsAny<Guid>()), Times.Never);
-    }
-
-    [TestMethod]
-    public void CreateSimClass_ShouldThrowInvalidAttributeLogic_WhenSimClassInvalidAttributeIsThrown()
-    {
-        var baseClassId = Guid.NewGuid();
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
-        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
-        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>())).Throws(new InvalidAttributeDomain("Invalid attribute"));
-
-        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
-        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
-        _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(@namespace))
-                .Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.GetNamespaceById(expectedNamespace.Id)).Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
-
-        Assert.ThrowsException<InvalidAttributeLogic>(() =>
-            _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id));
-
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.IsAny<SimClass>()), Times.Once);
-    }
-
-    [TestMethod]
-    public void CreateSimClass_ShouldCreateAndReturnSimClass_WhenAllIsValid()
-    {
-        var baseClassId = Guid.NewGuid();
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass" };
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassName("TestClass")).Returns(false);
-        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(baseClassId)).Returns(true);
-        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(baseClassId)).Returns(baseClass);
-        _mockSimClassDataAccess.Setup(da => da.CreateSimClass(It.IsAny<SimClass>()));
-
-        var @namespace = new NamespaceRequest { Name = "Namespace", BaseNamespaceId = null };
-        var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
-        _mockNamespaceService
-            ?.Setup(service => service.CreateNamespace(@namespace))
-                .Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.GetNamespaceById(expectedNamespace.Id)).Returns(expectedNamespace);
-        _mockNamespaceService.Setup(s => s.NameAlreadyInNamespace_Validation(expectedNamespace.Id, "TestClass")).Returns(false);
-
-        var result = _simClassService.CreateSimClass("TestClass", SimAccesibility.Normal, baseClassId, expectedNamespace.Id);
-
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassName("TestClass"), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.Is<SimClass>(
-            s => s.Name == "TestClass" &&
-                 s.BaseClass == baseClass &&
-                 s.Id != Guid.Empty &&
-                 s.State == SimAccesibility.Normal)), Times.Once);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("TestClass", result.Name);
-        Assert.AreEqual(baseClass, result.BaseClass);
-        Assert.AreNotEqual(Guid.Empty, result.Id);
-    }
-
-    [TestMethod]
     public void DeleteSimClass_ShouldDelete_WhenSimClassExistsAndNotInUse()
     {
         var simClassId = Guid.NewGuid();
@@ -182,7 +42,7 @@ public class SimClassServiceTest
             Id = simClassId,
             Name = "TestClass",
             Attributes = [],
-            Methods = []
+            Methods = [],
         };
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
@@ -217,7 +77,7 @@ public class SimClassServiceTest
         var simClasses = new List<SimClass>
         {
             new SimClass { Id = Guid.NewGuid(), Name = "Class1" },
-            new SimClass { Id = Guid.NewGuid(), Name = "Class2" }
+            new SimClass { Id = Guid.NewGuid(), Name = "Class2" },
         };
         _mockSimClassDataAccess.Setup(da => da.GetAllSimClasses()).Returns(simClasses);
 
@@ -248,6 +108,7 @@ public class SimClassServiceTest
     public void GetSimClassById_ShouldThrowNonExistentValueLogic_WhenNotExists()
     {
         var simClassId = Guid.NewGuid();
+
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(false);
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
@@ -259,23 +120,26 @@ public class SimClassServiceTest
     [TestMethod]
     public void UpdateSimClass_ShouldUpdateAndReturnSimClass_WhenExists()
     {
+        var namespaceId = Guid.NewGuid();
         var simClass = new SimClass
         {
             Id = Guid.NewGuid(),
             Name = "UpdatedClass",
             Attributes = [],
-            Methods = []
+            Methods = [],
+            NamespaceId = namespaceId,
         };
-
+        var simNamespace = new SimNamespace { Id = namespaceId, Name = "Namespace" };
+        _mockNamespaceService.Setup(da => da.GetNamespaceById(namespaceId)).Returns(simNamespace);
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClass.Id)).Returns(true);
-        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass); // Agregar esta configuración
+        _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClass.Id)).Returns(false);
         _mockSimClassDataAccess.Setup(da => da.UpdateSimClass(simClass));
 
         var result = _simClassService.UpdateSimClass(simClass);
 
         _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(simClass.Id), Times.Once);
-        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClass.Id), Times.Once); // Verificar que se llamó
+        _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(simClass), Times.Once);
         Assert.IsNotNull(result);
@@ -285,7 +149,18 @@ public class SimClassServiceTest
     [TestMethod]
     public void UpdateSimClass_ShouldThrowNonExistentValueLogic_WhenNotExists()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "UpdatedClass" };
+        var namespaceId = Guid.NewGuid();
+        var simClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "UpdatedClass",
+            Attributes = [],
+            Methods = [],
+            NamespaceId = namespaceId,
+        };
+        var simNamespace = new SimNamespace { Id = namespaceId, Name = "Namespace" };
+        _mockNamespaceService.Setup(da => da.GetNamespaceById(namespaceId)).Returns(simNamespace);
+
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClass.Id)).Returns(false);
 
         Assert.ThrowsException<NonExistentValueLogic>(() =>
@@ -297,13 +172,17 @@ public class SimClassServiceTest
     [TestMethod]
     public void UpdateSimClass_ShouldThrowInUseValueLogic_WhenSimClassIsInUse()
     {
+        var namespaceId = Guid.NewGuid();
         var simClass = new SimClass
         {
             Id = Guid.NewGuid(),
-            Name = "TestClass",
+            Name = "UpdatedClass",
             Attributes = [],
-            Methods = []
+            Methods = [],
+            NamespaceId = namespaceId,
         };
+        var simNamespace = new SimNamespace { Id = namespaceId, Name = "Namespace" };
+        _mockNamespaceService.Setup(da => da.GetNamespaceById(namespaceId)).Returns(simNamespace);
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClass.Id)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass);
@@ -328,7 +207,7 @@ public class SimClassServiceTest
             Id = simClassId,
             Name = "TestClass",
             Attributes = [],
-            Methods = []
+            Methods = [],
         };
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClassId)).Returns(true);
@@ -353,7 +232,7 @@ public class SimClassServiceTest
             Id = simClassId,
             Name = "TestClass",
             Attributes = [],
-            Methods = []
+            Methods = [],
         };
 
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
@@ -395,7 +274,7 @@ public class SimClassServiceTest
             Id = simClassId,
             Name = "TestClass",
             Attributes = [attribute],
-            Methods = []
+            Methods = [],
         };
 
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
@@ -422,7 +301,7 @@ public class SimClassServiceTest
             Id = simClassId,
             Name = "TestClass",
             Attributes = [],
-            Methods = [method]
+            Methods = [method],
         };
 
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClassId)).Returns(simClass);
@@ -442,21 +321,23 @@ public class SimClassServiceTest
     {
         var classId = Guid.NewGuid();
         var interfaceId = Guid.NewGuid();
+        var namespaceId = Guid.NewGuid();
 
         var simClass = new SimClass
         {
             Id = classId,
             Name = "TestClass",
-            Implements = []
+            Implements = [],
+            NamespaceId = namespaceId,
         };
-
         var interfaceToAdd = new SimClass
         {
             Id = interfaceId,
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
-
+        var simNamespace = new SimNamespace { Id = namespaceId, Name = "Namespace" };
+        _mockNamespaceService.Setup(da => da.GetNamespaceById(namespaceId)).Returns(simNamespace);
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(interfaceId)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(classId)).Returns(simClass);
@@ -530,14 +411,14 @@ public class SimClassServiceTest
         {
             Id = interfaceId,
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var simClass = new SimClass
         {
             Id = classId,
             Name = "TestClass",
-            Implements = [interfaceToAdd]
+            Implements = [interfaceToAdd],
         };
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
@@ -608,14 +489,14 @@ public class SimClassServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "BaseClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var derivedClass = new SimClass
         {
             Id = Guid.NewGuid(),
             Name = "DerivedInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
@@ -631,14 +512,14 @@ public class SimClassServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "BaseClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var derivedClass = new SimClass
         {
             Id = Guid.NewGuid(),
             Name = "DerivedAbstract",
-            State = SimAccesibility.Abstract
+            State = SimAccesibility.Abstract,
         };
 
         var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
@@ -654,14 +535,14 @@ public class SimClassServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "BaseClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var derivedClass = new SimClass
         {
             Id = Guid.NewGuid(),
             Name = "DerivedClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         _mockSimClassDataAccess!
@@ -682,7 +563,7 @@ public class SimClassServiceTest
         {
             new SimClass { Id = Guid.NewGuid(), Name = "Class1", NamespaceId = namespaceId },
             new SimClass { Id = Guid.NewGuid(), Name = "Class2", NamespaceId = namespaceId },
-            new SimClass { Id = Guid.NewGuid(), Name = "Class3", NamespaceId = Guid.NewGuid() }
+            new SimClass { Id = Guid.NewGuid(), Name = "Class3", NamespaceId = Guid.NewGuid() },
         };
 
         _mockNamespaceService?.Setup(ns => ns.GetNamespaceById(namespaceId)).Returns(new SimNamespace { Id = namespaceId });

@@ -2,7 +2,6 @@ using BusinessLogic.Exceptions;
 using Domain;
 using IBusinessLogic;
 using IDataAccess;
-using Models.Request;
 
 namespace BusinessLogic;
 
@@ -10,41 +9,32 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
 {
     private readonly INamespaceDataAccess _namespaceDataAccess = namespaceDataAccess;
 
-    public SimNamespace CreateNamespace(NamespaceRequest simNamespace)
+    public SimNamespace CreateNamespace(SimNamespace simNamespace)
     {
-        if(simNamespace.Name == string.Empty)
+        if(string.IsNullOrEmpty(simNamespace.Name))
         {
-            throw new InvalidAttributeLogic("Namespace name cannot be empty.");
+            throw new InvalidAttributeLogic("Namespace name cannot be null or empty.");
         }
 
-        if(simNamespace.BaseNamespaceId != null && !_namespaceDataAccess.NamespaceExistsById(simNamespace.BaseNamespaceId.Value))
+        if(simNamespace.BaseNamespaceId != null && simNamespace.BaseNamespaceId != Guid.Empty)
         {
-            throw new NonExistentValueLogic("Base namespace does not exist.");
+            if(!_namespaceDataAccess.NamespaceExistsById(simNamespace.BaseNamespaceId))
+            {
+                throw new NonExistentValueLogic("Base namespace does not exist.");
+            }
         }
 
-        var namespaces = _namespaceDataAccess.GetAllNamespaces();
-        if(namespaces.Any(ns => ns.Name == simNamespace.Name && ns.BaseNamespaceId == simNamespace.BaseNamespaceId))
+        if(_namespaceDataAccess.NamespaceExistsByName(simNamespace.Name))
         {
-            throw new InvalidAttributeLogic("Namespace with this name already exists at this lavel.");
+            throw new InvalidAttributeLogic("Namespace with this name already exists.");
         }
 
-        var newNamespace = new SimNamespace
-        {
-            Id = Guid.NewGuid(),
-            Name = simNamespace.Name,
-            BaseNamespaceId = simNamespace.BaseNamespaceId
-        };
-        _namespaceDataAccess.CreateNamespace(newNamespace);
-        return newNamespace;
+        _namespaceDataAccess.CreateNamespace(simNamespace);
+        return simNamespace;
     }
 
     public SimNamespace GetNamespaceById(Guid? id)
     {
-        if(id == null)
-        {
-            throw new InvalidAttributeLogic("Namespace can't be empty.");
-        }
-
         var result = _namespaceDataAccess.GetNamespaceById(id.Value);
         if(result == null)
         {

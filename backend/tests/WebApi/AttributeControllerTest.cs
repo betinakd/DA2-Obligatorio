@@ -43,7 +43,7 @@ public class AttributeControllerTest
             Name = "UpdatedAttribute",
             IdReference = Guid.NewGuid().ToString(),
             Privacity = SimModelsPrivacity.Public,
-            IdRelatedClass = Guid.NewGuid().ToString()
+            IdRelatedClass = Guid.NewGuid().ToString(),
         };
         var expectedResponse = new AttributeResponse()
         {
@@ -51,7 +51,7 @@ public class AttributeControllerTest
             Name = "UpdatedAttribute",
             ReferenceId = Guid.NewGuid(),
             Privacity = SimModelsPrivacity.Public,
-            RelatedClassId = Guid.NewGuid()
+            RelatedClassId = Guid.NewGuid(),
         };
         var updatedExpectedResponse = new UpdatedAttributeResponse() { Message = "Attribute updated succesfully.", Attribute = expectedResponse };
 
@@ -76,7 +76,7 @@ public class AttributeControllerTest
             Name = "TestAttribute",
             ReferenceId = Guid.NewGuid(),
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = Guid.NewGuid()
+            RelatedClassId = Guid.NewGuid(),
         };
 
         _mockAttributeAdapter?.Setup(a => a.GetAttribute(idToGet)).Returns(expectedAttribute);
@@ -117,7 +117,7 @@ public class AttributeControllerTest
             Name = "Test Attribute",
             ReferenceId = Guid.NewGuid(),
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            RelatedClassId = Guid.NewGuid()
+            RelatedClassId = Guid.NewGuid(),
         };
 
         _mockAttributeAdapter?.Setup(a => a.GetAttribute(id)).Returns(expectedAttribute);

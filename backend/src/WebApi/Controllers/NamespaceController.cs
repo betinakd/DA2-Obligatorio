@@ -13,10 +13,10 @@ public class NamespaceController(INamespaceAdapter namespaceAdapter) : Controlle
     public IActionResult CreateNamespace([FromBody] NamespaceRequest request)
     {
         var response = _namespaceAdapter.CreateNamespace(request);
-        return Created("GetNamespaceById", response);
+        return CreatedAtRoute("GetNamespaceById", new { id = response.NamespaceResponse.Id }, response);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetNamespaceById")]
     public IActionResult GetNamespaceById(Guid id)
     {
         return Ok(_namespaceAdapter.GetNamespaceById(id));

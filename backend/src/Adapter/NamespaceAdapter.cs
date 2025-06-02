@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using Adapter.Helpers;
 using BusinessLogic.Exceptions;
 using Domain;
 using IAdapter;
@@ -12,17 +13,18 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
 {
     private readonly INamespaceService _namespaceService = namespaceService;
     private readonly ISimClassService _simClassService = simClassService;
-    public NamespaceResponse CreateNamespace(NamespaceRequest namespaceRequest)
+    public CreatedNamespaceResponse CreateNamespace(NamespaceRequest namespaceRequest)
     {
         try
         {
-            var newNamespace = _namespaceService.CreateNamespace(namespaceRequest);
-            var response = new NamespaceResponse { Id = newNamespace.Id, Name = newNamespace.Name, };
-            if(namespaceRequest.BaseNamespaceId != null)
+            var simNamespace = new SimNamespace
             {
-                var baseName = _namespaceService.GetNamespaceById(namespaceRequest.BaseNamespaceId);
-                response.BaseNamespaceId = newNamespace.BaseNamespaceId;
-            }
+                Name = namespaceRequest.Name,
+                BaseNamespaceId = namespaceRequest.BaseNamespaceId
+            };
+            var newNamespace = _namespaceService.CreateNamespace(simNamespace);
+
+            var response = new CreatedNamespaceResponse() { NamespaceResponse = new NamespaceResponse { Id = newNamespace.Id, Name = newNamespace.Name, BaseNamespaceId = newNamespace.BaseNamespaceId }, Message = "Namespace created successfully" };
 
             return response;
         }
@@ -65,13 +67,8 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
     public List<NamespaceResponse> GetAllNamespaces()
     {
         return _namespaceService.GetAllNamespaces()
-            .Select(n => new NamespaceResponse
-            {
-                Id = n.Id,
-                Name = n.Name,
-                BaseNamespaceId = n.BaseNamespaceId,
-                Elements = MapClassesToResponses(_simClassService.GetClassesOfNamespaces(n.Id))
-            }).ToList();
+            .Select(NamespaceResponseMapper.MapToNamespaceResponse)
+            .ToList();
     }
 
     private List<SimClassResponse> MapClassesToResponses(List<SimClass> classes)

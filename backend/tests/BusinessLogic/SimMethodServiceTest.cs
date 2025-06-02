@@ -30,6 +30,15 @@ public class SimMethodServiceTest
     {
         var methodId = Guid.NewGuid();
         var invocation = new Invocation();
+        var returnTypeId = Guid.NewGuid();
+        invocation.Signature = new Signature
+        {
+            ReturnTypeId = returnTypeId,
+            Name = "TestInvocation",
+            Parameters = [],
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true); // Mock para ReturnTypeId
 
         _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(false);
 
@@ -42,15 +51,27 @@ public class SimMethodServiceTest
     public void AddInvocation_ShouldReturnInvocation_WhenMethodExists()
     {
         var methodId = Guid.NewGuid();
-        var newInvocation = new Invocation();
+        var returnTypeId = Guid.NewGuid();
+        var newInvocation = new Invocation
+        {
+            Signature = new Signature
+            {
+                ReturnTypeId = returnTypeId,
+                Name = "TestInvocation",
+                Parameters = [],
+            }
+        };
         var expectedInvocation = new Invocation();
 
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
         _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
         _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, newInvocation)).Returns(expectedInvocation);
 
         var result = _simMethodService!.AddInvocation(methodId, newInvocation);
 
         Assert.AreEqual(expectedInvocation, result);
+        _mockSimClassDataAccess.Verify(m => m.ExistSimClassById(returnTypeId), Times.Once);
+        _mockSimMethodDataAccess.Verify(m => m.ExistMethodById(methodId), Times.Once);
         _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, newInvocation), Times.Once);
     }
 
@@ -77,7 +98,7 @@ public class SimMethodServiceTest
         {
             Id = classId,
             Name = "TestClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(classId)).Returns(true);
@@ -118,14 +139,14 @@ public class SimMethodServiceTest
             Name = "TestMethod",
             Privacity = SimPrivacity.Public,
             RelatedClass = new SimClass() { Id = classId, Name = "TestClass" },
-            ReturnType = new SimClass() { Id = Guid.NewGuid(), Name = "TestClass" }
+            ReturnType = new SimClass() { Id = Guid.NewGuid(), Name = "TestClass" },
         };
 
         var simClass = new SimClass
         {
             Id = classId,
             Name = "TestClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
         var expectedMethod = method;
 
@@ -273,14 +294,14 @@ public class SimMethodServiceTest
             Id = localVariableId,
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
             Name = "TestVariable",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" },
         };
         var expectedAttribute = new LocalVariable()
         {
             Id = localVariableId,
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
             Name = "TestVariable",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" },
         };
 
         _mockSimMethodDataAccess!
@@ -309,7 +330,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
             Name = "TestVariable",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "Name" },
         };
         _mockSimMethodDataAccess!
             .Setup(m => m.ExistMethodById(methodId))
@@ -331,7 +352,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = Guid.NewGuid() },
             Name = "TestVariable",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "Name" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "Name" },
         };
         _mockSimMethodDataAccess!
             .Setup(m => m.ExistMethodById(methodId))
@@ -353,7 +374,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             RelatedMethod = new SimMethod() { Accesibility = SimAccesibility.Normal, Id = methodId },
             Name = "TestVariable",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" },
         };
 
         _mockSimMethodDataAccess!
@@ -381,7 +402,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" },
         };
 
         _mockSimMethodDataAccess!
@@ -401,7 +422,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" },
         };
 
         _mockSimMethodDataAccess!
@@ -423,7 +444,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass() { Id = Guid.NewGuid(), Name = "TypeName" },
         };
 
         _mockSimMethodDataAccess!
@@ -492,7 +513,7 @@ public class SimMethodServiceTest
         {
             Id = idClass,
             Name = "TestClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
         _mockSimClassDataAccess!
             .Setup(m => m.ExistSimClassById(idClass))
@@ -528,7 +549,7 @@ public class SimMethodServiceTest
         {
             Id = idClass,
             Name = "TestClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         _mockSimClassDataAccess!
@@ -573,7 +594,7 @@ public class SimMethodServiceTest
         {
             Id = idClass,
             Name = "TestClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         _mockSimClassDataAccess!
@@ -610,7 +631,7 @@ public class SimMethodServiceTest
         {
             Id = idClass,
             Name = "TestClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         _mockSimClassDataAccess!
@@ -673,7 +694,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "OverrideMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var simClass = new SimClass
@@ -681,7 +702,7 @@ public class SimMethodServiceTest
             Id = classId,
             Name = "ChildClass",
             State = SimAccesibility.Normal,
-            BaseClassId = Guid.NewGuid()
+            BaseClassId = Guid.NewGuid(),
         };
 
         _mockSimClassDataAccess!
@@ -736,7 +757,7 @@ public class SimMethodServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" }
+            Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeName" },
         };
 
         _mockSimMethodDataAccess!
@@ -757,34 +778,38 @@ public class SimMethodServiceTest
     [TestMethod]
     public void SignatureStaticExistsInClass_WhenMatchingMethodExists_ShouldNotThrowException()
     {
+        var typeId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
         var staticClassId = Guid.NewGuid();
 
         var signature = new Signature
         {
+            ReturnTypeId = typeId,
             Name = "TestMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var staticMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Name = "TestMethod",
             Accesibility = SimAccesibility.Normal,
             IsStatic = true,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         var staticClass = new SimClass
         {
             Id = staticClassId,
             Name = "StaticClass",
-            Methods = [staticMethod]
+            Methods = [staticMethod],
         };
 
         var invokingMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = methodId,
-            RelatedClass = new SimClass()
+            RelatedClass = new SimClass(),
         };
 
         _mockSimMethodDataAccess!
@@ -810,20 +835,20 @@ public class SimMethodServiceTest
         var signature = new Signature
         {
             Name = "MissingMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var staticClass = new SimClass
         {
             Id = staticClassId,
             Name = "StaticClass",
-            Methods = []
+            Methods = [],
         };
 
         var invokingMethod = new SimMethod
         {
             Id = methodId,
-            RelatedClass = new SimClass()
+            RelatedClass = new SimClass(),
         };
 
         _mockSimMethodDataAccess!
@@ -848,19 +873,19 @@ public class SimMethodServiceTest
         var attributeOwnerClass = new SimClass
         {
             Id = attributeOwnerClassId,
-            Name = "AttributeOwnerClass"
+            Name = "AttributeOwnerClass",
         };
 
         var callingClass = new SimClass
         {
             Id = classId,
-            Name = "CallingClass"
+            Name = "CallingClass",
         };
 
         var method = new SimMethod
         {
             Id = methodId,
-            RelatedClass = callingClass
+            RelatedClass = callingClass,
         };
 
         var publicStaticAttribute = new SimAttribute
@@ -869,7 +894,7 @@ public class SimMethodServiceTest
             Name = "PublicStaticAttr",
             Privacity = SimPrivacity.Public,
             IsStatic = true,
-            RelatedClass = attributeOwnerClass
+            RelatedClass = attributeOwnerClass,
         };
 
         _mockSimMethodDataAccess!
@@ -895,13 +920,13 @@ public class SimMethodServiceTest
         var sameClass = new SimClass
         {
             Id = sameClassId,
-            Name = "SameClass"
+            Name = "SameClass",
         };
 
         var method = new SimMethod
         {
             Id = methodId,
-            RelatedClass = sameClass
+            RelatedClass = sameClass,
         };
 
         var privateStaticAttribute = new SimAttribute
@@ -910,7 +935,7 @@ public class SimMethodServiceTest
             Name = "PrivateStaticAttr",
             Privacity = SimPrivacity.Private,
             IsStatic = true,
-            RelatedClass = sameClass
+            RelatedClass = sameClass,
         };
 
         _mockSimMethodDataAccess!
@@ -938,19 +963,19 @@ public class SimMethodServiceTest
         var attributeOwnerClass = new SimClass
         {
             Id = attributeOwnerClassId,
-            Name = "AttributeOwnerClass"
+            Name = "AttributeOwnerClass",
         };
 
         var callingClass = new SimClass
         {
             Id = callingClassId,
-            Name = "CallingClass"
+            Name = "CallingClass",
         };
 
         var method = new SimMethod
         {
             Id = methodId,
-            RelatedClass = callingClass
+            RelatedClass = callingClass,
         };
 
         var privateStaticAttribute = new SimAttribute
@@ -959,7 +984,7 @@ public class SimMethodServiceTest
             Name = "PrivateStaticAttr",
             Privacity = SimPrivacity.Private,
             IsStatic = true,
-            RelatedClass = attributeOwnerClass
+            RelatedClass = attributeOwnerClass,
         };
 
         _mockSimMethodDataAccess!
@@ -983,13 +1008,13 @@ public class SimMethodServiceTest
         var sameClass = new SimClass
         {
             Id = sameClassId,
-            Name = "SameClass"
+            Name = "SameClass",
         };
 
         var method = new SimMethod
         {
             Id = methodId,
-            RelatedClass = sameClass
+            RelatedClass = sameClass,
         };
 
         var protectedStaticAttribute = new SimAttribute
@@ -998,7 +1023,7 @@ public class SimMethodServiceTest
             Name = "ProtectedStaticAttr",
             Privacity = SimPrivacity.Protected,
             IsStatic = true,
-            RelatedClass = sameClass
+            RelatedClass = sameClass,
         };
 
         _mockSimMethodDataAccess!
@@ -1025,20 +1050,20 @@ public class SimMethodServiceTest
         var baseClass = new SimClass
         {
             Id = baseClassId,
-            Name = "BaseClass"
+            Name = "BaseClass",
         };
 
         var derivedClass = new SimClass
         {
             Id = derivedClassId,
             Name = "DerivedClass",
-            BaseClassId = baseClassId
+            BaseClassId = baseClassId,
         };
 
         var method = new SimMethod
         {
             Id = methodId,
-            RelatedClass = derivedClass
+            RelatedClass = derivedClass,
         };
 
         var protectedStaticAttribute = new SimAttribute
@@ -1047,7 +1072,7 @@ public class SimMethodServiceTest
             Name = "ProtectedStaticAttr",
             Privacity = SimPrivacity.Protected,
             IsStatic = true,
-            RelatedClass = baseClass
+            RelatedClass = baseClass,
         };
 
         _mockSimMethodDataAccess!
@@ -1079,20 +1104,20 @@ public class SimMethodServiceTest
         var attributeOwnerClass = new SimClass
         {
             Id = attributeOwnerClassId,
-            Name = "AttributeOwnerClass"
+            Name = "AttributeOwnerClass",
         };
 
         var unrelatedClass = new SimClass
         {
             Id = unrelatedClassId,
             Name = "UnrelatedClass",
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111") // Default base
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"), // Default base
         };
 
         var method = new SimMethod
         {
             Id = methodId,
-            RelatedClass = unrelatedClass
+            RelatedClass = unrelatedClass,
         };
 
         var protectedStaticAttribute = new SimAttribute
@@ -1101,7 +1126,7 @@ public class SimMethodServiceTest
             Name = "ProtectedStaticAttr",
             Privacity = SimPrivacity.Protected,
             IsStatic = true,
-            RelatedClass = attributeOwnerClass
+            RelatedClass = attributeOwnerClass,
         };
 
         _mockSimMethodDataAccess!
@@ -1139,7 +1164,7 @@ public class SimMethodServiceTest
                     Id = Guid.NewGuid(),
                     Name = "param1",
                     ReferenceId = parameterTypeId,
-                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" },
                 }
 
             ],
@@ -1152,7 +1177,7 @@ public class SimMethodServiceTest
                 Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
             }
 
-            ]
+            ],
         };
 
         var attribute = new SimAttribute
@@ -1160,7 +1185,7 @@ public class SimMethodServiceTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = attributeClassId, Name = "AttributeClass" },
-            RelatedClassId = attributeClassId
+            RelatedClassId = attributeClassId,
         };
 
         _mockSimClassDataAccess!
@@ -1219,11 +1244,11 @@ public class SimMethodServiceTest
                     Id = Guid.NewGuid(),
                     Name = "param1",
                     ReferenceId = parameterTypeId,
-                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" }
+                    Reference = new SimClass { Id = parameterTypeId, Name = "ParamType" },
                 }
 
             ],
-            LocalVariables = []
+            LocalVariables = [],
         };
 
         var attribute = new SimAttribute
@@ -1231,7 +1256,7 @@ public class SimMethodServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "AttributeClass" },
-            RelatedClassId = attributeId
+            RelatedClassId = attributeId,
         };
 
         _mockSimClassDataAccess!
@@ -1263,7 +1288,7 @@ public class SimMethodServiceTest
                 Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
             }
 
-            ]
+            ],
         };
 
         var attribute = new SimAttribute
@@ -1271,7 +1296,7 @@ public class SimMethodServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "AttributeClass" },
-            RelatedClassId = attributeId
+            RelatedClassId = attributeId,
         };
 
         _mockSimClassDataAccess!
@@ -1293,7 +1318,7 @@ public class SimMethodServiceTest
             Name = "TestMethod",
             RelatedClass = new SimClass { Id = methodClassId, Name = "MethodClass" },
             Parameters = [],
-            LocalVariables = []
+            LocalVariables = [],
         };
 
         var attribute = new SimAttribute
@@ -1301,7 +1326,7 @@ public class SimMethodServiceTest
             Id = attributeId,
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "AttributeClass" },
-            RelatedClassId = attributeId
+            RelatedClassId = attributeId,
         };
 
         _mockSimClassDataAccess!

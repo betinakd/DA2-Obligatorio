@@ -329,7 +329,8 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RelatedInvocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReturnTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -338,6 +339,12 @@ namespace DataAccess.Migrations
                         name: "FK_Signatures_Invocations_RelatedInvocationId",
                         column: x => x.RelatedInvocationId,
                         principalTable: "Invocations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Signatures_SimClasses_ReturnTypeId",
+                        column: x => x.ReturnTypeId,
+                        principalTable: "SimClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -548,6 +555,11 @@ namespace DataAccess.Migrations
                 table: "Signatures",
                 column: "RelatedInvocationId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Signatures_ReturnTypeId",
+                table: "Signatures",
+                column: "ReturnTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SimAttributes_InstanceId",

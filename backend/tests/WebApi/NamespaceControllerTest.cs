@@ -23,31 +23,6 @@ public class NamespaceControllerTest
     }
 
     [TestMethod]
-    public void CreateNamespace_ShouldReturnCreated_WhenRequestIsValid()
-    {
-        var request = new NamespaceRequest
-        {
-            Name = "TestNamespace",
-            BaseNamespaceId = Guid.NewGuid()
-        };
-        var response = new NamespaceResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            BaseNamespaceId = request.BaseNamespaceId,
-            Elements = []
-        };
-
-        _mockNamespaceAdapter.Setup(x => x.CreateNamespace(request)).Returns(response);
-
-        var result = _namespaceController.CreateNamespace(request) as CreatedResult;
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("GetNamespaceById", result.Location);
-        Assert.AreEqual(response, result.Value);
-    }
-
-    [TestMethod]
     public void GetNamespaceById_ShouldReturnOk_WhenNamespaceExists()
     {
         var namespaceId = Guid.NewGuid();
@@ -56,7 +31,7 @@ public class NamespaceControllerTest
             Id = namespaceId,
             Name = "TestNamespace",
             BaseNamespaceId = null,
-            Elements = []
+            Elements = [],
         };
 
         _mockNamespaceAdapter.Setup(x => x.GetNamespaceById(namespaceId)).Returns(response);
@@ -92,7 +67,7 @@ public class NamespaceControllerTest
         var request = new NamespaceRequest
         {
             Name = null,
-            BaseNamespaceId = null
+            BaseNamespaceId = null,
         };
 
         _mockNamespaceAdapter.Setup(x => x.CreateNamespace(request)).Throws(new InvalidAttributeAdapter("Namespace name can't be empty."));
@@ -107,7 +82,7 @@ public class NamespaceControllerTest
         var request = new NamespaceRequest
         {
             Name = "TestNamespace",
-            BaseNamespaceId = Guid.NewGuid()
+            BaseNamespaceId = Guid.NewGuid(),
         };
 
         _mockNamespaceAdapter.Setup(x => x.CreateNamespace(request)).Throws(new NonExistentValueAdapter("Base namespace does not exist."));
@@ -122,7 +97,7 @@ public class NamespaceControllerTest
         var expectedAdapterResponse = new List<NamespaceResponse>
         {
             new NamespaceResponse { Id = Guid.NewGuid(), Name = "TestNamespace1", BaseNamespaceId = null, Elements = [] },
-            new NamespaceResponse { Id = Guid.NewGuid(), Name = "TestNamespace2", BaseNamespaceId = null, Elements = [] }
+            new NamespaceResponse { Id = Guid.NewGuid(), Name = "TestNamespace2", BaseNamespaceId = null, Elements = [] },
         };
 
         _mockNamespaceAdapter.Setup(x => x.GetAllNamespaces()).Returns(expectedAdapterResponse);

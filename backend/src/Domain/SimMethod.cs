@@ -138,6 +138,11 @@ public class SimMethod
 
     public bool MatchSignature(Signature signature)
     {
+        if(signature.ReturnTypeId != ReturnTypeId)
+        {
+            return false;
+        }
+
         if(Name.ToLower() != signature.Name.ToLower() || Parameters.Count != signature.Parameters.Count)
         {
             return false;

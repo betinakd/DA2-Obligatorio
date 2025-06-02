@@ -40,7 +40,7 @@ public class ReferenceParameterTest
             [
                 new ParameterSignature { Name = "param1" },
                 new ParameterSignature { Name = "param2" }
-            ]
+            ],
         };
         var referenceParameter = new ReferenceParameter() { Reference = new Parameter { Reference = new SimClass { Name = "TestClass" }, Name = "Param" } };
 
@@ -59,7 +59,7 @@ public class ReferenceParameterTest
             [
                 new ParameterSignature { Name = "x" },
                 new ParameterSignature { Name = "y" }
-            ]
+            ],
         };
         var simClass = new SimClass { Name = "MyClass" };
         var parameter = new Parameter { Reference = simClass, Name = "Param" };
@@ -78,7 +78,7 @@ public class ReferenceParameterTest
         {
             Id = expectedId,
             Name = "Param",
-            Reference = new SimClass { Name = "TestClass" }
+            Reference = new SimClass { Name = "TestClass" },
         };
         var referenceParameter = new ReferenceParameter { Reference = parameter };
 
@@ -99,7 +99,7 @@ public class ReferenceParameterTest
         {
             Parameters = [
                 new ParameterSignature { Index = 0, Instance = expectedInstance }
-            ]
+            ],
         };
         var executionInstance = new SimClass();
 
@@ -119,7 +119,7 @@ public class ReferenceParameterTest
         {
             Parameters = [
                 new ParameterSignature { Index = 0, Instance = new SimClass() }
-            ]
+            ],
         };
         var executionInstance = new SimClass();
 

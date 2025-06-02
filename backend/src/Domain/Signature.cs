@@ -1,4 +1,5 @@
 namespace Domain;
+
 public class Signature
 {
     public Invocation? RelatedInvocation { get; set; }
@@ -6,4 +7,6 @@ public class Signature
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public List<ParameterSignature> Parameters { get; set; } = [];
+    public SimClass ReturnType { get; set; } = null!;
+    public Guid ReturnTypeId { get; set; } = Guid.Empty;
 }

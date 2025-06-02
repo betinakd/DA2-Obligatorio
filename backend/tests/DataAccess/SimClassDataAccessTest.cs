@@ -115,7 +115,7 @@ public class SimClassDataAccessTest
             Privacity = SimPrivacity.Public,
             Name = "Vehiculo",
             RelatedClass = new SimClass { Id = simClassId, Name = "Test1" },
-            Reference = new SimClass { Id = typeId, Name = "Test2" }
+            Reference = new SimClass { Id = typeId, Name = "Test2" },
         };
 
         _context.SimAttributes.Add(simAttribute);
@@ -134,7 +134,7 @@ public class SimClassDataAccessTest
         {
             Id = Guid.NewGuid(),
             ReferenceId = typeId,
-            Name = "Test Parameter"
+            Name = "Test Parameter",
         };
 
         _context.Parameters.Add(parameter);
@@ -157,7 +157,7 @@ public class SimClassDataAccessTest
             Name = "Test Local Variable",
             RelatedMethodId = methodId,
             Reference = new SimClass { Id = typeId, Name = "Test Reference" },
-            RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" }
+            RelatedMethod = new SimMethod { Id = methodId, Name = "Test Related Method" },
         };
 
         _context.LocalVariables.Add(localVariable);
@@ -189,7 +189,7 @@ public class SimClassDataAccessTest
             Id = simClassId,
             Name = "Original Name",
             BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-            State = SimAccesibility.Abstract
+            State = SimAccesibility.Abstract,
         };
 
         _context.SimClasses.Add(originalSimClass);
@@ -200,7 +200,7 @@ public class SimClassDataAccessTest
             Id = simClassId,
             Name = "Updated Name",
             BaseClassId = Guid.NewGuid(),
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         _simClassDataAccess!.UpdateSimClass(updatedSimClass);
@@ -269,26 +269,26 @@ public class SimClassDataAccessTest
         {
             Id = Guid.NewGuid(),
             Name = "param1",
-            RelatedMethodId = methodId
+            RelatedMethodId = methodId,
         };
 
         var localVariable = new LocalVariable
         {
             Id = Guid.NewGuid(),
             Name = "local1",
-            RelatedMethodId = methodId
+            RelatedMethodId = methodId,
         };
 
         var signature = new Signature
         {
             Id = Guid.NewGuid(),
-            Name = "TestSignature"
+            Name = "TestSignature",
         };
 
         var reference = new ReferenceThis
         {
             Id = Guid.NewGuid(),
-            ReferenceId = Guid.NewGuid()
+            ReferenceId = Guid.NewGuid(),
         };
 
         var invocation = new Invocation
@@ -296,7 +296,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             RelatedMethodId = methodId,
             Reference = reference,
-            Signature = signature
+            Signature = signature,
         };
 
         var method = new SimMethod
@@ -307,7 +307,7 @@ public class SimClassDataAccessTest
             RelatedClass = simClass,
             Parameters = [parameter],
             LocalVariables = [localVariable],
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
 
         simClass.Methods = [method];
@@ -345,7 +345,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             RelatedMethodId = methodId,
             Reference = new ReferenceThis(),
-            Signature = new Signature() { Name = "Test" }
+            Signature = new Signature() { Name = "Test" },
         };
 
         var method = new SimMethod
@@ -354,7 +354,7 @@ public class SimClassDataAccessTest
             Name = "TestMethod",
             RelatedClassId = classId,
             RelatedClass = simClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
 
         simClass.Methods = [method];
@@ -408,7 +408,7 @@ public class SimClassDataAccessTest
             Index = 2,
             RelatedMethodId = methodId,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var param2 = new Parameter
         {
@@ -417,7 +417,7 @@ public class SimClassDataAccessTest
             Index = 1,
             RelatedMethodId = methodId,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var param3 = new Parameter
         {
@@ -426,7 +426,7 @@ public class SimClassDataAccessTest
             Index = 0,
             RelatedMethodId = methodId,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         _context.Parameters.AddRange(param1, param2, param3);
 
@@ -436,7 +436,7 @@ public class SimClassDataAccessTest
             Name = "localVar",
             RelatedMethodId = methodId,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         _context.LocalVariables.Add(localVar);
 
@@ -446,7 +446,7 @@ public class SimClassDataAccessTest
             Name = "testAttr",
             RelatedClassId = classId,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         _context.SimAttributes.Add(attribute);
 
@@ -479,7 +479,7 @@ public class SimClassDataAccessTest
             RelatedClass = simClass,
             Parameters = [param1, param2, param3],
             LocalVariables = [localVar],
-            Invocations = [inv1, inv2, inv3, inv4, inv5]
+            Invocations = [inv1, inv2, inv3, inv4, inv5],
         };
         _context.SimMethods.Add(method);
 
@@ -534,7 +534,7 @@ public class SimClassDataAccessTest
             Index = 2,
             RelatedMethodId = methodId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var param2 = new Parameter
         {
@@ -543,7 +543,7 @@ public class SimClassDataAccessTest
             Index = 0,
             RelatedMethodId = methodId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var param3 = new Parameter
         {
@@ -552,7 +552,7 @@ public class SimClassDataAccessTest
             Index = 1,
             RelatedMethodId = methodId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         _context.Parameters.AddRange(param1, param2, param3);
 
@@ -562,7 +562,7 @@ public class SimClassDataAccessTest
             Name = "cVar",
             RelatedMethodId = methodId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var localVar2 = new LocalVariable
         {
@@ -570,7 +570,7 @@ public class SimClassDataAccessTest
             Name = "aVar",
             RelatedMethodId = methodId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var localVar3 = new LocalVariable
         {
@@ -578,7 +578,7 @@ public class SimClassDataAccessTest
             Name = "bVar",
             RelatedMethodId = methodId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         _context.LocalVariables.AddRange(localVar1, localVar2, localVar3);
 
@@ -588,7 +588,7 @@ public class SimClassDataAccessTest
             Name = "testAttr",
             RelatedClassId = classId1,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         _context.SimAttributes.Add(attribute);
 
@@ -600,7 +600,7 @@ public class SimClassDataAccessTest
             Index = 1,
             SignatureId = signature.Id,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         var sigParam2 = new ParameterSignature
         {
@@ -609,7 +609,7 @@ public class SimClassDataAccessTest
             Index = 0,
             SignatureId = signature.Id,
             ReferenceId = typeId,
-            Reference = typeClass
+            Reference = typeClass,
         };
         signature.Parameters = [sigParam1, sigParam2];
         _context.Signatures.Add(signature);
@@ -637,7 +637,7 @@ public class SimClassDataAccessTest
             RelatedClass = simClass1,
             Parameters = [param1, param2, param3],
             LocalVariables = [localVar1, localVar2, localVar3],
-            Invocations = [inv1, inv2, inv3, inv4, inv5]
+            Invocations = [inv1, inv2, inv3, inv4, inv5],
         };
 
         var method2 = new SimMethod
@@ -645,7 +645,7 @@ public class SimClassDataAccessTest
             Id = methodId2,
             Name = "ATestMethod",
             RelatedClassId = classId1,
-            RelatedClass = simClass1
+            RelatedClass = simClass1,
         };
 
         _context.SimMethods.AddRange(method1, method2);
@@ -713,7 +713,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClassId = simClass.Id,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         simClass.Attributes.Add(attribute);
         _context.SimAttributes.Add(attribute);
@@ -735,7 +735,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClassId = baseClass.Id,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         baseClass.Attributes.Add(attribute);
         _context.SimAttributes.Add(attribute);
@@ -745,7 +745,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -766,7 +766,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClassId = baseClass.Id,
-            Privacity = SimPrivacity.Protected
+            Privacity = SimPrivacity.Protected,
         };
         baseClass.Attributes.Add(attribute);
         _context.SimAttributes.Add(attribute);
@@ -776,7 +776,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -797,7 +797,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClassId = baseClass.Id,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         baseClass.Attributes.Add(attribute);
         _context.SimAttributes.Add(attribute);
@@ -807,7 +807,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -828,7 +828,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -851,7 +851,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestAttribute",
             RelatedClassId = grandparentClass.Id,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         grandparentClass.Attributes.Add(attribute);
         _context.SimAttributes.Add(attribute);
@@ -861,7 +861,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ParentClass",
             BaseClassId = grandparentClass.Id,
-            BaseClass = grandparentClass
+            BaseClass = grandparentClass,
         };
         _context.SimClasses.Add(parentClass);
 
@@ -870,7 +870,7 @@ public class SimClassDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = parentClass.Id,
-            BaseClass = parentClass
+            BaseClass = parentClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();

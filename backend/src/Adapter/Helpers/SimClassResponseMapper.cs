@@ -13,7 +13,7 @@ public class SimClassResponseMapper
         {
             Id = domainClass.Id,
             Name = domainClass.Name,
-            BaseNamespace = new NamespaceResponse
+            Namespace = new NamespaceResponse
             {
                 Id = domainClass.Namespace.Id,
                 Name = domainClass.Namespace.Name,
@@ -50,6 +50,7 @@ public class SimClassResponseMapper
                     IdReference = i.Reference?.GetReferenceId() ?? i.ReferenceId ?? Guid.Empty,
                     TypeReference = i.Reference?.GetReferenceTypeDescription(),
                     MethodName = i.Signature?.Name,
+                    IdReturnType = i.Signature?.ReturnType?.Id ?? Guid.Empty,
                     Parameters = i.Signature?.Parameters.Select(p => new ParameterSignatureResponse
                     {
                         Name = p.Name,

@@ -14,6 +14,11 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
     public Invocation AddInvocation(Guid idMethod, Invocation newInvocation)
     {
+        if(!_simClassDA.ExistSimClassById(newInvocation.Signature.ReturnTypeId))
+        {
+            throw new NonExistentValueLogic("ReturnType Class does not exist.");
+        }
+
         if(!_simMethodDA.ExistMethodById(idMethod))
         {
             throw new NonExistentValueLogic("Method does not exist.");

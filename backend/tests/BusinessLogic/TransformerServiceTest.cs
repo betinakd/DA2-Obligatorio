@@ -246,7 +246,7 @@ public class TransformerServiceTest
         {
             Id = t.Id,
             Name = t.Name,
-            ContentType = t.ContentType
+            ContentType = t.ContentType,
         }).ToList();
 
         Assert.AreEqual(1, result.Count);

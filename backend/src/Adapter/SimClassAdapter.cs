@@ -66,6 +66,7 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
                 Id = idSimClass,
                 Name = request.Name,
                 State = EnumMapper.MapToDomainAccesibility(request.State),
+                NamespaceId = request.BaseNamespaceId,
             };
 
             foreach(var atri in request.Attributes)

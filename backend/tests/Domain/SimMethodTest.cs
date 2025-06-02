@@ -15,22 +15,24 @@ public class SimMethodTest
 
         var method = new SimMethod
         {
+            ReturnTypeId = intType.Id,
             Name = "TestMethod",
             Parameters =
             [
                 new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
                 new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
-            ]
+            ],
         };
 
         var signature = new Signature
         {
+            ReturnTypeId = intType.Id,
             Name = "TestMethod",
             Parameters =
             [
                 new ParameterSignature { Name = "x", ReferenceId = intType.Id },
                 new ParameterSignature { Name = "y", ReferenceId = stringType.Id }
-            ]
+            ],
         };
 
         var result = method.MatchSignature(signature);
@@ -49,7 +51,7 @@ public class SimMethodTest
             Parameters =
             [
                 new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType }
-            ]
+            ],
         };
 
         var signature = new Signature
@@ -58,7 +60,7 @@ public class SimMethodTest
             Parameters =
             [
                 new ParameterSignature { Name = "x", ReferenceId = intType.Id }
-            ]
+            ],
         };
 
         var result = method.MatchSignature(signature);
@@ -79,7 +81,7 @@ public class SimMethodTest
             [
                 new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
                 new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
-            ]
+            ],
         };
 
         var signature = new Signature
@@ -88,7 +90,7 @@ public class SimMethodTest
             Parameters =
             [
                 new ParameterSignature { Name = "x", ReferenceId = intType.Id }
-            ]
+            ],
         };
 
         var result = method.MatchSignature(signature);
@@ -110,7 +112,7 @@ public class SimMethodTest
             [
                 new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
                 new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
-            ]
+            ],
         };
 
         var signature = new Signature
@@ -120,7 +122,7 @@ public class SimMethodTest
             [
                 new ParameterSignature { Name = "x", ReferenceId = intType.Id },
                 new ParameterSignature { Name = "y", ReferenceId = doubleType.Id } // Different type
-            ]
+            ],
         };
 
         var result = method.MatchSignature(signature);
@@ -141,7 +143,7 @@ public class SimMethodTest
             [
                 new Parameter { Name = "param1", ReferenceId = intType.Id, Reference = intType },
                 new Parameter { Name = "param2", ReferenceId = stringType.Id, Reference = stringType }
-            ]
+            ],
         };
 
         var signature = new Signature
@@ -151,7 +153,7 @@ public class SimMethodTest
             [
                 new ParameterSignature { Name = "y", ReferenceId = stringType.Id }, // Swapped order
                 new ParameterSignature { Name = "x", ReferenceId = intType.Id }
-            ]
+            ],
         };
 
         var result = method.MatchSignature(signature);
@@ -165,7 +167,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "MyClass" },
-            Name = "MyMethod"
+            Name = "MyMethod",
         };
 
         var signature = new Signature
@@ -175,7 +177,7 @@ public class SimMethodTest
             [
                 new ParameterSignature { Name = "a", ReferenceId = Guid.NewGuid() },
                 new ParameterSignature { Name = "b", ReferenceId = Guid.NewGuid() }
-            ]
+            ],
         };
 
         var result = method.GetMethodSignature(signature);
@@ -213,7 +215,7 @@ public class SimMethodTest
         var method1 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId }],
         };
 
         var method2 = new SimMethod
@@ -222,7 +224,7 @@ public class SimMethodTest
             Parameters = [
                 new Parameter { Name = "param1", ReferenceId = typeId },
                 new Parameter { Name = "param2", ReferenceId = typeId }
-            ]
+            ],
         };
 
         var result = method1.Equals(method2);
@@ -238,13 +240,13 @@ public class SimMethodTest
         var method1 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId }],
         };
 
         var method2 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "differentParam", ReferenceId = typeId }]
+            Parameters = [new Parameter { Name = "differentParam", ReferenceId = typeId }],
         };
 
         var result = method1.Equals(method2);
@@ -261,13 +263,13 @@ public class SimMethodTest
         var method1 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId1 }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId1 }],
         };
 
         var method2 = new SimMethod
         {
             Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId2 }]
+            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId2 }],
         };
 
         var result = method1.Equals(method2);
@@ -286,7 +288,7 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters = [
                 new Parameter { Name = "param1", ReferenceId = typeId1 }
-            ]
+            ],
         };
 
         var method2 = new SimMethod
@@ -294,7 +296,7 @@ public class SimMethodTest
             Name = "TestMethod",
             Parameters = [
                 new Parameter { Name = "param1", ReferenceId = typeId2 }
-            ]
+            ],
         };
 
         var result = method1.Equals(method2);
@@ -364,11 +366,11 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Normal
+            Accesibility = SimAccesibility.Normal,
         };
         var parameters = new List<Parameter>
     {
-        new Parameter { Name = "param1", ReferenceId = Guid.NewGuid() }
+        new Parameter { Name = "param1", ReferenceId = Guid.NewGuid() },
     };
 
         method.Parameters = parameters;
@@ -383,7 +385,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Interface
+            Accesibility = SimAccesibility.Interface,
         };
 
         method.LocalVariables =
@@ -398,11 +400,11 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Normal
+            Accesibility = SimAccesibility.Normal,
         };
         var localVariables = new List<LocalVariable>
     {
-        new LocalVariable { Name = "localVar1", ReferenceId = Guid.NewGuid() }
+        new LocalVariable { Name = "localVar1", ReferenceId = Guid.NewGuid() },
     };
 
         method.LocalVariables = localVariables;
@@ -417,7 +419,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Interface
+            Accesibility = SimAccesibility.Interface,
         };
 
         method.Invocations =
@@ -432,11 +434,11 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Normal
+            Accesibility = SimAccesibility.Normal,
         };
         var invocations = new List<Invocation>
     {
-        new Invocation { RelatedMethodId = Guid.NewGuid() }
+        new Invocation { RelatedMethodId = Guid.NewGuid() },
     };
 
         method.Invocations = invocations;
@@ -467,7 +469,7 @@ public class SimMethodTest
             Parameters =
         [
             new Parameter { Name = "param1", ReferenceId = paramTypeId }
-        ]
+        ],
         };
 
         var method2 = new SimMethod
@@ -477,7 +479,7 @@ public class SimMethodTest
             Parameters =
         [
             new Parameter { Name = "differentParamName", ReferenceId = paramTypeId }
-        ]
+        ],
         };
 
         Assert.IsTrue(method1.EqualsWithoutReturnType(method2));
@@ -494,7 +496,7 @@ public class SimMethodTest
         var staticMethod = new SimMethod
         {
             Name = "StaticTestMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         var nonStaticReference = new ReferenceAttribute();
@@ -503,7 +505,7 @@ public class SimMethodTest
             new Invocation
             {
                 RelatedMethodId = Guid.NewGuid(),
-                Reference = nonStaticReference
+                Reference = nonStaticReference,
             }
 
         ];
@@ -515,7 +517,7 @@ public class SimMethodTest
         var staticMethod = new SimMethod
         {
             Name = "StaticTestMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         var staticReference = new ReferenceStatic();
@@ -524,7 +526,7 @@ public class SimMethodTest
             new Invocation
             {
                 RelatedMethodId = Guid.NewGuid(),
-                Reference = staticReference
+                Reference = staticReference,
             }
 
         ];
@@ -540,7 +542,7 @@ public class SimMethodTest
         var staticMethod = new SimMethod
         {
             Name = "StaticMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         staticMethod.Accesibility = SimAccesibility.Abstract;
@@ -553,7 +555,7 @@ public class SimMethodTest
         var staticMethod = new SimMethod
         {
             Name = "StaticMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         staticMethod.Accesibility = SimAccesibility.Interface;
@@ -566,7 +568,7 @@ public class SimMethodTest
         var staticMethod = new SimMethod
         {
             Name = "StaticMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         staticMethod.Accesibility = SimAccesibility.Sealed;
@@ -578,7 +580,7 @@ public class SimMethodTest
         var staticMethod = new SimMethod
         {
             Name = "StaticMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         staticMethod.Accesibility = SimAccesibility.Normal;
@@ -593,7 +595,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Abstract
+            Accesibility = SimAccesibility.Abstract,
         };
 
         method.IsStatic = true;
@@ -606,7 +608,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Interface
+            Accesibility = SimAccesibility.Interface,
         };
 
         method.IsStatic = true;
@@ -619,7 +621,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Sealed
+            Accesibility = SimAccesibility.Sealed,
         };
 
         method.IsStatic = true;
@@ -631,7 +633,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Normal
+            Accesibility = SimAccesibility.Normal,
         };
 
         method.IsStatic = true;
@@ -662,7 +664,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         method.IsVirtual = true;
@@ -674,7 +676,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            IsStatic = false
+            IsStatic = false,
         };
 
         method.IsVirtual = true;
@@ -702,7 +704,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            Accesibility = SimAccesibility.Interface
+            Accesibility = SimAccesibility.Interface,
         };
 
         method.IsVirtual = true;
@@ -715,7 +717,7 @@ public class SimMethodTest
         var method = new SimMethod
         {
             Name = "TestMethod",
-            IsStatic = true
+            IsStatic = true,
         };
 
         method.IsOverride = true;
@@ -728,7 +730,7 @@ public class SimMethodTest
         {
             Name = "TestMethod",
             IsStatic = false,
-            IsVirtual = true
+            IsVirtual = true,
         };
 
         method.IsOverride = true;
@@ -757,7 +759,7 @@ public class SimMethodTest
             Name = "ValidMethod",
             IsVirtual = true,
             IsOverride = true,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         method.Validate();
@@ -771,7 +773,7 @@ public class SimMethodTest
         {
             Name = "InvalidMethod",
             IsVirtual = false,
-            IsOverride = true
+            IsOverride = true,
         };
 
         method.Validate();
@@ -786,7 +788,7 @@ public class SimMethodTest
             Name = "InvalidMethod",
             IsVirtual = true,
             IsOverride = true,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
 
         method.Validate();
@@ -800,7 +802,7 @@ public class SimMethodTest
             Name = "ValidMethod",
             IsVirtual = false,
             IsOverride = false,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
 
         method.Validate();
@@ -814,13 +816,13 @@ public class SimMethodTest
 
         var method = new SimMethod
         {
-            Name = "TestMethod"
+            Name = "TestMethod",
         };
 
         var parameters = new List<Parameter>
     {
         new Parameter { Name = "param1", ReferenceId = typeId },
-        new Parameter { Name = "Param1", ReferenceId = typeId } // Duplicado (case-insensitive)
+        new Parameter { Name = "Param1", ReferenceId = typeId }, // Duplicado (case-insensitive)
     };
 
         method.Parameters = parameters;

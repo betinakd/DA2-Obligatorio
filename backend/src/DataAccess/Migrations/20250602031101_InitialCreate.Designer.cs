@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SimulatorDbContext))]
-    [Migration("20250601004918_InitialCreate")]
+    [Migration("20250602031101_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -279,10 +279,15 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("RelatedInvocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ReturnTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RelatedInvocationId")
                         .IsUnique();
+
+                    b.HasIndex("ReturnTypeId");
 
                     b.ToTable("Signatures");
                 });
@@ -906,7 +911,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.SimClass", "ReturnType")
+                        .WithMany()
+                        .HasForeignKey("ReturnTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("RelatedInvocation");
+
+                    b.Navigation("ReturnType");
                 });
 
             modelBuilder.Entity("Domain.SimAttribute", b =>

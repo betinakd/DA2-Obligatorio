@@ -118,7 +118,7 @@ public class SimClassControllerTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.NewGuid().ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         var expectedResponse = new UpdateSimClassResponse
@@ -129,7 +129,7 @@ public class SimClassControllerTest
                 Id = classId,
                 Name = "UpdatedClass",
                 State = SimModelsAccesibility.Normal
-            }
+            },
         };
 
         _mockSimClassAdapter!

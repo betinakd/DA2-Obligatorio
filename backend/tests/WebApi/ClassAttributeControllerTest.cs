@@ -42,7 +42,7 @@ public class ClassAttributeControllerTest
                 ReferenceId = Guid.NewGuid(),
                 Privacity = SimModelsPrivacity.Public,
                 RelatedClassId = Guid.NewGuid()
-            }
+            },
         };
 
         _mockAttributeAdapter!

@@ -87,6 +87,12 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
     public SimClass UpdateSimClass(SimClass simClass)
     {
+        var simNamespace = _namespaceService.GetNamespaceById(simClass.NamespaceId);
+        if(simNamespace == null)
+        {
+            throw new NonExistentValueLogic("Namespace not found.");
+        }
+
         if(!_simClassDA.ExistSimClassById(simClass.Id))
         {
             throw new NonExistentValueLogic("SimClass not found.");
@@ -94,6 +100,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
         InUseByOther(simClass.Id);
 
+        simClass.Namespace = simNamespace;
         _simClassDA.UpdateSimClass(simClass);
         return simClass;
     }
