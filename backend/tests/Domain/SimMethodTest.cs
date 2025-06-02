@@ -15,6 +15,7 @@ public class SimMethodTest
 
         var method = new SimMethod
         {
+            ReturnTypeId = intType.Id,
             Name = "TestMethod",
             Parameters =
             [
@@ -25,6 +26,7 @@ public class SimMethodTest
 
         var signature = new Signature
         {
+            ReturnTypeId = intType.Id,
             Name = "TestMethod",
             Parameters =
             [

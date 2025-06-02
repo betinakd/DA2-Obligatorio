@@ -778,17 +778,20 @@ public class SimMethodServiceTest
     [TestMethod]
     public void SignatureStaticExistsInClass_WhenMatchingMethodExists_ShouldNotThrowException()
     {
+        var typeId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
         var staticClassId = Guid.NewGuid();
 
         var signature = new Signature
         {
+            ReturnTypeId = typeId,
             Name = "TestMethod",
             Parameters = [],
         };
 
         var staticMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Name = "TestMethod",
             Accesibility = SimAccesibility.Normal,
             IsStatic = true,
@@ -804,6 +807,7 @@ public class SimMethodServiceTest
 
         var invokingMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = methodId,
             RelatedClass = new SimClass(),
         };

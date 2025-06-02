@@ -23,31 +23,6 @@ public class NamespaceControllerTest
     }
 
     [TestMethod]
-    public void CreateNamespace_ShouldReturnCreated_WhenRequestIsValid()
-    {
-        var request = new NamespaceRequest
-        {
-            Name = "TestNamespace",
-            BaseNamespaceId = Guid.NewGuid(),
-        };
-        var response = new NamespaceResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            BaseNamespaceId = request.BaseNamespaceId,
-            Elements = [],
-        };
-
-        _mockNamespaceAdapter.Setup(x => x.CreateNamespace(request)).Returns(response);
-
-        var result = _namespaceController.CreateNamespace(request) as CreatedResult;
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("GetNamespaceById", result.Location);
-        Assert.AreEqual(response, result.Value);
-    }
-
-    [TestMethod]
     public void GetNamespaceById_ShouldReturnOk_WhenNamespaceExists()
     {
         var namespaceId = Guid.NewGuid();

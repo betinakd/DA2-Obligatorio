@@ -13,22 +13,18 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
 {
     private readonly INamespaceService _namespaceService = namespaceService;
     private readonly ISimClassService _simClassService = simClassService;
-    public NamespaceResponse CreateNamespace(NamespaceRequest namespaceRequest)
+    public CreatedNamespaceResponse CreateNamespace(NamespaceRequest namespaceRequest)
     {
         try
         {
             var simNamespace = new SimNamespace
             {
                 Name = namespaceRequest.Name,
-                BaseNamespaceId = namespaceRequest.BaseNamespaceId != Guid.Empty ? namespaceRequest.BaseNamespaceId : null
+                BaseNamespaceId = namespaceRequest.BaseNamespaceId
             };
             var newNamespace = _namespaceService.CreateNamespace(simNamespace);
-            var response = new NamespaceResponse { Id = newNamespace.Id, Name = newNamespace.Name, };
-            if(namespaceRequest.BaseNamespaceId != Guid.Empty)
-            {
-                var baseName = _namespaceService.GetNamespaceById(namespaceRequest.BaseNamespaceId);
-                response.BaseNamespaceId = newNamespace.BaseNamespaceId;
-            }
+
+            var response = new CreatedNamespaceResponse() { NamespaceResponse = new NamespaceResponse { Id = newNamespace.Id, Name = newNamespace.Name, BaseNamespaceId = newNamespace.BaseNamespaceId }, Message = "Namespace created successfully" };
 
             return response;
         }

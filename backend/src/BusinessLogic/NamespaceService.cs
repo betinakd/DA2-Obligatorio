@@ -16,19 +16,17 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
             throw new InvalidAttributeLogic("Namespace name cannot be null or empty.");
         }
 
-        if(simNamespace.BaseNamespaceId != Guid.Empty && !_namespaceDataAccess.NamespaceExistsById(simNamespace.BaseNamespaceId))
+        if(simNamespace.BaseNamespaceId != null && simNamespace.BaseNamespaceId != Guid.Empty)
         {
-            throw new NonExistentValueLogic("Base namespace does not exist.");
-        }
-
-        if(simNamespace.BaseNamespaceId == Guid.Empty)
-        {
-            simNamespace.BaseNamespaceId = null;
+            if(!_namespaceDataAccess.NamespaceExistsById(simNamespace.BaseNamespaceId))
+            {
+                throw new NonExistentValueLogic("Base namespace does not exist.");
+            }
         }
 
         if(_namespaceDataAccess.NamespaceExistsByName(simNamespace.Name))
         {
-            throw new InvalidAttributeLogic("Namespace with this name already exists at this lavel.");
+            throw new InvalidAttributeLogic("Namespace with this name already exists.");
         }
 
         _namespaceDataAccess.CreateNamespace(simNamespace);
@@ -37,11 +35,6 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
 
     public SimNamespace GetNamespaceById(Guid? id)
     {
-        if(id == null)
-        {
-            throw new InvalidAttributeLogic("Namespace can't be empty.");
-        }
-
         var result = _namespaceDataAccess.GetNamespaceById(id.Value);
         if(result == null)
         {

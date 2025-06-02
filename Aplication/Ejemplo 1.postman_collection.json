@@ -130,7 +130,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "    {\r\n        \"Name\": \"motorAuto\",\r\n        \"IdReference\" : \"68610a6d-3cac-4d23-8ab0-f9b96c0675f4\", // motor\r\n        \"IdInstance\" : \"68610a6d-3cac-4d23-8ab0-f9b96c0675f4\", // motor\r\n        \"Privacity\" : \"Private\",\r\n        \"IsStatic\": false\r\n    }",
+					"raw": "    {\r\n        \"Name\": \"motorAuto\",\r\n        \"IdReference\" : \"e7bbb5c0-e0d3-4ff2-ac9b-0a07e7aad961\", // motor\r\n        \"IdInstance\" : \"e7bbb5c0-e0d3-4ff2-ac9b-0a07e7aad961\", // motor\r\n        \"Privacity\" : \"Private\",\r\n        \"IsStatic\": false\r\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -220,7 +220,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\" :\"a058495e-6044-440a-8d6b-97792b86e8c7\", // motorAuto\r\n    \"MethodName\" :\"Encender\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\"\r\n}",
+					"raw": "{\r\n    \"IdReference\" :\"1610b641-1d46-4328-9008-421a8219223b\", // motorAuto\r\n    \"MethodName\" :\"Encender\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -250,7 +250,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\" :\"7318004c-ed47-4ded-a2e1-032c87b273a2\", //auto\r\n    \"MethodName\" :\"IniciarViaje\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+					"raw": "{\r\n    \"IdReference\" :\"d6566e7b-04ca-4de3-abe4-85e73e42f422\", //auto\r\n    \"MethodName\" :\"IniciarViaje\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -280,7 +280,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\" :\"a058495e-6044-440a-8d6b-97792b86e8c7\", //motorAuto\r\n    \"MethodName\" : \"Apagar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\"\r\n}",
+					"raw": "{\r\n    \"IdReference\" :\"1610b641-1d46-4328-9008-421a8219223b\", //motorAuto\r\n    \"MethodName\" : \"Apagar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\",\r\n    \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -310,7 +310,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"MethodName\" : \"IniciarViaje\",\r\n    \"Parameters\": [],\r\n    \"IdReferenceType\": \"2f5f2308-4b11-401c-ba4f-54dd91518929\", //Auto\r\n    \"IdInstanceType\":\"2f5f2308-4b11-401c-ba4f-54dd91518929\"  //Auto\r\n}",
+					"raw": "{\r\n    \"MethodName\" : \"IniciarViaje\",\r\n    \"Parameters\": [],\r\n    \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IdReferenceType\": \"d6566e7b-04ca-4de3-abe4-85e73e42f422\", //Auto\r\n    \"IdInstanceType\":\"d6566e7b-04ca-4de3-abe4-85e73e42f422\"  //Auto\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

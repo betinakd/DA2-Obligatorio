@@ -35,6 +35,7 @@ public class ExecutionDataAccessTest
     public void TestFindMethodInHierarchy_ThroughPublicMethods()
     {
         var baseClass = new SimClass { Name = "BaseClass" };
+        var typeId = Guid.NewGuid();
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -58,6 +59,7 @@ public class ExecutionDataAccessTest
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Public,
             Accesibility = SimAccesibility.Sealed,
+            ReturnTypeId = typeId,
         };
 
         var parameter = new Parameter
@@ -73,7 +75,7 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod" };
+        var signature = new Signature { Name = "TestMethod", ReturnTypeId = typeId };
         var paramSignature = new ParameterSignature
         {
             Name = "param1",
@@ -244,6 +246,7 @@ public class ExecutionDataAccessTest
     public void MethodIsInUseByInheriting_ReturnsTrue_WhenMethodIsUsedInInvocation()
     {
         var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        var typeId = Guid.NewGuid();
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -259,6 +262,7 @@ public class ExecutionDataAccessTest
 
         var baseMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = Guid.NewGuid(),
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
@@ -271,13 +275,14 @@ public class ExecutionDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            Signature = new Signature { ReturnTypeId = typeId, Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = Guid.NewGuid(),
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
@@ -350,6 +355,7 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void MethodIsInUseByInheriting_ReturnsTrue_WhenMethodInInheritingIsProtected()
     {
+        var typeId = Guid.NewGuid();
         var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
@@ -366,6 +372,7 @@ public class ExecutionDataAccessTest
 
         var baseMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = Guid.NewGuid(),
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
@@ -378,7 +385,12 @@ public class ExecutionDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            Signature = new Signature
+            {
+                ReturnTypeId = typeId,
+                Id = Guid.NewGuid(),
+                Name = "TestMethod"
+            },
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod,
         };
@@ -403,6 +415,7 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void MethodIsInUseByInheriting_ReturnsTrue_WhenMethodInInheritingIsPublic()
     {
+        var typeId = Guid.NewGuid();
         var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
@@ -419,6 +432,7 @@ public class ExecutionDataAccessTest
 
         var baseMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = Guid.NewGuid(),
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
@@ -431,13 +445,14 @@ public class ExecutionDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            Signature = new Signature { ReturnTypeId = typeId, Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
         {
+            ReturnTypeId = typeId,
             Id = Guid.NewGuid(),
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
@@ -456,7 +471,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void MethodIsInUseByInheriting_ReturnsTrue_WhenOwnerClassMethodIsPrivate()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -467,6 +486,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Private,
+            ReturnTypeId = typeId,
+            ReturnType = returnType
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -474,7 +495,13 @@ public class ExecutionDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            Signature = new Signature
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestMethod",
+                ReturnTypeId = typeId,
+                ReturnType = returnType
+            },
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod,
         };
@@ -486,6 +513,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Private,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Invocations = [invocation],
         };
         baseClass.Methods.Add(ownerMethod);
@@ -500,7 +529,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void MethodIsInUseByInheriting_ReturnsTrue_WhenOwnerClassMethodIsPublic()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var baseClass = new SimClass { Id = Guid.NewGuid(), Name = "BaseClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -511,6 +544,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Public,
+            ReturnTypeId = typeId,
+            ReturnType = returnType
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -518,7 +553,13 @@ public class ExecutionDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
+            Signature = new Signature
+            {
+                Id = Guid.NewGuid(),
+                Name = "TestMethod",
+                ReturnTypeId = typeId,
+                ReturnType = returnType
+            },
             RelatedMethodId = baseMethod.Id,
             RelatedMethod = baseMethod,
         };
@@ -530,6 +571,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Public,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Invocations = [invocation],
         };
         baseClass.Methods.Add(ownerMethod);
@@ -617,7 +660,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchy_WithReferenceParameter_LoadsParameterTypesCorrectly()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
@@ -638,6 +685,8 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Parameters = [methodParameter],
         };
         methodParameter.RelatedMethod = method;
@@ -659,6 +708,8 @@ public class ExecutionDataAccessTest
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Parameters = [],
         };
 
@@ -673,7 +724,13 @@ public class ExecutionDataAccessTest
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [new ParameterSignature { Name = "methodParam", ReferenceId = intType.Id, Reference = intType }] };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
+            Parameters = [new ParameterSignature { Name = "methodParam", ReferenceId = intType.Id, Reference = intType }]
+        };
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
 
         result.Should().NotBeNull();
@@ -689,7 +746,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchy_WithReferenceVariable_LoadsVariableTypesCorrectly()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
@@ -714,6 +775,8 @@ public class ExecutionDataAccessTest
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Parameters = [],
         };
 
@@ -729,13 +792,21 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
+            Parameters = []
+        };
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
 
         result.Should().NotBeNull();
@@ -751,7 +822,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchy_WithReferenceAttribute_LoadsAttributeTypesCorrectly()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
@@ -778,6 +853,8 @@ public class ExecutionDataAccessTest
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Parameters = [],
         };
 
@@ -793,13 +870,21 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
+            Parameters = []
+        };
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
 
         result.Should().NotBeNull();
@@ -815,7 +900,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchy_WithReferenceBase_LoadsBaseClassCorrectly()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -836,6 +925,8 @@ public class ExecutionDataAccessTest
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Parameters = [],
         };
 
@@ -851,13 +942,21 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
+            Parameters = []
+        };
         var result = _executionDataAccess.FindMethodInHierarchy(childClass, signature);
 
         result.Should().NotBeNull();
@@ -873,7 +972,11 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchy_WithReferenceThis_LoadsThisReferenceCorrectly()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
@@ -885,6 +988,8 @@ public class ExecutionDataAccessTest
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Parameters = [],
         };
 
@@ -900,13 +1005,21 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
             Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
+            Parameters = []
+        };
         var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
 
         result.Should().NotBeNull();
@@ -973,7 +1086,12 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchyPublicOrProtected_FindsAnyMethod_InOriginalClass()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
+        // ...existing code...
         var simClass = new SimClass { Name = "TestClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
@@ -983,12 +1101,20 @@ public class ExecutionDataAccessTest
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
             Privacity = SimPrivacity.Private,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
         };
         simClass.Methods.Add(privateMethod);
         _context.SimMethods.Add(privateMethod);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            Parameters = [],
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
@@ -1000,7 +1126,12 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchyPublicOrProtected_FindsPublicMethod_InBaseClass()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
+        // ...existing code...
         var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -1019,12 +1150,20 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Public,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
         };
         baseClass.Methods.Add(publicMethod);
         _context.SimMethods.Add(publicMethod);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "PublicMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "PublicMethod",
+            Parameters = [],
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
 
@@ -1036,7 +1175,12 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindMethodInHierarchyPublicOrProtected_FindsProtectedMethod_InBaseClass()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
+        // ...existing code...
         var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(baseClass);
         _context.SaveChanges();
 
@@ -1055,12 +1199,20 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Protected,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
         };
         baseClass.Methods.Add(protectedMethod);
         _context.SimMethods.Add(protectedMethod);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "ProtectedMethod", Parameters = [] };
+        var signature = new Signature
+        {
+            Name = "ProtectedMethod",
+            Parameters = [],
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
 
@@ -1423,12 +1575,20 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void ReturnsOverrideMethod_FromInstanceHierarchy()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var baseClass = new SimClass { Name = "Base" };
         var childClass = new SimClass { Name = "Child", BaseClass = baseClass };
-        _context.SimClasses.AddRange(baseClass, childClass);
+        _context.SimClasses.AddRange(returnType, baseClass, childClass);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod" };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var overrideMethod = new SimMethod
         {
@@ -1436,6 +1596,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
             IsOverride = true,
+            ReturnTypeId = typeId,
+            ReturnType = returnType
         };
         _context.SimMethods.Add(overrideMethod);
         _context.SaveChanges();
@@ -1449,12 +1611,20 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void ReturnsReferenceMethod_WhenNoOverrideFound()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var baseClass = new SimClass { Name = "Base" };
         var childClass = new SimClass { Name = "Child", BaseClass = baseClass };
-        _context.SimClasses.AddRange(baseClass, childClass);
+        _context.SimClasses.AddRange(returnType, baseClass, childClass);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod" };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var referenceMethod = new SimMethod
         {
@@ -1462,6 +1632,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             IsOverride = false,
+            ReturnTypeId = typeId,
+            ReturnType = returnType
         };
         _context.SimMethods.Add(referenceMethod);
         _context.SaveChanges();
@@ -1490,13 +1662,21 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void ReturnsOverrideMethod_FromIntermediateBaseClass()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var grandparent = new SimClass { Name = "Grandparent" };
         var parent = new SimClass { Name = "Parent", BaseClass = grandparent };
         var child = new SimClass { Name = "Child", BaseClass = parent };
-        _context.SimClasses.AddRange(grandparent, parent, child);
+        _context.SimClasses.AddRange(returnType, grandparent, parent, child);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod" };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var overrideMethod = new SimMethod
         {
@@ -1504,6 +1684,8 @@ public class ExecutionDataAccessTest
             RelatedClassId = parent.Id,
             RelatedClass = parent,
             IsOverride = true,
+            ReturnTypeId = typeId,
+            ReturnType = returnType
         };
         _context.SimMethods.Add(overrideMethod);
         _context.SaveChanges();
@@ -1517,12 +1699,20 @@ public class ExecutionDataAccessTest
     [TestMethod]
     public void FindOverrideOrReferenceMethod_BreaksWhenNoBaseClassId()
     {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
         var instanceClass = new SimClass { Name = "InstanceClass", BaseClass = null, BaseClassId = null };
         var referenceClass = new SimClass { Name = "ReferenceClass", BaseClass = null, BaseClassId = null };
-        _context.SimClasses.AddRange(instanceClass, referenceClass);
+        _context.SimClasses.AddRange(returnType, instanceClass, referenceClass);
         _context.SaveChanges();
 
-        var signature = new Signature { Name = "TestMethod" };
+        var signature = new Signature
+        {
+            Name = "TestMethod",
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
 
         var referenceMethod = new SimMethod
         {
@@ -1531,6 +1721,8 @@ public class ExecutionDataAccessTest
             RelatedClass = referenceClass,
             IsOverride = false,
             IsVirtual = true,
+            ReturnTypeId = typeId,
+            ReturnType = returnType
         };
         _context.SimMethods.Add(referenceMethod);
         _context.SaveChanges();

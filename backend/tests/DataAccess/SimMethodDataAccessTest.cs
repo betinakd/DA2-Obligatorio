@@ -1070,6 +1070,7 @@ public class SimMethodDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestMethod",
             Parameters = [parameter],
+            ReturnTypeId = typeId,
         };
         _context.Signatures.Add(signature);
 
@@ -1088,6 +1089,7 @@ public class SimMethodDataAccessTest
 
         var methodToCheck = new SimMethod
         {
+            ReturnTypeId = typeId,
             Name = "TestMethod",
             Parameters = [new Parameter { Name = "param1", ReferenceId = typeId, Reference = typeClass, Index = 0 }],
         };
