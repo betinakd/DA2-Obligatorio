@@ -276,10 +276,15 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("RelatedInvocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ReturnTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RelatedInvocationId")
                         .IsUnique();
+
+                    b.HasIndex("ReturnTypeId");
 
                     b.ToTable("Signatures");
                 });
@@ -903,7 +908,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.SimClass", "ReturnType")
+                        .WithMany()
+                        .HasForeignKey("ReturnTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("RelatedInvocation");
+
+                    b.Navigation("ReturnType");
                 });
 
             modelBuilder.Entity("Domain.SimAttribute", b =>

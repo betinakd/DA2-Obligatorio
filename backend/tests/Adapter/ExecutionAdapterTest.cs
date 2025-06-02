@@ -46,7 +46,7 @@ public class ExecutionAdapterTest
             [
                 new ParameterSignatureRequest { Name = "param1", IdReference = param1TypeId.ToString(), IdInstance = param1InstanceId.ToString() },
             new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString(), IdInstance = param2InstanceId.ToString() }
-            ]
+            ],
         };
 
         var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
@@ -109,7 +109,7 @@ public class ExecutionAdapterTest
             Parameters =
         [
             new ParameterSignatureRequest { Name = "param1", IdReference = Guid.NewGuid().ToString() }
-        ]
+        ],
         };
 
         _simClassService!
@@ -134,7 +134,7 @@ public class ExecutionAdapterTest
             MethodName = "TestMethod",
             IdInstanceType = instanceTypeId.ToString(),
             IdReferenceType = referenceTypeId.ToString(),
-            Parameters = []
+            Parameters = [],
         };
 
         var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
@@ -173,7 +173,7 @@ public class ExecutionAdapterTest
             MethodName = "TestMethod",
             IdInstanceType = instanceTypeId.ToString(),
             IdReferenceType = referenceTypeId.ToString(),
-            Parameters = []
+            Parameters = [],
         };
 
         var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };
@@ -218,20 +218,20 @@ public class ExecutionAdapterTest
             MethodName = "TestMethod",
             IdInstanceType = instanceTypeId.ToString(),
             IdReferenceType = referenceTypeId.ToString(),
-            Parameters = []
+            Parameters = [],
         };
 
         var instanceTypeClass = new SimClass
         {
             Id = instanceTypeId,
             Name = "InstanceType",
-            State = SimAccesibility.Abstract
+            State = SimAccesibility.Abstract,
         };
 
         var referenceTypeClass = new SimClass
         {
             Id = referenceTypeId,
-            Name = "ReferenceType"
+            Name = "ReferenceType",
         };
 
         _simClassService!
@@ -275,7 +275,7 @@ public class ExecutionAdapterTest
             Parameters =
             [
                 new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString(), IdInstance = paramInstanceId.ToString() }
-            ]
+            ],
         };
 
         var simClass = new SimClass { Id = paramTypeId, Name = "ParamType", State = SimAccesibility.Normal };
@@ -306,7 +306,7 @@ public class ExecutionAdapterTest
             OriginalResult = "resultado",
             TransformedResult = "transformado",
             ContentType = "text/plain",
-            TransformerId = "test"
+            TransformerId = "test",
         };
         mockTransformerService.Setup(x => x.TransformExecution("resultado", "test")).Returns(expectedResponse);
 
@@ -336,7 +336,7 @@ public class ExecutionAdapterTest
             MethodName = "TestMethod",
             IdInstanceType = instanceTypeId.ToString(),
             IdReferenceType = referenceTypeId.ToString(),
-            Parameters = []
+            Parameters = [],
         };
 
         var instanceTypeClass = new SimClass { Id = instanceTypeId, Name = "InstanceType" };

@@ -98,6 +98,8 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
     public IList<SimClass> GetAllSimClasses()
     {
         var classes = _context.SimClasses
+            .Include(c => c.Namespace)
+            .Include(c => c.Implements)
             .Include(c => c.Attributes)
                 .ThenInclude(a => a.Reference)
             .Include(c => c.Methods)

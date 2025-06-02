@@ -20,12 +20,13 @@ public class InvocationResponseMapper
             IdReference = domainInvocation.Reference?.GetReferenceId() ?? domainInvocation.ReferenceId ?? Guid.Empty,
             TypeReference = domainInvocation.Reference?.GetReferenceTypeDescription(),
             MethodName = domainInvocation.Signature?.Name,
+            IdReturnType = domainInvocation.Signature?.ReturnType?.Id ?? Guid.Empty,
             Parameters = domainInvocation.Signature?.Parameters
                 .Select(p => new ParameterSignatureResponse
                 {
                     Name = p.Name,
                     ReferenceId = p.ReferenceId,
-                    InstanceId = p.InstanceId
+                    InstanceId = p.InstanceId,
                 }).ToList() ?? []
         };
     }

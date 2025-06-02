@@ -30,7 +30,7 @@ public class ReferenceStaticTest
             [
                 new ParameterSignature { Name = "param1" },
                 new ParameterSignature { Name = "param2" }
-            ]
+            ],
         };
 
         var result = referenceStatic.GetSignature(signature);
@@ -46,7 +46,7 @@ public class ReferenceStaticTest
         var signature = new Signature
         {
             Name = "EmptyMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var result = referenceStatic.GetSignature(signature);
@@ -66,7 +66,7 @@ public class ReferenceStaticTest
             [
                 new ParameterSignature { Name = "x" },
                 new ParameterSignature { Name = "y" }
-            ]
+            ],
         };
 
         var result = referenceStatic.GetSignatureWithClassName(signature);

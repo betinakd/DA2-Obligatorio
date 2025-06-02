@@ -36,7 +36,7 @@ public class NamespaceAdapterTest
         var request = new Models.Request.NamespaceRequest
         {
             Name = "TestNamespace",
-            BaseNamespaceId = baseNamespace.Id
+            BaseNamespaceId = baseNamespace.Id,
         };
 
         var expectedNamespace = new SimNamespace
@@ -64,7 +64,7 @@ public class NamespaceAdapterTest
         var request = new NamespaceRequest
         {
             Name = string.Empty,
-            BaseNamespaceId = null
+            BaseNamespaceId = null,
         };
 
         _mockNamespaceService?.Setup(x => x.CreateNamespace(request)).Throws(new InvalidAttributeLogic("Namespace name cannot be empty."));
@@ -78,13 +78,13 @@ public class NamespaceAdapterTest
         var request1 = new NamespaceRequest
         {
             Name = "RepeatedName",
-            BaseNamespaceId = null
+            BaseNamespaceId = null,
         };
         var expectedNamespace1 = new SimNamespace
         {
             Id = Guid.NewGuid(),
             Name = request1.Name,
-            Elements = []
+            Elements = [],
         };
         _mockNamespaceService?.Setup(x => x.CreateNamespace(request1)).Returns(expectedNamespace1);
         var firstCallResponse = _namespaceAdapter?.CreateNamespace(request1);
@@ -99,7 +99,7 @@ public class NamespaceAdapterTest
         var request = new NamespaceRequest
         {
             Name = "TestNamespace",
-            BaseNamespaceId = Guid.NewGuid()
+            BaseNamespaceId = Guid.NewGuid(),
         };
 
         _mockNamespaceService?.Setup(x => x.CreateNamespace(request)).Throws(new NonExistentValueLogic("Base namespace does not exist."));
@@ -114,14 +114,14 @@ public class NamespaceAdapterTest
         var namespaceClasses = new List<SimClass>
         {
             new SimClass { Id = Guid.NewGuid(), Name = "TestClass1", NamespaceId = namespaceId },
-            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId }
+            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId },
         };
         var expectedNamespace = new SimNamespace
         {
             Id = namespaceId,
             Name = "TestNamespace",
             BaseNamespaceId = null,
-            Elements = namespaceClasses
+            Elements = namespaceClasses,
         };
         _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId)).Returns(expectedNamespace);
         _simClassService?.Setup(x => x.GetClassesOfNamespaces(namespaceId)).Returns(expectedNamespace.Elements);
@@ -153,7 +153,7 @@ public class NamespaceAdapterTest
         {
             new SimNamespace { Id = namespaceId1, Name = "Namespace1", BaseNamespaceId = null, Elements = [] },
             new SimNamespace { Id = namespaceId2, Name = "Namespace2", BaseNamespaceId = namespaceId1, Elements = [] },
-            new SimNamespace { Id = namespaceId3, Name = "Namespace3", BaseNamespaceId = null, Elements = [] }
+            new SimNamespace { Id = namespaceId3, Name = "Namespace3", BaseNamespaceId = null, Elements = [] },
         };
         _mockNamespaceService?.Setup(x => x.GetAllNamespaces()).Returns(namespaces);
 
@@ -186,7 +186,7 @@ public class NamespaceAdapterTest
         var namespaceClasses = new List<SimClass>
         {
             new SimClass { Id = Guid.NewGuid(), Name = "TestClass1", NamespaceId = namespaceId1 },
-            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId1 }
+            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId1 },
         };
         var namespaces = new List<SimNamespace>
         {

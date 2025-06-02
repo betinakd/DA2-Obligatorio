@@ -158,7 +158,7 @@ public class MethodControllerTest
         var request = new ParameterRequest
         {
             Name = parameterName,
-            IdReference = Guid.Empty.ToString()
+            IdReference = Guid.Empty.ToString(),
         };
         _mockmethodAdapter
             .Setup(m => m.CreateParameter(methodId, request))

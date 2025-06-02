@@ -38,7 +38,7 @@ public class SimClassAdapterTest
         var simClasses = new List<SimClass>
         {
             new SimClass { Id = Guid.NewGuid(), Name = "ClassA", Namespace = simNamespace, NamespaceId = simNamespace.Id },
-            new SimClass { Id = Guid.NewGuid(), Name = "ClassB", Namespace = simNamespace, NamespaceId = simNamespace.Id }
+            new SimClass { Id = Guid.NewGuid(), Name = "ClassB", Namespace = simNamespace, NamespaceId = simNamespace.Id },
         };
 
         _mockSimClassService
@@ -72,7 +72,7 @@ public class SimClassAdapterTest
             Name = "ValidClass",
             IdBaseClass = Guid.NewGuid().ToString(),
             State = SimModelsAccesibility.Normal,
-            IdBaseNamespace = expectedNamespace.Id.ToString()
+            IdBaseNamespace = expectedNamespace.Id.ToString(),
         };
         _mockSimClassService
             ?.Setup(service => service.CreateSimClass(
@@ -173,7 +173,7 @@ public class SimClassAdapterTest
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.NewGuid().ToString(),
-            IdBaseNamespace = expectedNamespace.Id.ToString()
+            IdBaseNamespace = expectedNamespace.Id.ToString(),
         };
         _mockSimClassService!
             .Setup(service => service.CreateSimClass(
@@ -222,7 +222,7 @@ public class SimClassAdapterTest
             Name = "Invalid-Name-With-Chars",
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.NewGuid().ToString(),
-            IdBaseNamespace = expectedNamespace.Id.ToString()
+            IdBaseNamespace = expectedNamespace.Id.ToString(),
         };
         _mockSimClassService!
             .Setup(service => service.CreateSimClass(
@@ -255,7 +255,7 @@ public class SimClassAdapterTest
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.NewGuid().ToString(),
-            IdBaseNamespace = expectedNamespace.Id.ToString()
+            IdBaseNamespace = expectedNamespace.Id.ToString(),
         };
         _mockSimClassService!
             .Setup(service => service.CreateSimClass(
@@ -281,7 +281,7 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         _mockSimClassService!
@@ -306,7 +306,7 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
@@ -336,7 +336,7 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Sealed };
@@ -367,7 +367,7 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal };
@@ -418,7 +418,7 @@ public class SimClassAdapterTest
                 Parameters =
                 [
                     new ParameterRequest { Name = "param1", IdReference = objTypeId.ToString() }
-                ]
+                ],
             }
 
             ],
@@ -432,7 +432,7 @@ public class SimClassAdapterTest
                 IdInstance = instanceId.ToString()
             }
 
-            ]
+            ],
         };
 
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal, Namespace = simNamespace, NamespaceId = simNamespace.Id };
@@ -449,7 +449,7 @@ public class SimClassAdapterTest
             NamespaceId = simNamespace.Id,
             Methods = [],
             Attributes = [],
-            Implements = []
+            Implements = [],
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
@@ -516,7 +516,7 @@ public class SimClassAdapterTest
             NamespaceId = simNamespace.Id,
             Methods = [],
             Attributes = [],
-            Implements = []
+            Implements = [],
         };
 
         var request = new SimClassRequestUpdate
@@ -525,7 +525,7 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.Empty.ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
@@ -577,7 +577,7 @@ public class SimClassAdapterTest
             [
                 new InterfaceRequestUpdate { IdInterface = interfaceId1.ToString() },
             new InterfaceRequestUpdate { IdInterface = interfaceId2.ToString() }
-            ]
+            ],
         };
 
         var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal, Namespace = simNamespace, NamespaceId = simNamespace.Id };
@@ -593,7 +593,7 @@ public class SimClassAdapterTest
             NamespaceId = simNamespace.Id,
             Methods = [],
             Attributes = [],
-            Implements = [interfaceClass1, interfaceClass2]
+            Implements = [interfaceClass1, interfaceClass2],
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
@@ -649,7 +649,7 @@ public class SimClassAdapterTest
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
             Methods = [],
-            Attributes = []
+            Attributes = [],
         };
 
         _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
@@ -682,7 +682,7 @@ public class SimClassAdapterTest
             NamespaceId = simNamespace.Id,
             Methods = [],
             Attributes = [],
-            Implements = []
+            Implements = [],
         };
 
         var request = new InterfaceRequestUpdate { IdInterface = interfaceId.ToString() };
@@ -798,7 +798,7 @@ public class SimClassAdapterTest
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
             IdBaseClass = Guid.NewGuid().ToString(),
-            IdBaseNamespace = Guid.Empty.ToString()
+            IdBaseNamespace = Guid.Empty.ToString(),
         };
         var expectedNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace", BaseNamespaceId = null };
         _mockNamespaceService
@@ -828,7 +828,7 @@ public class SimClassAdapterTest
             Name = "TestClass",
             State = SimModelsAccesibility.Normal,
             IdBaseClass = baseClassId.ToString(),
-            IdBaseNamespace = Guid.NewGuid().ToString()
+            IdBaseNamespace = Guid.NewGuid().ToString(),
         };
 
         _mockNamespaceService

@@ -13,13 +13,13 @@ public class SimClassTest
     {
         var baseClass = new SimClass
         {
-            Name = "SealedBaseClass"
+            Name = "SealedBaseClass",
         };
         baseClass.State = SimAccesibility.Sealed;
 
         var simClass = new SimClass
         {
-            Name = "DerivedClass"
+            Name = "DerivedClass",
         };
 
         simClass.BaseClass = baseClass;
@@ -61,7 +61,7 @@ public class SimClassTest
         [
             new SimMethod { Name = "ConcreteMethod", Accesibility = SimAccesibility.Normal },
             new SimMethod { Name = "AbstractMethod", Accesibility = SimAccesibility.Abstract }
-        ]
+        ],
         };
 
         Assert.AreEqual(SimAccesibility.Abstract, simClass.State);
@@ -76,7 +76,7 @@ public class SimClassTest
         [
             new SimMethod { Name = "ConcreteMethod1", Accesibility = SimAccesibility.Normal },
             new SimMethod { Name = "ConcreteMethod2", Accesibility = SimAccesibility.Normal }
-        ]
+        ],
         };
 
         Assert.AreEqual(SimAccesibility.Normal, simClass.State);
@@ -88,12 +88,12 @@ public class SimClassTest
         var baseClass = new SimClass
         {
             Name = "NormalBaseClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var simClass = new SimClass
         {
-            Name = "DerivedClass"
+            Name = "DerivedClass",
         };
 
         simClass.BaseClass = baseClass;
@@ -113,7 +113,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
-            ]
+            ],
         };
 
         var derivedClass = new SimClass
@@ -123,7 +123,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal }
-            ]
+            ],
         };
 
         derivedClass.BaseClass = baseClass;
@@ -142,7 +142,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
-            ]
+            ],
         };
 
         var derivedClass = new SimClass
@@ -152,7 +152,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "NewAbstractMethod", Accesibility = SimAccesibility.Abstract }
-            ]
+            ],
         };
 
         derivedClass.BaseClass = baseClass;
@@ -167,12 +167,12 @@ public class SimClassTest
         var baseClass = new SimClass
         {
             Name = "SealedBaseClass",
-            State = SimAccesibility.Sealed
+            State = SimAccesibility.Sealed,
         };
 
         var simClass = new SimClass
         {
-            Name = "DerivedClass"
+            Name = "DerivedClass",
         };
 
         simClass.SetBaseClass(baseClass);
@@ -187,7 +187,7 @@ public class SimClassTest
             Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
             Name = "void",
             State = SimAccesibility.Normal,
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
         };
 
         var baseClass = new SimClass
@@ -217,7 +217,7 @@ public class SimClassTest
                     Privacity = SimPrivacity.Public
                 }
 
-            ]
+            ],
         };
 
         var derivedClass = new SimClass
@@ -238,7 +238,7 @@ public class SimClassTest
                     Privacity = SimPrivacity.Public
                 }
 
-            ]
+            ],
         };
 
         derivedClass.SetBaseClass(baseClass);
@@ -255,7 +255,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
-            ]
+            ],
         };
 
         var derivedClass = new SimClass
@@ -267,7 +267,7 @@ public class SimClassTest
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal, IsOverride = true, IsVirtual = true },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal, IsOverride = true, IsVirtual = true },
                 new SimMethod { Name = "AdditionalMethod", Accesibility = SimAccesibility.Normal, IsOverride = true, IsVirtual = true }
-            ]
+            ],
         };
 
         derivedClass.SetBaseClass(baseClass);
@@ -282,13 +282,13 @@ public class SimClassTest
         var baseClass = new SimClass
         {
             Name = "NormalBaseClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var derivedClass = new SimClass
         {
             Name = "NormalDerivedClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         derivedClass.SetBaseClass(baseClass);
@@ -308,13 +308,13 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract },
                 new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract }
-            ]
+            ],
         };
 
         var derivedClass = new SimClass
         {
             Name = "AbstractDerivedClass",
-            State = SimAccesibility.Abstract
+            State = SimAccesibility.Abstract,
         };
 
         derivedClass.SetBaseClass(baseClass);
@@ -328,7 +328,7 @@ public class SimClassTest
     {
         var simClass = new SimClass
         {
-            State = SimAccesibility.Abstract
+            State = SimAccesibility.Abstract,
         };
 
         simClass.BaseClassId = Guid.NewGuid();
@@ -341,7 +341,7 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "IMyInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         simClass.Methods =
@@ -358,7 +358,7 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "NormalClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         simClass.Methods =
@@ -374,7 +374,7 @@ public class SimClassTest
     {
         var simClass = new SimClass
         {
-            Name = "TestClass"
+            Name = "TestClass",
         };
 
         simClass.Methods =
@@ -403,12 +403,12 @@ public class SimClassTest
         var interfaceClass = new SimClass
         {
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var simClass = new SimClass
         {
-            Name = "RegularClass"
+            Name = "RegularClass",
         };
 
         simClass.BaseClass = interfaceClass;
@@ -421,7 +421,7 @@ public class SimClassTest
         var simClass = new SimClass
         {
             BaseClassId = Guid.NewGuid(),
-            Name = "TestClass"
+            Name = "TestClass",
         };
         simClass.BaseClassId = Guid.NewGuid();
 
@@ -435,7 +435,7 @@ public class SimClassTest
         var simClass = new SimClass
         {
             BaseClassId = Guid.NewGuid(),
-            Name = "ITestInterface"
+            Name = "ITestInterface",
         };
         simClass.BaseClassId = Guid.NewGuid();
 
@@ -448,21 +448,21 @@ public class SimClassTest
     {
         var simClass = new SimClass
         {
-            Name = "TestClass"
+            Name = "TestClass",
         };
         var boolClass = new SimClass
         {
             Name = "bool",
             State = SimAccesibility.Normal,
             Id = Guid.NewGuid(),
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
         };
         var stringClass = new SimClass
         {
             Name = "string",
             State = SimAccesibility.Normal,
             Id = Guid.NewGuid(),
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
         };
 
         simClass.Attributes =
@@ -478,27 +478,27 @@ public class SimClassTest
     {
         var simClass = new SimClass
         {
-            Name = "TestClass"
+            Name = "TestClass",
         };
         var boolClass = new SimClass
         {
             Name = "bool",
             State = SimAccesibility.Normal,
             Id = Guid.NewGuid(),
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
         };
         var stringClass = new SimClass
         {
             Name = "string",
             State = SimAccesibility.Normal,
             Id = Guid.NewGuid(),
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
         };
         var attributes = new List<SimAttribute>
         {
             new SimAttribute { Name = "Attribute1", Reference = stringClass },
             new SimAttribute { Name = "Attribute2", Reference = stringClass },
-            new SimAttribute { Name = "Attribute3", Reference = boolClass }
+            new SimAttribute { Name = "Attribute3", Reference = boolClass },
         };
 
         simClass.Attributes = attributes;
@@ -513,7 +513,7 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         simClass.Attributes =
@@ -529,13 +529,13 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var classToImplement = new SimClass
         {
             Name = "RegularClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         simClass.Implements =
@@ -550,18 +550,18 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "RegularClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var classToImplement = new SimClass
         {
             Name = "InterfaceToImplement",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var implementations = new List<SimClass>
     {
-        classToImplement
+        classToImplement,
     };
 
         simClass.Implements = implementations;
@@ -576,13 +576,13 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "RegularClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         var regularClassToImplement = new SimClass
         {
             Name = "AnotherRegularClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         simClass.Implements =
@@ -600,7 +600,7 @@ public class SimClassTest
             Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
             Name = "void",
             State = SimAccesibility.Normal,
-            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111")
+            BaseClassId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
         };
 
         var interfaceClass = new SimClass
@@ -630,7 +630,7 @@ public class SimClassTest
                     Privacity = SimPrivacity.Public
                 }
 
-            ]
+            ],
         };
 
         var simClass = new SimClass
@@ -651,7 +651,7 @@ public class SimClassTest
                     Privacity = SimPrivacity.Public
                 }
 
-            ]
+            ],
         };
 
         simClass.SetImplements([interfaceClass]);
@@ -668,7 +668,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface },
                 new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface }
-            ]
+            ],
         };
 
         var simClass = new SimClass
@@ -680,7 +680,7 @@ public class SimClassTest
             new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true },
             new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = true },
             new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal, IsOverride = true }
-            ]
+            ],
         };
 
         simClass.SetImplements([interfaceClass]);
@@ -748,7 +748,7 @@ public class SimClassTest
         var simClass = new SimClass
         {
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         simClass.Methods =
@@ -772,7 +772,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface, ReturnType = voidType },
         new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface, ReturnType = voidType }
-            ]
+            ],
         };
 
         var simClass = new SimClass
@@ -783,7 +783,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true, ReturnType = voidType },
         new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
-            ]
+            ],
         };
 
         simClass.SetImplements([interfaceClass]);
@@ -803,7 +803,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract, ReturnType = voidType },
             new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract, ReturnType = voidType }
-            ]
+            ],
         };
 
         var derivedClass = new SimClass
@@ -814,7 +814,7 @@ public class SimClassTest
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal, IsOverride = true, ReturnType = voidType },
             new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
-            ]
+            ],
         };
 
         derivedClass.SetBaseClass(baseClass);
@@ -830,20 +830,20 @@ public class SimClassTest
         {
             Id = interfaceId,
             Name = "IInterface1",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var interface2 = new SimClass
         {
             Id = interfaceId,
             Name = "IInterface2",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
 
         var simClass = new SimClass
         {
             Name = "ImplementingClass",
-            State = SimAccesibility.Normal
+            State = SimAccesibility.Normal,
         };
 
         simClass.SetImplements([interface1, interface2]);

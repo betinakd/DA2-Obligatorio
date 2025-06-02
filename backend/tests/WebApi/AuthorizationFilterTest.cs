@@ -57,7 +57,7 @@ public class AuthorizationFilterTest
     {
         var headers = new HeaderDictionary
         {
-            { "API_KEY", "not-a-valid-guid" }
+            { "API_KEY", "not-a-valid-guid" },
         };
         var context = CreateContext(headers);
 
@@ -73,7 +73,7 @@ public class AuthorizationFilterTest
         var apiKey = Guid.NewGuid();
         var headers = new HeaderDictionary
         {
-            { "API_KEY", apiKey.ToString() }
+            { "API_KEY", apiKey.ToString() },
         };
         var context = CreateContext(headers);
 
@@ -91,7 +91,7 @@ public class AuthorizationFilterTest
         var apiKey = Guid.Parse("77777777-aaaa-1111-1111-111111111111");
         var headers = new HeaderDictionary
         {
-            { "API_KEY", apiKey.ToString() }
+            { "API_KEY", apiKey.ToString() },
         };
         var context = CreateContext(headers);
 
@@ -108,7 +108,7 @@ public class AuthorizationFilterTest
     {
         var headers = new HeaderDictionary
         {
-            { "API_KEY", Guid.Empty.ToString() }
+            { "API_KEY", Guid.Empty.ToString() },
         };
         var context = CreateContext(headers);
 
@@ -126,7 +126,7 @@ public class AuthorizationFilterTest
         var apiKey = Guid.Parse("9C0FF0B1-4ABD-45C6-8A4A-831748FB7A20");
         var headers = new HeaderDictionary
         {
-            { "API_KEY", apiKey.ToString() }
+            { "API_KEY", apiKey.ToString() },
         };
         var context = CreateContext(headers);
 

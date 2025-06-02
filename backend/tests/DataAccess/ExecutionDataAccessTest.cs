@@ -42,7 +42,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -57,7 +57,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Public,
-            Accesibility = SimAccesibility.Sealed
+            Accesibility = SimAccesibility.Sealed,
         };
 
         var parameter = new Parameter
@@ -66,7 +66,7 @@ public class ExecutionDataAccessTest
             ReferenceId = intType.Id,
             Reference = intType,
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
         baseMethod.Parameters.Add(parameter);
 
@@ -79,7 +79,7 @@ public class ExecutionDataAccessTest
             Name = "param1",
             ReferenceId = intType.Id,
             Reference = intType,
-            SignatureId = signature.Id
+            SignatureId = signature.Id,
         };
         signature.Parameters.Add(paramSignature);
 
@@ -120,13 +120,13 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass1",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         var childClass2 = new SimClass
         {
             Name = "ChildClass2",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.AddRange(childClass1, childClass2);
         _context.SaveChanges();
@@ -150,7 +150,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -159,7 +159,7 @@ public class ExecutionDataAccessTest
         {
             Name = "GrandChildClass",
             BaseClassId = childClass.Id,
-            BaseClass = childClass
+            BaseClass = childClass,
         };
         _context.SimClasses.Add(grandChildClass);
         _context.SaveChanges();
@@ -208,7 +208,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -218,7 +218,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
-            RelatedClass = baseClass
+            RelatedClass = baseClass,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -229,7 +229,7 @@ public class ExecutionDataAccessTest
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            Invocations = []
+            Invocations = [],
         };
         childClass.Methods.Add(childMethod);
         _context.SimMethods.Add(childMethod);
@@ -252,7 +252,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -263,7 +263,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Protected
+            Privacity = SimPrivacity.Protected,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -273,7 +273,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
@@ -283,7 +283,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
             Invocations = [invocation],
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         childClass.Methods.Add(childMethod);
         _context.SimMethods.Add(childMethod);
@@ -306,7 +306,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -317,7 +317,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -327,7 +327,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
@@ -336,7 +336,7 @@ public class ExecutionDataAccessTest
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
         childClass.Methods.Add(childMethod);
         _context.SimMethods.Add(childMethod);
@@ -359,7 +359,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -370,7 +370,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Protected
+            Privacity = SimPrivacity.Protected,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -380,7 +380,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
@@ -389,7 +389,7 @@ public class ExecutionDataAccessTest
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
         childClass.Methods.Add(childMethod);
         _context.SimMethods.Add(childMethod);
@@ -412,7 +412,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -423,7 +423,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -433,7 +433,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
@@ -442,7 +442,7 @@ public class ExecutionDataAccessTest
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
         childClass.Methods.Add(childMethod);
         _context.SimMethods.Add(childMethod);
@@ -466,7 +466,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -476,7 +476,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var ownerMethod = new SimMethod
@@ -486,7 +486,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Private,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
         baseClass.Methods.Add(ownerMethod);
         _context.SimMethods.Add(ownerMethod);
@@ -510,7 +510,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -520,7 +520,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethod" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var ownerMethod = new SimMethod
@@ -530,7 +530,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Privacity = SimPrivacity.Public,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
         baseClass.Methods.Add(ownerMethod);
         _context.SimMethods.Add(ownerMethod);
@@ -553,7 +553,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -564,7 +564,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Protected
+            Privacity = SimPrivacity.Protected,
         };
         _context.SimMethods.Add(baseMethod);
         _context.SaveChanges();
@@ -574,7 +574,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Signature = new Signature { Id = Guid.NewGuid(), Name = "TestMethodnotMatches" },
             RelatedMethodId = baseMethod.Id,
-            RelatedMethod = baseMethod
+            RelatedMethod = baseMethod,
         };
 
         var childMethod = new SimMethod
@@ -583,7 +583,7 @@ public class ExecutionDataAccessTest
             Name = "ChildMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
         childClass.Methods.Add(childMethod);
         _context.SimMethods.Add(childMethod);
@@ -602,7 +602,7 @@ public class ExecutionDataAccessTest
             Id = Guid.NewGuid(),
             Execution = "Test execution",
             Reference = "Test reference",
-            ObjectCreate = "Test object creation"
+            ObjectCreate = "Test object creation",
         };
 
         _executionDataAccess!.SaveExecutionLog(executionLog);
@@ -630,7 +630,7 @@ public class ExecutionDataAccessTest
             Name = "methodParam",
             ReferenceId = intType.Id,
             Reference = intType,
-            Index = 1
+            Index = 1,
         };
 
         var method = new SimMethod
@@ -638,7 +638,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
-            Parameters = [methodParameter]
+            Parameters = [methodParameter],
         };
         methodParameter.RelatedMethod = method;
         methodParameter.RelatedMethodId = method.Id;
@@ -648,25 +648,25 @@ public class ExecutionDataAccessTest
             Name = "invocationParam",
             ReferenceId = intType.Id,
             Reference = intType,
-            Index = 0
+            Index = 0,
         };
 
         var referenceParameter = new ReferenceParameter
         {
-            Reference = invocationParameter
+            Reference = invocationParameter,
         };
 
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var invocation = new Invocation
         {
             Reference = referenceParameter,
             Signature = invocationSignature,
-            Index = 0
+            Index = 0,
         };
         method.Invocations.Add(invocation);
 
@@ -701,27 +701,27 @@ public class ExecutionDataAccessTest
         {
             Name = "testVar",
             ReferenceId = stringType.Id,
-            Reference = stringType
+            Reference = stringType,
         };
         _context.LocalVariables.Add(variable);
         _context.SaveChanges();
 
         var referenceVariable = new ReferenceVariable
         {
-            Reference = variable
+            Reference = variable,
         };
 
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var invocation = new Invocation
         {
             Reference = referenceVariable,
             Signature = invocationSignature,
-            Index = 0
+            Index = 0,
         };
 
         var method = new SimMethod
@@ -729,7 +729,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
@@ -765,27 +765,27 @@ public class ExecutionDataAccessTest
             ReferenceId = boolType.Id,
             Reference = boolType,
             RelatedClassId = simClass.Id,
-            RelatedClass = simClass
+            RelatedClass = simClass,
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
 
         var referenceAttribute = new ReferenceAttribute
         {
-            Reference = attribute
+            Reference = attribute,
         };
 
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var invocation = new Invocation
         {
             Reference = referenceAttribute,
             Signature = invocationSignature,
-            Index = 0
+            Index = 0,
         };
 
         var method = new SimMethod
@@ -793,7 +793,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
@@ -823,27 +823,27 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
 
         var referenceBase = new ReferenceBase
         {
-            Reference = childClass
+            Reference = childClass,
         };
 
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var invocation = new Invocation
         {
             Reference = referenceBase,
             Signature = invocationSignature,
-            Index = 0
+            Index = 0,
         };
 
         var method = new SimMethod
@@ -851,7 +851,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
@@ -879,20 +879,20 @@ public class ExecutionDataAccessTest
 
         var referenceThis = new ReferenceThis
         {
-            Reference = simClass
+            Reference = simClass,
         };
 
         var invocationSignature = new Signature
         {
             Name = "InvokedMethod",
-            Parameters = []
+            Parameters = [],
         };
 
         var invocation = new Invocation
         {
             Reference = referenceThis,
             Signature = invocationSignature,
-            Index = 0
+            Index = 0,
         };
 
         var method = new SimMethod
@@ -900,7 +900,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
-            Invocations = [invocation]
+            Invocations = [invocation],
         };
 
         _context.SimMethods.Add(method);
@@ -982,7 +982,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = simClass.Id,
             RelatedClass = simClass,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         simClass.Methods.Add(privateMethod);
         _context.SimMethods.Add(privateMethod);
@@ -1008,7 +1008,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1018,7 +1018,7 @@ public class ExecutionDataAccessTest
             Name = "PublicMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         baseClass.Methods.Add(publicMethod);
         _context.SimMethods.Add(publicMethod);
@@ -1044,7 +1044,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1054,7 +1054,7 @@ public class ExecutionDataAccessTest
             Name = "ProtectedMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Protected
+            Privacity = SimPrivacity.Protected,
         };
         baseClass.Methods.Add(protectedMethod);
         _context.SimMethods.Add(protectedMethod);
@@ -1080,7 +1080,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1090,7 +1090,7 @@ public class ExecutionDataAccessTest
             Name = "PrivateMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         baseClass.Methods.Add(privateMethod);
         _context.SimMethods.Add(privateMethod);
@@ -1122,7 +1122,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             IsVirtual = true,
             IsOverride = true,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         var result = _executionDataAccess.CanOverride(nonExistentClassId, method);
@@ -1156,7 +1156,7 @@ public class ExecutionDataAccessTest
         var simClass = new SimClass
         {
             Name = "ClassWithNonExistentBase",
-            BaseClassId = nonExistentBaseId
+            BaseClassId = nonExistentBaseId,
         };
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
@@ -1184,7 +1184,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1195,7 +1195,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             IsVirtual = true,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
         baseClass.Methods.Add(baseMethod);
         _context.SimMethods.Add(baseMethod);
@@ -1219,7 +1219,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1230,7 +1230,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             Accesibility = SimAccesibility.Abstract,
-            Privacity = SimPrivacity.Protected
+            Privacity = SimPrivacity.Protected,
         };
         baseClass.Methods.Add(baseMethod);
         _context.SimMethods.Add(baseMethod);
@@ -1254,7 +1254,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ParentClass",
             BaseClassId = grandparentClass.Id,
-            BaseClass = grandparentClass
+            BaseClass = grandparentClass,
         };
         _context.SimClasses.Add(parentClass);
         _context.SaveChanges();
@@ -1263,7 +1263,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = parentClass.Id,
-            BaseClass = parentClass
+            BaseClass = parentClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1304,7 +1304,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1340,7 +1340,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1351,7 +1351,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
             IsVirtual = true,
-            Privacity = SimPrivacity.Private
+            Privacity = SimPrivacity.Private,
         };
         baseClass.Methods.Add(baseMethod);
         _context.SimMethods.Add(baseMethod);
@@ -1386,7 +1386,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ParentClass",
             BaseClassId = grandparentClass.Id,
-            BaseClass = grandparentClass
+            BaseClass = grandparentClass,
         };
         _context.SimClasses.Add(parentClass);
         _context.SaveChanges();
@@ -1395,7 +1395,7 @@ public class ExecutionDataAccessTest
         {
             Name = "ChildClass",
             BaseClassId = parentClass.Id,
-            BaseClass = parentClass
+            BaseClass = parentClass,
         };
         _context.SimClasses.Add(childClass);
         _context.SaveChanges();
@@ -1405,7 +1405,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = grandparentClass.Id,
             RelatedClass = grandparentClass,
-            Accesibility = SimAccesibility.Sealed
+            Accesibility = SimAccesibility.Sealed,
         };
         grandparentClass.Methods.Add(sealedMethod);
         _context.SimMethods.Add(sealedMethod);
@@ -1435,7 +1435,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = childClass.Id,
             RelatedClass = childClass,
-            IsOverride = true
+            IsOverride = true,
         };
         _context.SimMethods.Add(overrideMethod);
         _context.SaveChanges();
@@ -1461,7 +1461,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = baseClass.Id,
             RelatedClass = baseClass,
-            IsOverride = false
+            IsOverride = false,
         };
         _context.SimMethods.Add(referenceMethod);
         _context.SaveChanges();
@@ -1503,7 +1503,7 @@ public class ExecutionDataAccessTest
             Name = "TestMethod",
             RelatedClassId = parent.Id,
             RelatedClass = parent,
-            IsOverride = true
+            IsOverride = true,
         };
         _context.SimMethods.Add(overrideMethod);
         _context.SaveChanges();
@@ -1530,7 +1530,7 @@ public class ExecutionDataAccessTest
             RelatedClassId = referenceClass.Id,
             RelatedClass = referenceClass,
             IsOverride = false,
-            IsVirtual = true
+            IsVirtual = true,
         };
         _context.SimMethods.Add(referenceMethod);
         _context.SaveChanges();

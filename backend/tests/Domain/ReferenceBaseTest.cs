@@ -31,7 +31,7 @@ public class ReferenceBaseTest()
         [
             new ParameterSignature { Name = "param1" },
             new ParameterSignature { Name = "param2" }
-        ]
+        ],
         };
 
         var referenceBase = new ReferenceBase();
@@ -61,7 +61,7 @@ public class ReferenceBaseTest()
             [
                 new ParameterSignature { Name = "x" },
                 new ParameterSignature { Name = "y" }
-            ]
+            ],
         };
         var baseClass = new SimClass { Name = "BaseClass" };
         var simClass = new SimClass { Name = "ChildClass", BaseClass = baseClass, BaseClassId = baseClass.Id };
@@ -82,7 +82,7 @@ public class ReferenceBaseTest()
             Id = expectedId,
             Name = "ChildClass",
             BaseClassId = baseClass.Id,
-            BaseClass = baseClass
+            BaseClass = baseClass,
         };
 
         var referenceBase = new ReferenceBase { Reference = simClass };

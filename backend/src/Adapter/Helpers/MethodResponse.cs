@@ -44,6 +44,7 @@ public class MethodResponseMapper
                 Id = i.Id,
                 IdReference = i.Reference.GetReferenceId(),
                 MethodName = i.Signature.Name,
+                IdReturnType = i.Signature?.ReturnType?.Id ?? Guid.Empty,
                 Parameters = i.Signature.Parameters?.Select(p => new ParameterSignatureResponse
                 {
                     Name = p.Name,

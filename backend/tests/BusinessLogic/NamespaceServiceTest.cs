@@ -100,7 +100,7 @@ public class NamespaceServiceTest
         var expectedNamespaces = new List<SimNamespace>
         {
             new SimNamespace { Id = namespace1Id, Name = "Namespace1", BaseNamespaceId = null },
-            new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace2", BaseNamespaceId = namespace1Id }
+            new SimNamespace { Id = Guid.NewGuid(), Name = "Namespace2", BaseNamespaceId = namespace1Id },
         };
 
         _mockNamespaceDataAccess!.Setup(x => x.GetAllNamespaces()).Returns(expectedNamespaces);

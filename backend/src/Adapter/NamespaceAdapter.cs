@@ -1,4 +1,5 @@
 using Adapter.Exceptions;
+using Adapter.Helpers;
 using BusinessLogic.Exceptions;
 using Domain;
 using IAdapter;
@@ -65,13 +66,8 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
     public List<NamespaceResponse> GetAllNamespaces()
     {
         return _namespaceService.GetAllNamespaces()
-            .Select(n => new NamespaceResponse
-            {
-                Id = n.Id,
-                Name = n.Name,
-                BaseNamespaceId = n.BaseNamespaceId,
-                Elements = MapClassesToResponses(_simClassService.GetClassesOfNamespaces(n.Id))
-            }).ToList();
+            .Select(NamespaceResponseMapper.MapToNamespaceResponse)
+            .ToList();
     }
 
     private List<SimClassResponse> MapClassesToResponses(List<SimClass> classes)

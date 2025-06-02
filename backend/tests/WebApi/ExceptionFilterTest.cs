@@ -22,7 +22,7 @@ public class ExceptionFilterTests
                 new ActionDescriptor()),
             [])
         {
-            Exception = exception
+            Exception = exception,
         };
     }
 

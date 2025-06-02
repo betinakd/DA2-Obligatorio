@@ -28,7 +28,7 @@ public class ReferenceThisTest()
         [
             new ParameterSignature { Name = "param1" },
             new ParameterSignature { Name = "param2" }
-        ]
+        ],
         };
 
         var referenceThis = new ReferenceThis();
@@ -48,7 +48,7 @@ public class ReferenceThisTest()
         [
             new ParameterSignature { Name = "param1" },
             new ParameterSignature { Name = "param2" }
-        ]
+        ],
         };
 
         var referenceThis = new ReferenceThis() { Reference = new SimClass() { Name = "TestClass" } };

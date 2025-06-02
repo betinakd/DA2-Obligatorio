@@ -33,7 +33,7 @@ public class SimAttributeServiceTest
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = classId, Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(false);
@@ -55,7 +55,7 @@ public class SimAttributeServiceTest
             Name = "TestAttribute",
             RelatedClass = relatedClass,
             Reference = typeClass,
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
@@ -86,7 +86,7 @@ public class SimAttributeServiceTest
             Name = "ExistingAttribute",
             RelatedClass = new SimClass { Id = classId, Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(classId)).Returns(true);
@@ -142,7 +142,7 @@ public class SimAttributeServiceTest
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(false);
@@ -164,7 +164,7 @@ public class SimAttributeServiceTest
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
@@ -187,7 +187,7 @@ public class SimAttributeServiceTest
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "NonExistentClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
@@ -210,7 +210,7 @@ public class SimAttributeServiceTest
             Name = "DuplicateAttributeName",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
@@ -232,7 +232,7 @@ public class SimAttributeServiceTest
             Name = "ValidAttributeName",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         var updatedAttribute = new SimAttribute
@@ -241,7 +241,7 @@ public class SimAttributeServiceTest
             Name = "ValidAttributeName",
             RelatedClass = attribute.RelatedClass,
             Reference = attribute.Reference,
-            Privacity = attribute.Privacity
+            Privacity = attribute.Privacity,
         };
 
         _mockSimAttributeDataAccess.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);
@@ -277,7 +277,7 @@ public class SimAttributeServiceTest
             Name = "TestAttribute",
             RelatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" },
             Reference = new SimClass { Id = Guid.NewGuid(), Name = "TypeClass" },
-            Privacity = SimPrivacity.Public
+            Privacity = SimPrivacity.Public,
         };
 
         _mockSimAttributeDataAccess!.Setup(da => da.ExistAttributeById(attributeId)).Returns(true);

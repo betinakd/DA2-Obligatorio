@@ -33,7 +33,7 @@ public class ExecutionServiceTest
             Id = Guid.NewGuid(),
             Name = "TestMethod",
             RelatedClass = simClass,
-            Invocations = []
+            Invocations = [],
         };
         var signature = new Signature { Name = "TestMethod", Parameters = [] };
 
@@ -72,7 +72,7 @@ public class ExecutionServiceTest
             Name = "InnerMethod",
             RelatedClass = simClass,
             RelatedClassId = simClass.Id,
-            Invocations = []
+            Invocations = [],
         };
 
         var outerMethod = new SimMethod
@@ -81,7 +81,7 @@ public class ExecutionServiceTest
             Name = "OuterMethod",
             RelatedClass = simClass,
             RelatedClassId = simClass.Id,
-            Invocations = []
+            Invocations = [],
         };
 
         var innerSignature = new Signature { Name = "InnerMethod", Parameters = [] };
@@ -96,7 +96,7 @@ public class ExecutionServiceTest
         var invocation = new Invocation
         {
             Reference = thisRef.Object,
-            Signature = innerSignature
+            Signature = innerSignature,
         };
 
         outerMethod.Invocations.Add(invocation);
@@ -149,13 +149,13 @@ public class ExecutionServiceTest
             Id = methodId,
             Name = "RecursiveMethod",
             RelatedClass = simClass,
-            Invocations = []
+            Invocations = [],
         };
 
         var recursiveInvocation = new Invocation
         {
             Reference = new ReferenceThis { Reference = simClass },
-            Signature = signature
+            Signature = signature,
         };
         method.Invocations.Add(recursiveInvocation);
 
@@ -234,7 +234,7 @@ public class ExecutionServiceTest
         {
             Id = Guid.NewGuid(),
             Name = "ChildClass",
-            BaseClassId = parentClass.Id
+            BaseClassId = parentClass.Id,
         };
 
         _mockExecuteDataAccess
@@ -279,7 +279,7 @@ public class ExecutionServiceTest
             Id = Guid.NewGuid(),
             Name = "AbstractMethod",
             RelatedClass = simClass,
-            Accesibility = SimAccesibility.Abstract
+            Accesibility = SimAccesibility.Abstract,
         };
 
         _mockExecuteDataAccess!
@@ -344,7 +344,7 @@ public class ExecutionServiceTest
             IsVirtual = true,
             Invocations = [],
             RelatedClass = simClass,
-            RelatedClassId = simClass.Id
+            RelatedClassId = simClass.Id,
         };
 
         var innerMethod = new SimMethod
@@ -353,7 +353,7 @@ public class ExecutionServiceTest
             Name = "InnerMethod",
             Invocations = [],
             RelatedClass = simClass,
-            RelatedClassId = simClass.Id
+            RelatedClassId = simClass.Id,
         };
         var innerSignature = new Signature { Name = "InnerMethod", Parameters = [] };
 
@@ -373,7 +373,7 @@ public class ExecutionServiceTest
         var invocation = new Invocation
         {
             Reference = thisRef.Object,
-            Signature = innerSignature
+            Signature = innerSignature,
         };
         method.Invocations.Add(invocation);
 
@@ -414,7 +414,7 @@ public class ExecutionServiceTest
             Id = Guid.NewGuid(),
             Name = "PrivateMethod",
             Privacity = SimPrivacity.Private,
-            Invocations = []
+            Invocations = [],
         };
 
         var signature = new Signature { Name = "PrivateMethod", Parameters = [] };
@@ -525,7 +525,7 @@ public class ExecutionServiceTest
             Id = Guid.NewGuid(),
             Name = "AbstractMethod",
             RelatedClass = simClass,
-            Accesibility = SimAccesibility.Abstract
+            Accesibility = SimAccesibility.Abstract,
         };
 
         _mockExecuteDataAccess!
@@ -570,7 +570,7 @@ public class ExecutionServiceTest
             Accesibility = SimAccesibility.Abstract,
             IsVirtual = true,
             RelatedClass = simClass,
-            Invocations = []
+            Invocations = [],
         };
 
         var mockRef = new Mock<Reference>();
@@ -603,7 +603,7 @@ public class ExecutionServiceTest
             Accesibility = SimAccesibility.Abstract,
             IsVirtual = true,
             RelatedClass = simClass,
-            Invocations = []
+            Invocations = [],
         };
 
         var mockRef = new Mock<Reference>();
@@ -636,7 +636,7 @@ public class ExecutionServiceTest
             Accesibility = SimAccesibility.Interface,
             IsVirtual = false,
             RelatedClass = simClass,
-            Invocations = []
+            Invocations = [],
         };
 
         var mockRef = new Mock<Reference>();

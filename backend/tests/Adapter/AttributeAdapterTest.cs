@@ -67,7 +67,7 @@ public class AttributeAdapterTest
             Reference = typeClass,
             ReferenceId = typeId,
             Instance = instanceClass,
-            InstanceId = instanceId
+            InstanceId = instanceId,
         };
 
         _mockSimClassService!
@@ -144,7 +144,7 @@ public class AttributeAdapterTest
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdReference = typeId.ToString(),
-            IdInstance = instanceId.ToString()
+            IdInstance = instanceId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -182,7 +182,7 @@ public class AttributeAdapterTest
         {
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
-            IdReference = typeId.ToString()
+            IdReference = typeId.ToString(),
         };
 
         _mockSimClassService!
@@ -205,7 +205,7 @@ public class AttributeAdapterTest
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdReference = typeId.ToString(),
-            IdInstance = instanceId.ToString()
+            IdInstance = instanceId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = classId };
@@ -243,7 +243,7 @@ public class AttributeAdapterTest
             Name = "TestAttribute",
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdRelatedClass = relatedClassId.ToString(),
-            IdReference = typeId.ToString()
+            IdReference = typeId.ToString(),
         };
 
         _mockSimClassService!
@@ -269,7 +269,7 @@ public class AttributeAdapterTest
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdRelatedClass = classId.ToString(),
             IdReference = typeId.ToString(),
-            IdInstance = instanceId.ToString()
+            IdInstance = instanceId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = classId, Name = "TestClass" };
@@ -303,7 +303,7 @@ public class AttributeAdapterTest
             Reference = new SimClass { Id = typeId, Name = "string" },
             ReferenceId = typeId,
             RelatedClass = new SimClass { Id = relatedClassId, Name = "Owner" },
-            RelatedClassId = relatedClassId
+            RelatedClassId = relatedClassId,
         };
 
         _mockSimAttributeService!
@@ -349,7 +349,7 @@ public class AttributeAdapterTest
             Privacity = Models.Enums.SimModelsPrivacity.Protected,
             IdRelatedClass = relatedClassId.ToString(),
             IdReference = typeId.ToString(),
-            IdInstance = instanceId.ToString()
+            IdInstance = instanceId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "RelatedClass" };
@@ -366,7 +366,7 @@ public class AttributeAdapterTest
             Reference = typeClass,
             ReferenceId = typeId,
             Instance = instanceClass,
-            InstanceId = instanceId
+            InstanceId = instanceId,
         };
 
         _mockSimClassService!
@@ -420,7 +420,7 @@ public class AttributeAdapterTest
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdRelatedClass = relatedClassId.ToString(),
             IdReference = typeId.ToString(),
-            IdInstance = instanceId.ToString()
+            IdInstance = instanceId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" };
@@ -454,7 +454,7 @@ public class AttributeAdapterTest
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdRelatedClass = relatedClassId.ToString(),
             IdReference = typeId.ToString(),
-            IdInstance = instanceId.ToString()
+            IdInstance = instanceId.ToString(),
         };
 
         var relatedClass = new SimClass { Id = relatedClassId, Name = "TestClass" };
@@ -484,7 +484,7 @@ public class AttributeAdapterTest
             Privacity = Models.Enums.SimModelsPrivacity.Public,
             IdReference = typeId.ToString(),
             IdInstance = instanceId.ToString(),
-            IsStatic = false
+            IsStatic = false,
         };
 
         var relatedClass = new SimClass { Id = classId, Name = "RelatedClass" };

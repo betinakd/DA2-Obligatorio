@@ -244,6 +244,18 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             .WithOne(c => c.Namespace)
             .HasForeignKey(c => c.NamespaceId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<SimClass>()
+            .HasOne(c => c.Namespace)
+            .WithMany(n => n.Elements)
+            .HasForeignKey(c => c.NamespaceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<Signature>()
+            .HasOne(s => s.ReturnType)
+            .WithMany()
+            .HasForeignKey(s => s.ReturnTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     private void DataSeed(ModelBuilder modelBuilder)

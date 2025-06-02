@@ -29,19 +29,19 @@ public class ClassInterfaceControllerTest
         var classId = Guid.NewGuid();
         var interfaceRequest = new InterfaceRequestUpdate
         {
-            IdInterface = Guid.NewGuid().ToString()
+            IdInterface = Guid.NewGuid().ToString(),
         };
 
         var expectedResponse = new SimClassResponse
         {
             Id = classId,
-            Name = "TestClass"
+            Name = "TestClass",
         };
 
         var expectedResponseCreated = new CreatedSimClassResponse
         {
             Message = "Interface added successfully",
-            SimClass = expectedResponse
+            SimClass = expectedResponse,
         };
 
         _mockSimClassAdapter
@@ -67,7 +67,7 @@ public class ClassInterfaceControllerTest
         var classId = Guid.NewGuid();
         var interfaceRequest = new InterfaceRequestUpdate
         {
-            IdInterface = Guid.NewGuid().ToString()
+            IdInterface = Guid.NewGuid().ToString(),
         };
 
         _mockSimClassAdapter

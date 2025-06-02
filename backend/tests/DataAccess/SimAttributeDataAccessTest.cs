@@ -38,7 +38,7 @@ public class SimAttributeDataAccessTest
         var relatedClass = new SimClass
         {
             Id = relatedClassId,
-            Name = "Test Class"
+            Name = "Test Class",
         };
         _simClassDataAccess.CreateSimClass(relatedClass);
 
@@ -49,7 +49,7 @@ public class SimAttributeDataAccessTest
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId,
             Reference = relatedClass,
-            ReferenceId = relatedClassId
+            ReferenceId = relatedClassId,
         };
 
         var result = _simAttributeDataAccess.CreateAttribute(relatedClassId, attribute);
@@ -69,7 +69,7 @@ public class SimAttributeDataAccessTest
         var relatedClass = new SimClass
         {
             Id = relatedClassId,
-            Name = "Test Class"
+            Name = "Test Class",
         };
         _simClassDataAccess.CreateSimClass(relatedClass);
 
@@ -78,7 +78,7 @@ public class SimAttributeDataAccessTest
         {
             Id = attributeId,
             Name = "Test Attribute",
-            RelatedClass = relatedClass
+            RelatedClass = relatedClass,
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
@@ -96,7 +96,7 @@ public class SimAttributeDataAccessTest
         var relatedClass = new SimClass
         {
             Id = relatedClassId,
-            Name = "Test Class"
+            Name = "Test Class",
         };
         _simClassDataAccess.CreateSimClass(relatedClass);
 
@@ -105,7 +105,7 @@ public class SimAttributeDataAccessTest
         {
             Id = attributeId,
             Name = "Test Attribute",
-            RelatedClass = relatedClass
+            RelatedClass = relatedClass,
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
@@ -121,7 +121,7 @@ public class SimAttributeDataAccessTest
         var relatedClass = new SimClass
         {
             Id = relatedClassId,
-            Name = "Test Class"
+            Name = "Test Class",
         };
         _simClassDataAccess.CreateSimClass(relatedClass);
 
@@ -130,7 +130,7 @@ public class SimAttributeDataAccessTest
         {
             Id = attributeId,
             Name = "Test Attribute",
-            RelatedClass = relatedClass
+            RelatedClass = relatedClass,
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
@@ -149,7 +149,7 @@ public class SimAttributeDataAccessTest
         var relatedClass = new SimClass
         {
             Id = relatedClassId,
-            Name = "Test Class"
+            Name = "Test Class",
         };
         _simClassDataAccess.CreateSimClass(relatedClass);
 
@@ -161,7 +161,7 @@ public class SimAttributeDataAccessTest
             Reference = relatedClass,
             ReferenceId = relatedClassId,
             RelatedClass = relatedClass,
-            RelatedClassId = relatedClassId
+            RelatedClassId = relatedClassId,
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();
@@ -173,7 +173,7 @@ public class SimAttributeDataAccessTest
         var newRelatedClass = new SimClass
         {
             Id = newRelatedClassId,
-            Name = "Test Class 2"
+            Name = "Test Class 2",
         };
         _simClassDataAccess.CreateSimClass(newRelatedClass);
 
@@ -203,14 +203,14 @@ public class SimAttributeDataAccessTest
         var invocation = new Invocation
         {
             Id = invocationId,
-            Signature = signature
+            Signature = signature,
         };
 
         var reference = new ReferenceAttribute
         {
             Reference = new SimAttribute() { Id = attributeId, Name = "attri" },
             RelatedInvocationId = invocationId,
-            RelatedInvocation = invocation
+            RelatedInvocation = invocation,
         };
 
         invocation.Reference = reference;
@@ -229,7 +229,7 @@ public class SimAttributeDataAccessTest
         var relatedClass = new SimClass
         {
             Id = relatedClassId,
-            Name = "Test Class"
+            Name = "Test Class",
         };
         _context.SimClasses.Add(relatedClass);
 
@@ -242,7 +242,7 @@ public class SimAttributeDataAccessTest
             RelatedClass = relatedClass,
             RelatedClassId = relatedClassId,
             Reference = relatedClass,
-            ReferenceId = relatedClassId
+            ReferenceId = relatedClassId,
         };
         _context.SimAttributes.Add(attribute);
         _context.SaveChanges();

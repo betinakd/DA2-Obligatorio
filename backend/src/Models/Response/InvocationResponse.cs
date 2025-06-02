@@ -4,6 +4,7 @@ public class InvocationResponse()
 {
     public Guid Id { get; set; }
     public Guid IdReference { get; set; }
+    public Guid IdReturnType { get; set; }
     public string? TypeReference { get; set; }
     public string? MethodName { get; set; }
     public List<ParameterSignatureResponse>? Parameters { get; set; }
