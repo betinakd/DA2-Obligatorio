@@ -143,9 +143,9 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         var invocation = _context.Invocations
             .Where(i => i.Id == id)
             .Include(i => i.Reference)
-            .Include(i => i.Signature)
-                .ThenInclude(s => s.Parameters)
-                    .ThenInclude(p => p.Reference)
+            .Include(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
+            .Include(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Instance)
+            .Include(i => i.Signature).ThenInclude(s => s.ReturnType)
             .Include(i => i.RelatedMethod)
             .FirstOrDefault();
 
@@ -193,14 +193,13 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Where(m => m.Id == id)
             .Include(a => a.RelatedClass)
             .Include(b => b.ReturnType)
-            .Include(m => m.Parameters)
-                .ThenInclude(p => p.Reference)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => i.Signature)
-                    .ThenInclude(s => s.Parameters)
-                        .ThenInclude(p => p.Reference)
-            .Include(m => m.Invocations)
-                .ThenInclude(i => i.Reference)
+            .Include(m => m.LocalVariables)
+            .Include(m => m.LocalVariables).ThenInclude(v => v.Reference)
+            .Include(m => m.LocalVariables).ThenInclude(v => v.Instance)
+            .Include(m => m.Parameters).ThenInclude(p => p.Reference)
+            .Include(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Reference)
+            .Include(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.Parameters).ThenInclude(p => p.Instance)
+            .Include(m => m.Invocations).ThenInclude(i => i.Signature).ThenInclude(s => s.ReturnType)
             .FirstOrDefault();
 
         if(method != null)
@@ -262,6 +261,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         var variable = _context.LocalVariables
             .Where(v => v.Id == id)
             .Include(v => v.Reference)
+            .Include(v => v.Instance)
             .Include(v => v.RelatedMethod)
             .FirstOrDefault();
         return variable;

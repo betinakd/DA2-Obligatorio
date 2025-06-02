@@ -399,15 +399,28 @@ public class SimMethodDataAccessTest
     {
         var variableId = Guid.NewGuid();
         var typeId = Guid.NewGuid();
+        var instanceId = Guid.NewGuid();
         var methodId = Guid.NewGuid();
-        var localVariable = new LocalVariable()
+
+        var typeClass = new SimClass { Id = typeId, Name = "TestType" };
+        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceType" };
+        var relatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" };
+
+        _context.SimClasses.Add(typeClass);
+        _context.SimClasses.Add(instanceClass);
+        _context.SimMethods.Add(relatedMethod);
+        _context.SaveChanges();
+
+        var localVariable = new LocalVariable
         {
             Id = variableId,
             ReferenceId = typeId,
+            InstanceId = instanceId,
             Name = "TestLocalVariable",
             RelatedMethodId = methodId,
-            Reference = new SimClass { Id = typeId, Name = "TestType" },
-            RelatedMethod = new SimMethod { Id = methodId, Name = "TestRelatedMethod" },
+            Reference = typeClass,
+            Instance = instanceClass,
+            RelatedMethod = relatedMethod,
         };
         _context.LocalVariables.Add(localVariable);
         _context.SaveChanges();
@@ -417,6 +430,12 @@ public class SimMethodDataAccessTest
         Assert.IsNotNull(result);
         Assert.AreEqual(variableId, result.Id);
         Assert.AreEqual("TestLocalVariable", result.Name);
+        Assert.IsNotNull(result.Reference);
+        Assert.AreEqual("TestType", result.Reference.Name);
+        Assert.IsNotNull(result.Instance);
+        Assert.AreEqual("InstanceType", result.Instance.Name);
+        Assert.IsNotNull(result.RelatedMethod);
+        Assert.AreEqual("TestRelatedMethod", result.RelatedMethod.Name);
     }
 
     [TestMethod]
