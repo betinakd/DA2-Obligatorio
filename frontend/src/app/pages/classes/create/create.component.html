@@ -1,4 +1,26 @@
 <div class="page-container">
-    <h1 class="page-title">Create New Class</h1>
-    <app-form-class></app-form-class>
+  <h1 class="page-title">Create New Class</h1>
+  
+  <!-- Form for creating a class -->
+  <app-form-class 
+    (buttonClicked)="handleButtonClick()"
+    (name)="name = $event"
+    (baseClassId)="baseClassId = $event"
+    (baseNamespaceId)="baseNamespaceId = $event"
+    (state)="state = $event">
+  </app-form-class>
+  
+  <div *ngIf="loading" class="loading-indicator">
+    <p>Creating class...</p>
   </div>
+  
+  <div *ngIf="createdClass" class="result-container">
+    <h2>Class Created Successfully!</h2>
+    <app-class-card [simClass]="createdClass"></app-class-card>
+  </div>
+  
+  <div *ngIf="error" class="result-container">
+    <h2>Error Creating Class</h2>
+    <app-class-card [error]="error" [simClass]="createdClass || undefined"></app-class-card>
+  </div>
+</div>

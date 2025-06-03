@@ -1,3 +1,19 @@
-<div class="page-container">
-    <h1>Welcome to Simulator</h1>
-    <p>Welcome to the POO Class Simulator. Select an option from the side menu to start creating or modifying classes, methods and attributes.</p>  </div>
+@if (loading) {
+    <div class="loading-container">
+      <p>Cargando namespaces...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-container">
+      <app-namespace-card [error]="error"></app-namespace-card>
+    </div>
+  } @else {
+    <div class="namespaces-container">
+      @for (namespace of namespaces; track namespace.id) {
+        <app-namespace-card [namespace]="namespace"></app-namespace-card>
+      }
+      
+      @empty {
+        <div class="empty-state">No hay namespaces disponibles</div>
+      }
+    </div>
+  }
