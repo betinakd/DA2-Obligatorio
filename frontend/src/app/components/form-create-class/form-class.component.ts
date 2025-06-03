@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -28,10 +28,11 @@ import { ClassTypeSelectorComponent } from '../../components/accesibility-select
 })
 export class FormClassComponent implements OnInit {
   classForm!: FormGroup;
-  @Output() baseClassId! : string;
-  @Output() baseNamespaceId! : string;
-  @Output() state!: string;
-  @Output() name!: string;
+  @Output() name = new EventEmitter<string>();
+  @Output() baseClassId = new EventEmitter<string>();
+  @Output() baseNamespaceId = new EventEmitter<string>();
+  @Output() state = new EventEmitter<string>();
+  @Output() buttonClicked = new EventEmitter<void>();
 
   availableClasses: any[] = [];
   availableNamespaces: any[] = [];
@@ -44,11 +45,16 @@ export class FormClassComponent implements OnInit {
   
   initForm() {
     this.classForm = this.fb.group({
-      name: ['', Validators.required]
+      name: ['', Validators.required],
+      state: [''],
+      idBaseClass: [''],
+      idBaseNamespace: ['']
     });
     
+    // Change this - don't assign directly to this.name
     this.classForm.get('name')?.valueChanges.subscribe(value => {
-      this.name = value;
+      // Emit the value instead of assigning it
+      this.name.emit(value);
     });
   }
   
@@ -56,26 +62,45 @@ export class FormClassComponent implements OnInit {
   onClassSelected(classId: string | null): void {
     if (classId) {
       this.classForm.get('idBaseClass')?.setValue(classId);
-      this.baseClassId = classId;
+      this.baseClassId.emit(classId);
     }
   }
 
   onNamespaceSelected(namespaceId: string | null): void {
     if (namespaceId) {
       this.classForm.get('idBaseNamespace')?.setValue(namespaceId);
-      this.baseNamespaceId = namespaceId;
+      this.baseNamespaceId.emit(namespaceId);
     }
   }
 
   onStateSelected(type: string): void {
     this.classForm.get('state')?.setValue(type);
-    this.state = type;
+    this.state.emit(type);
   }
 
+  logClick() {
+    console.log('Button clicked');
+    console.log('Form values:', this.classForm.value);
+    console.log('Form valid:', this.classForm.valid);
+    console.log('Namespace ID:', this.classForm.get('idBaseNamespace')?.value);
+    
+    // Make sure you're emitting all values
+    this.name.emit(this.classForm.get('name')?.value);
+    this.baseNamespaceId.emit(this.classForm.get('idBaseNamespace')?.value);
+    this.baseClassId.emit(this.classForm.get('idBaseClass')?.value);
+    this.state.emit(this.classForm.get('state')?.value);
+    
+    // Only emit buttonClicked if form is valid
+    if (this.classForm.valid) {
+      this.buttonClicked.emit();
+    } else {
+      console.error('Form is invalid, cannot submit');
+    }
+  }
+  
   onSubmit() {
     if (this.classForm.valid) {
-      const formData = this.classForm.value;
-      console.log('Form submitted:', formData);
+      this.logClick();
     }
   }
 }

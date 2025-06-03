@@ -19,4 +19,16 @@ export class ClassService {
   getClass(id: string): Observable<SimClass> {
     return this.http.get<SimClass>(`${this.apiUrl}/${id}`);
   }
+
+  createClass(classData: any): Observable<SimClass> {
+    return this.http.post<SimClass>(this.apiUrl, classData);
+  }
+
+  updateClass(id: string, classData: any): Observable<SimClass> {
+    return this.http.put<SimClass>(`${this.apiUrl}/${id}`, classData);
+  }
+
+  deleteClass(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

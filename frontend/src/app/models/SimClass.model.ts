@@ -10,4 +10,5 @@ export interface SimClass {
   methods: Method[];
   attributes: Attribute[];
   implements: any[];
+  idBaseNamespace: string | null;
 }

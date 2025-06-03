@@ -4,46 +4,52 @@ import { FormClassComponent } from '../../../components/form-create-class/form-c
 import { ClassService } from '../../../services/class.service';
 import { SimClass } from '../../../models/SimClass.model';
 import { ErrorResponse } from '../../../models/ErrorResponse.model';
+import { ClassCardComponent } from '../../../components/class-card/class-card.component';
 
 @Component({
   selector: 'app-create',
   standalone: true,
-  imports: [CommonModule, FormClassComponent],
+  imports: [CommonModule, FormClassComponent,ClassCardComponent], // Remove ClassService from imports
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
 export class CreateComponent implements OnInit {
-  classes: SimClass[] = [];
   loading = false;
   error: ErrorResponse | null = null;
+  createdClass: SimClass | null = null;
+  name = '';
+  baseClassId = '';
+  baseNamespaceId = '';
+  state = '';
 
   constructor(private classService: ClassService) {}
   
   ngOnInit(): void {
-    this.loadClasses();
-  }
-  
-  loadClasses(): void {
-    this.loading = true;
-    this.error = null;
     
-    this.classService.getAllClasses().subscribe({
-      next: (data) => {
-        this.classes = data;
+  }
+
+  handleButtonClick() {
+    console.log('Button was clicked!');
+    
+    const classData = {
+      name: this.name,
+      idBaseClass: this.baseClassId,
+      idBaseNamespace: this.baseNamespaceId,
+      state: this.state
+    };
+    
+    console.log('Sending class data:', classData);
+    this.loading = true;
+    
+    this.classService.createClass(classData).subscribe({
+      next: (response) => {
+        console.log('Class created successfully:', response);
         this.loading = false;
+        this.createdClass = response;
       },
-      error: (err) => {
-        const apiError = err.error as ErrorResponse;
-        
-        if (apiError?.innerCode !== undefined && apiError?.message) {
-          this.error = apiError;
-        } else {
-          this.error = {
-            innerCode: err.status || 0,
-            message: err.message || 'Unexpected error loading classes'
-          };
-        }
-        
+      error: (error) => {
+        console.error('Error creating class:', error);
+        this.error = error;
         this.loading = false;
       }
     });
