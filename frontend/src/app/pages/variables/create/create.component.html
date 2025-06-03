@@ -1,1 +1,99 @@
-<p>create works!</p>
+<div class="container">
+  <!-- Vista de detalles para una variable existente -->
+  <div *ngIf="viewMode">
+    <h2>Detalles de la Variable</h2>
+    
+    <div *ngIf="isLoading" class="loading">
+      Cargando...
+    </div>
+    
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+    
+    <div *ngIf="!isLoading && !error" class="variable-details">
+      <div class="form-group">
+        <label>ID:</label>
+        <span>{{ variable.id }}</span>
+      </div>
+      
+      <div class="form-group">
+        <label>Nombre:</label>
+        <span>{{ variable.name }}</span>
+      </div>
+      
+      <div class="form-group">
+        <label>ID del Método:</label>
+        <span>{{ variable.methodId }}</span>
+      </div>
+      
+      <div class="form-group">
+        <label>ID de Referencia:</label>
+        <span>{{ variable.referenceId }}</span>
+      </div>
+      
+      <div class="form-group">
+        <label>ID de Instancia:</label>
+        <span>{{ variable.instanceId }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario para crear una nueva variable -->
+  <div *ngIf="!viewMode">
+    <h2>Crear Nueva Variable</h2>
+    
+    <div *ngIf="isLoading" class="loading">
+      Cargando...
+    </div>
+    
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+    
+    <div *ngIf="successMessage" class="success">
+      {{ successMessage }}
+    </div>
+    
+    <form [formGroup]="variableForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+      <div class="form-group">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" formControlName="name" class="form-control">
+        <div *ngIf="nameControl?.invalid && nameControl?.touched" class="error-message">
+          <span *ngIf="nameControl?.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="nameControl?.errors?.['pattern']">El nombre debe comenzar con una letra y contener solo letras, números y guiones bajos</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="idReference">ID de Referencia (GUID):</label>
+        <input type="text" id="idReference" formControlName="idReference" class="form-control">
+        <div *ngIf="idReferenceControl?.invalid && idReferenceControl?.touched" class="error-message">
+          <span *ngIf="idReferenceControl?.errors?.['required']">El ID de referencia es requerido</span>
+          <span *ngIf="idReferenceControl?.errors?.['pattern']">Formato GUID inválido</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="idInstance">ID de Instancia (GUID):</label>
+        <input type="text" id="idInstance" formControlName="idInstance" class="form-control">
+        <div *ngIf="idInstanceControl?.invalid && idInstanceControl?.touched" class="error-message">
+          <span *ngIf="idInstanceControl?.errors?.['required']">El ID de instancia es requerido</span>
+          <span *ngIf="idInstanceControl?.errors?.['pattern']">Formato GUID inválido</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="methodId">ID del Método (GUID):</label>
+        <input type="text" id="methodId" formControlName="methodId" class="form-control">
+        <div *ngIf="methodIdControl?.invalid && methodIdControl?.touched" class="error-message">
+          <span *ngIf="methodIdControl?.errors?.['required']">El ID del método es requerido</span>
+        </div>
+      </div>
+      
+      <button type="submit" [disabled]="variableForm.invalid || isLoading" class="btn btn-primary">
+        Crear Variable
+      </button>
+    </form>
+  </div>
+</div>
