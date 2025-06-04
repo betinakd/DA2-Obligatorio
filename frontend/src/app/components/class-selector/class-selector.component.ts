@@ -5,8 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { ClassService } from '../../services/class.service';
 import { SimClass } from '../../models/SimClass.model';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-class-selector',
@@ -31,7 +31,7 @@ export class ClassSelectorComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private classService: ClassService) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
     this.loadClasses();
@@ -44,23 +44,29 @@ export class ClassSelectorComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['reload'] && changes['reload'].currentValue === true) {
       this.loadClasses();
-      this.reload = false;
     }
   }
 
   loadClasses(): void {
     this.loading = true;
     this.error = null;
+    console.log('ClassSelector: Intentando cargar clases...');
 
-    this.classService.getAllClasses().subscribe({
-      next: (data) => {
-        this.classes = data;
+    this.dataService.loadAllData().subscribe({
+      next: () => {
+        const classes = this.dataService.getAllClasses();
+        this.classes = classes;
         this.loading = false;
+        console.log(`${classes.length} clases cargadas en selector`);
+
+        if (classes.length === 0) {
+          this.error = 'No se encontraron clases';
+        }
       },
       error: (err) => {
+        this.error = 'Error cargando clases: ' + (err.message || 'Error desconocido');
         this.loading = false;
-        this.error = 'Error al cargar clases';
-        console.error('Error cargando clases:', err);
+        console.error('Error en ClassSelector:', err);
       }
     });
   }

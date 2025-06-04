@@ -57,5 +57,13 @@ export const routes: Routes = [
     
     { path: 'namespaces/create', component: NamespaceCreateComponent },
     
-    { path: '**', redirectTo: 'home' }
+    { path: '**', redirectTo: 'home' },
+
+    { path: 'variables/:id', 
+    loadComponent: () => import('./pages/variables/create/create.component').then(m => m.CreateComponent)
+    },
+
+    { path: 'variables/create', 
+        loadComponent: () => import('./pages/variables/create/create.component').then(m => m.CreateComponent)
+    }
 ];
