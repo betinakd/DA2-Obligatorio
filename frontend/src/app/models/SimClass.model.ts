@@ -1,6 +1,7 @@
 import { Method } from './method.model';
 import { Attribute } from './attribute.model';
 import { Namespace } from './namespace.model';
+import { Interface } from './Interface';
 
 export interface SimClass {
   id: string;
@@ -9,6 +10,6 @@ export interface SimClass {
   state: string;
   methods: Method[];
   attributes: Attribute[];
-  implements: any[];
+  implements: Interface[];
   idBaseNamespace: string | null;
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,27 +23,35 @@ import { SimClass } from '../../models/SimClass.model';
 })
 export class ClassSelectorComponent implements OnInit {
   @Output() classSelected = new EventEmitter<string>();
-  @Input() labelText = 'Seleccionar Clase';
+  @Input() labelText: string = 'Select Class';
+  @Input() reload = false;
 
   classControl = new FormControl('');
   classes: SimClass[] = [];
   loading = false;
   error: string | null = null;
-  
-  constructor(private classService: ClassService) {}
-  
+
+  constructor(private classService: ClassService) { }
+
   ngOnInit(): void {
     this.loadClasses();
-    
+
     this.classControl.valueChanges.subscribe(value => {
       this.classSelected.emit(value || '');
     });
   }
-  
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['reload'] && changes['reload'].currentValue === true) {
+      this.loadClasses();
+      this.reload = false;
+    }
+  }
+
   loadClasses(): void {
     this.loading = true;
     this.error = null;
-    
+
     this.classService.getAllClasses().subscribe({
       next: (data) => {
         this.classes = data;

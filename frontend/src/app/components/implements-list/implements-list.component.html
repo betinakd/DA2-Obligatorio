@@ -1,0 +1,21 @@
+<div class="compact-implements-container">
+  <button class="btn-add" (click)="addNewInterface()">
+    <span class="material-icons">add</span> Add Interface
+  </button>
+
+  <div class="implements-wrapper" *ngIf="interfaces.length > 0">
+    <div *ngFor="let selected of interfaces; let i = index" class="implements-card">
+      <div class="implements-header">
+        <span class="implements-title">Interface {{i + 1}}</span>
+        <button class="btn-remove" (click)="removeInterface(i)">×</button>
+      </div>
+
+      <div class="form-row">
+        <app-class-selector
+          [labelText]="'Select Interface'"
+          (classSelected)="onInterfaceSelected($event, i)">
+        </app-class-selector>
+      </div>
+    </div>
+  </div>
+</div>

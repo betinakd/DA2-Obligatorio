@@ -1,0 +1,69 @@
+.methods-container {
+    background-color: rgb(4, 4, 4);
+    border-radius: 6px;
+    padding: 12px;
+    max-width: 400px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn-add {
+    background: linear-gradient(45deg, #672864, #7d1db5);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  
+    &:hover {
+      background: linear-gradient(45deg, #d934cc, #8e30c8);
+    }
+  }
+  
+  .methods-wrapper {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .method-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 10px;
+    border-left: 3px solid #7d1db5;
+  }
+  
+  .method-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .method-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .btn-remove {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 4px;
+  
+    &:hover {
+      color: #ff4081;
+    }
+  }
