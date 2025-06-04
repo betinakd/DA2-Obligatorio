@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,28 +22,35 @@ import { Namespace } from '../../models/namespace.model';
   styleUrls: ['./namespace-selector.component.scss']
 })
 export class NamespaceSelectorComponent implements OnInit {
-  @Output() namespaceSelected = new EventEmitter<string | null>();
+  @Output() namespaceSelected = new EventEmitter<string>();
   @Input() labelText = 'Seleccionar Namespace';
-  
+  @Input() reload = false;
+
   namespaceControl = new FormControl('');
   namespaces: Namespace[] = [];
   loading = false;
   error: string | null = null;
-  
-  constructor(private namespaceService: NamespaceService) {}
-  
+
+  constructor(private namespaceService: NamespaceService) { }
+
   ngOnInit(): void {
     this.loadNamespaces();
-    
+
     this.namespaceControl.valueChanges.subscribe(value => {
-      this.namespaceSelected.emit(value);
+      this.namespaceSelected.emit(value || '');
     });
   }
-  
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['reload'] && changes['reload'].currentValue === true) {
+      this.loadNamespaces();
+    }
+  }
+
   loadNamespaces(): void {
     this.loading = true;
     this.error = null;
-    
+
     this.namespaceService.fetchNamespaces().subscribe({
       next: (data) => {
         this.namespaces = data;
@@ -51,8 +58,6 @@ export class NamespaceSelectorComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.error = 'Error al cargar namespaces';
-        console.error('Error cargando namespaces:', err);
       }
     });
   }

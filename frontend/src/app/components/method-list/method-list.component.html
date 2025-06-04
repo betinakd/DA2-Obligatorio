@@ -1,0 +1,19 @@
+<div class="methods-container">
+    <button class="btn-add" (click)="addMethod()">
+      <span class="material-icons">add</span> Add Method
+    </button>
+  
+    <div class="methods-wrapper" *ngIf="methods.length > 0">
+      <div *ngFor="let method of methods; let i = index" class="method-card">
+        <div class="method-header">
+          <span class="method-title">Method {{ i + 1 }}</span>
+          <button class="btn-remove" (click)="removeMethod(i)">×</button>
+        </div>
+  
+        <app-method-create 
+          [method]="method"
+          (methodChange)="onMethodChange($event, i)">
+        </app-method-create>
+      </div>
+    </div>
+  </div>

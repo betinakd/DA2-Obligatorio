@@ -1,1 +1,18 @@
-<p>delete works!</p>
+<h1>Delete Class</h1>
+
+<app-class-selector 
+  [labelText]="'Select Class to Delete*'" 
+  (classSelected)="onClassSelected($event)" 
+  [reload]="reload">
+</app-class-selector>
+
+<button (click)="deleteClassClick()" class="btn btn-danger">
+  Delete Class </button>
+
+<div *ngIf="successMessage">
+  <p>{{ successMessage }}</p>
+</div>
+
+<div *ngIf="error">
+  <p>{{ error }}</p>
+</div>

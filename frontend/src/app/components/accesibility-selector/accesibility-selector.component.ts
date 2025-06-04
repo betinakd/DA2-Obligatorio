@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-class-type-selector',
+  selector: 'app-accesibility-selector',
   standalone: true,
   imports: [
     CommonModule,
@@ -18,20 +18,20 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class ClassTypeSelectorComponent implements OnInit {
   @Output() typeSelected = new EventEmitter<string>();
-  @Input() labelText = 'Class Type';
-  
+  @Input() labelText = '';
+
   typeControl = new FormControl('Normal');
-  
+
   classTypes = [
     { value: 'Normal', label: 'Normal' },
     { value: 'Abstract', label: 'Abstract' },
     { value: 'Sealed', label: 'Sealed' },
     { value: 'Interface', label: 'Interface' }
   ];
-  
+
   ngOnInit(): void {
     this.typeSelected.emit(this.typeControl.value || '');
-    
+
     this.typeControl.valueChanges.subscribe(value => {
       this.typeSelected.emit(value || '');
     });

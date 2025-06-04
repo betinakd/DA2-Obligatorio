@@ -1,0 +1,57 @@
+<div class="compact-attribute-container">
+  <button class="btn-add" (click)="addAttribute()">
+    <span class="material-icons">add</span> Add Attribute
+  </button>
+  
+  <div class="attributes-wrapper" *ngIf="attributes.length > 0">
+    <div *ngFor="let attribute of attributes; let i = index" class="attribute-card">
+      <div class="attribute-header">
+        <span class="attribute-title">Attribute {{i + 1}}</span>
+        <button class="btn-remove" (click)="removeAttribute(i)">×</button>
+      </div>
+      
+      <div class="form-row">
+        <input 
+          type="text" 
+          [(ngModel)]="attribute.name" 
+          (change)="onNameChanged($event, i)"
+          placeholder="Name" 
+          class="compact-input">
+      </div>
+      
+      <div class="form-row">
+        <app-class-selector 
+          [labelText]="'Reference Type'" 
+          (classSelected)="onClassReferenceSelected($event, i)" 
+          [reload]="loading">
+        </app-class-selector>
+      </div>
+      
+      <div class="form-row">
+        <app-class-selector 
+          [labelText]="'Instance Type'" 
+          (classSelected)="onClassInstanceSelected($event, i)" 
+          [reload]="loading">
+        </app-class-selector>
+      </div>
+      
+      <div class="form-row">
+        <app-privacity-selector 
+          [labelText]="'Visibility'" 
+          (privacitySelected)="onPrivacitySelected($event, i)">
+        </app-privacity-selector>
+      </div>
+
+      <div class="form-row checkbox-row">
+        <mat-checkbox 
+          [(ngModel)]="attribute.isStatic" 
+          (change)="onStaticChanged($event, i)">
+          Static
+        </mat-checkbox>
+
+      </div>
+
+    </div>
+    <button class="btn-primary" (click)="CLICKDEBUG()">DEBBUG ATTRIBUTES CONSOLELOG</button>
+  </div>
+</div>

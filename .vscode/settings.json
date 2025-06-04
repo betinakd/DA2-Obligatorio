@@ -27,5 +27,8 @@
   "editor.guides.bracketPairsHorizontal": false,
   "editor.guides.highlightActiveBracketPair": true,
   "editor.matchBrackets": "always",
-  "dotnet.formatting.organizeImportsOnFormat": true
+  "dotnet.formatting.organizeImportsOnFormat": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

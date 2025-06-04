@@ -1,0 +1,125 @@
+.compact-attribute-container {
+  background-color: rgb(4, 4, 4);
+  border-radius: 6px;
+  padding: 12px;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-add {
+  background: linear-gradient(45deg, #672864, #7d1db5);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  &:hover {
+    background: linear-gradient(45deg, #d934cc, #8e30c8);
+  }
+}
+
+.attributes-wrapper {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attribute-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  padding: 10px;
+  border-left: 3px solid #7d1db5;
+}
+
+.attribute-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.attribute-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  
+  &:hover {
+    color: #ff4081;
+  }
+}
+
+.form-row {
+  margin-bottom: 8px;
+  font-size: 13px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.compact-input {
+  width: 100%;
+  padding: 6px 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: white;
+  font-size: 13px;
+  
+  &:focus {
+    outline: none;
+    border-color: #461b43;
+    box-shadow: 0 0 0 1px #c41dbb;
+  }
+  
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.checkbox-row {
+  margin-top: 4px;
+  
+  ::ng-deep .mat-checkbox-label {
+    font-size: 13px;
+  }
+}
+
+// Override child component styles to make them more compact
+::ng-deep {
+  .attribute-card {
+    app-class-selector, app-privacity-selector {
+      .selector-container {
+        padding: 8px !important;
+        
+        mat-form-field {
+          font-size: 13px;
+          
+          .mat-form-field-infix {
+            padding: 6px 0 !important;
+          }
+        }
+      }
+    }
+  }
+}
