@@ -1,20 +1,28 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { provideHttpClient, withInterceptors, HttpErrorResponse } from '@angular/common/http';
 import { routes } from './app.routes';
+import { catchError, throwError } from 'rxjs';
 
-export function errorInterceptor(req: HttpRequest<unknown>, next: (req: HttpRequest<unknown>) => Observable<HttpEvent<unknown>>): Observable<HttpEvent<unknown>> {
+function errorInterceptor(req: any, next: any) {
   return next(req).pipe(
-    catchError(error => {
-      console.error('Error interceptado:', error);
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 0) {
+        console.error('Error de conexión. Verifica que el backend esté ejecutándose.');
+      } else if (error.status === 404) {
+        console.error(`Endpoint no encontrado: ${req.url}`);
+      } else if (error.status === 500) {
+        console.error('Error del servidor:', error.error);
+      }
       return throwError(() => error);
     })
   );
 }
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient()]
+    provideHttpClient(withInterceptors([errorInterceptor]))
+  ]
 };
