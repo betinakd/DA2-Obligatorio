@@ -23,19 +23,19 @@ import { SimClass } from '../../models/SimClass.model';
 })
 export class ClassSelectorComponent implements OnInit {
   @Output() classSelected = new EventEmitter<string>();
-  @Input() labelText = 'Seleccionar Clase';
+  @Input() labelText: string = 'Select Class';
   @Input() reload = false;
 
   classControl = new FormControl('');
   classes: SimClass[] = [];
   loading = false;
   error: string | null = null;
-  
-  constructor(private classService: ClassService) {}
-  
+
+  constructor(private classService: ClassService) { }
+
   ngOnInit(): void {
     this.loadClasses();
-    
+
     this.classControl.valueChanges.subscribe(value => {
       this.classSelected.emit(value || '');
     });
@@ -51,7 +51,7 @@ export class ClassSelectorComponent implements OnInit {
   loadClasses(): void {
     this.loading = true;
     this.error = null;
-    
+
     this.classService.getAllClasses().subscribe({
       next: (data) => {
         this.classes = data;

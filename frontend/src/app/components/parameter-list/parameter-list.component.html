@@ -1,0 +1,34 @@
+<div class="compact-attribute-container">
+    <button class="btn-add" (click)="addParameter()">
+      <span class="material-icons">add</span> Add Parameter
+    </button>
+  
+    <div class="parameters-wrapper" *ngIf="parameters.length > 0">
+      <div *ngFor="let parameter of parameters; let i = index" class="parameter-card">
+        
+        <div class="parameter-header">
+          <span class="attribute-title">Parameter {{ i + 1 }}</span>
+          <button class="btn-remove" (click)="removeParameter(i)">×</button>
+        </div>
+        
+        <div class="form-row">
+        <label class="attribute-label">Name:</label>
+          <input
+            type="text"
+            [(ngModel)]="parameter.name"
+            placeholder="Name"
+            class="compact-input"
+          />
+        </div>
+        
+        <div class="form-row">
+          <app-class-selector
+            (classSelected)="onTypeSelected($event, i)"
+            [labelText]="'Select Reference Type'">
+          </app-class-selector>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div style="height: 40px;"></div>

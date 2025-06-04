@@ -11,12 +11,12 @@ import { CreatedSimClassResponse } from '../models/CreatedSimClassResponse.model
 export class ClassService {
   private apiUrl = API_ENDPOINTS.CLASSES;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllClasses(): Observable<SimClass[]> {
     return this.http.get<SimClass[]>(this.apiUrl);
   }
-  
+
   getClass(id: string): Observable<SimClass> {
     return this.http.get<SimClass>(`${this.apiUrl}/${id}`);
   }
@@ -25,8 +25,8 @@ export class ClassService {
     return this.http.post<CreatedSimClassResponse>(this.apiUrl, classData);
   }
 
-  updateClass(id: string, classData: any): Observable<SimClass> {
-    return this.http.put<SimClass>(`${this.apiUrl}/${id}`, classData);
+  updateClass(classData: any): Observable<SimClass> {
+    return this.http.put<SimClass>(`${this.apiUrl}`, classData);
   }
 
   deleteClass(id: string): Observable<void> {
