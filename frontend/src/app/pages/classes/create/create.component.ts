@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClassService } from '../../../services/class.service';
-import { SimClass } from '../../../models/SimClass.model';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
+import { SimClassResponse } from '../../../models/SimClassResponse';
 
 @Component({
   selector: 'app-create',
@@ -17,7 +17,7 @@ import { ClassTypeSelectorComponent } from '../../../components/accesibility-sel
 export class CreateComponent implements OnInit {
   loading = false;
   error = '';
-  createdClass: SimClass | null = null;
+  createdClass: SimClassResponse | null = null;
   name = '';
   baseClassId = '';
   baseNamespaceId = '';

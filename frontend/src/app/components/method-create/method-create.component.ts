@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ParameterRequest } from '../../models/ParameterRequest.model';
+import { ParameterRequest } from '../../models/request/ParameterRequest.model';
 import { ParameterListComponent } from '../parameter-list/parameter-list.component';
-import { MethodRequest } from '../../models/MethodRequest';
+import { MethodRequest } from '../../models/request/MethodRequest';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
@@ -23,11 +23,9 @@ import { ClassTypeSelectorComponent } from '../accesibility-selector/accesibilit
 export class MethodCreateComponent {
   @Input() method: MethodRequest = new MethodRequest();
   @Output() methodChange = new EventEmitter<MethodRequest>();
-  methodName: string = '';
-  parameters: ParameterRequest[] = [];
 
   onParametersChange(value: ParameterRequest[]) {
-    this.parameters = value;
+    this.method.parameters = value;
     this.methodChange.emit(this.method);
   }
 
@@ -58,6 +56,11 @@ export class MethodCreateComponent {
 
   onOverrideChanged(event: MatCheckboxChange): void {
     this.method.isOverride = event.checked;
+    this.methodChange.emit(this.method);
+  }
+
+  onNameChange(value: string): void {
+    this.method.name = value;
     this.methodChange.emit(this.method);
   }
 }

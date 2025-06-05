@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MethodCreateComponent } from '../method-create/method-create.component';
 import { CommonModule } from '@angular/common';
-import { MethodRequest } from '../../models/MethodRequest';
+import { MethodRequest } from '../../models/request/MethodRequest';
 
 @Component({
   selector: 'app-method-list',
@@ -12,6 +12,7 @@ import { MethodRequest } from '../../models/MethodRequest';
 })
 export class MethodListComponent {
   @Output() methodsChange = new EventEmitter<MethodRequest[]>();
+  
   methods: MethodRequest[] = [];
 
   addMethod(): void {

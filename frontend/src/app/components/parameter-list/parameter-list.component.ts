@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ParameterRequest } from '../../models/ParameterRequest.model';
+import { ParameterRequest } from '../../models/request/ParameterRequest.model';
 import { ClassSelectorComponent } from '../class-selector/class-selector.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

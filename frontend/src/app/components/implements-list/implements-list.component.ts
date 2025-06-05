@@ -1,11 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { ClassSelectorComponent } from '../class-selector/class-selector.component';
-import { ClassService } from '../../services/class.service';
-import { SimClass } from '../../models/SimClass.model';
 import { Interface } from '../../models/Interface';
 
 @Component({

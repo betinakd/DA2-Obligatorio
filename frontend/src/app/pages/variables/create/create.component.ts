@@ -7,7 +7,6 @@ import { Variable } from '../../../models/variable.model';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { MethodSelectorComponent } from '../../../components/method-selector/method-selector.component';
 import { VariableRequest } from '../../../models/variable-request.model';
-import { DataService } from '../../../services/data.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -35,21 +34,7 @@ export class CreateComponent implements OnInit {
   selectedClassForMethods: string = '';
 
 
-  constructor(
-    private variableService: VariableService,
-    private fb: FormBuilder,
-    private dataService: DataService,
-    private router: Router
-  ) {
-    this.dataService.loadAllData().subscribe({
-      next: () => {
-        console.log('Datos cargados para la creación de variable');
-      },
-      error: (err) => {
-        console.error('Error cargando datos:', err);
-      }
-    });
-  }
+  constructor(private variableService: VariableService) { }
 
   ngOnInit(): void {
 
@@ -94,15 +79,5 @@ export class CreateComponent implements OnInit {
   onMethodSelected(value: string): void {
     console.log('Método seleccionado:', value);
     this.methodId = value;
-  }
-
-  onClassSelectedForMethod(value: string): void {
-    console.log('Clase para métodos seleccionada:', value);
-    this.selectedClassForMethods = value;
-
-    const methods = this.dataService.getMethodsByClassId(value);
-    console.log(`Clase ${value} tiene ${methods.length} métodos disponibles`);
-
-    this.methodId = '';
   }
 }

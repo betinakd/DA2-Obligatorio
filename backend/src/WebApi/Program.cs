@@ -19,7 +19,6 @@ builder.Services.AddSingleton<IBusinessLogic.ITransformerService, BusinessLogic.
 
 builder.Services.AddScoped<AuthorizationFilter>();
 
-// Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

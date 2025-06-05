@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ClassSelectorComponent } from '../class-selector/class-selector.component';
 import { PrivacitySelectorComponent } from '../privacity-selector/privacity-selector.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AttributeRequest } from '../../models/AttributeRequest';
+import { AttributeRequest } from '../../models/request/AttributeRequest';
 
 @Component({
   selector: 'app-attribute-list',
@@ -80,13 +80,5 @@ export class AttributeListComponent {
   removeAttribute(index: number): void {
     this.attributes.splice(index, 1);
     this.attributesChange.emit([...this.attributes]);
-  }
-
-  CLICKDEBUG(): void {
-    for (let i = 0; i < this.attributes.length; i++) {
-      console.log('Attribute', i + 1, ':', JSON.stringify(this.attributes[i], null, 2));
-    }
-
-    console.table(this.attributes);
   }
 }

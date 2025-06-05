@@ -1,82 +1,47 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, tap, map, shareReplay } from 'rxjs/operators';
-import { Method } from '../models/method.model';
+import { Observable } from 'rxjs';
+import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
+import { MethodRequest } from '../models/request/MethodRequest';
+import { MethodCreatedResponse } from '../models/MethodCreatedResponse';
+import { InvocationRequest } from '../models/request/InvocationRequest';
+import { InvocationResponse } from '../models/invocation-response.model';
+import { CreatedInvocationResponse } from '../models/invocation.model';
+
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class MethodService {
-    private apiUrl = 'http://localhost:5128/api/v1';
+  private apiUrl = API_ENDPOINTS.METHODS;
 
-    private methodsCache = new Map<string, Method[]>();
-    private loadingStatus = new Map<string, boolean>();
+  constructor(private http: HttpClient) { }
 
-    private methodsSubject = new BehaviorSubject<Map<string, Method[]>>(new Map());
-    public methods$ = this.methodsSubject.asObservable();
+  getMethod(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
 
-    constructor(private http: HttpClient) { }
+  createMethod(classId: string, method: MethodRequest): Observable<MethodCreatedResponse> {
+    return this.http.post<MethodCreatedResponse>(`${API_ENDPOINTS.CLASSES}/${classId}/methods`, method);
+  }
 
-    
-    getMethodsByClassId(classId: string): Observable<Method[]> {
-        if (this.methodsCache.has(classId)) {
-            console.log(`Usando caché para métodos de clase ${classId}`);
-            return of(this.methodsCache.get(classId) || []);
-        }
+  deleteMethod(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 
-        if (this.loadingStatus.get(classId)) {
-            console.log(`Ya se está cargando métodos para clase ${classId}`);
-            return of([]);
-        }
+  createParameter(methodId: string, parameter: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${methodId}/parameters`, parameter);
+  }
 
-        console.log(`Cargando métodos para clase: ${classId}`);
-        this.loadingStatus.set(classId, true);
+  createVariable(methodId: string, variable: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${methodId}/variables`, variable);
+  }
 
-        return this.http.get<any>(`${this.apiUrl}/classes/${classId}`).pipe(
-            tap(data => console.log('Respuesta recibida:', data)),
-            map(response => {
-                const methods = this.extractMethodsFromResponse(response);
-                console.log(`Se encontraron ${methods.length} métodos`);
+  createInvocation(methodId: string, invocation: InvocationRequest): Observable<CreatedInvocationResponse> {
+    return this.http.post<CreatedInvocationResponse>(`${this.apiUrl}/${methodId}/invocations`, invocation);
+  }
 
-                this.methodsCache.set(classId, methods);
-                this.methodsSubject.next(this.methodsCache);
-
-                return methods;
-            }),
-            catchError(error => {
-                console.error(`Error obteniendo métodos para clase ${classId}:`, error);
-                this.methodsCache.set(classId, []);
-                return of([]);
-            }),
-            tap(() => this.loadingStatus.set(classId, false)),
-            shareReplay(1)
-        );
-    }
-
-    private extractMethodsFromResponse(response: any): Method[] {
-        if (response && response.methods && Array.isArray(response.methods)) {
-            return response.methods;
-        }
-
-        if (response && response.simClass && response.simClass.methods) {
-            return response.simClass.methods;
-        }
-
-        if (Array.isArray(response)) {
-            return response;
-        }
-
-        console.warn('Formato de respuesta desconocido, no se pudieron extraer métodos');
-        return [];
-    }
-
-    clearCache(classId?: string): void {
-        if (classId) {
-            this.methodsCache.delete(classId);
-        } else {
-            this.methodsCache.clear();
-        }
-        this.methodsSubject.next(this.methodsCache);
-    }
+  executeMethod(executionRequest: any): Observable<any> {
+    return this.http.post<any>(`${API_ENDPOINTS.EXECUTIONS}`, executionRequest);
+  }
 }
