@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MethodCreateComponent } from '../../../components/method-create/method-create.component';
-import { MethodRequest } from '../../../models/MethodRequest';
+import { MethodRequest } from '../../../models/request/MethodRequest';
 import { CommonModule } from '@angular/common';
 import { MethodService } from '../../../services/method.service';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';

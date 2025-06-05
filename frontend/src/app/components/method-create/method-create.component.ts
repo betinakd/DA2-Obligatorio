@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ParameterRequest } from '../../models/ParameterRequest.model';
+import { ParameterRequest } from '../../models/request/ParameterRequest.model';
 import { ParameterListComponent } from '../parameter-list/parameter-list.component';
-import { MethodRequest } from '../../models/MethodRequest';
+import { MethodRequest } from '../../models/request/MethodRequest';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
