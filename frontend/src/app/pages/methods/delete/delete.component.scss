@@ -1,0 +1,45 @@
+.page-container {
+    max-width: 800px;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.delete-button-container {
+    margin: 40px 0 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-delete {
+    background: linear-gradient(45deg, #8e2053, #7d1db5);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    justify-content: center;
+    max-width: 400px;
+
+    &:hover {
+        background: linear-gradient(45deg, #cc3465, #8e30c8);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+}

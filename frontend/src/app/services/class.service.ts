@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SimClass } from '../models/SimClass.model';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
 import { CreatedSimClassResponse } from '../models/CreatedSimClassResponse.model';
+import { SimClassResponse } from '../models/SimClassResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class ClassService {
 
   constructor(private http: HttpClient) { }
 
-  getAllClasses(): Observable<SimClass[]> {
-    return this.http.get<SimClass[]>(this.apiUrl);
+  getAllClasses(): Observable<SimClassResponse[]> {
+    return this.http.get<SimClassResponse[]>(this.apiUrl);
   }
 
   getClass(id: string): Observable<SimClass> {

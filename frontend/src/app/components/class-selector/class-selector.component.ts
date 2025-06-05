@@ -4,9 +4,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 import { ClassService } from '../../services/class.service';
-import { SimClass } from '../../models/SimClass.model';
+import { SimClassResponse } from '../../models/SimClassResponse';
 
 @Component({
   selector: 'app-class-selector',
@@ -21,13 +20,14 @@ import { SimClass } from '../../models/SimClass.model';
   templateUrl: './class-selector.component.html',
   styleUrls: ['./class-selector.component.scss']
 })
+
 export class ClassSelectorComponent implements OnInit {
   @Output() classSelected = new EventEmitter<string>();
   @Input() labelText: string = 'Select Class';
   @Input() reload = false;
 
   classControl = new FormControl('');
-  classes: SimClass[] = [];
+  classes: SimClassResponse[] = [];
   loading = false;
   error: string | null = null;
 
