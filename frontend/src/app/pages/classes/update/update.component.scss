@@ -3,7 +3,12 @@
     display: flex;
     justify-content: center;
   }
-  
+  .page-container {
+    max-width: 800px;
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+  } 
   .btn-update {
     background: linear-gradient(45deg, #672864, #7d1db5);
     color: white;

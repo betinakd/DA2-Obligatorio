@@ -6,8 +6,11 @@
   [reload]="reload">
 </app-class-selector>
 
-<button (click)="deleteClassClick()" class="btn btn-danger">
-  Delete Class </button>
+<div class="delete-button-container">
+  <button class="btn-delete" (click)="deleteClassClick()">
+    <span class="material-icons">delete_forever</span> Delete Class
+  </button>
+</div>
 
 <div *ngIf="successMessage">
   <p>{{ successMessage }}</p>

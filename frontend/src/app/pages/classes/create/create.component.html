@@ -1,30 +1,30 @@
-<div class="page-container">  
+<div class="page-container">
 
-  <h1>Create Class</h1>
-  <label>Class name:</label>
-  <input #classNameInput [value]="name" (input)="name = classNameInput.value" 
-  placeholder="Class Name" 
-  class="form-control" 
-  required>  
-  
-  <app-class-selector 
-  [labelText]="'Select Base Class*'" 
-  (classSelected)="onClassSelected($event)" [reload]="loading"></app-class-selector>
-  
-  <app-namespace-selector 
-  [labelText]="'Select Namespace*'"
-  (namespaceSelected)="onNamespaceSelected($event)" [reload]="loading"></app-namespace-selector>
+    <h1>Create Class</h1>
+    <label>Class name:</label>
+    <input #classNameInput [value]="name" (input)="name = classNameInput.value" placeholder="Class Name"
+        class="form-control" required>
 
-  <app-accesibility-selector [labelText]="'Select State'" (typeSelected)="onStateSelected($event)"></app-accesibility-selector>
-  
-  <div *ngIf="successMessage">
-      <p>{{ successMessage }}</p>
-  </div>
+    <app-class-selector [labelText]="'Select Base Class*'" (classSelected)="onClassSelected($event)"
+        [reload]="loading"></app-class-selector>
 
-  <div *ngIf="error">
-      <p>{{ error }}</p>
-  </div>
+    <app-namespace-selector [labelText]="'Select Namespace*'" (namespaceSelected)="onNamespaceSelected($event)"
+        [reload]="loading"></app-namespace-selector>
 
-  <button (click)="handleButtonClick()" class="btn btn-primary">
-    Create Class</button>
+    <app-accesibility-selector [labelText]="'Select State'"
+        (typeSelected)="onStateSelected($event)"></app-accesibility-selector>
+
+    <div *ngIf="successMessage">
+        <p>{{ successMessage }}</p>
+    </div>
+
+    <div *ngIf="error">
+        <p>{{ error }}</p>
+    </div>
+
+    <div class="create-button-container">
+        <button class="btn-create" (click)="handleButtonClick()">
+            <span class="material-icons">add_circle</span> Create Class
+        </button>
+    </div>
 </div>
