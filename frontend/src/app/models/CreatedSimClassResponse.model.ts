@@ -1,6 +1,6 @@
-import { SimClass } from './SimClass.model';
+import { SimClassResponse } from './SimClassResponse';
 
 export interface CreatedSimClassResponse {
   message: string;
-  simClass: SimClass;
+  simClass: SimClassResponse;
 }

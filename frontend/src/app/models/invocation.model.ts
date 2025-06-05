@@ -1,8 +1,7 @@
-export interface Invocation {
-  id: string;
-  idReference: string;
-  idReturnType: string;
-  typeReference: string;
-  methodName: string;
-  parameters: any[]; // Puedes definir una interfaz para estos parámetros
+import { InvocationResponse } from "./invocation-response.model";
+
+export interface CreatedInvocationResponse {
+  message: string;
+  InvocationResponse: InvocationResponse;
+
 }

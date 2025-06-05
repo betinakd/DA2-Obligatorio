@@ -1,4 +1,4 @@
-import { ParameterRequest } from "./ParameterRequest.model";
+import { ParameterRequest } from "./request/ParameterRequest.model";
 
 export class MethodResponse {
   name: string = '';
