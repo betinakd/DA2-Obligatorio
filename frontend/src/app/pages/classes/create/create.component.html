@@ -2,8 +2,7 @@
 
     <h1>Create Class</h1>
     <label>Class name:</label>
-    <input #classNameInput [value]="name" (input)="name = classNameInput.value" placeholder="Class Name"
-        class="form-control" required>
+    <input #classNameInput [value]="name" (input)="name = classNameInput.value" placeholder="Class Name" required>
 
     <app-class-selector [labelText]="'Select Base Class*'" (classSelected)="onClassSelected($event)"
         [reload]="loading"></app-class-selector>
