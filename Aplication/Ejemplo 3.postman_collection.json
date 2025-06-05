@@ -1,0 +1,461 @@
+{
+	"info": {
+		"_postman_id": "a739dfef-e10c-49d9-bd2a-244146c8f455",
+		"name": "Ejemplo 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "Ejemplo 3",
+			"item": [
+				{
+					"name": "Class Validator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Validador\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "method Validar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Validar\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idValidatorClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idValidatorClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Entrada",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Entrada\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"EsValido\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idEntradaClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idEntradaClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Limpiar method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Limpiar\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idEntradaClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idEntradaClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inicializar method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Inicializar\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idEntradaClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idEntradaClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido invok to this.Inicializar()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"4bb0e992-86df-4322-a63e-e7b478b6750e\", //Entrada\r\n    \"MethodName\": \"Inicializar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_EsValido_Entrada}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_EsValido_Entrada}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class EntradaTexto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"EntradaTexto\",\r\n  \"IdBaseClass\": \"e48870fb-92af-4d42-9a28-f22b4ab75b50\", //Entrada\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"EsValido\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idEntradaTextoClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idEntradaTextoClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido invok to base.EsValido()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"42c96682-2059-44bc-af03-960d080978b5\", //EntradaTexto\r\n    \"MethodName\": \"EsValido\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Base\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_Esvalido_EntradaTexto}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_Esvalido_EntradaTexto}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido invok to this.Limpiar()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"42c96682-2059-44bc-af03-960d080978b5\", //EntradaTexto\r\n    \"MethodName\": \"Limpiar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_Esvalido_EntradaTexto}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_Esvalido_EntradaTexto}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class  EntradaTextoEspecial",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"EntradaTextoEspecial\",\r\n  \"IdBaseClass\": \"42c96682-2059-44bc-af03-960d080978b5\", //EntradaTexto\r\n  \"State\": \"Sealed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LocalVar input of Validator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"input\",\r\n    \"IdClassType\": \"1c0d8477-bac9-422a-864d-807bfbd82b9e\" //EntradaTextoEspecial\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_validar_Validador}}/variables",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_validar_Validador}}",
+								"variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validator invoks input.EsValido()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"973c7245-cfe2-41f0-8074-3b78eb4b1fa4\", //input\r\n    \"MethodName\": \"EsValido\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"LocalVariable\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_validar_Validador}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_validar_Validador}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido method",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"EsValido\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Sealed\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{idEntradaTextoEspecial}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idEntradaTextoEspecial}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EsValido invok to base.EsValido()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"1c0d8477-bac9-422a-864d-807bfbd82b9e\", //EntradaTextoEspecial\r\n    \"MethodName\": \"EsValido\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Base\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_Esvalido_EntradaTextoEspecial}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_Esvalido_EntradaTextoEspecial}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excecution",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MethodName\": \"Validar\",\r\n    \"Parameters\": [],\r\n    \"IdReferenceType\": \"4e9d9969-e45a-4cae-9d1f-6ecdcdf6a1f5\", //validador\r\n    \"IdInstanceType\": \"4e9d9969-e45a-4cae-9d1f-6ecdcdf6a1f5\" //validador\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}executions",
+							"host": [
+								"{{domain}}executions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "method_validar_Validador",
+			"value": "52970f0e-749d-4a9a-bbbc-51c46852d5ac",
+			"type": "default"
+		}
+	]
+}

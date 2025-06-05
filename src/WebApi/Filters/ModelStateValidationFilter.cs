@@ -1,0 +1,30 @@
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+[ExcludeFromCodeCoverage]
+public class ModelStateValidationFilter : IActionFilter
+{
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        if(!context.ModelState.IsValid)
+        {
+            var firstError = context.ModelState
+                .SelectMany(x => x.Value.Errors)
+                .FirstOrDefault();
+
+            if(firstError != null)
+            {
+                context.Result = new BadRequestObjectResult(new
+                {
+                    innerCode = 7,
+                    message = firstError.ErrorMessage,
+                });
+                return;
+            }
+        }
+    }
+
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+    }
+}

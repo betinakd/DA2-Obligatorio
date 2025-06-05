@@ -2,27 +2,27 @@
   background-color: rgb(4, 4, 4);
   border-radius: 8px;
   padding: 16px;
-  
+
   .loading-indicator {
     display: flex;
     align-items: center;
     gap: 10px;
     color: #c59dd5;
     padding: 8px 0;
-    
+
     span {
       font-size: 14px;
     }
   }
-  
+
   .error-message {
     color: #f44336;
     padding: 8px 0;
-    
+
     p {
       margin-bottom: 8px;
     }
-    
+
     button {
       background-color: transparent;
       border: 1px solid #f44336;
@@ -30,7 +30,7 @@
       padding: 4px 8px;
       border-radius: 4px;
       cursor: pointer;
-      
+
       &:hover {
         background-color: rgba(244, 67, 54, 0.1);
       }
@@ -46,11 +46,11 @@
   .mat-form-field-appearance-outline .mat-form-field-outline {
     color: rgba(255, 255, 255, 0.12);
   }
-  
+
   .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
     color: #c41dbb;
   }
-  
+
   .mat-mdc-select-panel {
     max-height: 300px !important;
   }

@@ -1,1 +1,55 @@
-<p>create works!</p>
+<div class="container">
+  <div>
+    <h2>Create new Variable</h2>
+
+    <div *ngIf="isLoading" class="loading">
+      Loading...
+    </div>
+
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <div *ngIf="successMessage" class="success">
+      {{ successMessage }}
+    </div>
+
+    <form #variableForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="varName" #nameInput="ngModel" required
+          pattern="^[a-zA-Z][a-zA-Z0-9_]*$" class="form-control">
+        <div *ngIf="nameInput.invalid && nameInput.touched" class="error-message">
+          <span *ngIf="nameInput.errors?.['required']">Name is required</span>
+          <span *ngIf="nameInput.errors?.['pattern']">The name must start with a letter and contain only letters,
+            numbers, and underscores</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h3>1. Reference Type</h3>
+        <app-class-selector (classSelected)="onClassSelectedReference($event)" [labelText]="'Select Reference Class'">
+        </app-class-selector>
+      </div>
+
+      <div class="form-group">
+        <h3>2. Instance Type</h3>
+        <app-class-selector (classSelected)="onClassSelectedInstance($event)" [labelText]="'Select Instance Class'">
+        </app-class-selector>
+      </div>
+
+
+      <div class="form-group">
+        <h3>3. Select Method</h3>
+        <app-method-selector [classId]="selectedClassForMethods" (methodSelected)="onMethodSelected($event)"
+          [labelText]="'Select Method'">
+        </app-method-selector>
+      </div>
+
+      <button type="submit" [disabled]="variableForm.invalid || !methodId || !referenceClassId || !instanceClassId"
+        class="btn btn-primary">
+        Create Variable
+      </button>
+    </form>
+  </div>
+</div>

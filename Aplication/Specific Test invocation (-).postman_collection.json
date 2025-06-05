@@ -1,0 +1,713 @@
+{
+	"info": {
+		"_postman_id": "eda993ef-4a89-4296-b4b6-6090b185ebcb",
+		"name": "Specific Test invocation (*)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "CreateClassViaje",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Viaje\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateAttributePiscinaInViaje",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"Name\": \"Piscina\",\r\n        \"IdClassType\" : \"22222222-2222-2222-2222-222222222222\",\r\n        \"Privacity\" : \"Public\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/{{idClass}}/attributes",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClass}}",
+						"attributes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateClassPlaya",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Playa\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"72a848e6-e4f7-44dd-98ce-7bf502ef3887\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateMethodNadarInPlaya",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Nadar\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/{{idClass2}}/methods",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClass2}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateMethodFlotadorInViaje",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Flotador\",\r\n  \"privacity\": \"Public\",\r\n  \"parameters\": [],\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/{{idClass}}/methods",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClass}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateMethodSumarInVoid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Sumar\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/{{idClass}}/methods",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClass}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddParameterManoInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\" : \"Mano\",\r\n    \"IdClassType\" : \"72a848e6-e4f7-44dd-98ce-7bf502ef3887\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/parameters",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"parameters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddVariablePiernaInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\" : \"Pierna\",\r\n    \"IdClassType\" : \"72a848e6-e4f7-44dd-98ce-7bf502ef3887\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/variables",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationPiscinaAttributeInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"4d7ff197-069c-4852-bc25-e7aa354e861e\",\r\n    \"MethodName\" :\"Sumar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationBaseFlotadorInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"MethodName\" :\"Flotador\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Base\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationThisNadarInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"MethodName\" :\"Flotador\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationParameterManoInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"08077188-ae06-409f-90a8-bcd6fc44ddd2\",\r\n    \"MethodName\" : \"Flotador\",\r\n    \"Parameters\": [],\r\n    \"TypeReference\" :\"Parameter\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationVariablePiernaInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"7d8449be-69df-48fd-87d7-64f4fe576553\",\r\n    \"MethodName\" :\"Flotador\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"LocalVariable\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExecuteNadarFromPlayaPlaya",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"Nadar\",\r\n    \"Parameters\": [{\"Name\": \"Mano\" , \"IdClassType\": \"72a848e6-e4f7-44dd-98ce-7bf502ef3887\"}],\r\n    \"IdReferenceType\": \"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"IdInstanceType\":\"5223a610-2c16-4291-a83e-ba24b8da1934\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/executions",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocInvalidClassThisNadarInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b7da1934\",\r\n    \"MethodName\" :\"Flotador\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocInvalidJson",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610\",\r\n    \"MethodName\" :\"Flotador\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Tis\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationInvalidVariablePiernaInMethodNadar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"7d8449be-69df-48fd-87d7-64f4fe576553\",\r\n    \"MethodName\" :\"Nadar\",\r\n    \"Parameters\" :[{\"Name\": \"Mano\" , \"IdClassType\": \"72a848e6-e4f7-44dd-98ce-7bf502ef3887\"}],\r\n    \"TypeReference\" :\"LocalVariable\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationIncorrectMethodNameThisInMethodNadarInvalid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"MethodName\" :\"Nadar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationBaseNotAccesibleMethodInvalid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"MethodName\" :\"Sumar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Base\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationParameterManoInMethodNadarInvalid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"08077188-ae06-409f-90a8-bcd6fc44ddd2\",\r\n    \"MethodName\" :\"Nadar\",\r\n    \"Parameters\" :[{\"Name\": \"Mano\" , \"IdClassType\": \"72a848e6-e4f7-44dd-98ce-7bf502ef3887\"}],\r\n    \"TypeReference\" :\"Parameter\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateMethodPrivateInViaje",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Privado\",\r\n  \"privacity\": \"Private\",\r\n  \"parameters\": [],\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/classes/{{idClass}}/methods",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClass}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationInvalidThisInehritsPrivateMethod",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"MethodName\" :\"Privado\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvocationInvalidBaseInehritsPrivateMethod",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"5223a610-2c16-4291-a83e-ba24b8da1934\",\r\n    \"MethodName\" :\"Privado\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Base\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:5128",
+			"type": "default"
+		},
+		{
+			"key": "idClass2",
+			"value": "bcc6641e-1090-4ebe-a3d4-1ccb0c8557f8",
+			"type": "default"
+		},
+		{
+			"key": "idMethod",
+			"value": "76b772fc-517d-4d7d-870a-412364ff8463",
+			"type": "default"
+		}
+	]
+}
