@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SimClass } from '../models/SimClass.model';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
 import { CreatedSimClassResponse } from '../models/CreatedSimClassResponse.model';
 import { SimClassResponse } from '../models/SimClassResponse';
+import { SimClassRequestUpdate } from '../models/request/SimClassRequestUpdate';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +18,16 @@ export class ClassService {
     return this.http.get<SimClassResponse[]>(this.apiUrl);
   }
 
-  getClass(id: string): Observable<SimClass> {
-    return this.http.get<SimClass>(`${this.apiUrl}/${id}`);
+  getClass(id: string): Observable<SimClassResponse> {
+    return this.http.get<SimClassResponse>(`${this.apiUrl}/${id}`);
   }
 
   createClass(classData: any): Observable<CreatedSimClassResponse> {
     return this.http.post<CreatedSimClassResponse>(this.apiUrl, classData);
   }
 
-  updateClass(classData: any): Observable<SimClass> {
-    return this.http.put<SimClass>(`${this.apiUrl}`, classData);
+  updateClass(classData: any): Observable<SimClassRequestUpdate> {
+    return this.http.put<SimClassRequestUpdate>(`${this.apiUrl}`, classData);
   }
 
   deleteClass(id: string): Observable<void> {

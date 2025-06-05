@@ -1,1 +1,85 @@
-<p>create works!</p>
+<h3>Select method where invocation belongs:</h3>
+<app-method-selector (methodSelected)="onMethodsChange($event)">
+</app-method-selector>
+
+<h3>Select invocation signature:</h3>
+<label for="invocationName">Method Name:</label>
+<input type="text" id="invocationName" [(ngModel)]="invocationRequest.methodName" placeholder="Invocation Name" />
+
+<app-class-selector [labelText]="'Select Method Return Type'" (classSelected)="onReturnTypeChange($event)">
+</app-class-selector>
+
+<app-parameter-signature-list [parameters]="invocationRequest.parameters"
+    (parametersChange)="onParametersChange($event)">
+</app-parameter-signature-list>
+
+<h3>Select type of reference:</h3>
+<app-type-reference-selector (typeSelected)="onTypeReferenceSelected($event)"></app-type-reference-selector>
+
+<div *ngIf="invocationRequest.typeReference === 'This'" class="reference-content">
+    <p>Using 'this' reference - Current instance of the class</p>
+    <app-class-selector [labelText]="'Select Class where this is released*'"
+        (classSelected)="onClassThisSelected($event)" [reload]="loading"></app-class-selector>
+</div>
+
+<div *ngIf="invocationRequest.typeReference === 'Base'" class="reference-content">
+    <p>Using 'base' reference - Parent class</p>
+    <app-class-selector [labelText]="'Select Class where base is released*'"
+        (classSelected)="onClassBaseSelected($event)" [reload]="loading"></app-class-selector>
+</div>
+
+<div *ngIf="invocationRequest.typeReference === 'Attribute'" class="reference-content">
+    <p>Using class attribute reference</p>
+    <app-attribute-selector [labelText]="'Select Attribute'" (attributeSelected)="onAttributeSelected($event)">
+    </app-attribute-selector>
+
+</div>
+
+<div *ngIf="invocationRequest.typeReference === 'Parameter'" class="reference-content">
+    <p>Using method parameter reference</p>
+    <app-parameter-selector [labelText]="'Select Parameter'" [methodId]="methodId"
+        (parameterSelected)="onParameterSelected($event)">
+    </app-parameter-selector>
+</div>
+
+<div *ngIf="invocationRequest.typeReference === 'LocalVariable'" class="reference-content">
+    <p>Using local variable reference</p>
+    <app-variable-selector [labelText]="'Select Variable'" [methodId]="methodId"
+        (variableSelected)="onVariableSelected($event)">
+    </app-variable-selector>
+
+</div>
+
+<div *ngIf="invocationRequest.typeReference === 'Static'" class="reference-content">
+    <p>Using static class reference</p>
+    <app-class-selector [labelText]="'Select Class where static method belongs*'"
+        (classSelected)="onClassStaticSelected($event)" [reload]="loading"></app-class-selector>
+
+</div>
+
+<div *ngIf="invocationRequest.typeReference === 'StaticAttribute'" class="reference-content">
+    <p>Using static attribute reference</p>
+    <app-static-attribute-selector [labelText]="'Select Static Attribute'"
+        (attributeSelected)="onStaticAttributeSelected($event)">
+    </app-static-attribute-selector>
+</div>
+
+
+<div *ngIf="success" class="alert alert-success">
+    <div class="alert-content">
+        <span>{{ success }}</span>
+    </div>
+</div>
+
+<div *ngIf="error" class="alert alert-error">
+    <div class="alert-content">
+        <span>{{ error }}</span>
+    </div>
+</div>
+
+
+<div class="debug-button-container">
+    <button (click)="clickButton()">
+        <span class="material-icons">add</span> Create Invocation
+    </button>
+</div>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ClassSelectorComponent } from '../class-selector/class-selector.component';
 import { PrivacitySelectorComponent } from '../privacity-selector/privacity-selector.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AttributeRequest } from '../../models/AttributeRequest';
+import { AttributeRequest } from '../../models/request/AttributeRequest';
 
 @Component({
   selector: 'app-attribute-list',

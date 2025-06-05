@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
-import { MethodRequest } from '../models/MethodRequest';
+import { MethodRequest } from '../models/request/MethodRequest';
 import { MethodCreatedResponse } from '../models/MethodCreatedResponse';
+import { InvocationRequest } from '../models/request/InvocationRequest';
+import { InvocationResponse } from '../models/invocation-response.model';
+import { CreatedInvocationResponse } from '../models/invocation.model';
 
 
 @Injectable({
@@ -34,8 +37,8 @@ export class MethodService {
     return this.http.post<any>(`${this.apiUrl}/${methodId}/variables`, variable);
   }
 
-  createInvocation(methodId: string, invocation: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${methodId}/invocations`, invocation);
+  createInvocation(methodId: string, invocation: InvocationRequest): Observable<CreatedInvocationResponse> {
+    return this.http.post<CreatedInvocationResponse>(`${this.apiUrl}/${methodId}/invocations`, invocation);
   }
 
   executeMethod(executionRequest: any): Observable<any> {
