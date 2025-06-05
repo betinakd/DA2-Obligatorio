@@ -1,7 +1,7 @@
 <div class="method-create-container">
 
 <label for="methodName">Name:</label>
-<input type="text" [(ngModel)]="methodName" placeholder="Method Name" />
+<input type="text" [(ngModel)]="method.name" placeholder="Method Name" />
 
 <app-privacity-selector [labelText]="'Select Privacity'" (privacitySelected)="onPrivacitySelected($event)"></app-privacity-selector>
 

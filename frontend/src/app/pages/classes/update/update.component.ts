@@ -8,7 +8,6 @@ import { NamespaceSelectorComponent } from '../../../components/namespace-select
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
 import { ImplementsListComponent } from '../../../components/implements-list/implements-list.component';
 import { Interface } from '../../../models/Interface';
-import { ParameterRequest } from '../../../models/ParameterRequest.model';
 import { MethodListComponent } from '../../../components/method-list/method-list.component';
 import { ClassService } from '../../../services/class.service';
 import { CommonModule } from '@angular/common';
@@ -42,7 +41,8 @@ export class UpdateComponent {
   labelText: string = 'Update Class';
   implements: Interface[] = [];
   methods: MethodRequest[] = [];
-  parameterRequest: ParameterRequest[] = [];
+
+  method: MethodRequest = new MethodRequest();
 
   onClassSelected(value: string): void {
     this.classId = value;
@@ -68,10 +68,6 @@ export class UpdateComponent {
     this.implements = value;
   }
 
-  onParametersUpdated(value: ParameterRequest[]): void {
-    this.parameterRequest = value;
-  }
-
   onMethodsUpdated(value: MethodRequest[]): void {
     this.methods = value;
   }
@@ -89,8 +85,7 @@ export class UpdateComponent {
       state: this.state,
       attributes: this.attributes,
       implements: this.implements,
-      methods: this.methods,
-      parameters: this.parameterRequest
+      methods: this.methods
     };
     console.log('Sending data:', JSON.stringify(dataToSend));
 
@@ -106,5 +101,9 @@ export class UpdateComponent {
         this.success = '';
       }
     });
+  }
+
+  onChangeMethod(event: MethodRequest): void {
+    this.method = event;
   }
 }
