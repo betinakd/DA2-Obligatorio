@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { AttributeListComponent } from '../../../components/attribute-list/attribute-list.component';
 import { Attribute } from '../../../models/attribute.model';
-import { AttributeRequest } from '../../../models/AttributeRequest';
+import { AttributeRequest } from '../../../models/request/AttributeRequest';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
-import { MethodRequest } from '../../../models/MethodRequest';
+import { MethodRequest } from '../../../models/request/MethodRequest';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
 import { ImplementsListComponent } from '../../../components/implements-list/implements-list.component';
