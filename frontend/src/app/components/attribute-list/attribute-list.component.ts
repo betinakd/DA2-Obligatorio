@@ -81,12 +81,4 @@ export class AttributeListComponent {
     this.attributes.splice(index, 1);
     this.attributesChange.emit([...this.attributes]);
   }
-
-  CLICKDEBUG(): void {
-    for (let i = 0; i < this.attributes.length; i++) {
-      console.log('Attribute', i + 1, ':', JSON.stringify(this.attributes[i], null, 2));
-    }
-
-    console.table(this.attributes);
-  }
 }
