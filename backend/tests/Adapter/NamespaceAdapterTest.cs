@@ -87,7 +87,6 @@ public class NamespaceAdapterTest
         _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId1))
             .Returns(namespaces[0]);
 
-        // Mock para clases vacías
         foreach(var ns in namespaces)
         {
             _simClassService?.Setup(x => x.GetClassesOfNamespaces(ns.Id)).Returns([]);
@@ -209,5 +208,16 @@ public class NamespaceAdapterTest
 
         Assert.ThrowsException<NonExistentValueAdapter>(() =>
             _namespaceAdapter!.CreateNamespace(namespaceRequest));
+    }
+
+    [TestMethod]
+    public void GetNamespaceById_ShouldThrowInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
+    {
+        var namespaceId = Guid.NewGuid();
+        _mockNamespaceService!.Setup(x => x.GetNamespaceById(namespaceId))
+            .Throws(new InvalidAttributeLogic("Invalid namespace ID"));
+
+        Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _namespaceAdapter!.GetNamespaceById(namespaceId));
     }
 }
