@@ -1,0 +1,20 @@
+.execution-status {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 4px;
+
+    &.loading {
+        background-color: #e2f0fd;
+        border: 1px solid #b3d7ff;
+    }
+
+    &.error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+
+        h5 {
+            color: #721c24;
+            margin-bottom: 8px;
+        }
+    } }
