@@ -1,1 +1,33 @@
-<p>update works!</p>
+<div class="container">
+    <h2>Update Attribute</h2>
+
+    <div class="form-container">
+        <div class="class-selector-container">
+            <app-attribute-selector-total [labelText]="'Select Attribute to update'"
+                (attributeIdSelected)="onAttributeSelected($event)" (classIdSelected)="onClassIdSelected($event)">
+            </app-attribute-selector-total>
+        </div>
+
+        <div class="attribute-container">
+            <app-attribute-item [attribute]="myAttribute" [relatedClassId]="myAttribute.idRelatedClass"
+                (attributeChange)="onAttributeChanged($event)">
+            </app-attribute-item>
+        </div>
+
+        <div class="actions">
+            <button class="create-btn" (click)="clickUpdate()">Update Attribute</button>
+        </div>
+    </div>
+</div>
+
+<div class="messages">
+    <div *ngIf="success" class="success-message">
+        <i class="material-icons">check_circle</i>
+        <span>{{ success }}</span>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        <i class="material-icons">error</i>
+        <span>{{ error }}</span>
+    </div>
+</div>

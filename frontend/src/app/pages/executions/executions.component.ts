@@ -16,10 +16,8 @@ import { ExecutionService } from '../../services/execution.service';
 @Component({
   selector: 'app-executions',
   standalone: true,
-  imports: [ParameterSignatureListComponent, MethodSelectorComponent, CommonModule,
-    ClassSelectorComponent, FormsModule, TypeReferenceSelectorComponent,
-    AttributeSelectorComponent, StaticAttributeSelectorComponent
-    , VariableSelectorComponent, ParameterSelectorComponent],
+  imports: [ParameterSignatureListComponent, CommonModule,
+    ClassSelectorComponent, FormsModule],
   templateUrl: './executions.component.html',
   styleUrl: './executions.component.scss'
 })
