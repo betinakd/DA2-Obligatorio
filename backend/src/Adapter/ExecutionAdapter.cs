@@ -1,7 +1,7 @@
-using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
 using IAdapter;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Models.Response;

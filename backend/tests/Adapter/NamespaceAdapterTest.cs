@@ -1,7 +1,7 @@
 using Adapter;
-using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Moq;
 
@@ -200,7 +200,7 @@ public class NamespaceAdapterTest
         var namespaceRequest = new Models.Request.NamespaceRequest
         {
             Name = "TestNamespace",
-            BaseNamespaceId = baseNamespaceId // Non-existent base namespace
+            BaseNamespaceId = baseNamespaceId
         };
 
         _mockNamespaceService!.Setup(x => x.CreateNamespace(It.IsAny<SimNamespace>()))

@@ -1,6 +1,6 @@
-using Adapter.Exceptions;
 using FluentAssertions;
 using IAdapter;
+using IAdapter.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;

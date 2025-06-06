@@ -1,5 +1,5 @@
 using System.Net;
-using Adapter.Exceptions;
+using IAdapter.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;

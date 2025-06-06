@@ -1,8 +1,8 @@
 using Adapter;
-using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Moq;

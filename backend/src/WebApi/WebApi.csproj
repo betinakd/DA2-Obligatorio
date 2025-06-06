@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IAdapter\IAdapter.csproj" />
-    <ProjectReference Include="..\Adapter\Adapter.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\ServiceFactory\ServiceFactory.csproj" />
   </ItemGroup>
