@@ -55,7 +55,7 @@ export class ExecutionsComponent {
     console.log('Creating execution with request:', this.executionRequest);
     this.executionService.executeMethod(this.executionRequest).subscribe({
       next: (response) => {
-        this.success = response;
+        this.success = response.execution;
         this.loading = false;
         this.error = '';
       },

@@ -1,9 +1,10 @@
-using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
 using IAdapter;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
+using Models.Response;
 using Transformers.Abstractions;
 
 namespace Adapter;
@@ -15,7 +16,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
     private readonly ISimClassService _simClassService = simClassService;
     private readonly ITransformerService _transformerService = transformerService;
 
-    public string ExecuteMethod(MethodExecutionRequest request)
+    public MethodExecutionResponse ExecuteMethod(MethodExecutionRequest request)
     {
         try
         {
@@ -61,7 +62,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
 
             var execution = _executionService.ExecuteMethod(refer, obj, reference, signature);
             _executionService.SaveExecutionLog(refer.Name, obj.Name, execution);
-            return execution;
+            return new MethodExecutionResponse() { Execution = execution };
         }
         catch(InvalidOperationLogic ex)
         {
@@ -84,7 +85,7 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
     public TransformedResponse ExecuteMethodWithTransform(MethodExecutionRequest request, string transformerId)
     {
         var executionResult = ExecuteMethod(request);
-        return _transformerService.TransformExecution(executionResult, transformerId);
+        return _transformerService.TransformExecution(executionResult.Execution, transformerId);
     }
 
     public bool IsAuthorizedUser(Guid apiKey)

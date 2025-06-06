@@ -1,4 +1,4 @@
-namespace Adapter.Exceptions;
+namespace IAdapter.Exceptions;
 
 public class InUseValueAdapter(string message) : Exception(message)
 {

@@ -1,8 +1,8 @@
 using Adapter;
-using Adapter.Exceptions;
 using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Moq;
@@ -105,7 +105,7 @@ public class ExecutionAdapterTest
         _mockExecutionService!
             .Setup(s => s.SaveExecutionLog("ReferenceType", "InstanceType", "expectedResult"));
 
-        var result = _executionAdapter!.ExecuteMethod(request);
+        var result = _executionAdapter!.ExecuteMethod(request).Execution;
 
         Assert.AreEqual("expectedResult", result);
         _simClassService.VerifyAll();

@@ -1,4 +1,5 @@
 using BusinessLogic;
+using BusinessLogic.Exceptions;
 using Domain;
 using IDataAccess;
 using Moq;
@@ -68,5 +69,93 @@ public class NamespaceServiceTest
 
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void CreateNamespace_ShouldThrowException_WhenNameIsEmpty()
+    {
+        var simNamespace = new SimNamespace { Name = string.Empty, Id = Guid.NewGuid() };
+
+        _namespaceService!.CreateNamespace(simNamespace);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void CreateNamespace_ShouldThrowException_WhenBaseNamespaceDoesNotExist()
+    {
+        var baseNamespaceId = Guid.NewGuid();
+        var simNamespace = new SimNamespace
+        {
+            Name = "TestNamespace",
+            Id = Guid.NewGuid(),
+            BaseNamespaceId = baseNamespaceId
+        };
+
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsById(baseNamespaceId)).Returns(false);
+
+        _namespaceService!.CreateNamespace(simNamespace);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidAttributeLogic))]
+    public void CreateNamespace_ShouldThrowException_WhenNamespaceWithSameNameExists()
+    {
+        var simNamespace = new SimNamespace { Name = "ExistingNamespace", Id = Guid.NewGuid() };
+
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsByName("ExistingNamespace")).Returns(true);
+
+        _namespaceService!.CreateNamespace(simNamespace);
+    }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldReturnCreatedNamespace_WhenValid()
+    {
+        var simNamespace = new SimNamespace { Name = "NewNamespace", Id = Guid.NewGuid() };
+
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsByName("NewNamespace")).Returns(false);
+        _mockNamespaceDataAccess!.Setup(x => x.CreateNamespace(simNamespace)).Verifiable();
+
+        var result = _namespaceService!.CreateNamespace(simNamespace);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simNamespace.Id, result.Id);
+        Assert.AreEqual(simNamespace.Name, result.Name);
+        _mockNamespaceDataAccess.Verify(x => x.CreateNamespace(simNamespace), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(NonExistentValueLogic))]
+    public void GetNamespaceById_ShouldThrowException_WhenNamespaceDoesNotExist()
+    {
+        var namespaceId = Guid.NewGuid();
+
+        _mockNamespaceDataAccess!.Setup(x => x.GetNamespaceById(namespaceId)).Returns((SimNamespace)null);
+
+        _namespaceService!.GetNamespaceById(namespaceId);
+    }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldCreateNamespace_WhenBaseNamespaceExists()
+    {
+        var baseNamespaceId = Guid.NewGuid();
+        var simNamespace = new SimNamespace
+        {
+            Name = "TestNamespace",
+            Id = Guid.NewGuid(),
+            BaseNamespaceId = baseNamespaceId
+        };
+
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsById(baseNamespaceId)).Returns(true);
+        _mockNamespaceDataAccess!.Setup(x => x.NamespaceExistsByName("TestNamespace")).Returns(false);
+        _mockNamespaceDataAccess!.Setup(x => x.CreateNamespace(simNamespace)).Verifiable();
+
+        var result = _namespaceService!.CreateNamespace(simNamespace);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simNamespace.Id, result.Id);
+        Assert.AreEqual(simNamespace.Name, result.Name);
+        Assert.AreEqual(simNamespace.BaseNamespaceId, result.BaseNamespaceId);
+        _mockNamespaceDataAccess.Verify(x => x.CreateNamespace(simNamespace), Times.Once);
     }
 }

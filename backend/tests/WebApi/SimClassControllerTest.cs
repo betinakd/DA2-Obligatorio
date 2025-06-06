@@ -1,8 +1,8 @@
-using Adapter.Exceptions;
 using Domain;
 using Domain.Enums;
 using FluentAssertions;
 using IAdapter;
+using IAdapter.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Enums;

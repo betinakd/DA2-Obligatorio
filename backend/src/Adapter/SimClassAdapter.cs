@@ -1,9 +1,9 @@
-using Adapter.Exceptions;
 using Adapter.Helpers;
 using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
 using IAdapter;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Models.Response;
@@ -191,31 +191,6 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
         catch(NonExistentValueLogic ex)
         {
             throw new NonExistentValueAdapter(ex.Message);
-        }
-    }
-
-    public CreatedSimClassResponse AddInterface(Guid id, InterfaceRequestUpdate methodRequest)
-    {
-        try
-        {
-            var simClass = _simClassService.AddInterface(id, methodRequest.InterfaceId);
-            return new CreatedSimClassResponse() { Message = "Interface implemented successfully.", SimClass = SimClassResponseMapper.MapToSimClassResponse(simClass) };
-        }
-        catch(NonExistentValueLogic ex)
-        {
-            throw new NonExistentValueAdapter(ex.Message);
-        }
-        catch(InUseValueLogic ex)
-        {
-            throw new InUseValueAdapter(ex.Message);
-        }
-        catch(InvalidAttributeLogic ex)
-        {
-            throw new InvalidAttributeAdapter(ex.Message);
-        }
-        catch(InvalidAttributeDomain ex)
-        {
-            throw new InvalidAttributeAdapter(ex.Message);
         }
     }
 }
