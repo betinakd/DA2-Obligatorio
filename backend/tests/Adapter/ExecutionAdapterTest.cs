@@ -105,7 +105,7 @@ public class ExecutionAdapterTest
         _mockExecutionService!
             .Setup(s => s.SaveExecutionLog("ReferenceType", "InstanceType", "expectedResult"));
 
-        var result = _executionAdapter!.ExecuteMethod(request);
+        var result = _executionAdapter!.ExecuteMethod(request).Execution;
 
         Assert.AreEqual("expectedResult", result);
         _simClassService.VerifyAll();

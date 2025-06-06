@@ -1,6 +1,7 @@
 using IAdapter;
 using Microsoft.AspNetCore.Mvc;
 using Models.Request;
+using Models.Response;
 using Moq;
 using WebApi.Controllers;
 
@@ -29,8 +30,12 @@ public class MethodExecutionControllerTest
             Parameters = [],
             IdReferenceType = Guid.NewGuid().ToString(),
         };
-        var expectedResult = "Class1.TestMethod()";
-        _mockExecutionAdapter?.Setup(adapter => adapter.ExecuteMethod(body)).Returns(expectedResult);
+        var method = "Class1.TestMethod()";
+        var bodyResponse = new MethodExecutionResponse()
+        {
+            Execution = method
+        };
+        _mockExecutionAdapter?.Setup(adapter => adapter.ExecuteMethod(body)).Returns(bodyResponse);
 
         var actionResult = _executionsController?.ExecuteMethod(body) as OkObjectResult;
 
@@ -38,6 +43,6 @@ public class MethodExecutionControllerTest
 
         Assert.IsNotNull(actionResult);
         Assert.AreEqual(200, actionResult.StatusCode);
-        Assert.AreEqual(expectedResult, actionResult.Value);
+        Assert.AreEqual(bodyResponse, actionResult.Value);
     }
 }
