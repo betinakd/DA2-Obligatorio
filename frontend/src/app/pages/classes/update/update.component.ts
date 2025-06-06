@@ -60,7 +60,7 @@ export class UpdateComponent {
     this.state = value;
   }
 
-  onAttributesUpdated(attributes: Attribute[]): void {
+  onAttributesUpdated(attributes: AttributeRequest[]): void {
     this.attributes = attributes;
   }
 

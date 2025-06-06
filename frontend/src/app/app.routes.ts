@@ -24,8 +24,6 @@ import { CreateComponent as VariableCreateComponent } from './pages/variables/cr
 
 import { CreateComponent as InvocationCreateComponent } from './pages/invocations/create/create.component';
 
-import { CreateImplementationComponent } from './pages/implements/create-implementation/create-implementation.component';
-
 import { CreateComponent as NamespaceCreateComponent } from './pages/namespaces/create/create.component';
 
 export const routes: Routes = [
@@ -34,36 +32,36 @@ export const routes: Routes = [
     { path: 'logging', component: LoggingComponent },
     { path: 'execute', component: ExecutionsComponent },
     { path: 'transformers', component: TransformersComponent },
-    
+
     { path: 'classes/create', component: ClassCreateComponent },
     { path: 'classes/update', component: ClassUpdateComponent },
     { path: 'classes/delete', component: ClassDeleteComponent },
     { path: 'classes/get-all', component: ClassGetAllComponent },
-    
+
     { path: 'attributes/create', component: AttributeCreateComponent },
     { path: 'attributes/update', component: AttributeUpdateComponent },
     { path: 'attributes/delete', component: AttributeDeleteComponent },
-    
+
     { path: 'methods/create', component: MethodCreateComponent },
     { path: 'methods/delete', component: MethodDeleteComponent },
-    
+
     { path: 'parameters/create', component: ParameterCreateComponent },
-    
+
     { path: 'variables/create', component: VariableCreateComponent },
-    
+
     { path: 'invocations/create', component: InvocationCreateComponent },
-    
-    { path: 'implements/create', component: CreateImplementationComponent },
-    
+
     { path: 'namespaces/create', component: NamespaceCreateComponent },
-    
+
     { path: '**', redirectTo: 'home' },
 
-    { path: 'variables/:id', 
-    loadComponent: () => import('./pages/variables/create/create.component').then(m => m.CreateComponent)
+    {
+        path: 'variables/:id',
+        loadComponent: () => import('./pages/variables/create/create.component').then(m => m.CreateComponent)
     },
 
-    { path: 'variables/create', 
+    {
+        path: 'variables/create',
         loadComponent: () => import('./pages/variables/create/create.component').then(m => m.CreateComponent)
     }
 ];
