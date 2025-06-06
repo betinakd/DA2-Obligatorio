@@ -48,7 +48,7 @@ export class AttributeService {
     }
 
     deleteAttribute(attributeId: string): Observable<any> {
-        return this.http.delete<any>(`${this.apiUrl}/attributes/${attributeId}`)
+        return this.http.delete<any>(`${this.apiUrl}attributes/${attributeId}`)
             .pipe(
                 catchError(error => {
                     console.error(error);
