@@ -30,11 +30,6 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("Namespace not found.");
         }
 
-        if(_namespaceService.NameAlreadyInNamespace_Validation(namespaceId, name))
-        {
-            throw new InUseValueLogic("Class name already exists in the namespace.");
-        }
-
         try
         {
             var baseClass = _simClassDA.GetSimClassById(baseClassId);

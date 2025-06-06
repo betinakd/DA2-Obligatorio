@@ -44,21 +44,6 @@ public class NamespaceService(INamespaceDataAccess namespaceDataAccess) : INames
         return result;
     }
 
-    public bool NameAlreadyInNamespace_Validation(Guid? id, string className)
-    {
-        try
-        {
-            var namespaceExists = _namespaceDataAccess.NamespaceExistsById(id);
-
-            var elements = GetNamespaceById(id).Elements;
-            return elements.Any(e => e.Name == className);
-        }
-        catch(InvalidAttributeLogic)
-        {
-            throw new NonExistentValueLogic($"Namespace with ID {id} does not exist.");
-        }
-    }
-
     public List<SimNamespace> GetAllNamespaces()
     {
         return _namespaceDataAccess.GetAllNamespaces();
