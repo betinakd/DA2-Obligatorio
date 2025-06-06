@@ -26,27 +26,39 @@ public class NamespaceAdapterTest
     public void GetNamespaceById_ShouldReturnNamespaceResponse_WhenIdIsValid()
     {
         var namespaceId = Guid.NewGuid();
-        var namespaceClasses = new List<SimClass>
-        {
-            new SimClass { Id = Guid.NewGuid(), Name = "TestClass1", NamespaceId = namespaceId },
-            new SimClass { Id = Guid.NewGuid(), Name = "TestClass2", NamespaceId = namespaceId },
-        };
+        var class1Id = Guid.NewGuid();
+        var class2Id = Guid.NewGuid();
+
         var expectedNamespace = new SimNamespace
         {
             Id = namespaceId,
             Name = "TestNamespace",
             BaseNamespaceId = null,
-            Elements = namespaceClasses,
         };
-        _mockNamespaceService?.Setup(x => x.GetNamespaceById(namespaceId)).Returns(expectedNamespace);
-        _simClassService?.Setup(x => x.GetClassesOfNamespaces(namespaceId)).Returns(expectedNamespace.Elements);
+        var namespaceClasses = new List<SimClass>
+        {
+        new SimClass { Id = class1Id, Name = "TestClass1", NamespaceId = namespaceId, Namespace = expectedNamespace },
+        new SimClass { Id = class2Id, Name = "TestClass2", NamespaceId = namespaceId, Namespace = expectedNamespace },
+        };
 
-        var response = _namespaceAdapter?.GetNamespaceById(namespaceId);
+        expectedNamespace.Elements = namespaceClasses;
+
+        _mockNamespaceService!.Setup(x => x.GetNamespaceById(namespaceId)).Returns(expectedNamespace);
+        _simClassService!.Setup(x => x.GetClassesOfNamespaces(namespaceId)).Returns(expectedNamespace.Elements);
+
+        var response = _namespaceAdapter!.GetNamespaceById(namespaceId);
 
         Assert.IsNotNull(response);
         Assert.AreEqual(expectedNamespace.Id, response.Id);
         Assert.AreEqual(expectedNamespace.Name, response.Name);
         Assert.IsNull(response.BaseNamespaceId);
+
+        Assert.IsNotNull(response.Elements);
+        Assert.AreEqual(2, response.Elements.Count);
+        Assert.AreEqual(class1Id, response.Elements[0].Id);
+        Assert.AreEqual("TestClass1", response.Elements[0].Name);
+        Assert.AreEqual(class2Id, response.Elements[1].Id);
+        Assert.AreEqual("TestClass2", response.Elements[1].Name);
     }
 
     [TestMethod]
@@ -135,5 +147,67 @@ public class NamespaceAdapterTest
 
         Assert.IsNotNull(response);
         Assert.AreEqual(0, response.Count);
+    }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldReturnCreatedNamespaceResponse_WhenInputIsValid()
+    {
+        var namespaceRequest = new Models.Request.NamespaceRequest
+        {
+            Name = "TestNamespace",
+            BaseNamespaceId = null
+        };
+
+        var createdNamespace = new SimNamespace
+        {
+            Id = Guid.NewGuid(),
+            Name = "TestNamespace",
+            BaseNamespaceId = null
+        };
+
+        _mockNamespaceService!.Setup(x => x.CreateNamespace(It.IsAny<SimNamespace>()))
+            .Returns(createdNamespace);
+
+        var response = _namespaceAdapter!.CreateNamespace(namespaceRequest);
+
+        Assert.IsNotNull(response);
+        Assert.IsNotNull(response.NamespaceResponse);
+        Assert.AreEqual(createdNamespace.Id, response.NamespaceResponse.Id);
+        Assert.AreEqual(createdNamespace.Name, response.NamespaceResponse.Name);
+        Assert.AreEqual(createdNamespace.BaseNamespaceId, response.NamespaceResponse.BaseNamespaceId);
+        Assert.AreEqual("Namespace created successfully", response.Message);
+    }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldThrowInvalidAttributeAdapter_WhenServiceThrowsInvalidAttributeLogic()
+    {
+        var namespaceRequest = new Models.Request.NamespaceRequest
+        {
+            Name = string.Empty,
+            BaseNamespaceId = null
+        };
+
+        _mockNamespaceService!.Setup(x => x.CreateNamespace(It.IsAny<SimNamespace>()))
+            .Throws(new InvalidAttributeLogic("Invalid namespace name"));
+
+        Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+            _namespaceAdapter!.CreateNamespace(namespaceRequest));
+    }
+
+    [TestMethod]
+    public void CreateNamespace_ShouldThrowNonExistentValueAdapter_WhenServiceThrowsNonExistentValueLogic()
+    {
+        var baseNamespaceId = Guid.NewGuid();
+        var namespaceRequest = new Models.Request.NamespaceRequest
+        {
+            Name = "TestNamespace",
+            BaseNamespaceId = baseNamespaceId // Non-existent base namespace
+        };
+
+        _mockNamespaceService!.Setup(x => x.CreateNamespace(It.IsAny<SimNamespace>()))
+            .Throws(new NonExistentValueLogic("Base namespace does not exist"));
+
+        Assert.ThrowsException<NonExistentValueAdapter>(() =>
+            _namespaceAdapter!.CreateNamespace(namespaceRequest));
     }
 }

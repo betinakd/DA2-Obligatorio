@@ -49,7 +49,7 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
                 Id = simNamespace.Id,
                 Name = simNamespace.Name,
                 BaseNamespaceId = simNamespace.BaseNamespaceId,
-                Elements = MapClassesToResponses(classes)
+                Elements = classes.Select(SimClassResponseMapper.MapToSimClassResponse).ToList()
             };
 
             return response;
@@ -69,23 +69,5 @@ public class NamespaceAdapter(INamespaceService namespaceService, ISimClassServi
         return _namespaceService.GetAllNamespaces()
             .Select(NamespaceResponseMapper.MapToNamespaceResponse)
             .ToList();
-    }
-
-    private List<SimClassResponse> MapClassesToResponses(List<SimClass> classes)
-    {
-        if(classes == null || !classes.Any())
-        {
-            return [];
-        }
-        else
-        {
-            return [.. classes.Select(c => new SimClassResponse
-            {
-                Id = c.Id,
-                Name = c.Name,
-                State = (Models.Enums.SimModelsAccesibility)c.State,
-                IdBaseClass = c.BaseClassId,
-            })];
-        }
     }
 }
