@@ -14,7 +14,11 @@
 <app-class-selector [labelText]="'Select Instance Type'"
     (classSelected)="onTypeInstanceSelected($event)"></app-class-selector>
 
-<button (click)="onCreateExecution()">Create Execution</button>
+<div class="create-button-container">
+    <button class="btn-create" (click)="onCreateExecution()">
+        <span class="material-icons">play_circle_filled</span> Execute Method
+    </button>
+</div>
 
 <div *ngIf="loading" class="execution-status loading">
     <p>Procesando solicitud...</p>
@@ -28,4 +32,4 @@
 <div *ngIf="success" class="execution-result">
     <h5>Execution created succesfully:</h5>
     <pre class="execution-trace">{{ success }}</pre>
-    </div>
+</div>

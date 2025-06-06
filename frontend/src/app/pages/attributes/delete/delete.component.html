@@ -1,1 +1,27 @@
-<p>delete works!</p>
+<div class="container">
+    <h2>Delete Attribute</h2>
+
+    <div class="form-container">
+        <div class="class-selector-container">
+            <app-attribute-selector-total [labelText]="'Select Attribute to delete'"
+                (attributeIdSelected)="onAttributeSelected($event)">
+            </app-attribute-selector-total>
+        </div>
+
+        <div class="actions">
+            <button class="create-btn" (click)="clickDelete()">Delete Attribute
+            </button>
+        </div>
+    </div>
+
+    <div class="messages">
+        <div *ngIf="success" class="success-message">
+            <i class="material-icons">check_circle</i>
+            <span>{{ success }}</span>
+        </div>
+
+        <div *ngIf="error" class="error-message">
+            <i class="material-icons">error</i>
+            <span>{{ error }}</span>
+        </div>
+    </div>

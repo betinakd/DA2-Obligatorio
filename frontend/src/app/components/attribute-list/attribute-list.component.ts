@@ -30,10 +30,10 @@ export class AttributeListComponent {
     const newAttribute: AttributeRequest = {
       id: '',
       name: '',
-      referenceId: '',
-      instanceId: '',
+      idReference: '',
+      idInstance: '',
       privacity: 'Public',
-      relatedClassId: this.relatedClassId,
+      idRelatedClass: this.relatedClassId,
       isStatic: false
     };
 
@@ -43,14 +43,14 @@ export class AttributeListComponent {
 
   onClassReferenceSelected(classId: string, index: number): void {
     if (this.attributes[index]) {
-      this.attributes[index].referenceId = classId;
+      this.attributes[index].idReference = classId;
       this.attributesChange.emit([...this.attributes]);
     }
   }
 
   onClassInstanceSelected(classId: string, index: number): void {
     if (this.attributes[index]) {
-      this.attributes[index].instanceId = classId;
+      this.attributes[index].idInstance = classId;
       this.attributesChange.emit([...this.attributes]);
     }
   }

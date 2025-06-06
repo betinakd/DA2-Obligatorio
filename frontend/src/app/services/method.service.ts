@@ -7,6 +7,7 @@ import { MethodCreatedResponse } from '../models/MethodCreatedResponse';
 import { InvocationRequest } from '../models/request/InvocationRequest';
 import { InvocationResponse } from '../models/invocation-response.model';
 import { CreatedInvocationResponse } from '../models/invocation.model';
+import { ParameterRequest } from '../models/request/ParameterRequest.model';
 
 
 @Injectable({
@@ -17,9 +18,6 @@ export class MethodService {
 
   constructor(private http: HttpClient) { }
 
-  getMethod(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
-  }
 
   createMethod(classId: string, method: MethodRequest): Observable<MethodCreatedResponse> {
     return this.http.post<MethodCreatedResponse>(`${API_ENDPOINTS.CLASSES}/${classId}/methods`, method);
@@ -29,8 +27,8 @@ export class MethodService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  createParameter(methodId: string, parameter: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${methodId}/parameters`, parameter);
+  createParameter(methodId: string, parameter: any): Observable<ParameterRequest> {
+    return this.http.post<ParameterRequest>(`${this.apiUrl}/${methodId}/parameters`, parameter);
   }
 
   createVariable(methodId: string, variable: any): Observable<any> {
@@ -39,9 +37,5 @@ export class MethodService {
 
   createInvocation(methodId: string, invocation: InvocationRequest): Observable<CreatedInvocationResponse> {
     return this.http.post<CreatedInvocationResponse>(`${this.apiUrl}/${methodId}/invocations`, invocation);
-  }
-
-  executeMethod(executionRequest: any): Observable<any> {
-    return this.http.post<any>(`${API_ENDPOINTS.EXECUTIONS}`, executionRequest);
   }
 }
