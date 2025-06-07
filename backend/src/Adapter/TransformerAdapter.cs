@@ -1,20 +1,21 @@
 using IAdapter;
 using IBusinessLogic;
-using Transformers.Abstractions;
+using Models.Request;
 
 namespace Adapter;
 
-public class TransformerAdapter(ITransformerService transformerService) : ITransformerAdapter
+public class TransformerAdapter(ITransformerService transformerService, IExecutionAdapter executionAdapter) : ITransformerAdapter
 {
     private readonly ITransformerService _transformerService = transformerService;
-
-    public IEnumerable<TransformerInfo> GetTransformers()
+    private readonly IExecutionAdapter _executionAdapter = executionAdapter;
+    public string[] GetTransformers()
     {
-        return _transformerService.GetAvailableTransformers();
+        return _transformerService.GetAvailableExporters();
     }
 
-    public TransformedResponse TransformExecution(string executionResult, string transformerId)
+    public string ExportExecution(MethodExecutionTransformedRequest methodExecutionRequest)
     {
-        return _transformerService.TransformExecution(executionResult, transformerId);
+        var executionResult = _executionAdapter.ExecuteMethod(methodExecutionRequest.Execution);
+        return _transformerService.ExportExecution(methodExecutionRequest.TransformerName, executionResult.Execution);
     }
 }

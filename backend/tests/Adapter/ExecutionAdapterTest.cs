@@ -6,7 +6,6 @@ using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Moq;
-using Transformers.Abstractions;
 
 namespace Tests.Adapter;
 
@@ -16,15 +15,13 @@ public class ExecutionAdapterTest
     private Mock<IExecutionService>? _mockExecutionService;
     private ExecutionAdapter? _executionAdapter;
     private Mock<ISimClassService>? _simClassService;
-    private Mock<ITransformerService>? _mockTransformerService;
 
     [TestInitialize]
     public void Initialize()
     {
         _mockExecutionService = new Mock<IExecutionService>(MockBehavior.Strict);
-        _mockTransformerService = new Mock<ITransformerService>(MockBehavior.Strict);
         _simClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _executionAdapter = new ExecutionAdapter(_mockExecutionService.Object, _simClassService.Object, _mockTransformerService.Object);
+        _executionAdapter = new ExecutionAdapter(_mockExecutionService.Object, _simClassService.Object);
     }
 
     [TestMethod]
@@ -269,85 +266,6 @@ public class ExecutionAdapterTest
             .Throws(new InvalidExecutionAdapter("No se puede ejecutar sobre una clase abstracta."));
 
         _executionAdapter!.ExecuteMethod(request);
-    }
-
-    [TestMethod]
-    public void ExecuteMethodWithTransform_ShouldReturnTransformedResponse()
-    {
-        var paramTypeId = Guid.NewGuid();
-        var paramInstanceId = Guid.NewGuid();
-        var referenceId = Guid.NewGuid();
-        var instanceId = Guid.NewGuid();
-
-        var typeId = Guid.NewGuid();
-        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
-
-        var request = new MethodExecutionRequest
-        {
-            MethodName = "TestMethod",
-            IdReturnType = typeId.ToString(),
-            IdInstanceType = instanceId.ToString(),
-            IdReferenceType = referenceId.ToString(),
-            Parameters =
-            [
-                new ParameterSignatureRequest { Name = "param1", IdReference = paramTypeId.ToString(), IdInstance = paramInstanceId.ToString() }
-            ],
-        };
-
-        var simClass = new SimClass { Id = paramTypeId, Name = "ParamType", State = SimAccesibility.Normal };
-        var simInstanceParam = new SimClass { Id = paramInstanceId, Name = "ParamInstance", State = SimAccesibility.Normal };
-        var simReference = new SimClass { Id = referenceId, Name = "Ref", State = SimAccesibility.Normal };
-        var simInstance = new SimClass { Id = instanceId, Name = "Obj", State = SimAccesibility.Normal };
-
-        var mockExecutionService = new Mock<IExecutionService>();
-        var mockSimClassService = new Mock<ISimClassService>();
-        var mockTransformerService = new Mock<ITransformerService>();
-
-        mockSimClassService.Setup(x => x.GetSimClassById(paramTypeId)).Returns(simClass);
-        mockSimClassService.Setup(x => x.GetSimClassById(paramInstanceId)).Returns(simInstanceParam);
-        mockSimClassService.Setup(x => x.GetSimClassById(referenceId)).Returns(simReference);
-        mockSimClassService.Setup(x => x.GetSimClassById(instanceId)).Returns(simInstance);
-        mockSimClassService.Setup(x => x.GetSimClassById(typeId)).Returns(returnType);
-
-        mockExecutionService.Setup(x => x.IsReferenceBaseOfInstance(simReference, simInstance)).Returns(true);
-
-        mockExecutionService.Setup(x => x.ExecuteMethod(
-                It.Is<SimClass>(c => c.Id == referenceId),
-                It.Is<SimClass>(c => c.Id == instanceId),
-                It.IsAny<Reference>(),
-                It.Is<Signature>(sig =>
-                    sig.Name == "TestMethod" &&
-                    sig.ReturnTypeId == typeId &&
-                    sig.ReturnType == returnType &&
-                    sig.Parameters.Count == 1),
-                It.IsAny<HashSet<Guid>>(),
-                It.IsAny<int>()))
-            .Returns("resultado");
-
-        mockExecutionService.Setup(x => x.SaveExecutionLog(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-
-        var expectedResponse = new TransformedResponse
-        {
-            OriginalResult = "resultado",
-            TransformedResult = "transformado",
-            ContentType = "text/plain",
-            TransformerId = "test",
-        };
-        mockTransformerService.Setup(x => x.TransformExecution("resultado", "test")).Returns(expectedResponse);
-
-        var adapter = new ExecutionAdapter(
-            mockExecutionService.Object,
-            mockSimClassService.Object,
-            mockTransformerService.Object);
-
-        var validKey = new Guid("77777777-aaaa-1111-1111-111111111111");
-        mockExecutionService.Setup(x => x.IsAuthorizedUser(validKey)).Returns(true);
-
-        var result = adapter.ExecuteMethodWithTransform(request, "test");
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("transformado", result.TransformedResult);
-        Assert.AreEqual("test", result.TransformerId);
     }
 
     [TestMethod]

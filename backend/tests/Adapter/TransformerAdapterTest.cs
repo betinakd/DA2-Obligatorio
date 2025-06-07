@@ -1,109 +1,59 @@
 using Adapter;
+using IAdapter;
 using IBusinessLogic;
+using Models.Request;
+using Models.Response;
 using Moq;
-using Transformers.Abstractions;
 
 namespace Tests.Adapter;
 
 [TestClass]
 public class TransformerAdapterTest
 {
-    [TestMethod]
-    public void GetTransformers_ShouldReturnTransformersFromService()
+    private Mock<ITransformerService>? _mockTransformerService;
+    private Mock<IExecutionAdapter>? _mockExecutionAdapter;
+    private TransformerAdapter? _adapter;
+
+    [TestInitialize]
+    public void Setup()
     {
-        var expectedTransformers = new List<TransformerInfo>
-            {
-                new TransformerInfo { Id = "test1", Name = "Test 1", ContentType = "text/plain" },
-                new TransformerInfo { Id = "test2", Name = "Test 2", ContentType = "text/html" },
-            };
-
-        var mockTransformerService = new Mock<ITransformerService>();
-        mockTransformerService.Setup(s => s.GetAvailableTransformers())
-            .Returns(expectedTransformers);
-
-        var adapter = new TransformerAdapter(mockTransformerService.Object);
-
-        var result = adapter.GetTransformers();
-
-        Assert.IsNotNull(result);
-        var resultList = result.ToList();
-        Assert.AreEqual(expectedTransformers.Count, resultList.Count);
-
-        for(var i = 0; i < expectedTransformers.Count; i++)
-        {
-            Assert.AreEqual(expectedTransformers[i].Id, resultList[i].Id);
-            Assert.AreEqual(expectedTransformers[i].Name, resultList[i].Name);
-            Assert.AreEqual(expectedTransformers[i].ContentType, resultList[i].ContentType);
-        }
-
-        mockTransformerService.Verify(s => s.GetAvailableTransformers(), Times.Once);
+        _mockTransformerService = new Mock<ITransformerService>();
+        _mockExecutionAdapter = new Mock<IExecutionAdapter>();
+        _adapter = new TransformerAdapter(_mockTransformerService.Object, _mockExecutionAdapter.Object);
     }
 
     [TestMethod]
-    public void TransformExecution_ShouldReturnTransformedResponseFromService()
+    public void GetTransformers_ReturnsAvailableExporters()
     {
-        var executionResult = "resultado original";
-        var transformerId = "test-transformer";
+        var exporters = new[] { "HTML", "JSON" };
+        _mockTransformerService!.Setup(x => x.GetAvailableExporters()).Returns(exporters);
 
-        var expectedResponse = new TransformedResponse
-        {
-            OriginalResult = executionResult,
-            TransformedResult = "resultado transformado",
-            ContentType = "text/html",
-            TransformerId = transformerId,
-            AvailableTransformers =
-                [
-                    new TransformerInfo { Id = transformerId, Name = "Test", ContentType = "text/html" }
-                ],
-        };
+        var result = _adapter!.GetTransformers();
 
-        var mockTransformerService = new Mock<ITransformerService>();
-        mockTransformerService.Setup(s => s.TransformExecution(executionResult, transformerId))
-            .Returns(expectedResponse);
-
-        var adapter = new TransformerAdapter(mockTransformerService.Object);
-
-        var result = adapter.TransformExecution(executionResult, transformerId);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(expectedResponse.OriginalResult, result.OriginalResult);
-        Assert.AreEqual(expectedResponse.TransformedResult, result.TransformedResult);
-        Assert.AreEqual(expectedResponse.ContentType, result.ContentType);
-        Assert.AreEqual(expectedResponse.TransformerId, result.TransformerId);
-        Assert.IsNotNull(result.AvailableTransformers);
-        Assert.AreEqual(1, result.AvailableTransformers.Count);
-
-        mockTransformerService.Verify(s => s.TransformExecution(executionResult, transformerId), Times.Once);
+        CollectionAssert.AreEqual(exporters, result);
     }
 
     [TestMethod]
-    public void TransformExecution_WithoutTransformerId_ShouldUseDefaultTransformer()
+    public void ExportExecution_ReturnsTransformedResult()
     {
-        var executionResult = "resultado original";
-        var defaultTransformerId = "default-transformer";
-
-        var expectedResponse = new TransformedResponse
+        var request = new MethodExecutionTransformedRequest
         {
-            OriginalResult = executionResult,
-            TransformedResult = "resultado transformado por defecto",
-            ContentType = "text/plain",
-            TransformerId = defaultTransformerId,
+            TransformerName = "HTML",
+            Execution = new MethodExecutionRequest()
         };
+        var executionResult = new MethodExecutionResponse { Execution = "raw result" };
+        var transformed = "<html>raw result</html>";
 
-        var mockTransformerService = new Mock<ITransformerService>();
-        mockTransformerService.Setup(s => s.TransformExecution(executionResult, null))
-            .Returns(expectedResponse);
+        _mockExecutionAdapter!
+            .Setup(x => x.ExecuteMethod(request.Execution))
+            .Returns(executionResult);
 
-        var adapter = new TransformerAdapter(mockTransformerService.Object);
+        _mockTransformerService!
+            .Setup(x => x.ExportExecution(request.TransformerName, executionResult.Execution))
+            .Returns(transformed);
 
-        var result = adapter.TransformExecution(executionResult, null);
+        var result = _adapter!.ExportExecution(request);
 
-        Assert.IsNotNull(result);
-        Assert.AreEqual(expectedResponse.OriginalResult, result.OriginalResult);
-        Assert.AreEqual(expectedResponse.TransformedResult, result.TransformedResult);
-        Assert.AreEqual(expectedResponse.ContentType, result.ContentType);
-        Assert.AreEqual(expectedResponse.TransformerId, result.TransformerId);
-
-        mockTransformerService.Verify(s => s.TransformExecution(executionResult, null), Times.Once);
+        Assert.AreEqual(transformed, result);
     }
 }
