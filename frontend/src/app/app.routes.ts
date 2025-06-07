@@ -26,11 +26,11 @@ import { CreateComponent as InvocationCreateComponent } from './pages/invocation
 
 import { CreateComponent as NamespaceCreateComponent } from './pages/namespaces/create/create.component';
 
-/*import { VisitorComponent } from './pages/pattern-examples/visitor/visitor.component';
-import { CompositeComponent } from './pages/pattern-examples/composite/composite.component';
-import { StrategyComponent } from './pages/pattern-examples/strategy/strategy.component';
-import { TemplateMethodComponent } from './pages/pattern-examples/template-method/template-method.component';*/
 import { PatternExamplesComponent } from './pages/pattern-examples/pattern-examples.component';
+import { VisitorComponent } from './pages/pattern-examples/visitor/visitor.component';
+import { StrategyComponent } from './pages/pattern-examples/strategy/strategy.component';
+import { CompositeComponent } from './pages/pattern-examples/composite/composite.component';
+import { TemplateMethodComponent } from './pages/pattern-examples/template-method/template-method.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -60,10 +60,10 @@ export const routes: Routes = [
     { path: 'namespaces/create', component: NamespaceCreateComponent },
 
     { path: 'patterns/prueba', component: PatternExamplesComponent },
-    /*{ path: 'pattern-examples/visitor', component: VisitorComponent },
-    { path: 'pattern-examples/composite', component: CompositeComponent },
-    { path: 'pattern-examples/strategy', component: StrategyComponent },
-    { path: 'pattern-examples/template-method', component: TemplateMethodComponent },*/
+    { path: 'patterns/visitor', component: VisitorComponent },
+    { path: 'patterns/composite', component: CompositeComponent },
+    { path: 'patterns/strategy', component: StrategyComponent },
+    { path: 'patterns/templateMethod', component: TemplateMethodComponent },
 
     { path: '**', redirectTo: 'home' },
 
