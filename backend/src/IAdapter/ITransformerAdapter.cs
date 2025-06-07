@@ -1,9 +1,10 @@
-using Transformers.Abstractions;
+using Models.Request;
 
 namespace IAdapter;
 
 public interface ITransformerAdapter
 {
-    IEnumerable<TransformerInfo> GetTransformers();
-    TransformedResponse TransformExecution(string executionResult, string transformerId);
+    public string[] GetTransformers();
+
+    string ExportExecution(MethodExecutionTransformedRequest executionResult);
 }

@@ -11,15 +11,15 @@ public class AuthorizationFilter(IExecutionAdapter executionAdapter) : IAuthoriz
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if(!context.HttpContext.Request.Headers.TryGetValue("API_KEY", out var apiKeyHeader))
+        if(!context.HttpContext.Request.Headers.TryGetValue("Authorization", out var apiKeyHeader))
         {
-            SetUnauthorizedResult(context, "Invalid or missing API key");
+            SetUnauthorizedResult(context, "Missing API key");
             return;
         }
 
         if(!Guid.TryParse(apiKeyHeader, out var apiKeyValue))
         {
-            SetUnauthorizedResult(context, "Invalid or missing API key");
+            SetUnauthorizedResult(context, "Invalid API key");
             return;
         }
 

@@ -5,16 +5,13 @@ using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Models.Response;
-using Transformers.Abstractions;
 
 namespace Adapter;
 
-public class ExecutionAdapter(IExecutionService executionService, ISimClassService simClassService,
-        ITransformerService transformerService) : IExecutionAdapter
+public class ExecutionAdapter(IExecutionService executionService, ISimClassService simClassService) : IExecutionAdapter
 {
     private readonly IExecutionService _executionService = executionService;
     private readonly ISimClassService _simClassService = simClassService;
-    private readonly ITransformerService _transformerService = transformerService;
 
     public MethodExecutionResponse ExecuteMethod(MethodExecutionRequest request)
     {
@@ -80,12 +77,6 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
         {
             throw new InvalidExecutionAdapter(ex.Message);
         }
-    }
-
-    public TransformedResponse ExecuteMethodWithTransform(MethodExecutionRequest request, string transformerId)
-    {
-        var executionResult = ExecuteMethod(request);
-        return _transformerService.TransformExecution(executionResult.Execution, transformerId);
     }
 
     public bool IsAuthorizedUser(Guid apiKey)

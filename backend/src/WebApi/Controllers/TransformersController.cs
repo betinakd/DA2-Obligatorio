@@ -7,24 +7,21 @@ namespace WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/transformers")]
-public class TransformersController(ITransformerAdapter transformerService, IExecutionAdapter executionAdapter) : ControllerBase
+public class TransformersController(ITransformerAdapter transformerAdaptercopy) : ControllerBase
 {
-    private readonly ITransformerAdapter _transformerService = transformerService;
-    private readonly IExecutionAdapter _executionAdapter = executionAdapter;
+    private readonly ITransformerAdapter _transformerAdaptercopy = transformerAdaptercopy;
 
     [HttpGet]
     public IActionResult GetTransformers()
     {
-        return Ok(_transformerService.GetTransformers());
+        return Ok(_transformerAdaptercopy.GetTransformers());
     }
 
     [HttpPost]
     [ServiceFilter(typeof(AuthorizationFilter))]
-    public IActionResult ExecuteWithTransform(
-        [FromBody] MethodExecutionRequest request,
-        [FromQuery] string transformerId)
+    public IActionResult ExecuteWithTransform([FromBody] MethodExecutionTransformedRequest request)
     {
-        var result = _executionAdapter.ExecuteMethodWithTransform(request, transformerId);
+        var result = _transformerAdaptercopy.ExportExecution(request);
         return Ok(result);
     }
 }
