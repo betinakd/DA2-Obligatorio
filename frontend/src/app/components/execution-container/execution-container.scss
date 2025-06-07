@@ -48,6 +48,22 @@ mat-card {
         background-color: #890568;
         border-radius: 10px;
     }
+
+    .execution-output {
+        white-space: pre;
+        font-family: monospace;
+        background-color: #531e46;
+        color: white;
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+
+        font-size: 16px;
+        margin: 0 auto;
+        display: table;
+        min-width: 50%;
+        max-width: 90%;
+    }
 }
 
 @media (max-width: 576px) {
