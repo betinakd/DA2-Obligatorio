@@ -1,2 +1,43 @@
+<h1>Execution Transformed</h1>
+
+<label for="header">Api key:</label>
+<input type="text" id="header" [(ngModel)]="header" placeholder="Invocation Name" />
+
 <app-transformer-selector [labelText]="'Choose Transformer'" (transformerSelected)="onTransformerSelected($event)">
 </app-transformer-selector>
+
+<label for="invocationName">Method Name:</label>
+<input type="text" id="invocationName" [(ngModel)]="executionRequest.methodName" placeholder="Invocation Name" />
+
+<app-class-selector [labelText]="'Select Method Return Type'" (classSelected)="onReturnTypeChange($event)">
+</app-class-selector>
+
+<app-parameter-signature-list [parameters]="executionRequest.parameters"
+    (parametersChange)="onParametersChange($event)">
+</app-parameter-signature-list>
+
+<app-class-selector [labelText]="'Select Reference Type'"
+    (classSelected)="onTypeReferenceSelected($event)"></app-class-selector>
+
+<app-class-selector [labelText]="'Select Instance Type'"
+    (classSelected)="onTypeInstanceSelected($event)"></app-class-selector>
+
+<div class="create-button-container">
+    <button class="btn-create" (click)="onCreateExecutionTransformed()">
+        <span class="material-icons">play_circle_filled</span> Execute Method
+    </button>
+</div>
+
+<div *ngIf="loading" class="execution-status loading">
+    <p>Procesando solicitud...</p>
+</div>
+
+<div *ngIf="error" class="execution-status error">
+    <h5>Error:</h5>
+    <p>{{ error }}</p>
+</div>
+
+<div *ngIf="success" class="execution-result">
+    <h5>Execution created succesfully:</h5>
+    <pre class="execution-trace">{{ success }}</pre>
+</div>
