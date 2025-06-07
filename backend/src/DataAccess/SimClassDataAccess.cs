@@ -195,6 +195,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
     {
         var simClass = _context.SimClasses
             .Where(c => c.Id == id)
+            .Include(c => c.Namespace)
             .Include(c => c.BaseClass)
             .Include(c => c.Attributes).ThenInclude(a => a.Reference)
             .Include(c => c.Attributes).ThenInclude(a => a.Instance)
