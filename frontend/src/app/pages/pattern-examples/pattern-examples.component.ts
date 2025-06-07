@@ -12,6 +12,7 @@ import { MethodResponse } from '../../models/method-response.model';
 import { ParameterResponse } from '../../models/parameter-response.model';
 import { VariableResponse } from '../../models/variable-response.model';
 import { InvocationResponse } from '../../models/invocation-response.model';
+import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-pattern-examples',
@@ -20,20 +21,16 @@ import { InvocationResponse } from '../../models/invocation-response.model';
   styleUrl: './pattern-examples.component.scss'
 })
 export class PatternExamplesComponent implements OnInit{
-  //@Input() patternName = '';
-  //@Input() patternIdClasses: string[] = [];
-  //@Input() executionInfo : any[] = [];
+  @Input() patternName = '';
+  @Input() patternIdClasses: string[] = [];
+  @Input() executionInfo: MethodExecutionRequest= {
+    methodName: '',
+    parameters: [],
+    idReferenceType: '',
+    idInstanceType: '',
+    idReturnType: ''
+  };
 
-  patternName = 'here goes the pattern name';
-  patternIdClasses: string[] = ['11111111-1111-1111-1111-111111111111']
-  executionInfo: MethodExecutionRequest = 
-   {
-      "methodName": "Finalize",
-      "parameters": [],
-      "idReferenceType": "11111111-1111-1111-1111-111111111111",
-      "idInstanceType": "11111111-1111-1111-1111-111111111111",
-      "idReturnType": "22222222-2222-2222-2222-222222222222"
-    }; //mock data
   classList: any[] = [];
   class: SimClassResponse | null = null;
   methodList: any[] = [];
@@ -46,7 +43,10 @@ export class PatternExamplesComponent implements OnInit{
   constructor(private classService: ClassService, private executionService: ExecutionService) { }
   ngOnInit(): void {
     this.getExecutionOutput();
-    this.getClasses(this.patternIdClasses[0]);
+    for (let i = 0; i < this.patternIdClasses.length; i++) {
+      this.getClasses(this.patternIdClasses[i]);
+    }
+    this.GetTypes();
   }
 
   getExecutionOutput() {
@@ -164,15 +164,21 @@ export class PatternExamplesComponent implements OnInit{
     return returnInfo.join(',');
   }
 
-  parseTypeData(typeId: string): string {
-    let typeData: any;
-    this.classService.getClass(typeId).subscribe({
+  GetTypes(): void {
+    this.classService.getAllClassesForPatterns().subscribe({
       next: (data) => {
-        typeData = data;
+        this.typesList = data;
       },
-    });
-    
-    return typeData ? String(typeData.name) : 'Unknown Type';
+    }
+    );
+  }
+
+  parseTypeData(typeId: string | undefined): string {
+    if (!typeId) {
+      return 'Unknown Type';
+    }
+    const type = this.typesList.filter(item => item.id === typeId)[0];
+    return type && type.name ? String(type.name) : 'Unknown Type';
   }
 
   parseAttributesData(attributes: AttributeResponse[]): string[] {
@@ -185,7 +191,7 @@ export class PatternExamplesComponent implements OnInit{
       const attr = attributes[i];
 
       const reference = this.parseTypeData(attr.referenceId ?? 'Unknown Type');
-      const instance = this.parseTypeData("352CBC54-62A2-449A-A916-4140A053783B");
+      const instance = this.parseTypeData(attr.instanceId ?? 'Unknown Type');
       const isStatic = attr.isStatic ? 'static' : '';
 
       const parsedAttrI = '' + attr?.privacity + ' ' + isStatic + ' ' + reference + ' ' + attr?.name + ': ' + instance;
