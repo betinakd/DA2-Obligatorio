@@ -12,7 +12,7 @@ import { CreatedNamespaceResponse } from '../../../models/CreatedNamespaceRespon
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class CreateComponent implements OnInit {
+export class CreateComponent {
   loading = false;
   error = '';
   name = '';
@@ -22,8 +22,6 @@ export class CreateComponent implements OnInit {
 
   constructor(private namespaceService: NamespaceService) { }
 
-  ngOnInit(): void {
-  }
 
   onNamespaceSelected(value: string): void {
     this.baseNamespaceId = value;
