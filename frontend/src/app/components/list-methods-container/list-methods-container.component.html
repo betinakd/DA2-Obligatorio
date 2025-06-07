@@ -1,1 +1,46 @@
-<p>list-methods</p>
+<mat-card class="main-container">
+    <mat-card-title>List of methods</mat-card-title>
+    <mat-card-content>
+        <div class="list-methods-container">
+            @for (methodItem of methodList; track methodItem.id) {
+            <mat-card class="method-card">
+                <mat-card-title>{{ methodItem.name }} ({{methodItem.class}})</mat-card-title>
+
+                <mat-card-content>
+                    <div>
+                        <strong>Signature: </strong> 
+                            <p> {{ methodItem.methodScript }} </p>
+                    </div>
+                
+                    <div>
+                        @if (methodItem.localVariables.length === 0) {
+                        <p>Local variables: none</p>
+                        }
+                        @else {
+                        <p>Local variables:</p>
+                        <ul>
+                            @for (localVar of methodItem.localVariables; track localVar) {
+                            <li>{{ localVar }}</li>
+                            }
+                        </ul>
+                        }
+                    </div>
+                    <div>
+                        @if (methodItem.invocations.length === 0) {
+                        <p>Invocations: none</p>
+                        }
+                        @else {
+                        <p>Invocations:</p>
+                        <ul>
+                            @for (invocation of methodItem.invocations; track invocation) {
+                            <li>{{ invocation }}</li>
+                            }
+                        </ul>
+                        }
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            }
+        </div>
+    </mat-card-content>
+</mat-card>
