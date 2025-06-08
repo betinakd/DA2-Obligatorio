@@ -1,3 +1,4 @@
+<h1>Execute Method</h1>
 <label for="invocationName">Method Name:</label>
 <input type="text" id="invocationName" [(ngModel)]="executionRequest.methodName" placeholder="Invocation Name" />
 
@@ -18,10 +19,6 @@
     <button class="btn-create" (click)="onCreateExecution()">
         <span class="material-icons">play_circle_filled</span> Execute Method
     </button>
-</div>
-
-<div *ngIf="loading" class="execution-status loading">
-    <p>Procesando solicitud...</p>
 </div>
 
 <div *ngIf="error" class="execution-status error">

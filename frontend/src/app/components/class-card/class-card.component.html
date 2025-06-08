@@ -1,0 +1,13 @@
+<!-- Métodos UML -->
+<ul *ngIf="showMethods && classData?.methods">
+    <li *ngFor="let method of classData.methods">
+        {{ getMethodUMLSignature(method) }}
+    </li>
+</ul>
+
+<!-- Atributos UML -->
+<ul *ngIf="showAttributes && classData?.attributes">
+    <li *ngFor="let attr of classData.attributes">
+        {{ getAttributeUML(attr) }}
+    </li>
+    </ul>
