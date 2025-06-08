@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
 import { CreatedSimClassResponse } from '../models/CreatedSimClassResponse.model';
 import { SimClassResponse } from '../models/SimClassResponse';
@@ -32,5 +33,9 @@ export class ClassService {
 
   deleteClass(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getAllClassesForPatterns(): Observable<SimClassResponse[]> {
+    return this.http.get<SimClassResponse[]>(this.apiUrl);
   }
 }
