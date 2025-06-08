@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.getNamespaces();
     this.loadClasses();
+    this.loading = true;
   }
 
   getNamespaces(): void {
@@ -44,6 +45,9 @@ export class HomeComponent implements OnInit {
         const apiError = err.error as ErrorResponse;
         this.loading = false;
         console.error('Complete error:', err);
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }
@@ -173,5 +177,33 @@ export class HomeComponent implements OnInit {
       methods,
       implements: impls
     };
+  }
+
+  private getAttributeNameById(
+    classes: SimClassResponse[],
+    attributeId: string
+  ): string {
+    for (const cls of classes) {
+      const attr = (cls as any).attributes?.find((a: any) => a.id === attributeId);
+      if (attr?.name) {
+        return attr.name;
+      }
+    }
+    return 'Unknown Attribute';
+  }
+
+  private getParameterNameById(
+    classes: SimClassResponse[],
+    parameterId: string
+  ): string {
+    for (const cls of classes) {
+      for (const m of cls.methods || []) {
+        const param = (m.parameters || []).find(p => p.id === parameterId);
+        if (param?.name) {
+          return param.name;
+        }
+      }
+    }
+    return 'Unknown Parameter';
   }
 }
