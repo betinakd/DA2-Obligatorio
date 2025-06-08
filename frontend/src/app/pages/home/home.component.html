@@ -22,10 +22,15 @@
           <ul>
             <li *ngFor="let m of cls.methods">
               {{ m.displayText }}
+              <ul *ngIf="m.invocations?.length" class="invocations-list">
+                <li *ngFor="let invText of m.invocations">
+                  {{ invText }}
+                </li>
+              </ul>
+              
             </li>
           </ul>
         </div>
-
         <div *ngIf="cls.implements?.length">
           <h4>Implements</h4>
           <ul>
@@ -36,7 +41,6 @@
         </div>
       </div>
     </div>
-
     <ng-template #noClasses>
       <p class="no-classes">This namespace doesn't contain classes.</p>
     </ng-template>

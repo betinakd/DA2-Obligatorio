@@ -133,6 +133,24 @@ export class HomeComponent implements OnInit {
         isOverride ? 'override' : null
       ].filter(x => !!x).join(' ');
 
+      const rawInvs = m.invocations || [];
+
+      const invocations = rawInvs.map(inv => {
+        const invParams = (inv.parameters || [])
+          .map(p => {
+            const pt = p.referenceId
+              ? this.getClassNameById(p.referenceId)
+              : 'Unknown Type';
+            const pi = p.instanceId
+              ? this.getClassNameById(p.instanceId)
+              : '';
+            return `${p.name}: ${pt}${pi ? ' ' + pi : ''}`;
+          })
+          .join(', ');
+
+        return `${inv.typeReference}.${inv.methodName}(${invParams})`;
+      });
+
       return {
         name: m.name,
         returnType,
@@ -140,7 +158,8 @@ export class HomeComponent implements OnInit {
         isStatic,
         isVirtual,
         isOverride,
-        displayText: `${prefixes} ${m.name}(${paramsText}): ${returnType}`.trim()
+        displayText: `${prefixes} ${m.name}(${paramsText}): ${returnType}`.trim(),
+        invocations
       };
     });
 
