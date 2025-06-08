@@ -26,6 +26,8 @@ import { CreateComponent as NamespaceCreateComponent } from './pages/namespaces/
 import { LocalStorageGuard } from './guards/local-storage.guard';
 import { ForbbidenComponent } from './pages/forbbiden/forbbiden.component';
 
+import { TransformerGetComponent } from './pages/transformers/transformer-get/transformer-get.component';
+
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
@@ -35,6 +37,15 @@ export const routes: Routes = [
     {
         path: 'transformers',
         component: TransformersComponent,
+        canActivate: [LocalStorageGuard],
+        data: {
+            storageKey: 'authToken',
+            redirectTo: '/forbidden'
+        }
+    },
+    {
+        path: 'transformers/get',
+        component: TransformerGetComponent,
         canActivate: [LocalStorageGuard],
         data: {
             storageKey: 'authToken',
