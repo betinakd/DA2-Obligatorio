@@ -15,7 +15,12 @@ export class TransformersService {
   constructor(private http: HttpClient) { }
 
   getTransformers(): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl);
+    const token = localStorage.getItem('authToken') ?? '';
+
+    const headers = new HttpHeaders({
+      'Authorization': token
+    });
+    return this.http.get<string[]>(this.apiUrl, { headers: headers });
   }
 
   executeWithTransform(

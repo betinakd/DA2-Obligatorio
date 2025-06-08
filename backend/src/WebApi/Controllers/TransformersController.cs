@@ -12,6 +12,7 @@ public class TransformersController(ITransformerAdapter transformerAdaptercopy) 
     private readonly ITransformerAdapter _transformerAdaptercopy = transformerAdaptercopy;
 
     [HttpGet]
+    [ServiceFilter(typeof(AuthorizationFilter))]
     public IActionResult GetTransformers()
     {
         return Ok(_transformerAdaptercopy.GetTransformers());
