@@ -1,5 +1,164 @@
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main-title {
+  margin-bottom: 24px;
+  color: #333;
+  font-size: 28px;
+}
+
+.loading,
+.error-message,
+.no-data {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.loading {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.no-data {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
 .namespaces-container {
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.namespace-card {
+  background-color: #25042c;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(113, 6, 135, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.namespace-header {
+  padding: 16px;
+  background-color: #1a1e22;
+  border-bottom: 1px solid #111416;
+
+  h2 {
+    margin: 0 0 8px 0;
+    color: #333;
   }
+
+  p {
+    margin: 0;
+    color: #6c757d;
+  }
+}
+
+.classes-container {
+  padding: 16px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    color: #495057;
+  }
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.class-card {
+  background-color: #000000;
+  border-radius: 6px;
+  padding: 16px;
+  border: 1px solid #e9ecef;
+
+  h4.class-name {
+    margin: 0 0 12px 0;
+    color: #212529;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 8px;
+  }
+}
+
+.attributes-section,
+.methods-section {
+  margin-bottom: 16px;
+
+  h5 {
+    margin: 0 0 8px 0;
+    color: #495057;
+    font-size: 16px;
+  }
+}
+
+.attribute-list,
+.parameter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 4px 0;
+    font-size: 14px;
+  }
+}
+
+.method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.method-item {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.method-signature {
+  font-family: monospace;
+  background-color: #a7afb8;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+.parameters h6 {
+  margin: 8px 0 4px 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.attribute-name,
+.param-name {
+  font-weight: 500;
+}
+
+.attribute-type,
+.param-type {
+  color: #0d6efd;
+}
+
+.empty-class,
+.no-classes {
+  text-align: center;
+  padding: 16px;
+  color: #6c757d;
+  font-style: italic;
+}

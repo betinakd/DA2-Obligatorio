@@ -1,19 +1,44 @@
-@if (loading) {
-    <div class="loading-container">
-      <p>Cargando namespaces...</p>
+<div class="namespaces-container">
+  <div *ngFor="let ns of processedNamespaces" class="namespace-card">
+    <h2>Namespace: {{ ns.name }}</h2>
+    <p>Base: {{ ns.baseNamespace }}</p>
+
+    <div *ngIf="ns.classes?.length; else noClasses">
+      <div *ngFor="let cls of ns.classes" class="class-card">
+        <h3>Clase: {{ cls.name }}</h3>
+        <p *ngIf="cls.baseClass">Extends: {{ cls.baseClass }}</p>
+
+        <div *ngIf="cls.attributes?.length">
+          <h4>Atributos</h4>
+          <ul>
+            <li *ngFor="let attr of cls.attributes">
+              {{ attr.name }}: {{ attr.type }}
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="cls.methods?.length">
+          <h4>Métodos</h4>
+          <ul>
+            <li *ngFor="let m of cls.methods">
+              {{ m.displayText }}
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="cls.implements?.length">
+          <h4>Implementa</h4>
+          <ul>
+            <li *ngFor="let i of cls.implements">
+              {{ i }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-  } @else if (error) {
-    <div class="error-container">
-      <app-namespace-card [error]="error"></app-namespace-card>
-    </div>
-  } @else {
-    <div class="namespaces-container">
-      @for (namespace of namespaces; track namespace.id) {
-        <app-namespace-card [namespace]="namespace"></app-namespace-card>
-      }
-      
-      @empty {
-        <div class="empty-state">No hay namespaces disponibles</div>
-      }
-    </div>
-  }
+
+    <ng-template #noClasses>
+      <p class="no-classes">Este namespace no contiene clases</p>
+    </ng-template>
+  </div>
+</div>
