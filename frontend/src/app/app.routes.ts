@@ -8,7 +8,6 @@ import { TransformersComponent } from './pages/transformers/transformers.compone
 import { CreateComponent as ClassCreateComponent } from './pages/classes/create/create.component';
 import { UpdateComponent as ClassUpdateComponent } from './pages/classes/update/update.component';
 import { DeleteComponent as ClassDeleteComponent } from './pages/classes/delete/delete.component';
-import { GetAllComponent as ClassGetAllComponent } from './pages/classes/get-all/get-all.component';
 
 import { CreateComponent as AttributeCreateComponent } from './pages/attributes/create/create.component';
 import { UpdateComponent as AttributeUpdateComponent } from './pages/attributes/update/update.component';
@@ -25,10 +24,13 @@ import { CreateComponent as InvocationCreateComponent } from './pages/invocation
 
 import { CreateComponent as NamespaceCreateComponent } from './pages/namespaces/create/create.component';
 import { LocalStorageGuard } from './guards/local-storage.guard';
+import { ForbbidenComponent } from './pages/forbbiden/forbbiden.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
+    { path: 'forbidden', component: ForbbidenComponent },
+
     { path: 'execute', component: ExecutionsComponent },
     {
         path: 'transformers',
@@ -36,13 +38,12 @@ export const routes: Routes = [
         canActivate: [LocalStorageGuard],
         data: {
             storageKey: 'authToken',
-            redirectTo: '/home'
+            redirectTo: '/forbidden'
         }
     },
     { path: 'classes/create', component: ClassCreateComponent },
     { path: 'classes/update', component: ClassUpdateComponent },
     { path: 'classes/delete', component: ClassDeleteComponent },
-    { path: 'classes/get-all', component: ClassGetAllComponent },
 
     { path: 'attributes/create', component: AttributeCreateComponent },
     { path: 'attributes/update', component: AttributeUpdateComponent },

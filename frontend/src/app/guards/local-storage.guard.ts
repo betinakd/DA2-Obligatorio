@@ -16,7 +16,7 @@ export class LocalStorageGuard implements CanActivate {
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     const requiredKey = route.data['storageKey'] || 'authToken';
-    const redirectTo = route.data['redirectTo'] || '/home';
+    const redirectTo = route.data['redirectTo'] || '/forbidden';
 
     if (localStorage.getItem(requiredKey) == API_KEYS.KEY1 ||
       localStorage.getItem(requiredKey) == API_KEYS.KEY2) {
