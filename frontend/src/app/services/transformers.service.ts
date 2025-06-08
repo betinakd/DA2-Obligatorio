@@ -20,13 +20,12 @@ export class TransformersService {
 
   executeWithTransform(
     execution: MethodExecutionRequest,
-    transformerName: string,
-    token: string
-  ): Observable<any> {
+    transformerName: string): Observable<any> {
     const request = {
       execution: execution,
       transformerName: transformerName
     };
+    const token = localStorage.getItem('authToken') ?? '';
 
     const headers = new HttpHeaders({
       'Authorization': token

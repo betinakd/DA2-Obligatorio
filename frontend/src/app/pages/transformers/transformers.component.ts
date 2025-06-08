@@ -24,7 +24,6 @@ export class TransformersComponent {
   loading: boolean = false;
   error = '';
   success = '';
-  header = '';
 
   onTransformerSelected(transformer: string): void {
     this.transformerName = transformer;
@@ -53,8 +52,7 @@ export class TransformersComponent {
 
     this.transformerService.executeWithTransform(
       this.executionRequest,
-      this.transformerName,
-      this.header
+      this.transformerName
     ).subscribe({
       next: (response) => {
         this.success = response;

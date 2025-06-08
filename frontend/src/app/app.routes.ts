@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './pages/home/home.component';
-import { LoggingComponent } from './pages/logging/logging.component';
 import { ExecutionsComponent } from './pages/executions/executions.component';
 
 import { TransformersComponent } from './pages/transformers/transformers.component';
@@ -25,14 +24,21 @@ import { CreateComponent as VariableCreateComponent } from './pages/variables/cr
 import { CreateComponent as InvocationCreateComponent } from './pages/invocations/create/create.component';
 
 import { CreateComponent as NamespaceCreateComponent } from './pages/namespaces/create/create.component';
+import { LocalStorageGuard } from './guards/local-storage.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
-    { path: 'logging', component: LoggingComponent },
     { path: 'execute', component: ExecutionsComponent },
-    { path: 'transformers', component: TransformersComponent },
-
+    {
+        path: 'transformers',
+        component: TransformersComponent,
+        canActivate: [LocalStorageGuard],
+        data: {
+            storageKey: 'authToken',
+            redirectTo: '/home'
+        }
+    },
     { path: 'classes/create', component: ClassCreateComponent },
     { path: 'classes/update', component: ClassUpdateComponent },
     { path: 'classes/delete', component: ClassDeleteComponent },

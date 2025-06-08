@@ -1,8 +1,5 @@
 <h1>Execution Transformed</h1>
 
-<label for="header">Api key:</label>
-<input type="text" id="header" [(ngModel)]="header" placeholder="Invocation Name" />
-
 <app-transformer-selector [labelText]="'Choose Transformer'" (transformerSelected)="onTransformerSelected($event)">
 </app-transformer-selector>
 

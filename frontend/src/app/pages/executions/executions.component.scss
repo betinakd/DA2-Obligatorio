@@ -4,7 +4,7 @@
     border-radius: 4px;
 
     &.loading {
-        background-color: #e2f0fd;
+        background-color: #33193f;
         border: 1px solid #b3d7ff;
     }
 
@@ -82,5 +82,6 @@
         background-color: rgba(76, 175, 80, 0.1);
         border-left: 4px solid #4CAF50;
         color: #4CAF50;
+        font-size: 25px;
     }
 }
