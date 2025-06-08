@@ -9,4 +9,5 @@ export const API_ENDPOINTS = {
     PARAMETERS: `${URL}parameters`,
     INVOCATIONS: `${URL}invocations`,
     ATTRIBUTES: `${URL}attributes`,
+    TRANSFORMERS: `${URL}transformers`,
 };

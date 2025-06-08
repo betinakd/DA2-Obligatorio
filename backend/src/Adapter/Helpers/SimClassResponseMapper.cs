@@ -27,6 +27,8 @@ public class SimClassResponseMapper
                 Name = m.Name,
                 ReturnTypeId = m.ReturnTypeId,
                 IsStatic = m.IsStatic,
+                IsOverride = m.IsOverride,
+                IsVirtual = m.IsVirtual,
                 Privacity = EnumMapper.MapToModelPrivacity(m.Privacity),
                 Accesibility = EnumMapper.MapToModelAccesibility(m.Accesibility),
                 Parameters = m.Parameters.Select(p => new ParameterResponse
