@@ -20,10 +20,8 @@ export class HomeComponent implements OnInit {
   classes: SimClassResponse[] = [];
   loading = false;
   error: string = '';
-  // Agregando propiedades faltantes
   classId: string | null = null;
   methodOptions: { id: string, displayText: string }[] = [];
-  // Para mostrar la información de namespaces de forma amigable
   processedNamespaces: any[] = [];
 
   constructor(private namespaceService: NamespaceService, private classService: ClassService) { }
@@ -39,7 +37,7 @@ export class HomeComponent implements OnInit {
     this.namespaceService.fetchNamespaces().subscribe({
       next: (data) => {
         this.namespaces = data;
-        this.processNamespaceData(); // Procesar datos para mostrar de forma amigable
+        this.processNamespaceData();
         this.loading = false;
       },
       error: (err) => {
@@ -69,14 +67,12 @@ export class HomeComponent implements OnInit {
 
   private getClassNameById(classId: string): string {
     const classObj = this.classes.find(c => c.id === classId)?.name;
-    return classObj ? classObj : 'Unknown Class';
+    return classObj ? classObj : '';
   }
 
   private processNamespaceData(): void {
-    // Reiniciar
     this.processedNamespaces = [];
 
-    // Mapa rápido de id→namespace name (si lo necesitas)
     const nsMap = new Map<string, string>();
     this.namespaces.forEach(ns => nsMap.set(ns.id, ns.name));
 
@@ -85,54 +81,69 @@ export class HomeComponent implements OnInit {
         id: ns.id,
         name: ns.name,
         baseNamespace: ns.baseNamespaceId
-          ? nsMap.get(ns.baseNamespaceId) || 'Desconocido'
-          : 'Ninguno',
+          ? nsMap.get(ns.baseNamespaceId)
+          : 'None',
         classes: ns.elements.map(el => this.processSimClass(el))
       });
     }
   }
 
-  // Convierte un SimClassResponse en un objeto amigable
   private processSimClass(sc: SimClassResponse): any {
-    // Nombre de la clase base
     const baseClass = sc.idBaseClass
       ? this.getClassNameById(sc.idBaseClass)
       : null;
 
-    // Atributos: si tienen referenceId, sustituye por nombre
     const attributes = sc.attributes.map(attr => ({
       name: attr.name,
-      type: attr.referenceId
+      reference: attr.referenceId
         ? this.getClassNameById(attr.referenceId)
-        : 'Unknown Type'
+        : 'Unknown Type',
+      instance: attr.instanceId
+        ? this.getClassNameById(attr.instanceId)
+        : 'Unknown Instance',
+      privacity: attr.privacity,
+      static: attr.isStatic ? 'static' : ''
     }));
 
-    // Métodos: parámetros y tipo de retorno con nombres
     const methods = sc.methods.map(m => {
       const returnType = m.returnTypeId
         ? this.getClassNameById(m.returnTypeId)
         : 'void';
-
       const parameters = (m.parameters || []).map(p => ({
         name: p.name,
         type: p.referenceId
           ? this.getClassNameById(p.referenceId)
           : 'Unknown Type'
       }));
-
       const paramsText = parameters
         .map(p => `${p.name}: ${p.type}`)
         .join(', ');
+
+      const isStatic = m.isStatic;
+      const isVirtual = m.isVirtual;
+      const isOverride = m.isOverride;
+      const priv = m.privacity;
+      const acc = m.accesibility;
+
+      const prefixes = [
+        priv,
+        acc,
+        isStatic ? 'static' : null,
+        isVirtual ? 'virtual' : null,
+        isOverride ? 'override' : null
+      ].filter(x => !!x).join(' ');
 
       return {
         name: m.name,
         returnType,
         parameters,
-        displayText: `${m.name}(${paramsText}): ${returnType}`
+        isStatic,
+        isVirtual,
+        isOverride,
+        displayText: `${prefixes} ${m.name}(${paramsText}): ${returnType}`.trim()
       };
     });
 
-    // Interfaces implementadas
     const impls = sc.implements.map(i => i.name);
 
     return {

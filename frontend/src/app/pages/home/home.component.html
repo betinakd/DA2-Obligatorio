@@ -5,20 +5,20 @@
 
     <div *ngIf="ns.classes?.length; else noClasses">
       <div *ngFor="let cls of ns.classes" class="class-card">
-        <h3>Clase: {{ cls.name }}</h3>
+        <h3>Class: {{ cls.name }}</h3>
         <p *ngIf="cls.baseClass">Extends: {{ cls.baseClass }}</p>
 
         <div *ngIf="cls.attributes?.length">
-          <h4>Atributos</h4>
+          <h4>Attributes</h4>
           <ul>
             <li *ngFor="let attr of cls.attributes">
-              {{ attr.name }}: {{ attr.type }}
+              {{attr.privacity}} {{attr.static}} {{ attr.name }}: {{ attr.reference }} {{attr.instance}}
             </li>
           </ul>
         </div>
 
         <div *ngIf="cls.methods?.length">
-          <h4>Métodos</h4>
+          <h4>Methods</h4>
           <ul>
             <li *ngFor="let m of cls.methods">
               {{ m.displayText }}
@@ -27,7 +27,7 @@
         </div>
 
         <div *ngIf="cls.implements?.length">
-          <h4>Implementa</h4>
+          <h4>Implements</h4>
           <ul>
             <li *ngFor="let i of cls.implements">
               {{ i }}
@@ -38,7 +38,7 @@
     </div>
 
     <ng-template #noClasses>
-      <p class="no-classes">Este namespace no contiene clases</p>
+      <p class="no-classes">This namespace doesn't contain classes.</p>
     </ng-template>
   </div>
 </div>
