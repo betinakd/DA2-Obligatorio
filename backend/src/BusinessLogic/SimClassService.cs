@@ -26,6 +26,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
         }
 
         var nameSpaceSim = _namespaceService.GetNamespaceById(namespaceId);
+
         if(nameSpaceSim == null)
         {
             throw new NonExistentValueLogic("Namespace not found.");
