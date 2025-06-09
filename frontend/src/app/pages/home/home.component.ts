@@ -32,6 +32,10 @@ export class HomeComponent implements OnInit {
     this.loadingclasses = true;
   }
 
+  get isLoading(): boolean {
+    return this.loading || this.loadingclasses;
+  }
+
   getNamespaces(): void {
     this.loading = true;
     this.error = '';
@@ -39,11 +43,9 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.namespaces = data;
         this.processNamespaceData();
-        this.loading = false;
       },
       error: (err) => {
         const apiError = err.error as ErrorResponse;
-        this.loading = false;
         console.error('Complete error:', err);
       },
       complete: () => {
@@ -59,14 +61,12 @@ export class HomeComponent implements OnInit {
     this.classService.getAllClasses().subscribe({
       next: (data) => {
         this.classes = data;
-        this.loading = false;
       },
       error: (err) => {
-        this.loading = false;
         this.error = 'Error al cargar métodos';
-        console.error('Error cargando clases:', err);
       },
       complete: () => {
+        this.processNamespaceData();
         this.loadingclasses = false;
       }
     });
@@ -166,7 +166,7 @@ export class HomeComponent implements OnInit {
         instance: v.instanceId
           ? this.getClassNameById(v.instanceId)
           : 'Unknown Instance'
-        }));
+      }));
       return {
         name: m.name,
         returnType,
