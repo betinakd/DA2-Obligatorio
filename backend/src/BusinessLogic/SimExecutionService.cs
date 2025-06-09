@@ -21,7 +21,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
             throw new InvalidOperationLogic($"Reference class '{referenceClass.Name}' is not a base of or the same as instance class '{instanceClass.Name}'.");
         }
 
-        SimMethod? staticMethod = _executionDA.FindMethodInHierarchy(referenceClass, signature);
+        SimMethod? staticMethod = _executionDA.FindMethodInHierarchyPublicOrProtected(referenceClass, signature);
 
         if(staticMethod == null)
         {
@@ -53,7 +53,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
         }
         else
         {
-            methodToExecute = _executionDA.FindMethodInHierarchy(referenceClass, signature);
+            methodToExecute = _executionDA.FindMethodInHierarchyPublicOrProtected(referenceClass, signature);
 
             if(methodToExecute != null &&
                methodToExecute.Privacity == SimPrivacity.Private &&

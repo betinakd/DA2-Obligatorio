@@ -47,7 +47,7 @@ public class ExecutionServiceTest
             .Returns(true);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, It.IsAny<int>()))
             .Returns(method);
 
         var result = _executionService!.ExecuteMethod(
@@ -109,11 +109,11 @@ public class ExecutionServiceTest
             .Returns(false);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, outerSignature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, outerSignature, 0))
             .Returns(outerMethod);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, innerSignature, 0))
             .Returns(innerMethod);
 
         _mockExecuteDataAccess!
@@ -164,7 +164,7 @@ public class ExecutionServiceTest
         mockRef.Setup(r => r.GetSignature(signature)).Returns("Recursive.RecursiveMethod()");
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0))
             .Returns(method);
 
         _mockSimClassDataAccess!
@@ -384,11 +384,11 @@ public class ExecutionServiceTest
             .Returns(method);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, 0))
             .Returns(method);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, innerSignature, 0))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, innerSignature, 0))
             .Returns(innerMethod);
 
         var result = _executionService!.ExecuteMethod(
@@ -427,7 +427,7 @@ public class ExecutionServiceTest
             .Returns(true);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(referenceClass, signature, It.IsAny<int>()))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(referenceClass, signature, It.IsAny<int>()))
             .Returns(method);
 
         _executionService!.ExecuteMethod(
@@ -454,7 +454,7 @@ public class ExecutionServiceTest
             .Returns(true);
 
         _mockExecuteDataAccess!
-            .Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>()))
+            .Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, It.IsAny<int>()))
             .Returns((SimMethod?)null);
 
         _executionService!.ExecuteMethod(
@@ -581,7 +581,7 @@ public class ExecutionServiceTest
         mockSimClassDA.Setup(m => m.IsClassBaseOfOrSameAs(simClass, simClass)).Returns(true);
 
         var mockExecDA = new Mock<IExecutionDataAccess>();
-        mockExecDA.Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>())).Returns(staticMethod);
+        mockExecDA.Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, It.IsAny<int>())).Returns(staticMethod);
         mockExecDA.Setup(m => m.FindOverrideOrReferenceMethod(simClass, simClass, signature)).Returns(staticMethod);
 
         var service = new ExecutionService(mockExecDA.Object, new Mock<IApikeyDataAccess>().Object, mockSimClassDA.Object);
@@ -614,7 +614,7 @@ public class ExecutionServiceTest
         mockSimClassDA.Setup(m => m.IsClassBaseOfOrSameAs(simClass, simClass)).Returns(true);
 
         var mockExecDA = new Mock<IExecutionDataAccess>();
-        mockExecDA.Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>())).Returns(staticMethod);
+        mockExecDA.Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, It.IsAny<int>())).Returns(staticMethod);
         mockExecDA.Setup(m => m.FindOverrideOrReferenceMethod(simClass, simClass, signature)).Returns((SimMethod?)null);
 
         var service = new ExecutionService(mockExecDA.Object, new Mock<IApikeyDataAccess>().Object, mockSimClassDA.Object);
@@ -647,7 +647,7 @@ public class ExecutionServiceTest
         mockSimClassDA.Setup(m => m.IsClassBaseOfOrSameAs(simClass, simClass)).Returns(true);
 
         var mockExecDA = new Mock<IExecutionDataAccess>();
-        mockExecDA.Setup(m => m.FindMethodInHierarchy(simClass, signature, It.IsAny<int>())).Returns(interfaceMethod);
+        mockExecDA.Setup(m => m.FindMethodInHierarchyPublicOrProtected(simClass, signature, It.IsAny<int>())).Returns(interfaceMethod);
         mockExecDA.Setup(m => m.FindOverrideOrReferenceMethod(simClass, simClass, signature)).Returns(interfaceMethod);
 
         var service = new ExecutionService(mockExecDA.Object, new Mock<IApikeyDataAccess>().Object, mockSimClassDA.Object);

@@ -13,7 +13,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
     private readonly ISimAttributeDataAccess _simAttributeDA = simAttributeDA;
     private readonly IExecutionDataAccess _executionDataAccess = executionDataAccess;
     private readonly INamespaceService _namespaceService = namespaceService;
-    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId, Guid? namespaceId = null)
+    public SimClass CreateSimClass(string name, SimAccesibility simAccesibility, Guid baseClassId, Guid? namespaceId)
     {
         if(_simClassDA.ExistSimClassName(name))
         {
@@ -25,7 +25,8 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("Base class not found.");
         }
 
-        if(_namespaceService.GetNamespaceById(namespaceId) == null)
+        var nameSpaceSim = _namespaceService.GetNamespaceById(namespaceId);
+        if(nameSpaceSim == null)
         {
             throw new NonExistentValueLogic("Namespace not found.");
         }
@@ -41,6 +42,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
                 BaseClass = baseClass,
                 BaseClassId = baseClass.Id,
                 NamespaceId = namespaceId,
+                Namespace = nameSpaceSim
             };
             _simClassDA.CreateSimClass(simClass);
             return simClass;

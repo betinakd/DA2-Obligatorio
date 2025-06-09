@@ -32,7 +32,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void TestFindMethodInHierarchy_ThroughPublicMethods()
+    public void TestFindMethodInHierarchyPublicOrProtected_ThroughPublicMethods()
     {
         var baseClass = new SimClass { Name = "BaseClass" };
         var typeId = Guid.NewGuid();
@@ -85,29 +85,29 @@ public class ExecutionDataAccessTest
         };
         signature.Parameters.Add(paramSignature);
 
-        var result = _executionDataAccess.FindMethodInHierarchy(childClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
     }
 
     [TestMethod]
-    public void TestFindMethodInHierarchy_ReturnsNull_WhenSimClassIsNull()
+    public void TestFindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
     {
         var signature = new Signature { Name = "AnyMethod" };
-        var result = _executionDataAccess.FindMethodInHierarchy(null, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(null, signature);
         result.Should().BeNull();
     }
 
     [TestMethod]
-    public void TestFindMethodInHierarchy_ReturnsNull_WhenBaseClassNotFound()
+    public void TestFindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenBaseClassNotFound()
     {
         var simClass = new SimClass { Name = "Child", BaseClassId = Guid.NewGuid() };
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
         var signature = new Signature { Name = "AnyMethod" };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
         result.Should().BeNull();
     }
 
@@ -658,7 +658,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceParameter_LoadsParameterTypesCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceParameter_LoadsParameterTypesCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -731,7 +731,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = [new ParameterSignature { Name = "methodParam", ReferenceId = intType.Id, Reference = intType }]
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -744,7 +744,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceVariable_LoadsVariableTypesCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceVariable_LoadsVariableTypesCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -807,7 +807,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -820,7 +820,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceAttribute_LoadsAttributeTypesCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceAttribute_LoadsAttributeTypesCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -885,7 +885,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -898,7 +898,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceBase_LoadsBaseClassCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceBase_LoadsBaseClassCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -957,7 +957,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(childClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -970,7 +970,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceThis_LoadsThisReferenceCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceThis_LoadsThisReferenceCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1020,7 +1020,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -1076,7 +1076,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
     {
         var signature = new Signature { Name = "AnyMethod" };
         var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(null, signature);
@@ -1084,7 +1084,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_FindsAnyMethod_InOriginalClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_FindsAnyMethod_InOriginalClass()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1124,7 +1124,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_FindsPublicMethod_InBaseClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_FindsPublicMethod_InBaseClass()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1173,7 +1173,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_FindsProtectedMethod_InBaseClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_FindsProtectedMethod_InBaseClass()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1222,7 +1222,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_DoesNotFindPrivateMethod_InBaseClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_DoesNotFindPrivateMethod_InBaseClass()
     {
         var baseClass = new SimClass { Name = "BaseClass" };
         _context.SimClasses.Add(baseClass);
