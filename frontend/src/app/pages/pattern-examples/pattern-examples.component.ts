@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ErrorResponse } from '../../models/ErrorResponse.model';
 import { SimClassResponse } from '../../models/SimClassResponse';
 import { TreefeatureGridComponent } from '../../components/treefeature-grid/treefeature-grid.component';
 import { CommonModule } from '@angular/common';
@@ -7,12 +6,10 @@ import { ExecutionService } from '../../services/execution.service';
 import { ClassService } from '../../services/class.service';
 import { MethodExecutionRequest } from '../../models/request/MethodExecutionRequest';
 import { AttributeResponse } from '../../models/attribute-response.model';
-import { MethodRequest } from '../../models/request/MethodRequest';
 import { MethodResponse } from '../../models/method-response.model';
 import { ParameterResponse } from '../../models/parameter-response.model';
-import { VariableResponse } from '../../models/variable-response.model';
+import { VariableResponse } from '../../models/VariableResponse';
 import { InvocationResponse } from '../../models/invocation-response.model';
-import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-pattern-examples',
@@ -20,10 +17,10 @@ import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
   templateUrl: './pattern-examples.component.html',
   styleUrl: './pattern-examples.component.scss'
 })
-export class PatternExamplesComponent implements OnInit{
+export class PatternExamplesComponent implements OnInit {
   @Input() patternName = '';
   @Input() patternIdClasses: string[] = [];
-  @Input() executionInfo: MethodExecutionRequest= {
+  @Input() executionInfo: MethodExecutionRequest = {
     methodName: '',
     parameters: [],
     idReferenceType: '',
@@ -75,12 +72,12 @@ export class PatternExamplesComponent implements OnInit{
             return { name: iface.name, id: iface.id };
           }),
         }
-          this.classList.push(classData);
-          data.methods.forEach((method) => {
-            var parsedMethod = this.parseMethodData(method, data.name || 'Unknown Class');
+        this.classList.push(classData);
+        data.methods.forEach((method) => {
+          var parsedMethod = this.parseMethodData(method, data.name || 'Unknown Class');
           this.methodList.push(parsedMethod);
         });
-  
+
       }
     });
   }
