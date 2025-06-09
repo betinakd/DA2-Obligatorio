@@ -4,7 +4,6 @@ namespace IDataAccess;
 
 public interface IExecutionDataAccess
 {
-    SimMethod? FindMethodInHierarchy(SimClass objClass, Signature signature, int level = 0);
     public bool MethodIsInUseByInheritingInvocations(Guid methodId);
 
     public bool CanOverride(Guid idClass, SimMethod method);

@@ -6,5 +6,4 @@ namespace IAdapter;
 public interface IExecutionAdapter
 {
     MethodExecutionResponse ExecuteMethod(MethodExecutionRequest request);
-    public bool IsAuthorizedUser(Guid apiKey);
 }

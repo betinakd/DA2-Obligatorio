@@ -78,9 +78,4 @@ public class ExecutionAdapter(IExecutionService executionService, ISimClassServi
             throw new InvalidExecutionAdapter(ex.Message);
         }
     }
-
-    public bool IsAuthorizedUser(Guid apiKey)
-    {
-        return _executionService.IsAuthorizedUser(apiKey);
-    }
 }

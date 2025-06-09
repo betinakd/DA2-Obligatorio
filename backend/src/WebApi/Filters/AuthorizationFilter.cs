@@ -1,13 +1,13 @@
 using System.Net;
-using IAdapter;
+using IBusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WebApi.Filters;
 
-public class AuthorizationFilter(IExecutionAdapter executionAdapter) : IAuthorizationFilter
+public class AuthorizationFilter(IApikeyService apikeyService) : IAuthorizationFilter
 {
-    private readonly IExecutionAdapter _executionAdapter = executionAdapter;
+    private readonly IApikeyService _apiKeyService = apikeyService;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
@@ -23,7 +23,7 @@ public class AuthorizationFilter(IExecutionAdapter executionAdapter) : IAuthoriz
             return;
         }
 
-        var isValidApiKey = _executionAdapter.IsAuthorizedUser(apiKeyValue);
+        var isValidApiKey = _apiKeyService.IsAuthorizedUser(apiKeyValue);
         if(!isValidApiKey)
         {
             SetUnauthorizedResult(context, "Invalid or missing API key");

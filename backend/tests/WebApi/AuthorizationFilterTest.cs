@@ -1,5 +1,5 @@
 using System.Net;
-using IAdapter;
+using IBusinessLogic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -13,14 +13,14 @@ namespace Tests.WebApi;
 [TestClass]
 public class AuthorizationFilterTest
 {
-    private Mock<IExecutionAdapter>? _mockExecutionAdapter;
+    private Mock<IApikeyService>? _mocksApikeyService;
     private AuthorizationFilter? _authorizationFilter;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockExecutionAdapter = new Mock<IExecutionAdapter>();
-        _authorizationFilter = new AuthorizationFilter(_mockExecutionAdapter.Object);
+        _mocksApikeyService = new Mock<IApikeyService>();
+        _authorizationFilter = new AuthorizationFilter(_mocksApikeyService.Object);
     }
 
     private AuthorizationFilterContext CreateContext(IHeaderDictionary headers)
@@ -49,7 +49,7 @@ public class AuthorizationFilterTest
         _authorizationFilter.OnAuthorization(context);
 
         AssertUnauthorizedResult(context, "Missing API key");
-        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(It.IsAny<Guid>()), Times.Never);
+        _mocksApikeyService.Verify(x => x.IsAuthorizedUser(It.IsAny<Guid>()), Times.Never);
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ public class AuthorizationFilterTest
         _authorizationFilter.OnAuthorization(context);
 
         AssertUnauthorizedResult(context, "Invalid API key");
-        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(It.IsAny<Guid>()), Times.Never);
+        _mocksApikeyService.Verify(x => x.IsAuthorizedUser(It.IsAny<Guid>()), Times.Never);
     }
 
     [TestMethod]
@@ -77,12 +77,12 @@ public class AuthorizationFilterTest
         };
         var context = CreateContext(headers);
 
-        _mockExecutionAdapter.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(false);
+        _mocksApikeyService.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(false);
 
         _authorizationFilter.OnAuthorization(context);
 
         AssertUnauthorizedResult(context, "Invalid or missing API key");
-        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
+        _mocksApikeyService.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
     }
 
     [TestMethod]
@@ -95,12 +95,12 @@ public class AuthorizationFilterTest
         };
         var context = CreateContext(headers);
 
-        _mockExecutionAdapter.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(true);
+        _mocksApikeyService.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(true);
 
         _authorizationFilter.OnAuthorization(context);
 
         Assert.IsNull(context.Result);
-        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
+        _mocksApikeyService.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
     }
 
     [TestMethod]
@@ -112,12 +112,12 @@ public class AuthorizationFilterTest
         };
         var context = CreateContext(headers);
 
-        _mockExecutionAdapter.Setup(x => x.IsAuthorizedUser(Guid.Empty)).Returns(false);
+        _mocksApikeyService.Setup(x => x.IsAuthorizedUser(Guid.Empty)).Returns(false);
 
         _authorizationFilter.OnAuthorization(context);
 
         AssertUnauthorizedResult(context, "Invalid or missing API key");
-        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(Guid.Empty), Times.Once);
+        _mocksApikeyService.Verify(x => x.IsAuthorizedUser(Guid.Empty), Times.Once);
     }
 
     [TestMethod]
@@ -130,12 +130,12 @@ public class AuthorizationFilterTest
         };
         var context = CreateContext(headers);
 
-        _mockExecutionAdapter.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(true);
+        _mocksApikeyService.Setup(x => x.IsAuthorizedUser(apiKey)).Returns(true);
 
         _authorizationFilter.OnAuthorization(context);
 
         Assert.IsNull(context.Result);
-        _mockExecutionAdapter.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
+        _mocksApikeyService.Verify(x => x.IsAuthorizedUser(apiKey), Times.Once);
     }
 
     private void AssertUnauthorizedResult(AuthorizationFilterContext context, string expectedMessage)
