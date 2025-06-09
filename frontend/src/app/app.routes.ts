@@ -28,6 +28,12 @@ import { ForbbidenComponent } from './pages/forbbiden/forbbiden.component';
 
 import { TransformerGetComponent } from './pages/transformers/transformer-get/transformer-get.component';
 
+import { PatternExamplesComponent } from './pages/pattern-examples/pattern-examples.component';
+import { VisitorComponent } from './pages/pattern-examples/visitor/visitor.component';
+import { StrategyComponent } from './pages/pattern-examples/strategy/strategy.component';
+import { CompositeComponent } from './pages/pattern-examples/composite/composite.component';
+import { TemplateMethodComponent } from './pages/pattern-examples/template-method/template-method.component';
+
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
@@ -70,6 +76,12 @@ export const routes: Routes = [
     { path: 'invocations/create', component: InvocationCreateComponent },
 
     { path: 'namespaces/create', component: NamespaceCreateComponent },
+
+    { path: 'patterns/prueba', component: PatternExamplesComponent },
+    { path: 'patterns/visitor', component: VisitorComponent },
+    { path: 'patterns/composite', component: CompositeComponent },
+    { path: 'patterns/strategy', component: StrategyComponent },
+    { path: 'patterns/templateMethod', component: TemplateMethodComponent },
 
     { path: '**', redirectTo: 'home' },
 

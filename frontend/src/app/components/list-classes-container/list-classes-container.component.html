@@ -1,0 +1,56 @@
+<mat-card class="main-container">
+    <mat-card-title>List of clases</mat-card-title>
+    <mat-card-content>
+        <div class="list-classes-container">
+            @for (classItem of classList; track classItem.id) {
+            <mat-card class="class-card">
+                <mat-card-title>{{ classItem.name }}</mat-card-title>
+                <mat-card-content>
+                    <div>
+                        <p>Id: {{ classItem.id }}</p>
+                    </div>
+                    @if(classItem.idBaseClass !== null) {
+                    <div>
+                        <p>Inherits from: {{ classItem.idBaseClass }}</p>
+                    </div>                   }
+                    <div>
+                        @if (classItem.attributes.length === 0) {
+                        <p>Attributes: none</p>
+                        } @else {
+                        <p>Attributes:</p>
+                        <ul>
+                            @for (attr of classItem.attributes; track attr) {
+                            <li>{{ attr }}</li>
+                            }
+                        </ul>
+                        }
+                    </div>
+                    <div>
+
+                        @if (classItem.methods.length === 0) {
+                        <p>Mehtod: none</p>
+                        } @else {
+                        <p>Methods:</p>
+                        <ul>
+                            @for (method of classItem.methods; track method) {
+                            <li>{{ method }}</li>
+                            }
+                        </ul>
+                        }
+                    </div>
+                    <div>
+                        @if (classItem.implements.length !== 0) {
+                        <p>Implements:</p>
+                        <ul>
+                            @for (imple of classItem.implements; track imple) {
+                            <li>{{ imple }}</li>
+                            }
+                        </ul>
+                        }
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            }
+        </div>
+    </mat-card-content>
+</mat-card>

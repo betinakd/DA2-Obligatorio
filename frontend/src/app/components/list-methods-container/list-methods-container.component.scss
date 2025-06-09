@@ -1,0 +1,73 @@
+.main-container {
+    padding: 24px;
+    background-color: rgb(4, 4, 4);
+    max-width: 800px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+mat-card-title {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: #890568;
+    font-weight: 500;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    border-bottom: 2px solid #f3f3f3;
+    padding-bottom: 12px;
+}
+
+.method-card {
+    margin-bottom: 24px;
+    background-color: #531e46;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    mat-card-title {
+        color: #f3f3f3;
+        font-size: 1.2em;
+        border-bottom: none;
+    }
+
+    strong {
+        font-weight: normal;
+    }
+
+    ul {
+        color: #f3f3f3;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-size: 14px;
+        list-style-type: "➜ ";
+    }
+}
+
+.list-methods-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 8px;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: rgba(243, 243, 243, 0.1);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #890568;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-container {
+        width: 95%;
+        padding: 16px;
+    }
+
+    .class-card {
+        padding: 12px;
+    }
+}
