@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { NamespaceService } from '../../services/namespace.service';
 import { Namespace } from '../../models/namespace.model';
 import { ErrorResponse } from '../../models/ErrorResponse.model';
-import { NamespaceCardComponent } from '../../components/namespace-card/namespace-card.component';
 import { ClassService } from '../../services/class.service';
 import { SimClassResponse } from '../../models/SimClassResponse';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,
-    NamespaceCardComponent],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -19,6 +17,7 @@ export class HomeComponent implements OnInit {
   namespaces: Namespace[] = [];
   classes: SimClassResponse[] = [];
   loading = false;
+  loadingclasses = false;
   error: string = '';
   classId: string | null = null;
   methodOptions: { id: string, displayText: string }[] = [];
@@ -30,6 +29,7 @@ export class HomeComponent implements OnInit {
     this.getNamespaces();
     this.loadClasses();
     this.loading = true;
+    this.loadingclasses = true;
   }
 
   getNamespaces(): void {
@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadClasses(): void {
-    this.loading = true;
+    this.loadingclasses = true;
     this.error = '';
 
     this.classService.getAllClasses().subscribe({
@@ -65,6 +65,9 @@ export class HomeComponent implements OnInit {
         this.loading = false;
         this.error = 'Error al cargar métodos';
         console.error('Error cargando clases:', err);
+      },
+      complete: () => {
+        this.loadingclasses = false;
       }
     });
   }
@@ -155,6 +158,15 @@ export class HomeComponent implements OnInit {
         return `${inv.typeReference}.${inv.methodName}(${invParams})`;
       });
 
+      const variables = (m.variables || []).map(v => ({
+        name: v.name,
+        reference: v.referenceId
+          ? this.getClassNameById(v.referenceId)
+          : 'Unknown Type',
+        instance: v.instanceId
+          ? this.getClassNameById(v.instanceId)
+          : 'Unknown Instance'
+        }));
       return {
         name: m.name,
         returnType,
@@ -163,7 +175,8 @@ export class HomeComponent implements OnInit {
         isVirtual,
         isOverride,
         displayText: `${prefixes} ${m.name}(${paramsText}): ${returnType}`.trim(),
-        invocations
+        invocations,
+        variables
       };
     });
 

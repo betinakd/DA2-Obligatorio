@@ -1,6 +1,7 @@
 import { InvocationResponse } from "./invocation-response.model";
-import { InvocationRequest } from "./request/InvocationRequest";
 import { ParameterRequest } from "./request/ParameterRequest.model";
+import { VariableResponse } from "./VariableResponse";
+
 
 export class MethodResponse {
   name: string = '';
@@ -12,4 +13,5 @@ export class MethodResponse {
   isOverride: boolean = false;
   parameters: ParameterRequest[] = [];
   invocations: InvocationResponse[] = [];
+  variables: VariableResponse[] = [];
 }
