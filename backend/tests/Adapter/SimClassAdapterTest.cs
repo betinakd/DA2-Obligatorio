@@ -65,7 +65,15 @@ public class SimClassAdapterTest
             ?.Setup(service => service.CreateNamespace(expectedNamespace))
                 .Returns(expectedNamespace);
 
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "ValidClass" };
+        var simClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ValidClass",
+            State = SimAccesibility.Normal,
+            NamespaceId = expectedNamespace.Id,
+            Namespace = expectedNamespace
+        };
+
         var request = new SimClassRequestCreate
         {
             Name = "ValidClass",

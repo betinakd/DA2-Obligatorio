@@ -33,7 +33,7 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
             }
 
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId, request.BaseNamespaceId);
-            return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
+            return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(simClass) };
         }
         catch(InUseValueLogic ex)
         {

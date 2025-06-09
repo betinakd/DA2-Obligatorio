@@ -13,11 +13,7 @@ public class SimClassResponseMapper
         {
             Id = domainClass.Id,
             Name = domainClass.Name,
-            Namespace = new NamespaceResponse
-            {
-                Id = domainClass.Namespace.Id,
-                Name = domainClass.Namespace.Name,
-            },
+            NamespaceId = domainClass.NamespaceId,
             State = EnumMapper.MapToModelAccesibility(domainClass.State),
             IdBaseClass = domainClass.BaseClassId,
             Methods = domainClass.Methods.Select(m => new MethodResponse
