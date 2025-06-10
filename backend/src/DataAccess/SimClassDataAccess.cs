@@ -257,7 +257,10 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
         var typeAttribute = _context.SimAttributes.Any(a => a.ReferenceId == id && a.RelatedClassId != id);
         var typeParameter = _context.Parameters.Any(p => p.ReferenceId == id);
         var typeLocalVar = _context.LocalVariables.Any(v => v.ReferenceId == id);
-        var parameter = _context.ParameterSignatures.Any(p => p.ReferenceId == id);
+        var instanceAttribute = _context.SimAttributes.Any(a => a.InstanceId == id && a.RelatedClassId != id);
+        var instanceLocalVar = _context.LocalVariables.Any(v => v.InstanceId == id);
+        var parameterSignature = _context.ParameterSignatures.Any(p => p.ReferenceId == id);
+        var parameterSignatureInstance = _context.ParameterSignatures.Any(p => p.InstanceId == id);
         var method = _context.SimMethods.Any(m => m.ReturnTypeId == id);
 
         var referenceThis = _context.References
@@ -268,9 +271,26 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             .OfType<ReferenceBase>()
             .Any(r => r.ReferenceId == id);
 
-        return baseClass || typeAttribute || typeParameter ||
-               typeLocalVar || parameter || method ||
-               referenceThis || referenceBase;
+        var staticReference = _context.References
+            .OfType<ReferenceStatic>()
+            .Any(r => r.ReferenceId == id);
+
+        var implemented = _context.SimClasses
+            .Any(c => c.Implements.Any(i => i.Id == id));
+
+        return baseClass
+            || typeAttribute
+            || typeParameter
+            || typeLocalVar
+            || instanceAttribute
+            || instanceLocalVar
+            || parameterSignature
+            || parameterSignatureInstance
+            || method
+            || referenceThis
+            || referenceBase
+            || staticReference
+            || implemented;
     }
 
     public void UpdateSimClass(SimClass simClass)
