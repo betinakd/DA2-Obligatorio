@@ -26,9 +26,15 @@ public class SimAttributeDataAccess(SimulatorDbContext context) : ISimAttributeD
 
     public bool InUseByOther(Guid attributeId)
     {
-        return _context.References
+        var inUseNoStatic = _context.References
             .OfType<ReferenceAttribute>()
             .Any(r => r.Reference.Id == attributeId);
+
+        var inUseStatic = _context.References
+            .OfType<ReferenceStaticAttribute>()
+            .Any(r => r.Reference.Id == attributeId);
+
+        return inUseNoStatic || inUseStatic;
     }
 
     public bool ExistAttributeById(Guid attributeId)
