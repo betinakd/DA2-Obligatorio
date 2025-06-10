@@ -61,7 +61,10 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Abstract method cannot be added because the class it is already in use and cannot change to abstract.");
         }
 
-        IsValidVirtualOverride(idClass, method);
+        if(simClass.BaseClassId != null)
+        {
+            IsValidVirtualOverride(simClass.BaseClassId.Value, method);
+        }
 
         if(method.Accesibility == SimAccesibility.Abstract)
         {

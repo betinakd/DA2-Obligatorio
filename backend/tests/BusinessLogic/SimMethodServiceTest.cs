@@ -959,18 +959,24 @@ public class SimMethodServiceTest
     public void AddMethod_ShouldCallIsValidVirtualOverride()
     {
         var idClass = Guid.NewGuid();
-        var method = new SimMethod { Accesibility = SimAccesibility.Normal, Name = "NormalMethod" };
+        var method = new SimMethod
+        {
+            Accesibility = SimAccesibility.Normal,
+            Name = "NormalMethod",
+            Id = Guid.NewGuid(),
+            RelatedClass = new SimClass { Id = idClass, Name = "TestClass" }
+        };
         var simClass = new SimClass { Id = idClass, State = SimAccesibility.Normal };
 
         _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(idClass)).Returns(true);
         _mockSimClassDataAccess.Setup(m => m.GetSimClassById(idClass)).Returns(simClass);
-        _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(idClass, method)).Returns(false);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(idClass, It.IsAny<SimMethod>())).Returns(false);
         _mockSimClassDataAccess.Setup(m => m.InUseByOther(idClass)).Returns(false);
         _mockExectuionDataAccess!
-            .Setup(m => m.CanOverrideFromBaseClass(idClass, method))
+            .Setup(m => m.CanOverrideFromBaseClass(It.IsAny<Guid>(), It.IsAny<SimMethod>()))
             .Returns(true);
         _mockExectuionDataAccess!
-            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(idClass, method))
+            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(It.IsAny<Guid>(), It.IsAny<SimMethod>()))
             .Returns((SimMethod?)null);
         _mockSimMethodDataAccess!
             .Setup(m => m.CreateMethod(idClass, method))
@@ -986,18 +992,24 @@ public class SimMethodServiceTest
     public void AddMethod_ShouldSetClassToAbstractAndUpdate_WhenAddingAbstractMethod()
     {
         var idClass = Guid.NewGuid();
-        var method = new SimMethod { Accesibility = SimAccesibility.Abstract, Name = "AbstractMethod" };
+        var method = new SimMethod
+        {
+            Accesibility = SimAccesibility.Abstract,
+            Name = "AbstractMethod",
+            Id = Guid.NewGuid(),
+            RelatedClass = new SimClass { Id = idClass, Name = "TestClass" }
+        };
         var simClass = new SimClass { Id = idClass, State = SimAccesibility.Normal };
 
         _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(idClass)).Returns(true);
         _mockSimClassDataAccess.Setup(m => m.GetSimClassById(idClass)).Returns(simClass);
-        _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(idClass, method)).Returns(false);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistsMethodInClass(idClass, It.IsAny<SimMethod>())).Returns(false);
         _mockSimClassDataAccess.Setup(m => m.InUseByOther(idClass)).Returns(false);
         _mockExectuionDataAccess!
-            .Setup(m => m.CanOverrideFromBaseClass(idClass, method))
+            .Setup(m => m.CanOverrideFromBaseClass(It.IsAny<Guid>(), It.IsAny<SimMethod>()))
             .Returns(true);
         _mockExectuionDataAccess!
-            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(idClass, method))
+            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(It.IsAny<Guid>(), It.IsAny<SimMethod>()))
             .Returns((SimMethod?)null);
         _mockSimClassDataAccess!
             .Setup(m => m.UpdateSimClass(It.Is<SimClass>(c => c.State == SimAccesibility.Abstract)))
