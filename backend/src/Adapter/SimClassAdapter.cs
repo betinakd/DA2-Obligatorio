@@ -127,7 +127,6 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
 
                 newMethod.Parameters = parametersNewClass;
                 newMethod.Validate();
-                _methodService.IsValidVirtualOverride(request.BaseClassId, newMethod);
                 methodsNewClass.Add(newMethod);
             }
 
@@ -143,6 +142,12 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
             classToUpdate.SetBaseClass(baseClass);
             classToUpdate.BaseClassId = baseClass.Id;
             classToUpdate.SetImplements(interfaces);
+
+            foreach(var method in classToUpdate.Methods)
+            {
+                _methodService.IsValidVirtualOverride(classToUpdate, method);
+            }
+
             _simClassService.UpdateSimClass(classToUpdate);
 
             return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(classToUpdate) };

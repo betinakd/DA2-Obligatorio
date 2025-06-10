@@ -1628,4 +1628,231 @@ public class ExecutionDataAccessTest
         result.Should().NotBeNull();
         result.Accesibility.Should().Be(SimAccesibility.Sealed);
     }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsFalse_WhenMethodToOverrideIsNull()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context!.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, null);
+
+        result.Should().BeFalse("Method should return false when methodToOverride is null");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsFalse_WhenClassHasNoImplements()
+    {
+        var simClass = new SimClass { Name = "TestClass", Implements = [] };
+        _context!.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, method);
+
+        result.Should().BeFalse("Method should return false when class implements no interfaces");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsTrue_WhenDirectInterfaceHasMatchingMethod()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.Add(interfaceClass);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = interfaceClass.Id,
+            RelatedClass = interfaceClass
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interfaceClass]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should return true when a direct interface has a matching method");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsFalse_WhenInterfacesHaveNoMatchingMethod()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.Add(interfaceClass);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "DifferentMethod",
+            RelatedClassId = interfaceClass.Id,
+            RelatedClass = interfaceClass
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interfaceClass]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeFalse("Method should return false when interfaces don't have matching method");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ContinuesToNextInterface_WhenInterfaceClassIsNull()
+    {
+        var realInterface = new SimClass
+        {
+            Name = "IRealInterface",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.Add(realInterface);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = realInterface.Id,
+            RelatedClass = realInterface,
+            Accesibility = SimAccesibility.Interface
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var nonExistentInterfaceId = Guid.NewGuid();
+        var nonExistentInterface = new SimClass
+        {
+            Id = nonExistentInterfaceId,
+            Name = "INonExistentInterface",
+            State = SimAccesibility.Interface,
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [nonExistentInterface, realInterface]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should continue to check other interfaces when an interface class is null");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ContinuesToNextInterface_WhenInterfaceMethodsIsNull()
+    {
+        var interfaceWithoutMethods = new SimClass
+        {
+            Name = "IWithoutMethods",
+            State = SimAccesibility.Interface,
+            Methods = null
+        };
+        var interfaceWithMethods = new SimClass
+        {
+            Name = "IWithMethods",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.AddRange(interfaceWithoutMethods, interfaceWithMethods);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = interfaceWithMethods.Id,
+            RelatedClass = interfaceWithMethods
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interfaceWithoutMethods, interfaceWithMethods]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should continue to check other interfaces when Methods is null");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsTrue_WhenOneOfMultipleInterfacesHasMatchingMethod()
+    {
+        var interface1 = new SimClass
+        {
+            Name = "IInterface1",
+            State = SimAccesibility.Interface
+        };
+        var interface2 = new SimClass
+        {
+            Name = "IInterface2",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.AddRange(interface1, interface2);
+        _context.SaveChanges();
+
+        var interface1Method = new SimMethod
+        {
+            Name = "Method1",
+            RelatedClassId = interface1.Id,
+            RelatedClass = interface1
+        };
+        var interface2Method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = interface2.Id,
+            RelatedClass = interface2
+        };
+        _context.SimMethods.AddRange(interface1Method, interface2Method);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interface1, interface2]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should return true when one of multiple interfaces has a matching method");
+    }
 }

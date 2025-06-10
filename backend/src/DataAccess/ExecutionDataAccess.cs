@@ -115,6 +115,39 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         return false;
     }
 
+    public bool CanOverrideFromImplementedInterfaces(SimClass simClass, SimMethod methodToOverride)
+    {
+        if(simClass == null || methodToOverride == null)
+        {
+            return false;
+        }
+
+        if(simClass.Implements != null && simClass.Implements.Any())
+        {
+            foreach(var interfaceRef in simClass.Implements)
+            {
+                var interfaceClass = GetFilteredClasses(query =>
+                    query.Where(c => c.Id == interfaceRef.Id))
+                    .FirstOrDefault();
+
+                if(interfaceClass == null || interfaceClass.Methods == null)
+                {
+                    continue;
+                }
+
+                var interfaceMethod = interfaceClass.Methods.FirstOrDefault(m =>
+                    m.Equals(methodToOverride));
+
+                if(interfaceMethod != null)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public SimMethod FindSealedMethodInHierarchyFromBaseClass(Guid baseClassId, SimMethod methodToCheck)
     {
         var currentClass = GetFilteredClasses(query =>

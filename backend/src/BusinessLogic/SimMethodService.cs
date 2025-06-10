@@ -63,7 +63,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
         if(simClass.BaseClassId != null)
         {
-            IsValidVirtualOverride(simClass.BaseClassId.Value, method);
+            IsValidVirtualOverride(simClass, method);
         }
 
         if(method.Accesibility == SimAccesibility.Abstract)
@@ -224,14 +224,15 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         throw new InvalidAttributeLogic("Method cannot access the specified attribute.");
     }
 
-    public void IsValidVirtualOverride(Guid idbaseClass, SimMethod method)
+    public void IsValidVirtualOverride(SimClass simClass, SimMethod method)
     {
-        if(!_executionDA.CanOverrideFromBaseClass(idbaseClass, method))
+        if(!_executionDA.CanOverrideFromBaseClass(simClass.Id, method) &&
+           !_executionDA.CanOverrideFromImplementedInterfaces(simClass, method))
         {
             throw new InUseValueLogic("Method cannot be overridden because no virtual or abstract method found in base classes.");
         }
 
-        if(_executionDA.FindSealedMethodInHierarchyFromBaseClass(idbaseClass, method) != null)
+        if(_executionDA.FindSealedMethodInHierarchyFromBaseClass(simClass.Id, method) != null)
         {
             throw new InUseValueLogic("Method cannot be overridden because a sealed method with the same signature was found in base classes.");
         }

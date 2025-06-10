@@ -432,7 +432,7 @@ public class SimClassServiceTest
         var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
             _simClassService.ValidPolymorphism(baseClass, derivedClass));
 
-        Assert.AreEqual("Reference class is not base of instance class.", ex.Message);
+        Assert.AreEqual("Base class is not base of derived class.", ex.Message);
     }
 
     [TestMethod]

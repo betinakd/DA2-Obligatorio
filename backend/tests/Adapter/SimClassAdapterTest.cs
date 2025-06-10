@@ -397,116 +397,6 @@ public class SimClassAdapterTest
     }
 
     [TestMethod]
-    public void UpdateSimClass_ShouldReturnSuccessResponse_WhenUpdateIsSuccessful()
-    {
-        var classId = Guid.NewGuid();
-        var baseClassId = Guid.NewGuid();
-        var objTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-        var instanceId = Guid.NewGuid();
-        var typeId = Guid.NewGuid();
-
-        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceA" };
-
-        var request = new SimClassRequestUpdate
-        {
-            Name = "UpdatedClass",
-            State = SimModelsAccesibility.Normal,
-            IdBaseClass = baseClassId.ToString(),
-            Methods =
-            [
-                new MethodRequest
-            {
-                Name = "TestMethod",
-                Privacity = SimModelsPrivacity.Public,
-                Accesibility = SimModelsAccesibility.Normal,
-                IdReturnType = objTypeId.ToString(),
-                Parameters =
-                [
-                    new ParameterRequest { Name = "param1", IdReference = objTypeId.ToString() }
-                ],
-            }
-
-            ],
-            Attributes =
-            [
-                new AttributeRequest
-            {
-                Name = "TestAttribute",
-                Privacity = SimModelsPrivacity.Private,
-                IdReference = typeId.ToString(),
-                IdInstance = instanceId.ToString()
-            }
-
-            ],
-        };
-
-        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal, Namespace = simNamespace, NamespaceId = simNamespace.Id };
-        var objectClass = new SimClass { Id = objTypeId, Name = "Object", Namespace = simNamespace, NamespaceId = simNamespace.Id };
-        var typeClass = new SimClass { Id = typeId, Name = "TypeClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
-        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
-
-        var updatedClass = new SimClass
-        {
-            Id = classId,
-            Name = "UpdatedClass",
-            BaseClassId = baseClassId,
-            Namespace = simNamespace,
-            NamespaceId = simNamespace.Id,
-            Methods = [],
-            Attributes = [],
-            Implements = [],
-        };
-
-        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
-        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
-        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(baseClassId))
-            .Returns(baseClass);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(objTypeId))
-            .Returns(objectClass);
-
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(typeId))
-            .Returns(typeClass);
-        _mockSimClassService
-            .Setup(s => s.GetSimClassById(instanceId))
-            .Returns(instanceClass);
-
-        _mockSimClassService
-            .Setup(s => s.ValidPolymorphism(typeClass, instanceClass));
-
-        _mockMethodService
-            .Setup(s => s.IsValidVirtualOverride(baseClassId, It.IsAny<SimMethod>()));
-
-        _mockSimClassService
-            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
-            .Callback<SimClass>(c =>
-            {
-                c.Methods ??= [];
-                c.Attributes ??= [];
-                c.Implements ??= [];
-                c.Namespace ??= simNamespace;
-                updatedClass = c;
-            })
-            .Returns(() => updatedClass);
-
-        var result = _simClassAdapter.UpdateSimClass(request, classId);
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("Class updated successfully", result.Message);
-        Assert.IsNotNull(result.SimClass);
-        Assert.AreEqual(classId, result.SimClass.Id);
-        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
-
-        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-        _mockMethodService.Verify(s => s.IsValidVirtualOverride(baseClassId, It.IsAny<SimMethod>()), Times.Once);
-    }
-
-    [TestMethod]
     public void UpdateSimClass_ShouldSetDefaultObjectId_WhenBaseClassIdIsEmpty()
     {
         var classId = Guid.NewGuid();
@@ -726,5 +616,119 @@ public class SimClassAdapterTest
 
         var exception = Assert.ThrowsException<NonExistentValueAdapter>(() =>
             _simClassAdapter.CreateSimClass(request));
+    }
+
+    [TestMethod]
+    public void UpdateSimClass_ShouldReturnSuccessResponse_WhenUpdateIsSuccessful()
+    {
+        var classId = Guid.NewGuid();
+        var baseClassId = Guid.NewGuid();
+        var objTypeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var instanceId = Guid.NewGuid();
+        var typeId = Guid.NewGuid();
+
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "NamespaceA" };
+
+        var request = new SimClassRequestUpdate
+        {
+            Name = "UpdatedClass",
+            State = SimModelsAccesibility.Normal,
+            IdBaseClass = baseClassId.ToString(),
+            Methods =
+            [
+                new MethodRequest
+            {
+                Name = "TestMethod",
+                Privacity = SimModelsPrivacity.Public,
+                Accesibility = SimModelsAccesibility.Normal,
+                IdReturnType = objTypeId.ToString(),
+                Parameters =
+                [
+                    new ParameterRequest { Name = "param1", IdReference = objTypeId.ToString() }
+                ],
+            }
+
+            ],
+            Attributes =
+            [
+                new AttributeRequest
+            {
+                Name = "TestAttribute",
+                Privacity = SimModelsPrivacity.Private,
+                IdReference = typeId.ToString(),
+                IdInstance = instanceId.ToString()
+            }
+
+            ],
+        };
+
+        var baseClass = new SimClass { Id = baseClassId, Name = "BaseClass", State = SimAccesibility.Normal, Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var objectClass = new SimClass { Id = objTypeId, Name = "Object", Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var typeClass = new SimClass { Id = typeId, Name = "TypeClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
+        var instanceClass = new SimClass { Id = instanceId, Name = "InstanceClass", Namespace = simNamespace, NamespaceId = simNamespace.Id };
+
+        var updatedClass = new SimClass
+        {
+            Id = classId,
+            Name = "UpdatedClass",
+            BaseClassId = baseClassId,
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+            Methods = [],
+            Attributes = [],
+            Implements = [],
+        };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(baseClassId))
+            .Returns(baseClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(objTypeId))
+            .Returns(objectClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(typeId))
+            .Returns(typeClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(instanceId))
+            .Returns(instanceClass);
+
+        _mockSimClassService
+            .Setup(s => s.ValidPolymorphism(typeClass, instanceClass));
+
+        _mockMethodService
+            .Setup(s => s.IsValidVirtualOverride(It.IsAny<SimClass>(), It.IsAny<SimMethod>()));
+
+        _mockSimClassService
+            .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
+            .Callback<SimClass>(c =>
+            {
+                c.Methods ??= [];
+                c.Attributes ??= [];
+                c.Implements ??= [];
+                c.Namespace ??= simNamespace;
+                updatedClass = c;
+            })
+            .Returns(() => updatedClass);
+
+        var result = _simClassAdapter.UpdateSimClass(request, classId);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Class updated successfully", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+        Assert.AreEqual("UpdatedClass", result.SimClass.Name);
+
+        _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
+
+        _mockMethodService.Verify(s => s.IsValidVirtualOverride(It.IsAny<SimClass>(), It.IsAny<SimMethod>()), Times.Once);
+
+        _mockSimClassService.Verify(s => s.ValidPolymorphism(typeClass, instanceClass), Times.Once);
     }
 }

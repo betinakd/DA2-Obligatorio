@@ -342,6 +342,14 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             return true;
         }
 
+        if(potentialDerived.Implements != null)
+        {
+            if(potentialDerived.Implements.Any(i => i.Id == potentialBase.Id))
+            {
+                return true;
+            }
+        }
+
         if(!potentialDerived.BaseClassId.HasValue)
         {
             return false;
@@ -354,6 +362,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         var baseClass = _context.SimClasses
             .Include(c => c.BaseClass)
+            .Include(c => c.Implements)
             .FirstOrDefault(c => c.Id == potentialDerived.BaseClassId.Value);
 
         if(baseClass == null)

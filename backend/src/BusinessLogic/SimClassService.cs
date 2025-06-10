@@ -153,7 +153,7 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
         if(!_simClassDA.IsClassBaseOfOrSameAs(baseClass, derivedClass))
         {
-            throw new InvalidAttributeLogic("Reference class is not base of instance class.");
+            throw new InvalidAttributeLogic("Base class is not base of derived class.");
         }
     }
 
