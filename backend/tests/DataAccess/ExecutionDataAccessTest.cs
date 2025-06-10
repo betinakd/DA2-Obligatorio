@@ -32,7 +32,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void TestFindMethodInHierarchy_ThroughPublicMethods()
+    public void TestFindMethodInHierarchyPublicOrProtected_ThroughPublicMethods()
     {
         var baseClass = new SimClass { Name = "BaseClass" };
         var typeId = Guid.NewGuid();
@@ -85,29 +85,29 @@ public class ExecutionDataAccessTest
         };
         signature.Parameters.Add(paramSignature);
 
-        var result = _executionDataAccess.FindMethodInHierarchy(childClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
     }
 
     [TestMethod]
-    public void TestFindMethodInHierarchy_ReturnsNull_WhenSimClassIsNull()
+    public void TestFindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
     {
         var signature = new Signature { Name = "AnyMethod" };
-        var result = _executionDataAccess.FindMethodInHierarchy(null, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(null, signature);
         result.Should().BeNull();
     }
 
     [TestMethod]
-    public void TestFindMethodInHierarchy_ReturnsNull_WhenBaseClassNotFound()
+    public void TestFindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenBaseClassNotFound()
     {
         var simClass = new SimClass { Name = "Child", BaseClassId = Guid.NewGuid() };
         _context.SimClasses.Add(simClass);
         _context.SaveChanges();
 
         var signature = new Signature { Name = "AnyMethod" };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
         result.Should().BeNull();
     }
 
@@ -658,7 +658,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceParameter_LoadsParameterTypesCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceParameter_LoadsParameterTypesCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -731,7 +731,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = [new ParameterSignature { Name = "methodParam", ReferenceId = intType.Id, Reference = intType }]
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -744,7 +744,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceVariable_LoadsVariableTypesCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceVariable_LoadsVariableTypesCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -807,7 +807,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -820,7 +820,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceAttribute_LoadsAttributeTypesCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceAttribute_LoadsAttributeTypesCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -885,7 +885,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -898,7 +898,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceBase_LoadsBaseClassCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceBase_LoadsBaseClassCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -957,7 +957,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(childClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -970,7 +970,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchy_WithReferenceThis_LoadsThisReferenceCorrectly()
+    public void FindMethodInHierarchyPublicOrProtected_WithReferenceThis_LoadsThisReferenceCorrectly()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1020,7 +1020,7 @@ public class ExecutionDataAccessTest
             ReturnType = returnType,
             Parameters = []
         };
-        var result = _executionDataAccess.FindMethodInHierarchy(simClass, signature);
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(simClass, signature);
 
         result.Should().NotBeNull();
         result.Name.Should().Be("TestMethod");
@@ -1076,7 +1076,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_ReturnsNull_WhenSimClassIsNull()
     {
         var signature = new Signature { Name = "AnyMethod" };
         var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(null, signature);
@@ -1084,7 +1084,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_FindsAnyMethod_InOriginalClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_FindsAnyMethod_InOriginalClass()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1124,7 +1124,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_FindsPublicMethod_InBaseClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_FindsPublicMethod_InBaseClass()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
@@ -1173,12 +1173,11 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_FindsProtectedMethod_InBaseClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_FindsProtectedMethod_InBaseClass()
     {
         var typeId = Guid.NewGuid();
         var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
 
-        // ...existing code...
         var baseClass = new SimClass { Name = "BaseClass" };
         _context.SimClasses.Add(returnType);
         _context.SimClasses.Add(baseClass);
@@ -1222,7 +1221,7 @@ public class ExecutionDataAccessTest
     }
 
     [TestMethod]
-    public void FindMethodInHierarchyPublicOrProtected_DoesNotFindPrivateMethod_InBaseClass()
+    public void FindMethodInHierarchyPublicOrProtectedPublicOrProtected_DoesNotFindPrivateMethod_InBaseClass()
     {
         var baseClass = new SimClass { Name = "BaseClass" };
         _context.SimClasses.Add(baseClass);
@@ -1260,7 +1259,7 @@ public class ExecutionDataAccessTest
     {
         var classId = Guid.NewGuid();
 
-        var result = _executionDataAccess.CanOverride(classId, null);
+        var result = _executionDataAccess.CanOverrideFromBaseClass(classId, null);
 
         result.Should().BeFalse("Method should not be overridable when method parameter is null");
     }
@@ -1277,7 +1276,7 @@ public class ExecutionDataAccessTest
             Privacity = SimPrivacity.Public,
         };
 
-        var result = _executionDataAccess.CanOverride(nonExistentClassId, method);
+        var result = _executionDataAccess.CanOverrideFromBaseClass(nonExistentClassId, method);
 
         result.Should().BeFalse("Method should not be overridable when class doesn't exist");
     }
@@ -1296,280 +1295,9 @@ public class ExecutionDataAccessTest
             IsOverride = true,
         };
 
-        var result = _executionDataAccess.CanOverride(simClass.Id, method);
+        var result = _executionDataAccess.CanOverrideFromBaseClass(simClass.Id, method);
 
         result.Should().BeFalse("Method should not be overridable when class has no base class");
-    }
-
-    [TestMethod]
-    public void CanOverride_ReturnsFalse_WhenBaseClassDoesNotExist()
-    {
-        var nonExistentBaseId = Guid.NewGuid();
-        var simClass = new SimClass
-        {
-            Name = "ClassWithNonExistentBase",
-            BaseClassId = nonExistentBaseId,
-        };
-        _context.SimClasses.Add(simClass);
-        _context.SaveChanges();
-
-        var method = new SimMethod
-        {
-            Name = "TestMethod",
-            IsVirtual = true,
-            IsOverride = true,
-        };
-
-        var result = _executionDataAccess.CanOverride(simClass.Id, method);
-
-        result.Should().BeFalse("Method should not be overridable when base class doesn't exist");
-    }
-
-    [TestMethod]
-    public void CanOverride_ReturnsTrue_WhenBaseMethodIsVirtualAndPublic()
-    {
-        var baseClass = new SimClass { Name = "BaseClass" };
-        _context.SimClasses.Add(baseClass);
-        _context.SaveChanges();
-
-        var childClass = new SimClass
-        {
-            Name = "ChildClass",
-            BaseClassId = baseClass.Id,
-            BaseClass = baseClass,
-        };
-        _context.SimClasses.Add(childClass);
-        _context.SaveChanges();
-
-        var baseMethod = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = baseClass.Id,
-            RelatedClass = baseClass,
-            IsVirtual = true,
-            Privacity = SimPrivacity.Public,
-        };
-        baseClass.Methods.Add(baseMethod);
-        _context.SimMethods.Add(baseMethod);
-        _context.SaveChanges();
-
-        var methodToOverride = new SimMethod { Name = "TestMethod" };
-
-        var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
-
-        result.Should().BeTrue("Virtual public methods in base class should be overridable");
-    }
-
-    [TestMethod]
-    public void CanOverride_ReturnsTrue_WhenBaseMethodIsAbstractAndProtected()
-    {
-        var baseClass = new SimClass { Name = "BaseClass" };
-        _context.SimClasses.Add(baseClass);
-        _context.SaveChanges();
-
-        var childClass = new SimClass
-        {
-            Name = "ChildClass",
-            BaseClassId = baseClass.Id,
-            BaseClass = baseClass,
-        };
-        _context.SimClasses.Add(childClass);
-        _context.SaveChanges();
-
-        var baseMethod = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = baseClass.Id,
-            RelatedClass = baseClass,
-            Accesibility = SimAccesibility.Abstract,
-            Privacity = SimPrivacity.Protected,
-        };
-        baseClass.Methods.Add(baseMethod);
-        _context.SimMethods.Add(baseMethod);
-        _context.SaveChanges();
-
-        var methodToOverride = new SimMethod { Name = "TestMethod" };
-
-        var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
-
-        result.Should().BeTrue("Abstract protected methods in base class should be overridable");
-    }
-
-    [TestMethod]
-    public void CanOverride_ReturnsTrue_WhenMethodExistsInGrandparentClass()
-    {
-        var grandparentClass = new SimClass { Name = "GrandparentClass" };
-        _context.SimClasses.Add(grandparentClass);
-        _context.SaveChanges();
-
-        var parentClass = new SimClass
-        {
-            Name = "ParentClass",
-            BaseClassId = grandparentClass.Id,
-            BaseClass = grandparentClass,
-        };
-        _context.SimClasses.Add(parentClass);
-        _context.SaveChanges();
-
-        var childClass = new SimClass
-        {
-            Name = "ChildClass",
-            BaseClassId = parentClass.Id,
-            BaseClass = parentClass,
-        };
-        _context.SimClasses.Add(childClass);
-        _context.SaveChanges();
-
-        var grandparentMethod = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = grandparentClass.Id,
-            RelatedClass = grandparentClass,
-            IsVirtual = true,
-            Privacity = SimPrivacity.Public,
-            IsOverride = true,
-        };
-        grandparentClass.Methods.Add(grandparentMethod);
-        _context.SimMethods.Add(grandparentMethod);
-        _context.SaveChanges();
-
-        var methodToOverride = new SimMethod
-        {
-            Name = "TestMethod",
-            IsVirtual = true,
-            IsOverride = true,
-        };
-
-        var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
-
-        result.Should().BeTrue("Virtual public methods in grandparent class should be overridable");
-    }
-
-    [TestMethod]
-    public void CanOverride_ReturnsFalse_WhenBaseMethodIsNotVirtualOrAbstract()
-    {
-        var baseClass = new SimClass { Name = "BaseClass" };
-        _context.SimClasses.Add(baseClass);
-        _context.SaveChanges();
-
-        var childClass = new SimClass
-        {
-            Name = "ChildClass",
-            BaseClassId = baseClass.Id,
-            BaseClass = baseClass,
-        };
-        _context.SimClasses.Add(childClass);
-        _context.SaveChanges();
-
-        var baseMethod = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = baseClass.Id,
-            RelatedClass = baseClass,
-            IsVirtual = false,
-            Accesibility = SimAccesibility.Normal,
-            Privacity = SimPrivacity.Public,
-        };
-        baseClass.Methods.Add(baseMethod);
-        _context.SimMethods.Add(baseMethod);
-        _context.SaveChanges();
-
-        var methodToOverride = new SimMethod { Name = "TestMethod", IsVirtual = true, IsOverride = true };
-
-        var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
-
-        result.Should().BeFalse("Non-virtual, non-abstract methods in base class should not be overridable");
-    }
-
-    [TestMethod]
-    public void CanOverride_ReturnsFalse_WhenBaseMethodIsPrivate()
-    {
-        var baseClass = new SimClass { Name = "BaseClass" };
-        _context.SimClasses.Add(baseClass);
-        _context.SaveChanges();
-
-        var childClass = new SimClass
-        {
-            Name = "ChildClass",
-            BaseClassId = baseClass.Id,
-            BaseClass = baseClass,
-        };
-        _context.SimClasses.Add(childClass);
-        _context.SaveChanges();
-
-        var baseMethod = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = baseClass.Id,
-            RelatedClass = baseClass,
-            IsVirtual = true,
-            Privacity = SimPrivacity.Private,
-        };
-        baseClass.Methods.Add(baseMethod);
-        _context.SimMethods.Add(baseMethod);
-        _context.SaveChanges();
-
-        var methodToOverride = new SimMethod { Name = "TestMethod", IsVirtual = true, IsOverride = true };
-
-        var result = _executionDataAccess.CanOverride(childClass.Id, methodToOverride);
-
-        result.Should().BeFalse("Private methods in base class should not be overridable");
-    }
-
-    [TestMethod]
-    public void FindSealedMethodInHierarchy_ReturnsNull_WhenClassDoesNotExist()
-    {
-        var nonExistentClassId = Guid.NewGuid();
-        var methodToCheck = new SimMethod { Name = "TestMethod" };
-
-        var result = _executionDataAccess.FindSealedMethodInHierarchy(nonExistentClassId, methodToCheck);
-
-        result.Should().BeNull("Method should return null when class doesn't exist");
-    }
-
-    [TestMethod]
-    public void FindSealedMethodInHierarchy_ReturnsSealedMethod_WhenFoundInGrandparentClass()
-    {
-        var grandparentClass = new SimClass { Name = "GrandparentClass" };
-        _context.SimClasses.Add(grandparentClass);
-        _context.SaveChanges();
-
-        var parentClass = new SimClass
-        {
-            Name = "ParentClass",
-            BaseClassId = grandparentClass.Id,
-            BaseClass = grandparentClass,
-        };
-        _context.SimClasses.Add(parentClass);
-        _context.SaveChanges();
-
-        var childClass = new SimClass
-        {
-            Name = "ChildClass",
-            BaseClassId = parentClass.Id,
-            BaseClass = parentClass,
-        };
-        _context.SimClasses.Add(childClass);
-        _context.SaveChanges();
-
-        var sealedMethod = new SimMethod
-        {
-            Name = "TestMethod",
-            RelatedClassId = grandparentClass.Id,
-            RelatedClass = grandparentClass,
-            Accesibility = SimAccesibility.Sealed,
-        };
-        grandparentClass.Methods.Add(sealedMethod);
-        _context.SimMethods.Add(sealedMethod);
-        _context.SaveChanges();
-
-        var methodToCheck = new SimMethod { Name = "TestMethod", IsVirtual = true, IsOverride = false };
-
-        var result = _executionDataAccess.FindSealedMethodInHierarchy(childClass.Id, methodToCheck);
-
-        result.Should().NotBeNull("Method should find sealed method in grandparent class");
-        result.Id.Should().Be(sealedMethod.Id);
-        result.Accesibility.Should().Be(SimAccesibility.Sealed);
     }
 
     [TestMethod]
@@ -1731,5 +1459,400 @@ public class ExecutionDataAccessTest
 
         result.Should().NotBeNull();
         result.Id.Should().Be(referenceMethod.Id);
+    }
+
+    [TestMethod]
+    public void CanOverrideFromBaseClass_ReturnsFalse_WhenMethodIsNull()
+    {
+        var baseClassId = Guid.NewGuid();
+        var result = _executionDataAccess!.CanOverrideFromBaseClass(baseClassId, null);
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void CanOverrideFromBaseClass_ReturnsTrue_WhenMethodIsNotOverride()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context!.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod { Name = "TestMethod", IsOverride = false };
+        var result = _executionDataAccess!.CanOverrideFromBaseClass(baseClass.Id, method);
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void CanOverrideFromBaseClass_ReturnsFalse_WhenBaseClassNotFound()
+    {
+        var baseClassId = Guid.NewGuid();
+        var method = new SimMethod { Name = "TestMethod", IsOverride = true };
+        var result = _executionDataAccess!.CanOverrideFromBaseClass(baseClassId, method);
+        result.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void CanOverrideFromBaseClass_ReturnsTrue_WhenBaseMethodIsVirtualOrAbstractOrInterfaceAndAccessible()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context!.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsOverride = true,
+            IsVirtual = true,
+            Accesibility = SimAccesibility.Normal,
+            Privacity = SimPrivacity.Public
+        };
+        var baseMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            Accesibility = SimAccesibility.Abstract,
+            Privacity = SimPrivacity.Public,
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass
+        };
+        _context.SimMethods.Add(baseMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess!.CanOverrideFromBaseClass(baseClass.Id, method);
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void CanOverrideFromBaseClass_RecursesToParent_WhenNotFoundInCurrentBase()
+    {
+        var grandparent = new SimClass { Name = "Grandparent" };
+        _context!.SimClasses.Add(grandparent);
+        _context.SaveChanges();
+
+        var parent = new SimClass { Name = "Parent", BaseClassId = grandparent.Id, BaseClass = grandparent };
+        _context.SimClasses.Add(parent);
+        _context.SaveChanges();
+
+        var method = new SimMethod
+        {
+            Name = "TestMethod",
+            IsOverride = true,
+            IsVirtual = true,
+            Accesibility = SimAccesibility.Normal,
+            Privacity = SimPrivacity.Public
+        };
+        var baseMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            Accesibility = SimAccesibility.Abstract,
+            Privacity = SimPrivacity.Public,
+            RelatedClassId = grandparent.Id,
+            RelatedClass = grandparent
+        };
+        _context.SimMethods.Add(baseMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess!.CanOverrideFromBaseClass(parent.Id, method);
+        result.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void FindSealedMethodInHierarchyFromBaseClass_ReturnsNull_WhenClassNotFound()
+    {
+        var baseClassId = Guid.NewGuid();
+        var method = new SimMethod { Name = "TestMethod", IsVirtual = true };
+        var result = _executionDataAccess!.FindSealedMethodInHierarchyFromBaseClass(baseClassId, method);
+        result.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void FindSealedMethodInHierarchyFromBaseClass_ReturnsNull_WhenMethodIsNotVirtual()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context!.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod { Name = "TestMethod", IsVirtual = false };
+        var result = _executionDataAccess!.FindSealedMethodInHierarchyFromBaseClass(baseClass.Id, method);
+        result.Should().BeNull();
+    }
+
+    [TestMethod]
+    public void FindSealedMethodInHierarchyFromBaseClass_ReturnsSealedMethod_WhenFound()
+    {
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context!.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod { Name = "TestMethod", IsVirtual = true };
+        var sealedMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            Accesibility = SimAccesibility.Sealed,
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass
+        };
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess!.FindSealedMethodInHierarchyFromBaseClass(baseClass.Id, method);
+        result.Should().NotBeNull();
+        result.Accesibility.Should().Be(SimAccesibility.Sealed);
+    }
+
+    [TestMethod]
+    public void FindSealedMethodInHierarchyFromBaseClass_RecursesToParent_WhenNotFoundInCurrentBase()
+    {
+        var grandparent = new SimClass { Name = "Grandparent" };
+        _context!.SimClasses.Add(grandparent);
+        _context.SaveChanges();
+
+        var parent = new SimClass { Name = "Parent", BaseClassId = grandparent.Id, BaseClass = grandparent };
+        _context.SimClasses.Add(parent);
+        _context.SaveChanges();
+
+        var method = new SimMethod { Name = "TestMethod", IsVirtual = true };
+        var sealedMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            IsVirtual = true,
+            Accesibility = SimAccesibility.Sealed,
+            RelatedClassId = grandparent.Id,
+            RelatedClass = grandparent
+        };
+        _context.SimMethods.Add(sealedMethod);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess!.FindSealedMethodInHierarchyFromBaseClass(parent.Id, method);
+        result.Should().NotBeNull();
+        result.Accesibility.Should().Be(SimAccesibility.Sealed);
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsFalse_WhenMethodToOverrideIsNull()
+    {
+        var simClass = new SimClass { Name = "TestClass" };
+        _context!.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, null);
+
+        result.Should().BeFalse("Method should return false when methodToOverride is null");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsFalse_WhenClassHasNoImplements()
+    {
+        var simClass = new SimClass { Name = "TestClass", Implements = [] };
+        _context!.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, method);
+
+        result.Should().BeFalse("Method should return false when class implements no interfaces");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsTrue_WhenDirectInterfaceHasMatchingMethod()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.Add(interfaceClass);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = interfaceClass.Id,
+            RelatedClass = interfaceClass
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interfaceClass]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should return true when a direct interface has a matching method");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsFalse_WhenInterfacesHaveNoMatchingMethod()
+    {
+        var interfaceClass = new SimClass
+        {
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.Add(interfaceClass);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "DifferentMethod",
+            RelatedClassId = interfaceClass.Id,
+            RelatedClass = interfaceClass
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interfaceClass]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeFalse("Method should return false when interfaces don't have matching method");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ContinuesToNextInterface_WhenInterfaceClassIsNull()
+    {
+        var realInterface = new SimClass
+        {
+            Name = "IRealInterface",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.Add(realInterface);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = realInterface.Id,
+            RelatedClass = realInterface,
+            Accesibility = SimAccesibility.Interface
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var nonExistentInterfaceId = Guid.NewGuid();
+        var nonExistentInterface = new SimClass
+        {
+            Id = nonExistentInterfaceId,
+            Name = "INonExistentInterface",
+            State = SimAccesibility.Interface,
+        };
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [nonExistentInterface, realInterface]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should continue to check other interfaces when an interface class is null");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ContinuesToNextInterface_WhenInterfaceMethodsIsNull()
+    {
+        var interfaceWithoutMethods = new SimClass
+        {
+            Name = "IWithoutMethods",
+            State = SimAccesibility.Interface,
+            Methods = null
+        };
+        var interfaceWithMethods = new SimClass
+        {
+            Name = "IWithMethods",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.AddRange(interfaceWithoutMethods, interfaceWithMethods);
+        _context.SaveChanges();
+
+        var interfaceMethod = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = interfaceWithMethods.Id,
+            RelatedClass = interfaceWithMethods
+        };
+        _context.SimMethods.Add(interfaceMethod);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interfaceWithoutMethods, interfaceWithMethods]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should continue to check other interfaces when Methods is null");
+    }
+
+    [TestMethod]
+    public void CanOverrideFromImplementedInterfaces_ReturnsTrue_WhenOneOfMultipleInterfacesHasMatchingMethod()
+    {
+        var interface1 = new SimClass
+        {
+            Name = "IInterface1",
+            State = SimAccesibility.Interface
+        };
+        var interface2 = new SimClass
+        {
+            Name = "IInterface2",
+            State = SimAccesibility.Interface
+        };
+        _context!.SimClasses.AddRange(interface1, interface2);
+        _context.SaveChanges();
+
+        var interface1Method = new SimMethod
+        {
+            Name = "Method1",
+            RelatedClassId = interface1.Id,
+            RelatedClass = interface1
+        };
+        var interface2Method = new SimMethod
+        {
+            Name = "TestMethod",
+            RelatedClassId = interface2.Id,
+            RelatedClass = interface2
+        };
+        _context.SimMethods.AddRange(interface1Method, interface2Method);
+        _context.SaveChanges();
+
+        var simClass = new SimClass
+        {
+            Name = "TestClass",
+            Implements = [interface1, interface2]
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToOverride = new SimMethod { Name = "TestMethod" };
+
+        var result = _executionDataAccess!.CanOverrideFromImplementedInterfaces(simClass, methodToOverride);
+
+        result.Should().BeTrue("Method should return true when one of multiple interfaces has a matching method");
     }
 }

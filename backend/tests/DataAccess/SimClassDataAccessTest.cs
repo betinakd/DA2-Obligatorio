@@ -956,4 +956,30 @@ public class SimClassDataAccessTest
         var result = _simClassDataAccess.IsClassBaseOfOrSameAs(grandBase, derived);
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public void IsClassBaseOfOrSameAs_ReturnsTrue_WhenDerivedImplementsInterface()
+    {
+        var interfaceClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+        _context.SimClasses.Add(interfaceClass);
+        _context.SaveChanges();
+
+        var implementingClass = new SimClass
+        {
+            Id = Guid.NewGuid(),
+            Name = "ImplementingClass",
+            Implements = [interfaceClass]
+        };
+        _context.SimClasses.Add(implementingClass);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess.IsClassBaseOfOrSameAs(interfaceClass, implementingClass);
+
+        Assert.IsTrue(result, "Should return true when a class directly implements an interface");
+    }
 }

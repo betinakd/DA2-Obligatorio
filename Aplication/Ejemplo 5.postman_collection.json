@@ -1,0 +1,713 @@
+{
+	"info": {
+		"_postman_id": "f682e7b1-4aec-4164-8949-fc16897bf248",
+		"name": "Ejemplos collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "Ejemplo 5",
+			"item": [
+				{
+					"name": "Namespace Ejemplo5",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Ejemplo5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}namespaces",
+							"host": [
+								"{{domain}}namespaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Cliente\",\r\n  \"IdBaseNamespace\": \"f20a282b-badc-4a26-8b8b-8117be1361ac\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attribute id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"Id\",\r\n    \"IdReference\": \"33333333-7777-1111-1111-111111111111\", //int\r\n    \"IdInstance\": \"33333333-7777-1111-1111-111111111111\", //int\r\n    \"Privacity\": \"Public\",\r\n    \"isStatic\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ClientClass}}/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ClientClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method ValidarIdentidad",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"ValidarIdentidad\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ClientClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ClientClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Communicacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Comunicacion\",\r\n  \"IdBaseNamespace\": \"f20a282b-badc-4a26-8b8b-8117be1361ac\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method EnviarNotificacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"EnviarNotificacion\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ComunicacionClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ComunicacionClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EnviarNotificacion params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"mensaje\",\r\n    \"IdReference\": \"44444444-1111-1111-1111-111111111111\" //string\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_EnviarNotificacion}}/parameters",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_EnviarNotificacion}}",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Proceso",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Proceso\",\r\n  \"IdBaseNamespace\": \"f20a282b-badc-4a26-8b8b-8117be1361ac\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Abstract\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attribute notificador",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"notificador\",\r\n    \"IdReference\": \"c3be4ac2-a895-435a-92b2-550a61e8bcba\", //Comunicacion\r\n    \"IdInstance\": \"c3be4ac2-a895-435a-92b2-550a61e8bcba\", //Comunicacion\r\n    \"Privacity\": \"Protected\",\r\n    \"isStatic\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoClass}}/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method Ejecutar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Ejecutar\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ejecutar params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"cliente\",\r\n    \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_ejecutar}}/parameters",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_ejecutar}}",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method RealizarProceso",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"RealizarProceso\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Abstract\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": false,\r\n    \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RealizarProceso params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"cliente\",\r\n    \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_RealizarProceso}}/parameters",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_RealizarProceso}}",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ejecutar invoks this.RealizarProceso",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"e929c57c-dac7-486a-86da-4798de09ce34\", //Proceso\r\n    \"MethodName\": \"RealizarProceso\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n                \"Name\": \"cliente\",\r\n                \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\", //Cliente\r\n                \"IdInstance\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n        }\r\n    ],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_ejecutar}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_ejecutar}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ejecutar invoks notificador.EnviarNotificacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"e3802f4e-981d-45d6-ab53-3fd5aa6a6ad5\", //notificador de Comunicador\r\n    \"MethodName\": \"EnviarNotificacion\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n                \"Name\": \"string\",\r\n                \"IdReference\": \"44444444-1111-1111-1111-111111111111\", //string\r\n                \"IdInstance\": \"44444444-1111-1111-1111-111111111111\" //string\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_ejecutar}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_ejecutar}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method Validar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Validar\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"Parameters\":[{\r\n                    \"Name\": \"cliente\",\r\n                    \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n                }],\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar invoks ValidarIdentidad",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"55ebc454-b2ad-47cb-a936-e3fccda99515\",//param cliente\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\",\r\n    \"MethodName\": \"ValidarIdentidad\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_Validar}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_Validar}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class ProcesoCompra",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"ProcesoCompra\",\r\n  \"IdBaseNamespace\": \"f20a282b-badc-4a26-8b8b-8117be1361ac\",\r\n  \"IdBaseClass\": \"e929c57c-dac7-486a-86da-4798de09ce34\", //Proceso\r\n  \"State\": \"Sealed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attribute inventarioDisponible",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"inventarioDisponible\",\r\n    \"IdInstance\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IdReference\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"Privacity\": \"Private\",\r\n    \"isStatic\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoCompraClass}}/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoCompraClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method ComprobarInventario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"ComprobarInventario\",\r\n    \"Privacity\": \"Private\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoCompraClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoCompraClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method RealizarProceso",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"RealizarProceso\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Sealed\",\r\n    \"parameters\": [{\r\n    \"Name\": \"cliente\",\r\n    \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n    }],\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/{{ProcesoCompraClass}}/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{ProcesoCompraClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RealizarProceso invoks this.Validar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"IdReference\": \"6722c439-142d-4eca-94a3-4d636ee7594c\",//ProcesoCompra\r\n  \"MethodName\": \"Validar\",\r\n  \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n  \"Parameters\": [\r\n    {\r\n      \"Name\": \"cliente\",\r\n      \"IdInstance\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\", //Cliente\r\n      \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n    }\r\n  ],\r\n  \"TypeReference\": \"This\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_RealizarProceso_ProcesoCompra}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_RealizarProceso_ProcesoCompra}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RealizarProceso invoks this.ComprobarInventario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"6722c439-142d-4eca-94a3-4d636ee7594c\", //ProcesoCompra\r\n    \"MethodName\": \"ComprobarInventario\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_RealizarProceso_ProcesoCompra}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_RealizarProceso_ProcesoCompra}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RealizarProceso invoks notificador.EnviarNotificacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"e3802f4e-981d-45d6-ab53-3fd5aa6a6ad5\", //notificador de Proceso\r\n    \"MethodName\": \"EnviarNotificacion\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[\r\n        {\r\n        \"Name\": \"mensaje\",\r\n        \"IdReference\": \"44444444-1111-1111-1111-111111111111\", //string\r\n        \"IdInstance\": \"44444444-1111-1111-1111-111111111111\" //string\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/{{method_RealizarProceso_ProcesoCompra}}/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"{{method_RealizarProceso_ProcesoCompra}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excecution",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MethodName\": \"Ejecutar\",\r\n    \"IdReturnType\":\"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\": [\r\n        {\r\n            \"name\": \"cliente\",\r\n            \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\", //CLIENTE\r\n            \"IdInstance\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //CLIENTE\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"e929c57c-dac7-486a-86da-4798de09ce34\", //PROCESO\r\n    \"IdInstanceType\": \"6722c439-142d-4eca-94a3-4d636ee7594c\" //PROCESOCOMPRA\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}executions",
+							"host": [
+								"{{domain}}executions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "ClientClass",
+			"value": "08ac28ea-28cc-4519-bce0-69083f60a42b",
+			"type": "default"
+		},
+		{
+			"key": "ComunicacionClass",
+			"value": "c3be4ac2-a895-435a-92b2-550a61e8bcba",
+			"type": "default"
+		},
+		{
+			"key": "method_EnviarNotificacion",
+			"value": "456afcca-acff-4c93-ad06-39b19e584036",
+			"type": "default"
+		},
+		{
+			"key": "ProcesoClass",
+			"value": "e929c57c-dac7-486a-86da-4798de09ce34",
+			"type": "default"
+		},
+		{
+			"key": "method_ejecutar",
+			"value": "e929c57c-dac7-486a-86da-4798de09ce34",
+			"type": "default"
+		},
+		{
+			"key": "method_RealizarProceso",
+			"value": "2aa7fe43-aa71-4a83-a664-7ef3813d61c6",
+			"type": "default"
+		},
+		{
+			"key": "method_Validar",
+			"value": "66e51423-cde6-4366-8fde-3f3d68397a3d",
+			"type": "default"
+		},
+		{
+			"key": "ProcesoCompraClass",
+			"value": "6722c439-142d-4eca-94a3-4d636ee7594c",
+			"type": "default"
+		},
+		{
+			"key": "method_RealizarProceso_ProcesoCompra",
+			"value": "2618291c-8b63-42ca-839e-3b27523522b2",
+			"type": "default"
+		}
+	]
+}

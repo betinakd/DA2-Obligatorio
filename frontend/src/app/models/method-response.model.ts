@@ -1,6 +1,6 @@
 import { ParameterResponse } from './parameter-response.model';
-import { VariableResponse } from './variable-response.model';
 import { InvocationResponse } from './invocation-response.model';
+import { VariableResponse } from './VariableResponse';
 
 export interface MethodResponse {
     id?: string;

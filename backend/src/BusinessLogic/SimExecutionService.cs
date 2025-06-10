@@ -6,22 +6,18 @@ using IDataAccess;
 
 namespace BusinessLogic;
 
-public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyDataAccess apikeyDataAccess, ISimClassDataAccess simClassDataAccess) : IExecutionService
+public class ExecutionService(IExecutionDataAccess executionDataAccess, ISimClassService simClassService) : IExecutionService
 {
     private readonly IExecutionDataAccess _executionDA = executionDataAccess;
-    private readonly ISimClassDataAccess _simClassDA = simClassDataAccess;
-    private readonly IApikeyDataAccess _apikeyDA = apikeyDataAccess;
+    private readonly ISimClassService _simClassService = simClassService;
 
     public string ExecuteMethod(SimClass referenceClass, SimClass instanceClass, Reference reference, Signature signature, HashSet<Guid>? visited, int level = 0)
     {
         visited ??= [];
 
-        if(!_simClassDA.IsClassBaseOfOrSameAs(referenceClass, instanceClass))
-        {
-            throw new InvalidOperationLogic($"Reference class '{referenceClass.Name}' is not a base of or the same as instance class '{instanceClass.Name}'.");
-        }
+        _simClassService.ValidPolymorphism(referenceClass, instanceClass);
 
-        SimMethod? staticMethod = _executionDA.FindMethodInHierarchy(referenceClass, signature);
+        SimMethod? staticMethod = _executionDA.FindMethodInHierarchyPublicOrProtected(referenceClass, signature);
 
         if(staticMethod == null)
         {
@@ -53,7 +49,7 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
         }
         else
         {
-            methodToExecute = _executionDA.FindMethodInHierarchy(referenceClass, signature);
+            methodToExecute = _executionDA.FindMethodInHierarchyPublicOrProtected(referenceClass, signature);
 
             if(methodToExecute != null &&
                methodToExecute.Privacity == SimPrivacity.Private &&
@@ -148,11 +144,5 @@ public class ExecutionService(IExecutionDataAccess executionDataAccess, IApikeyD
         }
 
         return IsReferenceBaseOfInstance(refer, baseClass);
-    }
-
-    public bool IsAuthorizedUser(Guid apiKey)
-    {
-        var keyExists = _apikeyDA.ApiKeyExists(apiKey);
-        return keyExists && !(apiKey == Guid.Empty);
     }
 }

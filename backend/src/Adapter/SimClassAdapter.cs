@@ -33,7 +33,7 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
             }
 
             var simClass = _simClassService.CreateSimClass(request.Name, EnumMapper.MapToDomainAccesibility(request.State), request.BaseClassId, request.BaseNamespaceId);
-            return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = new SimClassResponse() { Id = simClass.Id, Name = request.Name, State = (Models.Enums.SimModelsAccesibility)request.State, IdBaseClass = simClass.BaseClassId } };
+            return new CreatedSimClassResponse() { Message = "Class created successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(simClass) };
         }
         catch(InUseValueLogic ex)
         {
@@ -127,7 +127,6 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
 
                 newMethod.Parameters = parametersNewClass;
                 newMethod.Validate();
-                _methodService.IsValidVirtualOverride(idSimClass, newMethod);
                 methodsNewClass.Add(newMethod);
             }
 
@@ -143,6 +142,12 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
             classToUpdate.SetBaseClass(baseClass);
             classToUpdate.BaseClassId = baseClass.Id;
             classToUpdate.SetImplements(interfaces);
+
+            foreach(var method in classToUpdate.Methods)
+            {
+                _methodService.IsValidVirtualOverride(classToUpdate, method);
+            }
+
             _simClassService.UpdateSimClass(classToUpdate);
 
             return new UpdateSimClassResponse() { Message = "Class updated successfully", SimClass = SimClassResponseMapper.MapToSimClassResponse(classToUpdate) };

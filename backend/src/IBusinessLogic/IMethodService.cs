@@ -17,5 +17,5 @@ public interface IMethodService
 
     void ValidateStaticAttributeAccessibility(SimAttribute staticAttribute, Guid methodId);
     void MethodInheritsAttribute(SimMethod method, SimAttribute attribute);
-    public void IsValidVirtualOverride(Guid idClass, SimMethod method);
+    public void IsValidVirtualOverride(SimClass simClass, SimMethod method);
 }

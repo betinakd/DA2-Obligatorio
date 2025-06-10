@@ -1,6 +1,6 @@
 <h1>Welcome to Simulator </h1>
 
-<div *ngIf="loading" class="spinner-container">
+<div *ngIf="isLoading" class="spinner-container">
   <div class="spinner"></div>
   <p>Please wait...</p>
 </div>
@@ -34,7 +34,12 @@
                   {{ invText }}
                 </li>
               </ul>
-
+              <ul *ngIf="m.variables?.length">
+                <h4>Variables:</h4>
+                <li *ngFor="let locVar of m.variables">
+                  {{ locVar.name }} {{ locVar.reference }} {{ locVar.instance }}
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
