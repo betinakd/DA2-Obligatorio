@@ -67,20 +67,6 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         _context.SimAttributes.RemoveRange(simClass.Attributes);
 
-        var implementsToRemove = _context.SimClasses
-            .Where(c => c.Id == id)
-            .SelectMany(c => c.Implements)
-            .ToList();
-
-        foreach(var impl in implementsToRemove)
-        {
-            _context.Entry(simClass).Collection("SimClassImplements").EntityEntry
-                .State = EntityState.Deleted;
-        }
-
-        simClass.NamespaceId = null;
-        simClass.Namespace = null;
-
         _context.SimClasses.Remove(simClass);
         _context.SaveChanges();
     }

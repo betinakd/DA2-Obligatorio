@@ -480,7 +480,7 @@ public class SimClassAdapterTest
             .Setup(s => s.ValidPolymorphism(typeClass, instanceClass));
 
         _mockMethodService
-            .Setup(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()));
+            .Setup(s => s.IsValidVirtualOverride(baseClassId, It.IsAny<SimMethod>()));
 
         _mockSimClassService
             .Setup(s => s.UpdateSimClass(It.IsAny<SimClass>()))
@@ -503,7 +503,7 @@ public class SimClassAdapterTest
         Assert.AreEqual("UpdatedClass", result.SimClass.Name);
 
         _mockSimClassService.Verify(s => s.UpdateSimClass(It.IsAny<SimClass>()), Times.Once);
-        _mockMethodService.Verify(s => s.IsValidVirtualOverride(classId, It.IsAny<SimMethod>()), Times.Once);
+        _mockMethodService.Verify(s => s.IsValidVirtualOverride(baseClassId, It.IsAny<SimMethod>()), Times.Once);
     }
 
     [TestMethod]

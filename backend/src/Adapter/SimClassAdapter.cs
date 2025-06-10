@@ -127,7 +127,7 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
 
                 newMethod.Parameters = parametersNewClass;
                 newMethod.Validate();
-                _methodService.IsValidVirtualOverride(idSimClass, newMethod);
+                _methodService.IsValidVirtualOverride(request.BaseClassId, newMethod);
                 methodsNewClass.Add(newMethod);
             }
 

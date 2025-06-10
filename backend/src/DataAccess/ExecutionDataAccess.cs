@@ -76,7 +76,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
                 simMethod.MatchSignature(i.Signature) && isAccessible));
     }
 
-    public bool CanOverride(Guid classId, SimMethod methodToOverride)
+    public bool CanOverrideFromBaseClass(Guid baseClassId, SimMethod methodToOverride)
     {
         if(methodToOverride == null)
         {
@@ -88,16 +88,6 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return true;
         }
 
-        var currentClass = GetFilteredClasses(query =>
-            query.Where(c => c.Id == classId))
-            .FirstOrDefault();
-
-        if(currentClass == null || !currentClass.BaseClassId.HasValue)
-        {
-            return false;
-        }
-
-        var baseClassId = currentClass.BaseClassId.Value;
         var baseClass = GetFilteredClasses(query =>
             query.Where(c => c.Id == baseClassId))
             .FirstOrDefault();
@@ -119,19 +109,19 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         if(baseClass.BaseClassId.HasValue && baseClass.BaseClassId.Value != baseClassId)
         {
-            return CanOverride(baseClass.Id, methodToOverride);
+            return CanOverrideFromBaseClass(baseClass.BaseClassId.Value, methodToOverride);
         }
 
         return false;
     }
 
-    public SimMethod FindSealedMethodInHierarchy(Guid classId, SimMethod methodToCheck)
+    public SimMethod FindSealedMethodInHierarchyFromBaseClass(Guid baseClassId, SimMethod methodToCheck)
     {
-        var baseClass = GetFilteredClasses(query =>
-            query.Where(c => c.Id == classId))
+        var currentClass = GetFilteredClasses(query =>
+            query.Where(c => c.Id == baseClassId))
             .FirstOrDefault();
 
-        if(baseClass == null)
+        if(currentClass == null)
         {
             return null;
         }
@@ -141,7 +131,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return null;
         }
 
-        var sealedMethod = baseClass.Methods.FirstOrDefault(m =>
+        var sealedMethod = currentClass.Methods.FirstOrDefault(m =>
             m.Equals(methodToCheck) &&
             m.Accesibility == SimAccesibility.Sealed);
 
@@ -150,9 +140,9 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
             return sealedMethod;
         }
 
-        if(baseClass.BaseClassId.HasValue)
+        if(currentClass.BaseClassId.HasValue && currentClass.BaseClassId.Value != baseClassId)
         {
-            return FindSealedMethodInHierarchy(baseClass.BaseClassId.Value, methodToCheck);
+            return FindSealedMethodInHierarchyFromBaseClass(currentClass.BaseClassId.Value, methodToCheck);
         }
 
         return null;
