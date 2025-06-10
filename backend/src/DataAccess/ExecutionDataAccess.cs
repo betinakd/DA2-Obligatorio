@@ -312,9 +312,9 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
         }
 
         var methods = GetFilteredMethods(query => query.Where(m =>
-            m.RelatedClassId == simClass.Id &&
-            m.Name == signature.Name && !m.IsStatic && (level == 0
-            || m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected)));
+                    m.RelatedClassId == simClass.Id &&
+                    m.Name == signature.Name && (level == 0
+                    || ((m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected) && !m.IsStatic))));
 
         var method = methods.FirstOrDefault(m => m.MatchSignature(signature));
         if(method != null)

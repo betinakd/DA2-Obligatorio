@@ -1855,4 +1855,51 @@ public class ExecutionDataAccessTest
 
         result.Should().BeTrue("Method should return true when one of multiple interfaces has a matching method");
     }
+
+    [TestMethod]
+    public void FindMethodInHierarchyPublicOrProtected_DoesNotFindStaticMethod_InBaseClass()
+    {
+        var typeId = Guid.NewGuid();
+        var returnType = new SimClass { Id = typeId, Name = "ReturnType" };
+
+        var baseClass = new SimClass { Name = "BaseClass" };
+        _context.SimClasses.Add(returnType);
+        _context.SimClasses.Add(baseClass);
+        _context.SaveChanges();
+
+        var childClass = new SimClass
+        {
+            Name = "ChildClass",
+            BaseClassId = baseClass.Id,
+            BaseClass = baseClass,
+        };
+        _context.SimClasses.Add(childClass);
+        _context.SaveChanges();
+
+        var staticMethod = new SimMethod
+        {
+            Name = "StaticMethod",
+            RelatedClassId = baseClass.Id,
+            RelatedClass = baseClass,
+            Privacity = SimPrivacity.Public,
+            IsStatic = true,
+            ReturnTypeId = typeId,
+            ReturnType = returnType,
+        };
+        baseClass.Methods.Add(staticMethod);
+        _context.SimMethods.Add(staticMethod);
+        _context.SaveChanges();
+
+        var signature = new Signature
+        {
+            Name = "StaticMethod",
+            Parameters = [],
+            ReturnTypeId = typeId,
+            ReturnType = returnType
+        };
+
+        var result = _executionDataAccess.FindMethodInHierarchyPublicOrProtected(childClass, signature);
+
+        result.Should().BeNull("Static methods in base classes should not be found in hierarchy");
+    }
 }
