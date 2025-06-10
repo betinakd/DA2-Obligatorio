@@ -1054,6 +1054,29 @@ public class SimMethodDataAccessTest
         var simClass = new SimClass { Id = classId, Name = "TestClass" };
         _context.SimClasses.Add(typeClass);
         _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodParameter = new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            ReferenceId = typeId,
+            Reference = typeClass,
+            Index = 0
+        };
+
+        var methodToCheck = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            ReturnTypeId = typeId,
+            ReturnType = typeClass,
+            Parameters = [methodParameter]
+        };
+        _context.SimMethods.Add(methodToCheck);
+        _context.SaveChanges();
 
         var parameter = new ParameterSignature
         {
@@ -1071,6 +1094,7 @@ public class SimMethodDataAccessTest
             Name = "TestMethod",
             Parameters = [parameter],
             ReturnTypeId = typeId,
+            ReturnType = typeClass
         };
         _context.Signatures.Add(signature);
 
@@ -1080,21 +1104,14 @@ public class SimMethodDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            RelatedMethodId = methodId,
+            RelatedMethodId = Guid.NewGuid(),
             Reference = referenceThis,
             Signature = signature,
         };
         _context.Invocations.Add(invocation);
         _context.SaveChanges();
 
-        var methodToCheck = new SimMethod
-        {
-            ReturnTypeId = typeId,
-            Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId, Reference = typeClass, Index = 0 }],
-        };
-
-        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck);
+        var result = _simMethodDataAccess.MethodInUseByInvocations(methodId);
 
         Assert.IsTrue(result);
     }
@@ -1110,6 +1127,27 @@ public class SimMethodDataAccessTest
         var simClass = new SimClass { Id = classId, Name = "TestClass" };
         _context.SimClasses.Add(typeClass);
         _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var methodToCheck = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            RelatedClassId = classId,
+            RelatedClass = simClass,
+            Parameters = [new Parameter
+        {
+            Id = Guid.NewGuid(),
+            Name = "param1",
+            ReferenceId = typeId,
+            Reference = typeClass,
+            Index = 0
+        }
+
+        ],
+        };
+        _context.SimMethods.Add(methodToCheck);
+        _context.SaveChanges();
 
         var parameter = new ParameterSignature
         {
@@ -1135,20 +1173,14 @@ public class SimMethodDataAccessTest
         var invocation = new Invocation
         {
             Id = Guid.NewGuid(),
-            RelatedMethodId = methodId,
+            RelatedMethodId = Guid.NewGuid(),
             Reference = referenceThis,
             Signature = signature,
         };
         _context.Invocations.Add(invocation);
         _context.SaveChanges();
 
-        var methodToCheck = new SimMethod
-        {
-            Name = "TestMethod",
-            Parameters = [new Parameter { Name = "param1", ReferenceId = typeId, Reference = typeClass, Index = 0 }],
-        };
-
-        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck);
+        var result = _simMethodDataAccess.MethodInUseByInvocations(methodId);
 
         Assert.IsFalse(result);
     }
@@ -1162,7 +1194,7 @@ public class SimMethodDataAccessTest
             Parameters = [],
         };
 
-        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck);
+        var result = _simMethodDataAccess.MethodInUseByInvocations(methodToCheck.Id);
 
         Assert.IsFalse(result);
     }

@@ -273,7 +273,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return _context.LocalVariables.Any(v => v.RelatedMethodId == id) ||
                _context.Parameters.Any(p => p.RelatedMethodId == id) ||
                _context.Invocations.Any(i => i.RelatedMethodId == id) ||
-               MethodInUseByInvocations(method);
+               MethodInUseByInvocations(id);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
@@ -286,8 +286,9 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name.ToLower() == localVariable.Name.ToLower());
     }
 
-    public bool MethodInUseByInvocations(SimMethod method)
+    public bool MethodInUseByInvocations(Guid methodId)
     {
+        var method = GetMethodById(methodId);
         var invocationIds = _context.Invocations.Select(i => i.Id).ToList();
 
         foreach(var id in invocationIds)

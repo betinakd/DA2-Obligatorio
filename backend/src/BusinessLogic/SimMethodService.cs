@@ -77,9 +77,16 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
     public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
     {
-        if(!_simMethodDA.ExistMethodById(methodId))
+        var method = _simMethodDA.GetMethodById(methodId);
+
+        if(method == null)
         {
             throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        if(method.IsVirtual || method.Accesibility == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        {
+            throw new InUseValueLogic("Parameter modification is not allowed for virtual, abstract or interface methods after initial creation.");
         }
 
         if(_simMethodDA.MethodParameterRepeatedValues(methodId, parameter))
@@ -87,9 +94,9 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Parameter with that name is already in use.");
         }
 
-        if(_executionDA.MethodIsInUseByInheritingInvocations(methodId))
+        if(_simMethodDA.MethodInUseByInvocations(methodId))
         {
-            throw new InUseValueLogic("Cannot Add a parameter in a method used by an invocation.");
+            throw new InUseValueLogic("Cannot add a parameter in a method used by invocations.");
         }
 
         return _simMethodDA.AddMethodParameter(methodId, parameter);
