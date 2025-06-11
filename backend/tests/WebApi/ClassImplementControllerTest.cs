@@ -54,7 +54,7 @@ public class ClassImplementControllerTest
 
         Assert.AreEqual("GetReferenceClass", createdResult!.RouteName);
 
-        Assert.AreEqual(classId, createdResult.RouteValues!["id"]);
+        Assert.AreEqual(classId, createdResult.RouteValues!["classId"]);
 
         Assert.AreEqual(mockResponse, createdResult.Value);
     }

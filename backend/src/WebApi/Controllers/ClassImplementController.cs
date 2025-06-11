@@ -14,6 +14,6 @@ public class ClassImplementController(ISimClassAdapter simClass) : ControllerBas
     public IActionResult ImplementInterface(Guid id, [FromBody] ImplementRequest implementRequest)
     {
         var response = _simClassAdapter.ImplementInterface(id, implementRequest);
-        return CreatedAtRoute("GetReferenceClass", new { id = response.SimClass.Id }, response);
+        return CreatedAtRoute("GetReferenceClass", new { classId = response.SimClass.Id }, response);
     }
 }
