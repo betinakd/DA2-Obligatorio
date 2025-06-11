@@ -375,6 +375,30 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
     public SimClass ImplementInterface(SimClass simClassToUpdate)
     {
-        throw new NotImplementedException();
+        var existingClass = GetSimClassById(simClassToUpdate.Id);
+
+        foreach(var method in simClassToUpdate.Methods)
+        {
+            method.RelatedClassId = existingClass.Id;
+            method.RelatedClass = existingClass;
+
+            _context.SimMethods.Add(method);
+        }
+
+        if(!simClassToUpdate.Implements.Any())
+        {
+            throw new InvalidOperationException("The class must implement at least one interface.");
+        }
+
+        var interfaceToImplement = simClassToUpdate.Implements.FirstOrDefault();
+        if(interfaceToImplement != null)
+        {
+            existingClass.Implements.Add(interfaceToImplement);
+        }
+
+        _context.SimClasses.Update(existingClass);
+        _context.SaveChanges();
+
+        return GetSimClassById(existingClass.Id);
     }
 }
