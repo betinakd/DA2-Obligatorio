@@ -1,6 +1,7 @@
 using Adapter;
 using BusinessLogic.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using IAdapter.Exceptions;
 using IBusinessLogic;
 using Moq;
@@ -186,10 +187,7 @@ public class NamespaceAdapterTest
             BaseNamespaceId = null
         };
 
-        _mockNamespaceService!.Setup(x => x.CreateNamespace(It.IsAny<SimNamespace>()))
-            .Throws(new InvalidAttributeLogic("Invalid namespace name"));
-
-        Assert.ThrowsException<InvalidAttributeAdapter>(() =>
+        Assert.ThrowsException<InvalidAttributeDomain>(() =>
             _namespaceAdapter!.CreateNamespace(namespaceRequest));
     }
 

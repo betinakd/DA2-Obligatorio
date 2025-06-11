@@ -1,6 +1,7 @@
 using BusinessLogic;
 using BusinessLogic.Exceptions;
 using Domain;
+using Domain.Exceptions;
 using IDataAccess;
 using Moq;
 
@@ -72,7 +73,7 @@ public class NamespaceServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeLogic))]
+    [ExpectedException(typeof(InvalidAttributeDomain))]
     public void CreateNamespace_ShouldThrowException_WhenNameIsEmpty()
     {
         var simNamespace = new SimNamespace { Name = string.Empty, Id = Guid.NewGuid() };
