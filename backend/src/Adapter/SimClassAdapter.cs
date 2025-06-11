@@ -198,4 +198,9 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
             throw new NonExistentValueAdapter(ex.Message);
         }
     }
+
+    public UpdateSimClassResponse ImplementInterface(Guid id, ImplementRequest methodRequest)
+    {
+        throw new NotImplementedException();
+    }
 }
