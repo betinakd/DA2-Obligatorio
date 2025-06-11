@@ -51,6 +51,14 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
         var simClass = _simClassDA.GetSimClassById(idClass);
 
+        if(simClass.State == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        {
+            if(_simClassDA.InUseByOther(idClass))
+            {
+                throw new InUseValueLogic("Cannot add a method in an abstract class or interface in use by other entities.");
+            }
+        }
+
         if(_simMethodDA.ExistsMethodInClass(idClass, method))
         {
             throw new InUseValueLogic("Method with same firm is already in the specified class.");
