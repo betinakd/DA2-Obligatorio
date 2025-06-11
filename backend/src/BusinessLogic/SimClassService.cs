@@ -175,4 +175,9 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new InvalidAttributeLogic(e.Message);
         }
     }
+
+    public SimClass ImplementInterface(SimClass simClassToUpdate)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -71,7 +71,7 @@ public class SimClassAdapterTest
             Name = "ValidClass",
             State = SimAccesibility.Normal,
             NamespaceId = expectedNamespace.Id,
-            Namespace = expectedNamespace
+            Namespace = expectedNamespace,
         };
 
         var request = new SimClassRequestCreate
@@ -656,7 +656,7 @@ public class SimClassAdapterTest
                 Name = "TestAttribute",
                 Privacity = SimModelsPrivacity.Private,
                 IdReference = typeId.ToString(),
-                IdInstance = instanceId.ToString()
+                IdInstance = instanceId.ToString(),
             }
 
             ],
@@ -730,5 +730,103 @@ public class SimClassAdapterTest
         _mockMethodService.Verify(s => s.IsValidVirtualOverride(It.IsAny<SimClass>(), It.IsAny<SimMethod>()), Times.Once);
 
         _mockSimClassService.Verify(s => s.ValidPolymorphism(typeClass, instanceClass), Times.Once);
+    }
+
+    [TestMethod]
+    public void ImplementInterface_ShouldReturnSuccessResponse_WhenImplementationIsValid()
+    {
+        // Arrange
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var simNamespace = new SimNamespace { Id = Guid.NewGuid(), Name = "TestNamespace" };
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+        };
+
+        var interfaceClass = new SimClass
+        {
+            Id = interfaceId,
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+        };
+
+        var returnType = new SimClass
+        {
+            Id = returnTypeId,
+            Name = "ReturnType",
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+        };
+
+        var updatedClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Implements = [interfaceClass],
+            Namespace = simNamespace,
+            NamespaceId = simNamespace.Id,
+        };
+
+        var request = new ImplementRequest
+        {
+            IdInterface = interfaceId.ToString(),
+            Methods = [
+                new MethodRequest
+            {
+                Name = "TestMethod",
+                Privacity = SimModelsPrivacity.Public,
+                Accesibility = SimModelsAccesibility.Normal,
+                IdReturnType = returnTypeId.ToString(),
+                Parameters = []
+            }
+
+            ],
+        };
+
+        _mockSimClassService = new Mock<ISimClassService>(MockBehavior.Strict);
+        _mockMethodService = new Mock<IMethodService>(MockBehavior.Strict);
+        _simClassAdapter = new SimClassAdapter(_mockSimClassService.Object, _mockMethodService.Object);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(classId))
+            .Returns(simClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(interfaceId))
+            .Returns(interfaceClass);
+
+        _mockSimClassService
+            .Setup(s => s.GetSimClassById(returnTypeId))
+            .Returns(returnType);
+
+        _mockMethodService
+            .Setup(s => s.IsValidVirtualOverride(It.IsAny<SimClass>(), It.IsAny<SimMethod>()));
+
+        _mockSimClassService
+            .Setup(s => s.ImplementInterface(It.IsAny<SimClass>()))
+            .Returns(new SimClass
+            { Id = classId, Name = "TestClass" });
+
+        var result = _simClassAdapter.ImplementInterface(classId, request);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Interface implemented successfully", result.Message);
+        Assert.IsNotNull(result.SimClass);
+        Assert.AreEqual(classId, result.SimClass.Id);
+
+        _mockSimClassService.Verify(s => s.GetSimClassById(classId), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(interfaceId), Times.Once);
+        _mockSimClassService.Verify(s => s.GetSimClassById(returnTypeId), Times.Once);
+        _mockMethodService.Verify(s => s.IsValidVirtualOverride(It.IsAny<SimClass>(), It.IsAny<SimMethod>()), Times.AtLeastOnce);
+        _mockSimClassService.Verify(s => s.ImplementInterface(It.IsAny<SimClass>()), Times.Once);
     }
 }

@@ -118,7 +118,7 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
         }
 
         var method = _simMethodDA.GetMethodById(id);
-        if(method.IsVirtual || method.Accesibility == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        if((method.IsVirtual && !method.IsOverride) || method.Accesibility == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
         {
             throw new InUseValueLogic("Cannot delete a virtual, abstract or interface method.");
         }
