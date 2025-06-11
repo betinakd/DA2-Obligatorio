@@ -109,12 +109,18 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
+        var method = _simMethodDA.GetMethodById(id);
+        if(method.IsVirtual || method.Accesibility == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        {
+            throw new InUseValueLogic("Cannot delete a virtual, abstract or interface method.");
+        }
+
         if(_simMethodDA.MethodIsInUse(id))
         {
             throw new InUseValueLogic("Method cannot be deleted because it is in use by parameters, local variables or invocations.");
         }
 
-        if(_executionDA.MethodIsInUseByInheritingInvocations(id))
+        if(_simMethodDA.MethodInUseByInvocations(id))
         {
             throw new InUseValueLogic("Method cannot be deleted because it is in use by inheriting classes.");
         }

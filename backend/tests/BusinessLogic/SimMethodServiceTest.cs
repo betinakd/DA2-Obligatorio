@@ -347,29 +347,6 @@ public class SimMethodServiceTest
     }
 
     [TestMethod]
-    public void DeleteMethod_ValidId_DeletesMethod()
-    {
-        var methodId = Guid.NewGuid();
-
-        _mockSimMethodDataAccess!
-            .Setup(m => m.ExistMethodById(methodId))
-            .Returns(true);
-        _mockSimMethodDataAccess!
-            .Setup(m => m.DeleteMethod(methodId))
-            .Verifiable();
-
-        _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
-            .Returns(false);
-        _mockSimMethodDataAccess!
-            .Setup(m => m.MethodIsInUse(methodId))
-            .Returns(false);
-        _simMethodService!.DeleteMethod(methodId);
-
-        _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
-    }
-
-    [TestMethod]
     [ExpectedException(typeof(InUseValueLogic))]
     public void AddMethod_ShouldThrowException_WhenIsAbstractAndClassIsInUse()
     {
@@ -403,27 +380,6 @@ public class SimMethodServiceTest
 
         _simMethodService!.AddMethod(idClass, method);
         _mockSimMethodDataAccess.Verify();
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InUseValueLogic))]
-    public void DeleteMethod_ShouldThrowException_WhenMethodIsInUseByInheritingClasses()
-    {
-        var methodId = Guid.NewGuid();
-
-        _mockSimMethodDataAccess!
-            .Setup(m => m.ExistMethodById(methodId))
-            .Returns(true);
-
-        _mockExectuionDataAccess!
-            .Setup(m => m.MethodIsInUseByInheritingInvocations(methodId))
-            .Returns(true);
-
-        _mockSimMethodDataAccess!
-            .Setup(m => m.MethodIsInUse(methodId))
-            .Returns(false);
-
-        _simMethodService!.DeleteMethod(methodId);
     }
 
     [TestMethod]
@@ -1015,22 +971,6 @@ public class SimMethodServiceTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InUseValueLogic))]
-    public void DeleteMethod_ShouldThrowException_WhenMethodIsInUse()
-    {
-        var methodId = Guid.NewGuid();
-
-        _mockSimMethodDataAccess!
-            .Setup(m => m.ExistMethodById(methodId))
-            .Returns(true);
-        _mockSimMethodDataAccess!
-            .Setup(m => m.MethodIsInUse(methodId))
-            .Returns(true);
-
-        _simMethodService!.DeleteMethod(methodId);
-    }
-
-    [TestMethod]
     [ExpectedException(typeof(NonExistentValueLogic))]
     public void AddMethodParameter_MethodDoesNotExist_ThrowsNonExistentValueLogicException()
     {
@@ -1232,5 +1172,171 @@ public class SimMethodServiceTest
 
         Assert.AreEqual(parameter, result);
         _mockSimMethodDataAccess.Verify(m => m.AddMethodParameter(methodId, parameter), Times.Once);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_VirtualMethod_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsVirtual = true,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_AbstractMethod_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Accesibility = SimAccesibility.Abstract,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_InterfaceMethod_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Accesibility = SimAccesibility.Interface,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_MethodInUse_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsVirtual = false,
+            Accesibility = SimAccesibility.Normal,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.MethodIsInUse(methodId))
+            .Returns(true);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InUseValueLogic))]
+    public void DeleteMethod_MethodInUseByInvocations_ThrowsInUseValueLogicException()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsVirtual = false,
+            Accesibility = SimAccesibility.Normal,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.MethodIsInUse(methodId))
+            .Returns(false);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.MethodInUseByInvocations(methodId))
+            .Returns(true);
+
+        _simMethodService!.DeleteMethod(methodId);
+    }
+
+    [TestMethod]
+    public void DeleteMethod_ValidMethod_DeletesSuccessfully()
+    {
+        var methodId = Guid.NewGuid();
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsVirtual = false,
+            Accesibility = SimAccesibility.Normal,
+            RelatedClass = new SimClass()
+        };
+
+        _mockSimMethodDataAccess!
+            .Setup(m => m.ExistMethodById(methodId))
+            .Returns(true);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.GetMethodById(methodId))
+            .Returns(method);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.MethodIsInUse(methodId))
+            .Returns(false);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.MethodInUseByInvocations(methodId))
+            .Returns(false);
+
+        _mockSimMethodDataAccess
+            .Setup(m => m.DeleteMethod(methodId))
+            .Verifiable();
+
+        _simMethodService!.DeleteMethod(methodId);
+
+        _mockSimMethodDataAccess.Verify(m => m.DeleteMethod(methodId), Times.Once);
     }
 }
