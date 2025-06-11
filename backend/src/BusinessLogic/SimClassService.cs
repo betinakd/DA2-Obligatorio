@@ -178,6 +178,6 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
 
     public SimClass ImplementInterface(SimClass simClassToUpdate)
     {
-        throw new NotImplementedException();
+        return _simClassDA.ImplementInterface(simClassToUpdate);
     }
 }

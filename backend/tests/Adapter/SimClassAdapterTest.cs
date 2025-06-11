@@ -735,7 +735,6 @@ public class SimClassAdapterTest
     [TestMethod]
     public void ImplementInterface_ShouldReturnSuccessResponse_WhenImplementationIsValid()
     {
-        // Arrange
         var classId = Guid.NewGuid();
         var interfaceId = Guid.NewGuid();
         var returnTypeId = Guid.NewGuid();

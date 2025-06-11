@@ -372,4 +372,9 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         return IsClassBaseOfOrSameAs(potentialBase, baseClass);
     }
+
+    public SimClass ImplementInterface(SimClass simClassToUpdate)
+    {
+        throw new NotImplementedException();
+    }
 }

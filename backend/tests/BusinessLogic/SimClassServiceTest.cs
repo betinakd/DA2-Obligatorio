@@ -604,4 +604,41 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(baseClassId), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.CreateSimClass(It.IsAny<SimClass>()), Times.Once);
     }
+
+    [TestMethod]
+    public void ImplementInterface_ShouldImplementAndReturnUpdatedClass()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var namespaceId = Guid.NewGuid();
+
+        var interfaceClass = new SimClass
+        {
+            Id = interfaceId,
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface
+        };
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            NamespaceId = namespaceId,
+            Implements = [interfaceClass]
+        };
+
+        _mockSimClassDataAccess!
+            .Setup(da => da.ImplementInterface(simClass))
+            .Returns(simClass);
+
+        var result = _simClassService!.ImplementInterface(simClass);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(simClass.Id, result.Id);
+        Assert.AreEqual(simClass.Name, result.Name);
+        Assert.AreEqual(1, result.Implements.Count);
+        Assert.AreEqual(interfaceId, result.Implements[0].Id);
+
+        _mockSimClassDataAccess.Verify(da => da.ImplementInterface(simClass), Times.Once);
+    }
 }
