@@ -99,7 +99,7 @@ public class ExecutionDataAccess(SimulatorDbContext context) : IExecutionDataAcc
 
         var baseMethod = baseClass.Methods.FirstOrDefault(m =>
             m.Equals(methodToOverride) &&
-            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract || m.Accesibility == SimAccesibility.Interface) &&
+            (m.IsVirtual || m.Accesibility == SimAccesibility.Abstract) &&
             (m.Privacity == SimPrivacity.Public || m.Privacity == SimPrivacity.Protected));
 
         if(baseMethod != null)

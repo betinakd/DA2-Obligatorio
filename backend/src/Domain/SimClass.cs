@@ -167,9 +167,9 @@ public class SimClass
         get => _implements;
         set
         {
-            if(State == SimAccesibility.Interface && value.Any())
+            if((State == SimAccesibility.Interface || State == SimAccesibility.Abstract) && value.Any())
             {
-                throw new InvalidAttributeDomain("An interface cannot implement other classes.");
+                throw new InvalidAttributeDomain("An interface or abstract class cannot implement other classes.");
             }
 
             if(value.Any(i => i.State != SimAccesibility.Interface))

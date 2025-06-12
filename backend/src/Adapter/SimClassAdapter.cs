@@ -201,10 +201,11 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
 
     public UpdateSimClassResponse ImplementInterface(Guid id, ImplementRequest methodRequest)
     {
-        var simClassToUpdate = _simClassService.GetSimClassById(id);
         var interfaceClass = _simClassService.GetSimClassById(methodRequest.InterfaceId);
+        _simClassService.SimClassImplementsInterface(id, methodRequest.InterfaceId);
 
-        var methodsNewClass = new List<SimMethod>();
+        var simClassToUpdate = _simClassService.GetSimClassById(id);
+        var methodsNewClass = simClassToUpdate.Methods.ToList();
         foreach(var method in methodRequest.Methods)
         {
             var newMethod = new SimMethod()
@@ -245,7 +246,9 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
         }
 
         simClassToUpdate.Methods = methodsNewClass;
-        simClassToUpdate.SetImplements([interfaceClass]);
+        var newImplements = simClassToUpdate.Implements;
+        newImplements.Add(interfaceClass);
+        simClassToUpdate.SetImplements(newImplements);
 
         foreach(var method in simClassToUpdate.Methods)
         {

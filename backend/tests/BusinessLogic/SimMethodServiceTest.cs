@@ -912,11 +912,12 @@ public class SimMethodServiceTest
     [ExpectedException(typeof(InUseValueLogic))]
     public void IsValidVirtualOverride_ShouldThrow_WhenCannotOverrideFromBaseOrInterfaces()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var idClassBase = Guid.NewGuid();
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass", BaseClassId = idClassBase };
         var method = new SimMethod { Name = "TestMethod" };
 
         _mockExectuionDataAccess!
-            .Setup(m => m.CanOverrideFromBaseClass(simClass.Id, method))
+            .Setup(m => m.CanOverrideFromBaseClass(idClassBase, method))
             .Returns(false);
 
         _mockExectuionDataAccess!
@@ -930,12 +931,13 @@ public class SimMethodServiceTest
     [ExpectedException(typeof(InUseValueLogic))]
     public void IsValidVirtualOverride_ShouldThrow_WhenSealedMethodFoundInHierarchy()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var idClassBase = Guid.NewGuid();
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass", BaseClassId = idClassBase };
         var method = new SimMethod { Name = "TestMethod" };
         var sealedMethod = new SimMethod { Name = "SealedMethod" };
 
         _mockExectuionDataAccess!
-            .Setup(m => m.CanOverrideFromBaseClass(simClass.Id, method))
+            .Setup(m => m.CanOverrideFromBaseClass(idClassBase, method))
             .Returns(true);
 
         _mockExectuionDataAccess!
@@ -943,7 +945,7 @@ public class SimMethodServiceTest
             .Returns(false);
 
         _mockExectuionDataAccess!
-            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(simClass.Id, method))
+            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(idClassBase, method))
             .Returns(sealedMethod);
 
         _simMethodService!.IsValidVirtualOverride(simClass, method);
@@ -952,11 +954,12 @@ public class SimMethodServiceTest
     [TestMethod]
     public void IsValidVirtualOverride_ShouldNotThrow_WhenOverrideIsValid()
     {
-        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass" };
+        var idClassBase = Guid.NewGuid();
+        var simClass = new SimClass { Id = Guid.NewGuid(), Name = "TestClass", BaseClassId = idClassBase };
         var method = new SimMethod { Name = "TestMethod" };
 
         _mockExectuionDataAccess!
-            .Setup(m => m.CanOverrideFromBaseClass(simClass.Id, method))
+            .Setup(m => m.CanOverrideFromBaseClass(idClassBase, method))
             .Returns(true);
 
         _mockExectuionDataAccess!
@@ -964,7 +967,7 @@ public class SimMethodServiceTest
             .Returns(false);
 
         _mockExectuionDataAccess!
-            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(simClass.Id, method))
+            .Setup(m => m.FindSealedMethodInHierarchyFromBaseClass(idClassBase, method))
             .Returns((SimMethod?)null);
 
         _simMethodService!.IsValidVirtualOverride(simClass, method);
