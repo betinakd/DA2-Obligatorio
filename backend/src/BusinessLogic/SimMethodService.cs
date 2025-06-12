@@ -51,6 +51,14 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
         var simClass = _simClassDA.GetSimClassById(idClass);
 
+        if(simClass.State == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        {
+            if(_simClassDA.InUseByOther(idClass))
+            {
+                throw new InUseValueLogic("Cannot add a method in an abstract class or interface in use by other entities.");
+            }
+        }
+
         if(_simMethodDA.ExistsMethodInClass(idClass, method))
         {
             throw new InUseValueLogic("Method with same firm is already in the specified class.");
@@ -77,9 +85,16 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
     public Parameter AddMethodParameter(Guid methodId, Parameter parameter)
     {
-        if(!_simMethodDA.ExistMethodById(methodId))
+        var method = _simMethodDA.GetMethodById(methodId);
+
+        if(method == null)
         {
             throw new NonExistentValueLogic("Method does not exist.");
+        }
+
+        if(method.IsVirtual || method.Accesibility == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        {
+            throw new InUseValueLogic("Parameter modification is not allowed for virtual, abstract or interface methods after initial creation.");
         }
 
         if(_simMethodDA.MethodParameterRepeatedValues(methodId, parameter))
@@ -87,9 +102,9 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new InUseValueLogic("Parameter with that name is already in use.");
         }
 
-        if(_executionDA.MethodIsInUseByInheritingInvocations(methodId))
+        if(_simMethodDA.MethodInUseByInvocations(methodId))
         {
-            throw new InUseValueLogic("Cannot Add a parameter in a method used by an invocation.");
+            throw new InUseValueLogic("Cannot add a parameter in a method used by invocations.");
         }
 
         return _simMethodDA.AddMethodParameter(methodId, parameter);
@@ -102,12 +117,18 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
+        var method = _simMethodDA.GetMethodById(id);
+        if((method.IsVirtual && !method.IsOverride) || method.Accesibility == SimAccesibility.Abstract || method.Accesibility == SimAccesibility.Interface)
+        {
+            throw new InUseValueLogic("Cannot delete a virtual, abstract or interface method.");
+        }
+
         if(_simMethodDA.MethodIsInUse(id))
         {
             throw new InUseValueLogic("Method cannot be deleted because it is in use by parameters, local variables or invocations.");
         }
 
-        if(_executionDA.MethodIsInUseByInheritingInvocations(id))
+        if(_simMethodDA.MethodInUseByInvocations(id))
         {
             throw new InUseValueLogic("Method cannot be deleted because it is in use by inheriting classes.");
         }
@@ -226,13 +247,18 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
 
     public void IsValidVirtualOverride(SimClass simClass, SimMethod method)
     {
-        if(!_executionDA.CanOverrideFromBaseClass(simClass.Id, method) &&
+        if(simClass.BaseClassId == null)
+        {
+            throw new NonExistentValueLogic("Cannot override a method in a class without a base class.");
+        }
+
+        if(!_executionDA.CanOverrideFromBaseClass((Guid)simClass.BaseClassId, method) &&
            !_executionDA.CanOverrideFromImplementedInterfaces(simClass, method))
         {
             throw new InUseValueLogic("Method cannot be overridden because no virtual or abstract method found in base classes.");
         }
 
-        if(_executionDA.FindSealedMethodInHierarchyFromBaseClass(simClass.Id, method) != null)
+        if(_executionDA.FindSealedMethodInHierarchyFromBaseClass((Guid)simClass.BaseClassId, method) != null)
         {
             throw new InUseValueLogic("Method cannot be overridden because a sealed method with the same signature was found in base classes.");
         }

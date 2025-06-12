@@ -273,7 +273,7 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return _context.LocalVariables.Any(v => v.RelatedMethodId == id) ||
                _context.Parameters.Any(p => p.RelatedMethodId == id) ||
                _context.Invocations.Any(i => i.RelatedMethodId == id) ||
-               MethodInUseByInvocations(method);
+               MethodInUseByInvocations(id);
     }
 
     public bool MethodParameterRepeatedValues(Guid methodId, Parameter parameter)
@@ -286,29 +286,15 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
         return _context.LocalVariables.Any(v => v.RelatedMethodId == methodId && v.Name.ToLower() == localVariable.Name.ToLower());
     }
 
-    private List<Invocation> GetAllInvocations()
+    public bool MethodInUseByInvocations(Guid methodId)
     {
+        var method = GetMethodById(methodId);
         var invocationIds = _context.Invocations.Select(i => i.Id).ToList();
-        var invocations = new List<Invocation>();
 
         foreach(var id in invocationIds)
         {
             var invocation = GetInvocationById(id);
-            if(invocation != null)
-            {
-                invocations.Add(invocation);
-            }
-        }
-
-        return invocations;
-    }
-
-    public bool MethodInUseByInvocations(SimMethod method)
-    {
-        var invocations = GetAllInvocations();
-        foreach(var invocation in invocations)
-        {
-            if(method.MatchSignature(invocation.Signature))
+            if(invocation != null && method.MatchSignature(invocation.Signature))
             {
                 return true;
             }

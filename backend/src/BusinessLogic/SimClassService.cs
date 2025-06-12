@@ -175,4 +175,29 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new InvalidAttributeLogic(e.Message);
         }
     }
+
+    public SimClass ImplementInterface(SimClass simClassToUpdate)
+    {
+        return _simClassDA.ImplementInterface(simClassToUpdate);
+    }
+
+    public bool SimClassImplementsInterface(Guid classId, Guid interfaceId)
+    {
+        if(!_simClassDA.ExistSimClassById(classId))
+        {
+            throw new NonExistentValueLogic("SimClass not found.");
+        }
+
+        if(!_simClassDA.ExistSimClassById(interfaceId))
+        {
+            throw new NonExistentValueLogic("Interface not found.");
+        }
+
+        if(_simClassDA.SimClassImplementsInterface(classId, interfaceId))
+        {
+            throw new InvalidAttributeLogic("SimClass already implements this interface.");
+        }
+
+        return false;
+    }
 }

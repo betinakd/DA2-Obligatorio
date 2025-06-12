@@ -13,4 +13,6 @@ public interface ISimClassService
     public void ClassInheritAttribute(Guid idClass, Guid idAttribute);
     void ValidPolymorphism(SimClass type, SimClass instance);
     public List<SimClass> GetClassesOfNamespaces(Guid id);
+    SimClass ImplementInterface(SimClass simClassToUpdate);
+    public bool SimClassImplementsInterface(Guid classId, Guid interfaceId);
 }

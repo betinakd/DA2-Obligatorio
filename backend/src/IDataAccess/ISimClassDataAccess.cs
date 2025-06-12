@@ -14,4 +14,6 @@ public interface ISimClassDataAccess
     public bool ExistSimClassName(string name);
     public bool ClassInheritAttribute(Guid classId, Guid attributeId, int level = 0);
     bool IsClassBaseOfOrSameAs(SimClass potentialBase, SimClass potentialDerived);
+    SimClass ImplementInterface(SimClass simClassToUpdate);
+    bool SimClassImplementsInterface(Guid classId, Guid interfaceId);
 }

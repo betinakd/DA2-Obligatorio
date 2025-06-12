@@ -21,4 +21,5 @@ public interface ISimMethodDataAccess
     Parameter AddMethodParameter(Guid methodId, Parameter parameter);
     void DeleteMethod(Guid id);
     bool MethodIsInUse(Guid id);
+    public bool MethodInUseByInvocations(Guid methodId);
 }

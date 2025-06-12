@@ -964,7 +964,7 @@ public class SimClassDataAccessTest
         {
             Id = Guid.NewGuid(),
             Name = "ITestInterface",
-            State = SimAccesibility.Interface
+            State = SimAccesibility.Interface,
         };
         _context.SimClasses.Add(interfaceClass);
         _context.SaveChanges();
@@ -973,7 +973,7 @@ public class SimClassDataAccessTest
         {
             Id = Guid.NewGuid(),
             Name = "ImplementingClass",
-            Implements = [interfaceClass]
+            Implements = [interfaceClass],
         };
         _context.SimClasses.Add(implementingClass);
         _context.SaveChanges();
@@ -981,5 +981,235 @@ public class SimClassDataAccessTest
         var result = _simClassDataAccess.IsClassBaseOfOrSameAs(interfaceClass, implementingClass);
 
         Assert.IsTrue(result, "Should return true when a class directly implements an interface");
+    }
+
+    [TestMethod]
+    public void ImplementInterface_ShouldAddInterfaceAndMethods_WhenClassAndInterfaceExist()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var returnType = new SimClass
+        {
+            Id = returnTypeId,
+            Name = "ReturnType",
+        };
+        _context.SimClasses.Add(returnType);
+
+        var interfaceClass = new SimClass
+        {
+            Id = interfaceId,
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+        };
+        _context.SimClasses.Add(interfaceClass);
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Implements = [],
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Name = "TestMethod",
+            ReturnTypeId = returnTypeId,
+            ReturnType = returnType,
+            RelatedClassId = classId,
+            Parameters = [],
+        };
+
+        var classToUpdate = new SimClass
+        {
+            Id = classId,
+            Methods = [method],
+            Implements = [interfaceClass],
+        };
+
+        var result = _simClassDataAccess.ImplementInterface(classToUpdate);
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Implements.Count);
+        Assert.AreEqual(interfaceId, result.Implements[0].Id);
+        Assert.AreEqual("ITestInterface", result.Implements[0].Name);
+
+        var classFromDb = _context.SimClasses
+            .Include(c => c.Methods)
+            .Include(c => c.Implements)
+            .FirstOrDefault(c => c.Id == classId);
+
+        Assert.IsNotNull(classFromDb);
+        Assert.AreEqual(1, classFromDb.Methods.Count);
+        Assert.AreEqual(methodId, classFromDb.Methods.First().Id);
+        Assert.AreEqual("TestMethod", classFromDb.Methods.First().Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void ImplementInterface_ShouldThrowException_WhenNoInterfacesProvided()
+    {
+        var classId = Guid.NewGuid();
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Implements = [],
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var classToUpdate = new SimClass
+        {
+            Id = classId,
+            Methods = [],
+            Implements = [],
+        };
+
+        _simClassDataAccess.ImplementInterface(classToUpdate);
+    }
+
+    [TestMethod]
+    public void ImplementInterface_ShouldImplementMultipleMethods_WhenProvided()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var methodId1 = Guid.NewGuid();
+        var methodId2 = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var returnType = new SimClass
+        {
+            Id = returnTypeId,
+            Name = "ReturnType",
+        };
+        _context.SimClasses.Add(returnType);
+
+        var interfaceClass = new SimClass
+        {
+            Id = interfaceId,
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+        };
+        _context.SimClasses.Add(interfaceClass);
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Implements = [],
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var method1 = new SimMethod
+        {
+            Id = methodId1,
+            Name = "Method1",
+            ReturnTypeId = returnTypeId,
+            ReturnType = returnType,
+            RelatedClassId = classId,
+        };
+
+        var method2 = new SimMethod
+        {
+            Id = methodId2,
+            Name = "Method2",
+            ReturnTypeId = returnTypeId,
+            ReturnType = returnType,
+            RelatedClassId = classId,
+        };
+
+        var classToUpdate = new SimClass
+        {
+            Id = classId,
+            Methods = [method1, method2],
+            Implements = [interfaceClass],
+        };
+
+        var result = _simClassDataAccess.ImplementInterface(classToUpdate);
+
+        var classFromDb = _context.SimClasses
+            .Include(c => c.Methods)
+            .Include(c => c.Implements)
+            .FirstOrDefault(c => c.Id == classId);
+
+        Assert.IsNotNull(classFromDb);
+        Assert.AreEqual(2, classFromDb.Methods.Count);
+        Assert.IsTrue(classFromDb.Methods.Any(m => m.Name == "Method1"));
+        Assert.IsTrue(classFromDb.Methods.Any(m => m.Name == "Method2"));
+        Assert.AreEqual(1, classFromDb.Implements.Count);
+    }
+
+    [TestMethod]
+    public void SimClassImplementsInterface_ShouldReturnTrue_WhenClassImplementsInterface()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+
+        var interfaceClass = new SimClass
+        {
+            Id = interfaceId,
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+        };
+        _context.SimClasses.Add(interfaceClass);
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Implements = [interfaceClass],
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.SimClassImplementsInterface(classId, interfaceId);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void SimClassImplementsInterface_ShouldReturnFalse_WhenClassDoesNotExist()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+        var result = _simClassDataAccess!.SimClassImplementsInterface(classId, interfaceId);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void SimClassImplementsInterface_ShouldReturnFalse_WhenClassDoesNotImplementInterface()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+
+        var interfaceClass = new SimClass
+        {
+            Id = interfaceId,
+            Name = "ITestInterface",
+            State = SimAccesibility.Interface,
+        };
+        _context.SimClasses.Add(interfaceClass);
+
+        var simClass = new SimClass
+        {
+            Id = classId,
+            Name = "TestClass",
+            Implements = [],
+        };
+        _context.SimClasses.Add(simClass);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.SimClassImplementsInterface(classId, interfaceId);
+
+        Assert.IsFalse(result);
     }
 }
