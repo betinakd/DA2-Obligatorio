@@ -379,10 +379,13 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         foreach(var method in simClassToUpdate.Methods)
         {
-            method.RelatedClassId = existingClass.Id;
-            method.RelatedClass = existingClass;
+            if(!_context.SimMethods.Any(m => m.Id == method.Id))
+            {
+                method.RelatedClassId = existingClass.Id;
+                method.RelatedClass = existingClass;
 
-            _context.SimMethods.Add(method);
+                _context.SimMethods.Add(method);
+            }
         }
 
         if(!simClassToUpdate.Implements.Any())
@@ -400,5 +403,27 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
         _context.SaveChanges();
 
         return GetSimClassById(existingClass.Id);
+    }
+
+    public bool SimClassImplementsInterface(Guid classId, Guid interfaceId)
+    {
+        var simClass = _context.SimClasses
+            .Include(c => c.Implements)
+            .FirstOrDefault(c => c.Id == classId);
+
+        if(simClass == null)
+        {
+            return false;
+        }
+
+        foreach(var implementedInterface in simClass.Implements)
+        {
+            if(implementedInterface.Id == interfaceId)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
