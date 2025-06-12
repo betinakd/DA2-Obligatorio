@@ -606,39 +606,72 @@ public class SimClassServiceTest
     }
 
     [TestMethod]
-    public void ImplementInterface_ShouldImplementAndReturnUpdatedClass()
+    public void SimClassImplementsInterface_ShouldThrowNonExistentValueLogic_WhenClassDoesNotExist()
     {
         var classId = Guid.NewGuid();
         var interfaceId = Guid.NewGuid();
-        var namespaceId = Guid.NewGuid();
 
-        var interfaceClass = new SimClass
-        {
-            Id = interfaceId,
-            Name = "ITestInterface",
-            State = SimAccesibility.Interface
-        };
+        _mockSimClassDataAccess!.Setup(da => da.ExistSimClassById(classId)).Returns(false);
 
-        var simClass = new SimClass
-        {
-            Id = classId,
-            Name = "TestClass",
-            NamespaceId = namespaceId,
-            Implements = [interfaceClass]
-        };
+        var ex = Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simClassService!.SimClassImplementsInterface(classId, interfaceId));
 
-        _mockSimClassDataAccess!
-            .Setup(da => da.ImplementInterface(simClass))
-            .Returns(simClass);
+        Assert.AreEqual("SimClass not found.", ex.Message);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(interfaceId), Times.Never);
+    }
 
-        var result = _simClassService!.ImplementInterface(simClass);
+    [TestMethod]
+    public void SimClassImplementsInterface_ShouldThrowNonExistentValueLogic_WhenInterfaceDoesNotExist()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
 
-        Assert.IsNotNull(result);
-        Assert.AreEqual(simClass.Id, result.Id);
-        Assert.AreEqual(simClass.Name, result.Name);
-        Assert.AreEqual(1, result.Implements.Count);
-        Assert.AreEqual(interfaceId, result.Implements[0].Id);
+        _mockSimClassDataAccess!.Setup(da => da.ExistSimClassById(classId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(interfaceId)).Returns(false);
 
-        _mockSimClassDataAccess.Verify(da => da.ImplementInterface(simClass), Times.Once);
+        var ex = Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simClassService!.SimClassImplementsInterface(classId, interfaceId));
+
+        Assert.AreEqual("Interface not found.", ex.Message);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void SimClassImplementsInterface_ShouldThrowInvalidAttributeLogic_WhenAlreadyImplements()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+
+        _mockSimClassDataAccess!.Setup(da => da.ExistSimClassById(classId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(interfaceId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.SimClassImplementsInterface(classId, interfaceId)).Returns(true);
+
+        var ex = Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simClassService!.SimClassImplementsInterface(classId, interfaceId));
+
+        Assert.AreEqual("SimClass already implements this interface.", ex.Message);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(interfaceId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.SimClassImplementsInterface(classId, interfaceId), Times.Once);
+    }
+
+    [TestMethod]
+    public void SimClassImplementsInterface_ShouldReturnFalse_WhenNotImplemented()
+    {
+        var classId = Guid.NewGuid();
+        var interfaceId = Guid.NewGuid();
+
+        _mockSimClassDataAccess!.Setup(da => da.ExistSimClassById(classId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(interfaceId)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.SimClassImplementsInterface(classId, interfaceId)).Returns(false);
+
+        var result = _simClassService!.SimClassImplementsInterface(classId, interfaceId);
+
+        Assert.IsFalse(result);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(classId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.ExistSimClassById(interfaceId), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.SimClassImplementsInterface(classId, interfaceId));
     }
 }
