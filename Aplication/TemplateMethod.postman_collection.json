@@ -1,0 +1,701 @@
+{
+	"info": {
+		"_postman_id": "75002baf-fb4e-4233-b8e5-e80a7ecdfe05",
+		"name": "TemplateMethod",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "Namespace TemplateMethod",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"TemplateMethod\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/namespaces",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"namespaces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClasePizza",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Pizza\",\r\n  \"state\": \"Abstract\",\r\n  \"IdBaseNamespace\": \"fdf74f60-7b78-4ce5-9a36-c54c80c41102\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MetodoPrepararPizza",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"prepararPizza\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\":true,\r\n    \"IsOverride\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes/{{idClassPizza}}/methods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClassPizza}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MetodoPrepararMasa",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"prepararMasa\",\r\n  \"privacity\": \"Protected\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n      \"IsStatic\": false,\r\n    \"IsVirtual\":true,\r\n    \"IsOverride\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes/{{idClassPizza}}/methods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClassPizza}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MetodoAgregarSalsa",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"agregarSalsa\",\r\n  \"privacity\": \"Protected\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n      \"IsStatic\": false,\r\n    \"IsVirtual\":true,\r\n    \"IsOverride\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes/{{idClassPizza}}/methods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClassPizza}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MetodoAgregarIngredientes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"agregarIngredientes\",\r\n  \"privacity\": \"Protected\",\r\n  \"accesibility\" : \"Abstract\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n      \"IsStatic\": false,\r\n    \"IsVirtual\":false,\r\n    \"IsOverride\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes/{{idClassPizza}}/methods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClassPizza}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MetodoHornear",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"hornearPizza\",\r\n  \"privacity\": \"Protected\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",      \r\n  \"IsStatic\": false,\r\n    \"IsVirtual\":true,\r\n    \"IsOverride\":false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes/{{idClassPizza}}/methods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes",
+						"{{idClassPizza}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvocacionPrepararMasa",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"ffcd25a6-f332-4b7d-8963-73067185d1df\",\r\n    \"MethodName\" :\"prepararMasa\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{idMethod_PrepararPizza}}/invocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod_PrepararPizza}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvocacionAgregarSalsa",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"ffcd25a6-f332-4b7d-8963-73067185d1df\", //pizza\r\n    \"MethodName\" :\"agregarSalsa\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{idMethod_PrepararPizza}}/invocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod_PrepararPizza}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvocacionAgregarIngredientes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"ffcd25a6-f332-4b7d-8963-73067185d1df\",  //pizza\r\n    \"MethodName\" :\"agregarIngredientes\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{idMethod_PrepararPizza}}/invocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod_PrepararPizza}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvocaionHornear",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"ffcd25a6-f332-4b7d-8963-73067185d1df\", //pizza\r\n    \"MethodName\" :\"hornearPizza\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{idMethod_PrepararPizza}}/invocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{idMethod_PrepararPizza}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClasePizzaHawaiana",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"PizzaHawaiana\",\r\n  \"IdBaseNamespace\": \"fdf74f60-7b78-4ce5-9a36-c54c80c41102\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ModificarClasePizzaHawaiana",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"86714626-ed96-4026-85b4-092f1bcbdc27\", //Pizza Hawaiana\r\n  \"name\": \"PizzaHawaiana\",\r\n  \"state\": \"Normal\",\r\n  \"IdBaseNamespace\": \"00000000-1111-0000-0000-000000000001\",\r\n  \"IdBaseClass\": \"928b9733-6144-451b-912b-87575ef1d667\", //PIZZa\r\n  \"methods\": [\r\n    {\r\n        \"Name\": \"agregarIngredientes\",\r\n        \"Privacity\": \"Protected\",\r\n        \"Accesibility\": \"Normal\",\r\n        \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"Parameters\": [],\r\n        \"IsStatic\": false,\r\n       \"IsVirtual\":true,\r\n        \"IsOverride\":true\r\n       },\r\n    {\r\n        \"Name\": \"condimentar\",\r\n        \"Privacity\": \"Public\",\r\n        \"Accesibility\": \"Normal\",\r\n        \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"Parameters\": [],\r\n              \"IsStatic\": false,\r\n    \"IsVirtual\":true,\r\n    \"IsOverride\":false\r\n    }\r\n  ],\r\n  \"attributes\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VaraibleJamonAnanaQueso",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\" :\"JamonAnanaQueso\",\r\n    \"IdInstance\" : \"e9b3a925-3b58-4f05-b144-33746b05d116\", //PizzaHAwaiana\r\n    \"IdReference\" : \"e9b3a925-3b58-4f05-b144-33746b05d116\" //PizzaHAwaiana\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{Id_Agregar_Ingredientes_Hawaiana}}/variables",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{Id_Agregar_Ingredientes_Hawaiana}}",
+						"variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invocacionVariableJamon",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\" :\"2bb4275c-ef9f-43c9-b15b-07608dcbfac6\", //jamonananaqueso\r\n    \"MethodName\" :\"condimentar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"LocalVariable\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{Id_Agregar_Ingredientes_Hawaiana}}/invocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{Id_Agregar_Ingredientes_Hawaiana}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ClasePizzaPepperoni",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"PizzaPepperoni\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n\"IdBaseNamespace\": \"ad78557d-24b1-40fd-8623-03f01c2e8872\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ModificarClasePizzaPepperoni",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"296ae2b3-2eac-4899-8aee-ffc4e641b7a0\", // pizza peperoni\r\n  \"name\": \"PizzaPepperoni\",\r\n  \"state\": \"Normal\",\r\n\"IdBaseNamespace\": \"00000000-1111-0000-0000-000000000001\",\r\n  \"idBaseClass\": \"ffcd25a6-f332-4b7d-8963-73067185d1df\", //pizza\r\n  \"methods\" : [\r\n    {\r\n        \"Name\": \"agregarIngredientes\",\r\n        \"Privacity\": \"Protected\",\r\n        \"Accesibility\": \"Normal\",\r\n        \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"Parameters\":[],\r\n                \"IsStatic\": false,\r\n       \"IsVirtual\":true,\r\n        \"IsOverride\":true\r\n    },\r\n    {\r\n        \"Name\": \"condimentar\",\r\n        \"Privacity\": \"Public\",\r\n        \"Accesibility\": \"Normal\",\r\n        \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n        \"Parameters\": [],\r\n                \"IsStatic\": false,\r\n       \"IsVirtual\":true,\r\n        \"IsOverride\":false\r\n    }\r\n  ],\r\n  \"attributes\":[]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/classes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VariablePepperoniQueso",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\" :\"pepperoniQueso\",\r\n    \"IdInstance\" :\"296ae2b3-2eac-4899-8aee-ffc4e641b7a0\", // pizza peperoni\r\n    \"IdReference\" :\"296ae2b3-2eac-4899-8aee-ffc4e641b7a0\" // pizza peperoni\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{methodAgregarIngredientesPepperoni}}/variables",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{methodAgregarIngredientesPepperoni}}",
+						"variables"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvocacionVariablePepperoni",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\": \"f04b9d2e-a412-4e03-8ba7-03cfa14eaf9f\", //peperoniqueso\r\n    \"MethodName\": \"condimentar\",\r\n    \"Parameters\": [],\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\",\r\n    \"TypeReference\": \"LocalVariable\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/methods/{{methodAgregarIngredientesPepperoni}}/invocations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"methods",
+						"{{methodAgregarIngredientesPepperoni}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EjecucionPizzaHawaiana",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"prepararPizza\",\r\n    \"Parameters\": [],\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\",\r\n    \"IdReferenceType\": \"ffcd25a6-f332-4b7d-8963-73067185d1df\", //pizza\r\n    \"IdInstanceType\":\"e9b3a925-3b58-4f05-b144-33746b05d116\" // pizzahawaiana\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/executions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EjecucionPizzaPepperoni",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"prepararPizza\",\r\n    \"Parameters\": [],\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\",\r\n    \"IdReferenceType\": \"ffcd25a6-f332-4b7d-8963-73067185d1df\", //pizza\r\n    \"IdInstanceType\":\"296ae2b3-2eac-4899-8aee-ffc4e641b7a0\"  //pizzapepperoni\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5128/api/v1/executions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5128",
+					"path": [
+						"api",
+						"v1",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:5128",
+			"type": "default"
+		},
+		{
+			"key": "idClass",
+			"value": "Guid",
+			"type": "default"
+		},
+		{
+			"key": "idMethod",
+			"value": "Guid",
+			"type": "default"
+		},
+		{
+			"key": "idClassPizza",
+			"value": "f2dba125-4074-490c-bd53-e04106d076dc",
+			"type": "default"
+		},
+		{
+			"key": "idMethod_PrepararPizza",
+			"value": "fe26d512-37a8-4690-ae81-5cf63388a7d9",
+			"type": "default"
+		},
+		{
+			"key": "Id_Agregar_Ingredientes_Hawaiana",
+			"value": "4c6d2fed-21ff-4680-8af2-da78a90200c2",
+			"type": "default"
+		},
+		{
+			"key": "methodAgregarIngredientesPepperoni",
+			"value": "ab6b9993-0ea8-4725-88ca-6a3d7ca08a95",
+			"type": "default"
+		}
+	]
+}
