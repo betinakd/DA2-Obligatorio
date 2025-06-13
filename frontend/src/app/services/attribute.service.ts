@@ -17,7 +17,6 @@ export class AttributeService {
     constructor(private http: HttpClient) { }
 
     createAttribute(classId: string, attribute: AttributeRequest): Observable<CreatedAttributeResponse> {
-        console.log('Enviando atributo:', attribute);
         return this.http.post<CreatedAttributeResponse>(`${this.apiUrl}classes/${classId}/attributes`, attribute)
             .pipe(
                 catchError(error => {
