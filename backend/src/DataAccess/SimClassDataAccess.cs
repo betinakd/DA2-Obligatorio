@@ -393,10 +393,14 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
             throw new InvalidOperationException("The class must implement at least one interface.");
         }
 
-        var interfaceToImplement = simClassToUpdate.Implements.FirstOrDefault();
-        if(interfaceToImplement != null)
+        foreach(var implementedInterface in simClassToUpdate.Implements)
         {
-            existingClass.Implements.Add(interfaceToImplement);
+            if(existingClass.Implements.Any(i => i.Id == implementedInterface.Id))
+            {
+                continue;
+            }
+
+            existingClass.Implements.Add(implementedInterface);
         }
 
         _context.SimClasses.Update(existingClass);
