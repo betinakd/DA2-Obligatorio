@@ -96,6 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   private processSimClass(sc: SimClassResponse): any {
+    const state = sc.state || 'Unknown State';
     const baseClass = sc.idBaseClass
       ? this.getClassNameById(sc.idBaseClass)
       : null;
@@ -186,6 +187,7 @@ export class HomeComponent implements OnInit {
       id: sc.id,
       name: sc.name,
       baseClass,
+      state,
       attributes,
       methods,
       implements: impls
