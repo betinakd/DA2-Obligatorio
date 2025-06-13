@@ -1,4 +1,6 @@
+using BusinessLogic.Exceptions;
 using IAdapter;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 
@@ -15,7 +17,14 @@ public class TransformerAdapter(ITransformerService transformerService, IExecuti
 
     public string ExportExecution(MethodExecutionTransformedRequest methodExecutionRequest)
     {
-        var executionResult = _executionAdapter.ExecuteMethod(methodExecutionRequest.Execution);
-        return _transformerService.ExportExecution(methodExecutionRequest.TransformerName, executionResult.Execution);
+        try
+        {
+            var executionResult = _executionAdapter.ExecuteMethod(methodExecutionRequest.Execution);
+            return _transformerService.ExportExecution(methodExecutionRequest.TransformerName, executionResult.Execution);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new InvalidExecutionAdapter($"Error during execution export: {ex.Message}");
+        }
     }
 }

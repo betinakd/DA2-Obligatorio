@@ -679,12 +679,12 @@ public class SimMethodServiceTest
             ],
             LocalVariables = [
                 new LocalVariable
-            {
-                Id = Guid.NewGuid(),
-                Name = "localVar1",
-                ReferenceId = variableTypeId,
-                Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "localVar1",
+                    ReferenceId = variableTypeId,
+                    Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
+                }
 
             ],
         };
@@ -767,12 +767,12 @@ public class SimMethodServiceTest
             Parameters = [],
             LocalVariables = [
                 new LocalVariable
-            {
-                Id = Guid.NewGuid(),
-                Name = "localVar1",
-                ReferenceId = variableTypeId,
-                Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
-            }
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "localVar1",
+                    ReferenceId = variableTypeId,
+                    Reference = new SimClass { Id = variableTypeId, Name = "VarType" }
+                }
 
             ],
         };

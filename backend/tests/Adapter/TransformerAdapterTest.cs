@@ -1,5 +1,7 @@
 using Adapter;
+using BusinessLogic.Exceptions;
 using IAdapter;
+using IAdapter.Exceptions;
 using IBusinessLogic;
 using Models.Request;
 using Models.Response;
@@ -55,5 +57,28 @@ public class TransformerAdapterTest
         var result = _adapter!.ExportExecution(request);
 
         Assert.AreEqual(transformed, result);
+    }
+
+    [TestMethod]
+    public void ExportExecution_ShouldThrowInvalidExecutionAdapter_WhenNonExistentValueLogicIsThrown()
+    {
+        var mockTransformerService = new Mock<ITransformerService>();
+        var mockExecutionAdapter = new Mock<IExecutionAdapter>();
+        var adapter = new TransformerAdapter(mockTransformerService.Object, mockExecutionAdapter.Object);
+
+        var request = new MethodExecutionTransformedRequest
+        {
+            TransformerName = "TestTransformer",
+            Execution = new MethodExecutionRequest()
+        };
+
+        mockExecutionAdapter
+            .Setup(e => e.ExecuteMethod(It.IsAny<MethodExecutionRequest>()))
+            .Throws(new NonExistentValueLogic("Execution not found"));
+
+        var ex = Assert.ThrowsException<InvalidExecutionAdapter>(() =>
+            adapter.ExportExecution(request));
+
+        Assert.AreEqual("Error during execution export: Execution not found", ex.Message);
     }
 }

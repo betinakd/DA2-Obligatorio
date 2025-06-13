@@ -24,7 +24,7 @@ public class TransformerService() : ITransformerService
         if(!Directory.Exists(pathExporters))
         {
             Console.WriteLine("Folder not found: " + pathExporters);
-            throw new Exception("Plugins folder not found. Please ensure the path is correct." + pathExporters);
+            throw new NonExistentValueLogic("Plugins folder not found. Please ensure the path is correct." + pathExporters);
         }
 
         var dllFiles = Directory.GetFiles(pathExporters, "*.dll", SearchOption.TopDirectoryOnly);

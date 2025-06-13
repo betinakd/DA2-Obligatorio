@@ -672,8 +672,8 @@ public class SimClassTest
             Methods =
             [
             new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true },
-            new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = true },
-            new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal, IsOverride = true }
+                new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = true },
+                new SimMethod { Name = "ExtraMethod", Accesibility = SimAccesibility.Normal, IsOverride = true }
             ],
         };
 
@@ -765,7 +765,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Interface, ReturnType = voidType },
-        new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface, ReturnType = voidType }
+                new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Interface, ReturnType = voidType }
             ],
         };
 
@@ -776,7 +776,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "Method1", Accesibility = SimAccesibility.Normal, IsOverride = true, ReturnType = voidType },
-        new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
+                new SimMethod { Name = "Method2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
             ],
         };
 
@@ -796,7 +796,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Abstract, ReturnType = voidType },
-            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract, ReturnType = voidType }
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Abstract, ReturnType = voidType }
             ],
         };
 
@@ -807,7 +807,7 @@ public class SimClassTest
             Methods =
             [
                 new SimMethod { Name = "AbstractMethod1", Accesibility = SimAccesibility.Normal, IsOverride = true, ReturnType = voidType },
-            new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
+                new SimMethod { Name = "AbstractMethod2", Accesibility = SimAccesibility.Normal, IsOverride = false, ReturnType = voidType }
             ],
         };
 
