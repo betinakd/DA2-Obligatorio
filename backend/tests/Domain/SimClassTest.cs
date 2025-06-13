@@ -524,7 +524,7 @@ public class SimClassTest
 
     [TestMethod]
     [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void Implements_ShouldThrowException_WhenInterfaceImplementsClasses()
+    public void SetImplements_ShouldThrowException_WhenInterfaceImplementsClasses()
     {
         var simClass = new SimClass
         {
@@ -538,10 +538,7 @@ public class SimClassTest
             State = SimAccesibility.Normal,
         };
 
-        simClass.Implements =
-    [
-        classToImplement
-    ];
+        simClass.SetImplements([classToImplement]);
     }
 
     [TestMethod]
@@ -571,7 +568,7 @@ public class SimClassTest
 
     [TestMethod]
     [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void Implements_ShouldThrowException_WhenImplementingNonInterface()
+    public void SetImplements_ShouldThrowException_WhenImplementingNonInterface()
     {
         var simClass = new SimClass
         {
@@ -585,10 +582,7 @@ public class SimClassTest
             State = SimAccesibility.Normal,
         };
 
-        simClass.Implements =
-    [
-        regularClassToImplement
-    ];
+        simClass.SetImplements([regularClassToImplement]);
     }
 
     [TestMethod]

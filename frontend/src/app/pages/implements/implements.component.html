@@ -1,0 +1,28 @@
+<div class="container-center"></div>
+<h1>Create Implements </h1>
+<app-class-selector (classSelected)="classImplements($event)" [labelText]="'Select the implementing Class'"
+    [reload]="reload"></app-class-selector>
+
+<app-class-selector (classSelected)="interfaceSelected($event)" [labelText]="'Select Interface Class'"
+    [reload]="reload"></app-class-selector>
+
+<app-method-list (methodsChange)="methodsSelected($event)"></app-method-list>
+
+
+<div class="create-button-container">
+    <button class="btn-create" (click)="onCreateImplement()">
+        <span class="material-icons">play_circle_filled</span> Implement
+    </button>
+</div>
+
+<div *ngIf="success" class="alert alert-success">
+    <div class="alert-content">
+        <span>{{ success }}</span>
+    </div>
+</div>
+
+<div *ngIf="error" class="alert alert-error">
+    <div class="alert-content">
+        <span>{{ error }}</span>
+    </div>
+</div>

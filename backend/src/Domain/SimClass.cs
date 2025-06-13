@@ -167,16 +167,6 @@ public class SimClass
         get => _implements;
         set
         {
-            if((State == SimAccesibility.Interface || State == SimAccesibility.Abstract) && value.Any())
-            {
-                throw new InvalidAttributeDomain("An interface or abstract class cannot implement other classes.");
-            }
-
-            if(value.Any(i => i.State != SimAccesibility.Interface))
-            {
-                throw new InvalidAttributeDomain("Cannot implement a non interface.");
-            }
-
             _implements = value;
         }
     }
@@ -214,6 +204,16 @@ public class SimClass
 
     public void SetImplements(List<SimClass> value)
     {
+        if((State == SimAccesibility.Interface || State == SimAccesibility.Abstract) && value.Any())
+        {
+            throw new InvalidAttributeDomain("An interface or abstract class cannot implement other classes.");
+        }
+
+        if(value.Any(i => i.State != SimAccesibility.Interface))
+        {
+            throw new InvalidAttributeDomain("Cannot implement a non interface.");
+        }
+
         var duplicateIds = value.GroupBy(i => i.Id).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
         if(duplicateIds.Any())
         {
