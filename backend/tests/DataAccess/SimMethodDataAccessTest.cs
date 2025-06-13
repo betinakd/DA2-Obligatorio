@@ -1136,13 +1136,13 @@ public class SimMethodDataAccessTest
             RelatedClassId = classId,
             RelatedClass = simClass,
             Parameters = [new Parameter
-        {
-            Id = Guid.NewGuid(),
-            Name = "param1",
-            ReferenceId = typeId,
-            Reference = typeClass,
-            Index = 0
-        }
+            {
+                Id = Guid.NewGuid(),
+                Name = "param1",
+                ReferenceId = typeId,
+                Reference = typeClass,
+                Index = 0
+            }
 
         ],
         };

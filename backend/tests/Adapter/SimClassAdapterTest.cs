@@ -472,7 +472,7 @@ public class SimClassAdapterTest
             Implements =
             [
                 new InterfaceRequestUpdate { IdInterface = interfaceId1.ToString() },
-            new InterfaceRequestUpdate { IdInterface = interfaceId2.ToString() }
+                new InterfaceRequestUpdate { IdInterface = interfaceId2.ToString() }
             ],
         };
 
@@ -638,27 +638,27 @@ public class SimClassAdapterTest
             Methods =
             [
                 new MethodRequest
-            {
-                Name = "TestMethod",
-                Privacity = SimModelsPrivacity.Public,
-                Accesibility = SimModelsAccesibility.Normal,
-                IdReturnType = objTypeId.ToString(),
-                Parameters =
+                {
+                    Name = "TestMethod",
+                    Privacity = SimModelsPrivacity.Public,
+                    Accesibility = SimModelsAccesibility.Normal,
+                    IdReturnType = objTypeId.ToString(),
+                    Parameters =
                 [
                     new ParameterRequest { Name = "param1", IdReference = objTypeId.ToString() }
                 ],
-            }
+                }
 
             ],
             Attributes =
             [
                 new AttributeRequest
-            {
-                Name = "TestAttribute",
-                Privacity = SimModelsPrivacity.Private,
-                IdReference = typeId.ToString(),
-                IdInstance = instanceId.ToString(),
-            }
+                {
+                    Name = "TestAttribute",
+                    Privacity = SimModelsPrivacity.Private,
+                    IdReference = typeId.ToString(),
+                    IdInstance = instanceId.ToString(),
+                }
 
             ],
         };
@@ -1037,10 +1037,10 @@ public class SimClassAdapterTest
             Parameters =
             [
                 new ParameterRequest
-            {
-                Name = "param1",
-                IdReference = returnTypeId.ToString()
-            }
+                {
+                    Name = "param1",
+                    IdReference = returnTypeId.ToString()
+                }
 
             ]
         };
