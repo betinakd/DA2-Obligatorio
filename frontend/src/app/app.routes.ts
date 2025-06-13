@@ -34,6 +34,8 @@ import { StrategyComponent } from './pages/pattern-examples/strategy/strategy.co
 import { CompositeComponent } from './pages/pattern-examples/composite/composite.component';
 import { TemplateMethodComponent } from './pages/pattern-examples/template-method/template-method.component';
 
+import { ImplementsComponent } from './pages/implements/implements.component';
+
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
@@ -82,6 +84,8 @@ export const routes: Routes = [
     { path: 'patterns/composite', component: CompositeComponent },
     { path: 'patterns/strategy', component: StrategyComponent },
     { path: 'patterns/templateMethod', component: TemplateMethodComponent },
+
+    { path: 'implements/create', component: ImplementsComponent },
 
     { path: '**', redirectTo: 'home' },
 
