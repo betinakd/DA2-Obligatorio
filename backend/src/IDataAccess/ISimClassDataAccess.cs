@@ -16,4 +16,5 @@ public interface ISimClassDataAccess
     bool IsClassBaseOfOrSameAs(SimClass potentialBase, SimClass potentialDerived);
     SimClass ImplementInterface(SimClass simClassToUpdate);
     bool SimClassImplementsInterface(Guid classId, Guid interfaceId);
+    bool HasCyclicDependency(SimClass fromClass, SimClass toClass);
 }
