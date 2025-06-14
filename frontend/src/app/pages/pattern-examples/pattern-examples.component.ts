@@ -10,23 +10,25 @@ import { MethodResponse } from '../../models/method-response.model';
 import { ParameterResponse } from '../../models/parameter-response.model';
 import { VariableResponse } from '../../models/VariableResponse';
 import { InvocationResponse } from '../../models/invocation-response.model';
+import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-pattern-examples',
-  imports: [TreefeatureGridComponent, CommonModule],
+  imports: [TreefeatureGridComponent, CommonModule, MatSelect, MatFormField, MatLabel, MatOption],
   templateUrl: './pattern-examples.component.html',
   styleUrl: './pattern-examples.component.scss'
 })
 export class PatternExamplesComponent implements OnInit {
   @Input() patternName = '';
   @Input() patternIdClasses: string[] = [];
-  @Input() executionInfo: MethodExecutionRequest = {
+  @Input() executionInfo: MethodExecutionRequest[] = [{
     methodName: '',
     parameters: [],
     idReferenceType: '',
     idInstanceType: '',
     idReturnType: ''
-  };
+  }];
+  @Input() executionsOptions: string[] = [];
 
   classList: any[] = [];
   class: SimClassResponse | null = null;
@@ -34,16 +36,117 @@ export class PatternExamplesComponent implements OnInit {
 
   executionOutput = 'empty execution output';
 
-  typesList: SimClassResponse[] = [];
+  classes: SimClassResponse[] = [];
 
 
   constructor(private classService: ClassService, private executionService: ExecutionService) { }
   ngOnInit(): void {
+    this.loadClasses();
+    this.getExecutionOutput();
+    for (let i = 0; i < this.patternIdClasses.length; i++) {
+      this.getPatternClasses(this.patternIdClasses[i]);
+    }
+  }
+
+  getExecutionOutput(index: number = 0): void {
+    const info = this.executionInfo[index];
+    const request: MethodExecutionRequest = {
+      methodName: info.methodName,
+      parameters: info.parameters,
+      idReferenceType: info.idReferenceType,
+      idInstanceType: info.idInstanceType,
+      idReturnType: info.idReturnType
+    };
+    this.executionService.executeMethod(info).subscribe({
+      next: (response) => {
+      this.executionOutput = String(response.execution);
+      },
+      error: (error) => {
+      //this.executionOutput = 'Error loading execution information. Message: ' + error.message;
+      this.executionOutput = info.methodName;
+    }
+    });
+  }
+
+  loadClasses(): void {
+    this.classService.getAllClasses().subscribe({
+      next: (data) => {
+        this.classes = data;
+      },
+    });
+  }
+
+  getPatternClasses(id : string): void {
+    this.classService.getClass(id).subscribe({
+      next: (data) => {
+        data.methods.forEach((method) => {
+          //var parsedMethod = this.parseMethodData(method, data.name || 'Unknown Class');
+          //this.methodList.push(parsedMethod);
+          var parsedClass = this.processSimClass(data);
+          this.classList.push(parsedClass);
+        });
+      }
+    });
+  }
+
+  private getClassNameById(classId: string): string {
+    const classObj = this.classes.find(c => c.id === classId)?.name;
+    return classObj ? classObj : '';
+  }
+
+  private processSimClass(sc: SimClassResponse): any {
+    const name = sc.name || 'Unknown Class';
+    const baseClass = sc.idBaseClass
+      ? this.getClassNameById(sc.idBaseClass)
+      : 'Unknown Base Class';
+
+    const attributes = sc.attributes.map(attr => ({
+      name: attr.name,
+      reference: attr.referenceId
+        ? this.getClassNameById(attr.referenceId)
+        : 'Unknown Type',
+      instance: attr.instanceId
+        ? this.getClassNameById(attr.instanceId)
+        : 'Unknown Instance',
+      privacity: attr.privacity,
+      static: attr.isStatic ? 'static' : ''
+    }));
+
+    const methods = sc.methods.map(m => ({
+        name: m.name
+    }));
+
+    const _implements = sc.implements.map(i => i.name);
+
+    return {
+      name: name,
+      baseClass: baseClass,
+      attributes: attributes,
+      methods: methods,
+      implements: _implements
+    };
+  }
+
+  /*ngOnInit(): void {
+    this.GetTypes();
     this.getExecutionOutput();
     for (let i = 0; i < this.patternIdClasses.length; i++) {
       this.getClasses(this.patternIdClasses[i]);
     }
-    this.GetTypes();
+  }
+
+  GetTypes(): void {
+    this.classService.getAllClasses().subscribe({
+      next: (data) => {
+        this.typesList = data;
+      },
+    }
+    );
+  }
+
+  parseTypeData(typeId: string): string {
+    const classObj = this.typesList.find(c => c.id === typeId)?.name;
+    return classObj ? classObj : '';
   }
 
   getExecutionOutput() {
@@ -64,7 +167,7 @@ export class PatternExamplesComponent implements OnInit {
         {
           "id": data.id,
           "name": data.name,
-          "idBaseClass": data.idBaseClass,
+          "baseClass": data.idBaseClass? this.parseTypeData(data.idBaseClass): 'Unknown Base Class',
           "state": data.state,
           "methods": data.methods.map(method => method.name).filter((name): name is string => typeof name === 'string'),
           "attributes": this.parseAttributesData(data.attributes),
@@ -91,7 +194,7 @@ export class PatternExamplesComponent implements OnInit {
     }
 
     if (rawMehtod) {
-      const returnType = this.parseTypeData(rawMehtod.returnTypeId ?? ' ');
+      const returnType = rawMehtod.returnTypeId ? this.parseTypeData(rawMehtod.returnTypeId) : 'void';
       const parameters = this.parsedParametersData(rawMehtod.parameters);
       const modifier = this.parseModifier(rawMehtod);
 
@@ -101,7 +204,6 @@ export class PatternExamplesComponent implements OnInit {
     parsedMethod.invocations = this.parseMethodInvocationData(rawMehtod.invocations);
     parsedMethod.class = name || 'Unknown Class';
     return parsedMethod;
-
   }
 
   parseMethodInvocationData(methodInvocations: InvocationResponse[]): any[] {
@@ -161,23 +263,6 @@ export class PatternExamplesComponent implements OnInit {
     return returnInfo.join(',');
   }
 
-  GetTypes(): void {
-    this.classService.getAllClassesForPatterns().subscribe({
-      next: (data) => {
-        this.typesList = data;
-      },
-    }
-    );
-  }
-
-  parseTypeData(typeId: string | undefined): string {
-    if (!typeId) {
-      return 'Unknown Type';
-    }
-    const type = this.typesList.filter(item => item.id === typeId)[0];
-    return type && type.name ? String(type.name) : 'Unknown Type';
-  }
-
   parseAttributesData(attributes: AttributeResponse[]): string[] {
     var parsedAttr: string[] = [];
     if (!attributes || attributes.length === 0) {
@@ -195,6 +280,6 @@ export class PatternExamplesComponent implements OnInit {
       parsedAttr.push(parsedAttrI);
     }
     return parsedAttr
-  }
+  }*/
 
 }
