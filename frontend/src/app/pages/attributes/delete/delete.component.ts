@@ -31,7 +31,7 @@ export class DeleteComponent {
           this.error = '';
         },
         error: (err) => {
-          this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+          this.error = 'Error: ' + (err.error?.message || 'Wrong data format. Please check the input fields.');
           this.loading = false;
           this.success = '';
         }
