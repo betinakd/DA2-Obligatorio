@@ -4,13 +4,13 @@
         <div class="list-classes-container">
             <div *ngIf="classList?.length; else noClasses">
                 <div *ngFor="let cls of classList" class="class-card">
-                    <h3> {{ cls.name }}</h3>
+                    <h3 class="name-class"> {{ cls.name }}</h3>
                     <p *ngIf="cls.baseClass">Extends: {{ cls.baseClass }}</p> <!-- no esta mostrando pq el metodo getclassname devuelve null -->
                     <div *ngIf="cls.implements?.length">
                         <p> Implements: {{cls.implements}}</p>
                     </div>
                     <div *ngIf="cls.attributes?.length">
-                        <h4>Attributes</h4>
+                        <p>Attributes</p>
                         <ul>
                             <li *ngFor="let attr of cls.attributes">
                                 {{attr.privacity}} {{attr.static}} {{ attr.name }}: {{ attr.reference }} {{attr.instance}}
@@ -19,7 +19,7 @@
                     </div>
             
                     <div *ngIf="cls.methods?.length">
-                        <h4>Methods</h4>
+                        <p>Methods</p>
                         <ul>
                             <li *ngFor="let m of cls.methods">
                                 {{ m.name }}

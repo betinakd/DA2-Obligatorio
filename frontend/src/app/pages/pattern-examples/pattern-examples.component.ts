@@ -42,12 +42,25 @@ export class PatternExamplesComponent implements OnInit {
 
   constructor(private classService: ClassService, private executionService: ExecutionService) { }
   ngOnInit(): void {
-    this.loadClasses();
-    this.getExecutionOutput();
-    for (let i = 0; i < this.patternIdClasses.length; i++) {
-      this.getPatternClasses(this.patternIdClasses[i]);
-    }
+    this.loadClasses().then(() => {
+      this.getExecutionOutput();
+      for (let i = 0; i < this.patternIdClasses.length; i++) {
+        this.getPatternClasses(this.patternIdClasses[i]);
+      }
+    });
   }
+
+  loadClasses(): Promise<void> {
+    return new Promise((resolve) => {
+      this.classService.getAllClasses().subscribe({
+        next: (data) => {
+          this.classes = data;
+          resolve();
+        },
+        error: () => resolve()
+      });
+    });
+}
 
   getExecutionOutput(index: number = 0): void {
     const info = this.executionInfo[index];
@@ -68,13 +81,13 @@ export class PatternExamplesComponent implements OnInit {
     });
   }
 
-  loadClasses(): void {
+  /*loadClasses(): void {
     this.classService.getAllClasses().subscribe({
       next: (data) => {
         this.classes = data;
       },
     });
-  }
+  }*/
   private getClassNameById(classId: string): string {
     const classObj = this.classes.find(c => c.id === classId)?.name;
     return classObj ? classObj : '';
@@ -235,160 +248,4 @@ export class PatternExamplesComponent implements OnInit {
         return 'Unknown Reference';
     }
   }
-
-  /*ngOnInit(): void {
-    this.GetTypes();
-    this.getExecutionOutput();
-    for (let i = 0; i < this.patternIdClasses.length; i++) {
-      this.getClasses(this.patternIdClasses[i]);
-    }
-  }
-
-  GetTypes(): void {
-    this.classService.getAllClasses().subscribe({
-      next: (data) => {
-        this.typesList = data;
-      },
-    }
-    );
-  }
-
-  parseTypeData(typeId: string): string {
-    const classObj = this.typesList.find(c => c.id === typeId)?.name;
-    return classObj ? classObj : '';
-  }
-
-  getExecutionOutput() {
-    this.executionService.executeMethod(this.executionInfo).subscribe({
-      next: (response) => {
-        this.executionOutput = String(response.execution);
-      },
-      error: (error) => {
-        this.executionOutput = 'Error loading execution information. Message: ' + error.message;
-      }
-    });
-  }
-
-  getClasses(objectId: string): void {
-    this.classService.getClass(objectId).subscribe({
-      next: (data) => {
-        const classData =
-        {
-          "id": data.id,
-          "name": data.name,
-          "baseClass": data.idBaseClass? this.parseTypeData(data.idBaseClass): 'Unknown Base Class',
-          "state": data.state,
-          "methods": data.methods.map(method => method.name).filter((name): name is string => typeof name === 'string'),
-          "attributes": this.parseAttributesData(data.attributes),
-          "implements": data.implements.map((iface) => {
-            return { name: iface.name, id: iface.id };
-          }),
-        }
-        this.classList.push(classData);
-        data.methods.forEach((method) => {
-          var parsedMethod = this.parseMethodData(method, data.name || 'Unknown Class');
-          this.methodList.push(parsedMethod);
-        });
-
-      }
-    });
-  }
-  parseMethodData(rawMehtod: MethodResponse, name: string): string {
-    const parsedMethod: any = {
-      name: rawMehtod.name || 'Unknown Method',
-      methodScript: '',
-      class: '',
-      localVariables: [],
-      invocations: []
-    }
-
-    if (rawMehtod) {
-      const returnType = rawMehtod.returnTypeId ? this.parseTypeData(rawMehtod.returnTypeId) : 'void';
-      const parameters = this.parsedParametersData(rawMehtod.parameters);
-      const modifier = this.parseModifier(rawMehtod);
-
-      parsedMethod.methodScript = `${rawMehtod.privacity} ${rawMehtod.accesibility} ${modifier}${rawMehtod.name}(${parameters}): ${returnType}`;
-    }
-    parsedMethod.localVariables = this.parseLocalVariablesData(rawMehtod.variables);
-    parsedMethod.invocations = this.parseMethodInvocationData(rawMehtod.invocations);
-    parsedMethod.class = name || 'Unknown Class';
-    return parsedMethod;
-  }
-
-  parseMethodInvocationData(methodInvocations: InvocationResponse[]): any[] {
-    let parsedInvocations: any[] = [];
-    if (!methodInvocations || methodInvocations.length === 0) {
-      parsedInvocations = ['No method invocations found'];
-    }
-    for (let i = 0; i < methodInvocations.length; i++) {
-      const invocation = methodInvocations[i];
-      const parameters = this.parsedParametersData(invocation.parameters || []);
-      const invocationInfo = invocation.typeReference + '.' + invocation.methodName + '(' + parameters + ')';
-      parsedInvocations.push(invocationInfo);
-    }
-    return parsedInvocations;
-  }
-
-  parseLocalVariablesData(localVariables: VariableResponse[]): string[] {
-    let parsedLocalVariables: string[] = [];
-    if (!localVariables || localVariables.length === 0) {
-      parsedLocalVariables = ['No local variables found'];
-    }
-    for (let i = 0; i < localVariables.length; i++) {
-      const localVariable = localVariables[i];
-      const type = this.parseTypeData(localVariable.referenceId ?? 'Unknown Type');
-      const name = localVariable.name || 'Unknown Variable';
-      const localVar = `${name}: ${type}`;
-      parsedLocalVariables.push(localVar);
-    }
-    return parsedLocalVariables;
-  }
-
-  parseModifier(rawMethod: MethodResponse): string {
-    let modifier = '';
-    if (rawMethod.isStatic) {
-      modifier = 'static';
-    }
-    if (rawMethod.isVirtual) {
-      if (rawMethod.isOverride) {
-        modifier = 'override';
-      } else {
-        modifier = 'virtual';
-      }
-    }
-    return modifier;
-  }
-
-  parsedParametersData(parameters: ParameterResponse[]): string {
-    let returnInfo = [];
-    if (parameters != null) {
-      for (let i = 0; i < parameters.length; i++) {
-        const param = parameters[i];
-        const type = this.parseTypeData(param.referenceId ?? 'Unknown Type');
-        const name = param.name || 'Unknown Parameter';
-        returnInfo.push(` ${name}: ${type}`);
-      }
-    }
-    return returnInfo.join(',');
-  }
-
-  parseAttributesData(attributes: AttributeResponse[]): string[] {
-    var parsedAttr: string[] = [];
-    if (!attributes || attributes.length === 0) {
-      var emptyAttr: string = 'No attributes found';
-      return parsedAttr;
-    }
-    for (let i = 0; i < attributes.length; i++) {
-      const attr = attributes[i];
-
-      const reference = this.parseTypeData(attr.referenceId ?? 'Unknown Type');
-      const instance = this.parseTypeData(attr.instanceId ?? 'Unknown Type');
-      const isStatic = attr.isStatic ? 'static' : '';
-
-      const parsedAttrI = '' + attr?.privacity + ' ' + isStatic + ' ' + reference + ' ' + attr?.name + ': ' + instance;
-      parsedAttr.push(parsedAttrI);
-    }
-    return parsedAttr
-  }*/
-
 }
