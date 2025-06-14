@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NamespaceService } from '../../../services/namespace.service';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { NamespaceRequest } from '../../../models/request/NamespaceRequest.model';
-import { CreatedNamespaceResponse } from '../../../models/CreatedNamespaceResponse';
+import { CreatedNamespaceResponse } from '../../../models/response/CreatedNamespaceResponse';
 
 @Component({
   selector: 'app-create',
@@ -37,14 +37,18 @@ export class CreateComponent {
 
     this.namespaceService.createNamespace(namespaceData).subscribe({
       next: (response) => {
-        this.successMessage = response.message + ' - ID: ' + response.namespaceResponse.id + ' - Name: ' + response.namespaceResponse.name;
+        this.successMessage =
+          response.message +
+          ' - ID: ' + response.namespaceResponse.id +
+          ' - Name: ' + response.namespaceResponse.name +
+          (response.namespaceResponse.baseNamespaceId ? ' - Base Namespace ID: ' + response.namespaceResponse.baseNamespaceId : '');
         this.loading = true;
         this.createdNamespace = response;
         this.error = '';
         this.name = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Unknown error');
         this.loading = false;
         this.successMessage = '';
       }

@@ -46,12 +46,9 @@ export class CreateComponent {
     this.error = '';
     this.success = '';
 
-    console.log('Creating method:', this.method);
-    console.log('For class:', this.classId);
-
     this.methodService.createMethod(this.classId, this.method).subscribe({
       next: (response) => {
-        this.success = response.message;
+        this.success = `${response.message}\n\n${JSON.stringify(response.methodResponse, null, 2)}`;
         this.error = '';
         this.loading = false;
       },

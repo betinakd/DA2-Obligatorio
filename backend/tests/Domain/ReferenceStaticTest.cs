@@ -21,6 +21,11 @@ public class ReferenceStaticTest
     [TestMethod]
     public void TestGetSignature_ShouldReturnCorrectStaticFormat()
     {
+        var referenceClass1 = new SimClass { Name = "RefClass1" };
+        var instanceClass1 = new SimClass { Name = "InstClass1" };
+        var referenceClass2 = new SimClass { Name = "RefClass2" };
+        var instanceClass2 = new SimClass { Name = "InstClass2" };
+
         var simClass = new SimClass { Name = "TestClass" };
         var referenceStatic = new ReferenceStatic { Reference = simClass };
         var signature = new Signature
@@ -28,14 +33,25 @@ public class ReferenceStaticTest
             Name = "TestMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "param1" },
-                new ParameterSignature { Name = "param2" }
+                new ParameterSignature
+            {
+                Name = "param1",
+                Reference = referenceClass1,
+                Instance = instanceClass1
+            },
+            new ParameterSignature
+            {
+                Name = "param2",
+                Reference = referenceClass2,
+                Instance = instanceClass2
+            }
+
             ],
         };
 
         var result = referenceStatic.GetSignature(signature);
 
-        Assert.AreEqual("TestClass.TestMethod(param1, param2)", result);
+        Assert.AreEqual("TestClass.TestMethod(param1: RefClass1 InstClass1, param2: RefClass2 InstClass2)", result);
     }
 
     [TestMethod]
@@ -57,6 +73,11 @@ public class ReferenceStaticTest
     [TestMethod]
     public void TestGetSignatureWithClassName_ShouldReturnCorrectFormat()
     {
+        var referenceClassX = new SimClass { Name = "RefClassX" };
+        var instanceClassX = new SimClass { Name = "InstClassX" };
+        var referenceClassY = new SimClass { Name = "RefClassY" };
+        var instanceClassY = new SimClass { Name = "InstClassY" };
+
         var simClass = new SimClass { Name = "TestClass" };
         var referenceStatic = new ReferenceStatic { Reference = simClass };
         var signature = new Signature
@@ -64,14 +85,25 @@ public class ReferenceStaticTest
             Name = "TestMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "x" },
-                new ParameterSignature { Name = "y" }
+                new ParameterSignature
+            {
+                Name = "x",
+                Reference = referenceClassX,
+                Instance = instanceClassX
+            },
+            new ParameterSignature
+            {
+                Name = "y",
+                Reference = referenceClassY,
+                Instance = instanceClassY
+            }
+
             ],
         };
 
         var result = referenceStatic.GetSignatureWithClassName(signature);
 
-        Assert.AreEqual("TestClass.TestMethod(x, y)", result);
+        Assert.AreEqual("TestClass.TestMethod(x: RefClassX InstClassX, y: RefClassY InstClassY)", result);
     }
 
     [TestMethod]

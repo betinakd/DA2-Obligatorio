@@ -1,4 +1,4 @@
-export class Attribute {
+export class AttributeResponse {
   id: string = '';
   name: string = '';
   referenceId: string = '';

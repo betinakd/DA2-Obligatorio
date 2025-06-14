@@ -82,7 +82,7 @@ export class CreateComponent {
     this.methodService.createInvocation(this.methodId, this.invocationRequest).subscribe({
       next: (response) => {
         this.loading = false;
-        this.success = response.message;
+        this.success = response.message + '\n\n' + JSON.stringify(this.invocationRequest, null, 2);
         this.error = '';
       },
       error: (error) => {

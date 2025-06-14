@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { AttributeListComponent } from '../../../components/attribute-list/attribute-list.component';
-import { Attribute } from '../../../models/attribute.model';
 import { AttributeRequest } from '../../../models/request/AttributeRequest';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { MethodRequest } from '../../../models/request/MethodRequest';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
 import { ImplementsListComponent } from '../../../components/implements-list/implements-list.component';
-import { Interface } from '../../../models/Interface';
+import { Interface } from '../../../models/request/Interface';
 import { MethodListComponent } from '../../../components/method-list/method-list.component';
 import { ClassService } from '../../../services/class.service';
 import { CommonModule } from '@angular/common';
@@ -87,16 +86,15 @@ export class UpdateComponent {
       implements: this.implements,
       methods: this.methods
     };
-    console.log('Sending data:', JSON.stringify(dataToSend));
 
     this.classService.updateClass(dataToSend).subscribe({
-      next: () => {
-        this.success = 'Class updated successfully';
+      next: (response) => {
+        this.success = `Class updated successfully!\n\n${JSON.stringify(response.simClass, null, 2)}`;
         this.loading = false;
         this.error = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Invalid inputs. Please check the form and try again.');
         this.loading = false;
         this.success = '';
       }

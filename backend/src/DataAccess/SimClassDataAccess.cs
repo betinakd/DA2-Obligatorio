@@ -430,4 +430,36 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         return false;
     }
+
+    public bool HasCyclicDependency(Guid fromClassId, Guid? toClassId)
+    {
+        var visited = new HashSet<Guid>();
+        var current = _context.SimClasses
+            .Include(c => c.BaseClass)
+            .FirstOrDefault(c => c.Id == toClassId);
+
+        while(current != null)
+        {
+            if(current.Id == fromClassId)
+            {
+                return true;
+            }
+
+            if(!current.BaseClassId.HasValue)
+            {
+                break;
+            }
+
+            if(!visited.Add(current.Id))
+            {
+                break;
+            }
+
+            current = current.BaseClass ?? _context.SimClasses
+                .Include(c => c.BaseClass)
+                .FirstOrDefault(c => c.Id == current.BaseClassId.Value);
+        }
+
+        return false;
+    }
 }

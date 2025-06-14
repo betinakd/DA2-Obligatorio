@@ -58,7 +58,7 @@ export class ExecutionsComponent {
         this.error = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Unknown error');
         this.loading = false;
         this.success = '';
       }

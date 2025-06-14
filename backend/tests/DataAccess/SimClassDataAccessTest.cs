@@ -1212,4 +1212,76 @@ public class SimClassDataAccessTest
 
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    public void HasCyclicDependency_NoCycle_ReturnsFalse()
+    {
+        var a = new SimClass { Id = Guid.NewGuid(), Name = "A" };
+        var b = new SimClass { Id = Guid.NewGuid(), Name = "B" };
+        _context!.SimClasses.AddRange(a, b);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.HasCyclicDependency(a.Id, b.Id);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void HasCyclicDependency_DirectCycle_ReturnsTrue()
+    {
+        var a = new SimClass { Id = Guid.NewGuid(), Name = "A" };
+        var b = new SimClass { Id = Guid.NewGuid(), Name = "B", BaseClassId = a.Id };
+        _context!.SimClasses.AddRange(a, b);
+        _context.SaveChanges();
+
+        a.BaseClassId = b.Id;
+        _context.SimClasses.Update(a);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.HasCyclicDependency(a.Id, b.Id);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void HasCyclicDependency_IndirectCycle_ReturnsTrue()
+    {
+        var a = new SimClass { Id = Guid.NewGuid(), Name = "A" };
+        var b = new SimClass { Id = Guid.NewGuid(), Name = "B", BaseClassId = a.Id };
+        var c = new SimClass { Id = Guid.NewGuid(), Name = "C", BaseClassId = b.Id };
+        _context!.SimClasses.AddRange(a, b, c);
+        _context.SaveChanges();
+
+        a.BaseClassId = c.Id;
+        _context.SimClasses.Update(a);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.HasCyclicDependency(a.Id, c.Id);
+
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void HasCyclicDependency_ToClassIsNull_ReturnsFalse()
+    {
+        var a = new SimClass { Id = Guid.NewGuid(), Name = "A" };
+        _context!.SimClasses.Add(a);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.HasCyclicDependency(a.Id, null);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void HasCyclicDependency_FromClassEqualsToClass_ReturnsTrue()
+    {
+        var a = new SimClass { Id = Guid.NewGuid(), Name = "A" };
+        _context!.SimClasses.Add(a);
+        _context.SaveChanges();
+
+        var result = _simClassDataAccess!.HasCyclicDependency(a.Id, a.Id);
+
+        Assert.IsTrue(result);
+    }
 }

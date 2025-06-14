@@ -1,4 +1,4 @@
-import { InvocationResponse } from "./invocation-response.model";
+import { InvocationResponse } from "./InvocationResponse.model";
 
 export interface CreatedInvocationResponse {
   message: string;

@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
 import { ImplementRequest } from '../models/request/ImplementRequest';
-import { SimClassResponse } from '../models/SimClassResponse';
-import { CreatedSimClassResponse } from '../models/CreatedSimClassResponse.model';
+import { CreatedSimClassResponse } from '../models/response/CreatedSimClassResponse.model';
 
 @Injectable({
     providedIn: 'root'

@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SimClassResponse } from '../../models/SimClassResponse';
+import { SimClassResponse } from '../../models/response/SimClassResponse';
 import { TreefeatureGridComponent } from '../../components/treefeature-grid/treefeature-grid.component';
 import { CommonModule } from '@angular/common';
 import { ExecutionService } from '../../services/execution.service';
 import { ClassService } from '../../services/class.service';
 import { MethodExecutionRequest } from '../../models/request/MethodExecutionRequest';
+
 import { AttributeResponse } from '../../models/attribute-response.model';
 import { MethodResponse } from '../../models/method-response.model';
 import { ParameterResponse } from '../../models/parameter-response.model';
