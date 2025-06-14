@@ -344,7 +344,7 @@ public class SimClassDataAccess(SimulatorDbContext context) : ISimClassDataAcces
 
         if(potentialDerived.Implements != null)
         {
-            if(potentialDerived.Implements.Any(i => i.Id == potentialBase.Id))
+            if(SimClassImplementsInterface(potentialDerived.Id, potentialBase.Id))
             {
                 return true;
             }
