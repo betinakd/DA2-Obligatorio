@@ -201,66 +201,85 @@ public class SimClassAdapter(ISimClassService simClassService, IMethodService me
 
     public UpdateSimClassResponse ImplementInterface(Guid id, ImplementRequest methodRequest)
     {
-        var interfaceClass = _simClassService.GetSimClassById(methodRequest.InterfaceId);
-        _simClassService.SimClassImplementsInterface(id, methodRequest.InterfaceId);
-
-        var simClassToUpdate = _simClassService.GetSimClassById(id);
-        var methodsNewClass = simClassToUpdate.Methods.ToList();
-        foreach(var method in methodRequest.Methods)
+        try
         {
-            var newMethod = new SimMethod()
-            {
-                Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
-                Name = method.Name,
-                ReturnType = _simClassService.GetSimClassById(method.ReturnTypeId),
-                Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
-                RelatedClassId = id,
-                ReturnTypeId = method.ReturnTypeId,
-                RelatedClass = simClassToUpdate,
-                IsStatic = method.IsStatic,
-                IsVirtual = method.IsVirtual,
-                IsOverride = method.IsOverride,
-            };
+            var interfaceClass = _simClassService.GetSimClassById(methodRequest.InterfaceId);
+            _simClassService.SimClassImplementsInterface(id, methodRequest.InterfaceId);
 
-            var parametersNewClass = new List<Parameter>();
-            var index = 0;
-            foreach(var param in method.Parameters)
+            var simClassToUpdate = _simClassService.GetSimClassById(id);
+            var methodsNewClass = simClassToUpdate.Methods.ToList();
+            foreach(var method in methodRequest.Methods)
             {
-                var parameterType = _simClassService.GetSimClassById(param.ReferenceId);
-                var newParam = new Parameter()
+                var newMethod = new SimMethod()
                 {
-                    Name = param.Name,
-                    Reference = parameterType,
-                    ReferenceId = param.ReferenceId,
-                    RelatedMethod = newMethod,
-                    RelatedMethodId = newMethod.Id,
-                    Index = index
+                    Accesibility = EnumMapper.MapToDomainAccesibility(method.Accesibility),
+                    Name = method.Name,
+                    ReturnType = _simClassService.GetSimClassById(method.ReturnTypeId),
+                    Privacity = EnumMapper.MapToDomainPrivacity(method.Privacity),
+                    RelatedClassId = id,
+                    ReturnTypeId = method.ReturnTypeId,
+                    RelatedClass = simClassToUpdate,
+                    IsStatic = method.IsStatic,
+                    IsVirtual = method.IsVirtual,
+                    IsOverride = method.IsOverride,
                 };
-                index++;
-                parametersNewClass.Add(newParam);
+
+                var parametersNewClass = new List<Parameter>();
+                var index = 0;
+                foreach(var param in method.Parameters)
+                {
+                    var parameterType = _simClassService.GetSimClassById(param.ReferenceId);
+                    var newParam = new Parameter()
+                    {
+                        Name = param.Name,
+                        Reference = parameterType,
+                        ReferenceId = param.ReferenceId,
+                        RelatedMethod = newMethod,
+                        RelatedMethodId = newMethod.Id,
+                        Index = index
+                    };
+                    index++;
+                    parametersNewClass.Add(newParam);
+                }
+
+                newMethod.Parameters = parametersNewClass;
+                newMethod.Validate();
+                methodsNewClass.Add(newMethod);
             }
 
-            newMethod.Parameters = parametersNewClass;
-            newMethod.Validate();
-            methodsNewClass.Add(newMethod);
+            simClassToUpdate.Methods = methodsNewClass;
+            var newImplements = simClassToUpdate.Implements;
+            newImplements.Add(interfaceClass);
+            simClassToUpdate.SetImplements(newImplements);
+
+            foreach(var method in simClassToUpdate.Methods)
+            {
+                _methodService.IsValidVirtualOverride(simClassToUpdate, method);
+            }
+
+            var result = _simClassService.ImplementInterface(simClassToUpdate);
+
+            return new UpdateSimClassResponse()
+            {
+                SimClass = SimClassResponseMapper.MapToSimClassResponse(result),
+                Message = "Interface implemented successfully"
+            };
         }
-
-        simClassToUpdate.Methods = methodsNewClass;
-        var newImplements = simClassToUpdate.Implements;
-        newImplements.Add(interfaceClass);
-        simClassToUpdate.SetImplements(newImplements);
-
-        foreach(var method in simClassToUpdate.Methods)
+        catch(InvalidAttributeDomain ex)
         {
-            _methodService.IsValidVirtualOverride(simClassToUpdate, method);
+            throw new InvalidAttributeAdapter(ex.Message);
         }
-
-        var result = _simClassService.ImplementInterface(simClassToUpdate);
-
-        return new UpdateSimClassResponse()
+        catch(InvalidAttributeLogic ex)
         {
-            SimClass = SimClassResponseMapper.MapToSimClassResponse(result),
-            Message = "Interface implemented successfully"
-        };
+            throw new InvalidAttributeAdapter(ex.Message);
+        }
+        catch(InUseValueLogic ex)
+        {
+            throw new InUseValueAdapter(ex.Message);
+        }
+        catch(NonExistentValueLogic ex)
+        {
+            throw new NonExistentValueAdapter(ex.Message);
+        }
     }
 }

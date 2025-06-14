@@ -46,7 +46,7 @@ public class ExecutionAdapterTest
             Parameters =
             [
                 new ParameterSignatureRequest { Name = "param1", IdReference = param1TypeId.ToString(), IdInstance = param1InstanceId.ToString() },
-            new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString(), IdInstance = param2InstanceId.ToString() }
+                new ParameterSignatureRequest { Name = "param2", IdReference = param2TypeId.ToString(), IdInstance = param2InstanceId.ToString() }
             ],
         };
 
