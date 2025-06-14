@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { Attribute } from '../models/attribute.model';
 import { AttributeRequest } from '../models/request/AttributeRequest';
-import { AttributeResponse } from '../models/attribute-response.model';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
-import { CreatedAttributeResponse } from '../models/CreatedAttributeResponse';
+import { CreatedAttributeResponse } from '../models/response/CreatedAttributeResponse';
 
 @Injectable({
     providedIn: 'root'

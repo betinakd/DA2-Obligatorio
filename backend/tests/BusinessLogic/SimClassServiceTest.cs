@@ -136,6 +136,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClass.Id)).Returns(false);
         _mockSimClassDataAccess.Setup(da => da.UpdateSimClass(simClass));
+        _mockSimClassDataAccess.Setup(da => da.HasCyclicDependency(simClass.Id, simClass.BaseClassId)).Returns(false);
 
         var result = _simClassService.UpdateSimClass(simClass);
 
@@ -143,6 +144,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(simClass), Times.Once);
+        _mockSimClassDataAccess.Verify(da => da.HasCyclicDependency(simClass.Id, simClass.BaseClassId), Times.Once);
         Assert.IsNotNull(result);
         Assert.AreEqual(simClass, result);
     }
@@ -188,6 +190,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Setup(da => da.ExistSimClassById(simClass.Id)).Returns(true);
         _mockSimClassDataAccess.Setup(da => da.GetSimClassById(simClass.Id)).Returns(simClass);
         _mockSimClassDataAccess.Setup(da => da.InUseByOther(simClass.Id)).Returns(true);
+        _mockSimClassDataAccess.Setup(da => da.HasCyclicDependency(simClass.Id, simClass.BaseClassId)).Returns(false);
 
         Assert.ThrowsException<InUseValueLogic>(() =>
             _simClassService.UpdateSimClass(simClass));
@@ -196,6 +199,7 @@ public class SimClassServiceTest
         _mockSimClassDataAccess.Verify(da => da.GetSimClassById(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.InUseByOther(simClass.Id), Times.Once);
         _mockSimClassDataAccess.Verify(da => da.UpdateSimClass(It.IsAny<SimClass>()), Times.Never);
+        _mockSimClassDataAccess.Verify(da => da.HasCyclicDependency(It.IsAny<Guid>(), It.IsAny<Guid?>()), Times.Once);
     }
 
     [TestMethod]

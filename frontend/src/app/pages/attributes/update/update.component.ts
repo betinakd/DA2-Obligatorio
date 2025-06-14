@@ -49,11 +49,10 @@ export class UpdateComponent {
     this.loading = true;
     this.error = '';
     this.success = '';
-    console.log('Updating attribute:', this.myAttribute);
     this.attributeService.updateAttribute(this.myAttribute)
       .subscribe({
         next: (response) => {
-          this.success = `Attribute ${response.attribute?.name} updated successfully!`;
+          this.success = `Attribute updated successfully!\n\n${JSON.stringify(response.attribute, null, 2)}`;
           this.error = '';
         },
         error: (err) => {

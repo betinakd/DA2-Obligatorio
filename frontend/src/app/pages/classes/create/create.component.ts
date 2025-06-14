@@ -4,7 +4,7 @@ import { ClassService } from '../../../services/class.service';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
-import { SimClassResponse } from '../../../models/SimClassResponse';
+import { SimClassResponse } from '../../../models/response/SimClassResponse';
 
 @Component({
   selector: 'app-create',
@@ -55,14 +55,14 @@ export class CreateComponent implements OnInit {
 
     this.classService.createClass(classData).subscribe({
       next: (response) => {
-        this.successMessage = response.message + ' - ID: ' + response.simClass.id + ' - Name: ' + response.simClass.name;
+        this.successMessage = `Class created successfully!\n\n${JSON.stringify(response.simClass, null, 2)}`;
         this.loading = true;
         this.createdClass = response.simClass;
         this.error = '';
         this.name = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Unknown error');
         this.loading = false;
         this.successMessage = '';
       }

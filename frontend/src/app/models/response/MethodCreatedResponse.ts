@@ -1,4 +1,4 @@
-import { MethodResponse } from "./MethodResponse";
+import { MethodResponse } from './MethodResponse';
 
 export class MethodCreatedResponse {
   message: string = '';

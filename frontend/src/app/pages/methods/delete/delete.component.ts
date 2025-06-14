@@ -31,12 +31,12 @@ export class DeleteComponent {
 
     this.methodService.deleteMethod(this.selectedMethodId).subscribe({
       next: () => {
-        this.success = 'Method deleted successfully';
+        this.success = 'Method id:' + this.selectedMethodId + ' deleted successfully';
         this.error = '';
         this.loading = true;
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Invalid inputs');
         this.success = '';
       }
     });

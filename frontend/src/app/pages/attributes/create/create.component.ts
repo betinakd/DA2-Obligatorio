@@ -42,12 +42,12 @@ export class CreateComponent {
     this.attributeService.createAttribute(this.myAttribute.idRelatedClass, this.myAttribute)
       .subscribe({
         next: (response) => {
-          this.success = `Attribute ${response.attribute?.name} created successfully!`;
+          this.success = `Attribute created successfully!\n\n${JSON.stringify(response.attribute, null, 2)}`;
           this.error = '';
           this.resetForm();
         },
         error: (err) => {
-          this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+          this.error = 'Error: ' + (err.error?.message || 'Wrong data format. Please check the input fields.');
           this.loading = false;
           this.success = '';
         }

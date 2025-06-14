@@ -14,7 +14,7 @@
       <div *ngFor="let cls of ns.classes" class="class-card">
         <h3>Class: {{ cls.name }}</h3>
         <p *ngIf="cls.baseClass">Extends: {{ cls.baseClass }}</p>
-
+        <p>State: {{ cls.state }}</p>
         <div *ngIf="cls.attributes?.length">
           <h4>Attributes</h4>
           <ul>

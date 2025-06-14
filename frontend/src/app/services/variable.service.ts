@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { Variable } from '../models/variable.model';
-import { VariableRequest } from '../models/variable-request.model';
+import { VariableRequest } from '../models/request/VariableRequest.model';
+import { VariableResponse } from '../models/response/VariableResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,12 @@ export class VariableService {
 
   constructor(private http: HttpClient) { }
 
-  getVariable(id: string): Observable<Variable> {
-    return this.http.get<Variable>(`${this.apiUrl}/variables/${id}`);
+  getVariable(id: string): Observable<VariableResponse> {
+    return this.http.get<VariableResponse>(`${this.apiUrl}/variables/${id}`);
   }
 
   createVariable(methodId: string, variable: VariableRequest): Observable<any> {
-    console.log('Enviando:', variable); // Para verificar los datos que envías
+    console.log('Enviando:', variable);
     return this.http.post<any>(`${this.apiUrl}/methods/${methodId}/variables`, variable)
       .pipe(
         catchError(error => {

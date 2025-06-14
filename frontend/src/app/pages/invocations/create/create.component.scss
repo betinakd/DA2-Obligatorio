@@ -34,4 +34,19 @@ button {
 
     .material-icons {
         font-size: 20px;
-    } }
+    }
+}
+
+.success-message {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid #4CAF50;
+    padding: 10px 15px;
+    color: #4CAF50;
+}
+
+.error-message {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-left: 4px solid #f44336;
+    padding: 10px 15px;
+    color: #f44336;
+}

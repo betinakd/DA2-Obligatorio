@@ -6,7 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ClassService } from '../../services/class.service';
 import { MethodService } from '../../services/method.service';
-import { SimClassResponse } from '../../models/SimClassResponse';
+import { SimClassResponse } from '../../models/response/SimClassResponse';
 
 @Component({
   selector: 'app-variable-selector',

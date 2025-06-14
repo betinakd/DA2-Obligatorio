@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ClassService } from '../../services/class.service';
-import { SimClassResponse } from '../../models/SimClassResponse';
+import { SimClassResponse } from '../../models/response/SimClassResponse';
 
 @Component({
   selector: 'app-attribute-selector-total',

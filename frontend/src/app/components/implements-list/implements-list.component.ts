@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { ClassSelectorComponent } from '../class-selector/class-selector.component';
-import { Interface } from '../../models/Interface';
+import { Interface } from '../../models/request/Interface';
 
 @Component({
   selector: 'app-implements-list',

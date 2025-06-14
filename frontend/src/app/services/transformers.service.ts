@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
 import { MethodExecutionRequest } from '../models/request/MethodExecutionRequest';
-import { ErrorResponse } from '../models/ErrorResponse.model';
+import { ErrorResponse } from '../models/response/ErrorResponse.model';
 
 @Injectable({
   providedIn: 'root'

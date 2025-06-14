@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
-import { CreatedSimClassResponse } from '../models/CreatedSimClassResponse.model';
-import { SimClassResponse } from '../models/SimClassResponse';
+import { CreatedSimClassResponse } from '../models/response/CreatedSimClassResponse.model';
+import { SimClassResponse } from '../models/response/SimClassResponse';
 import { SimClassRequestUpdate } from '../models/request/SimClassRequestUpdate';
 
 @Injectable({
@@ -27,8 +26,8 @@ export class ClassService {
     return this.http.post<CreatedSimClassResponse>(this.apiUrl, classData);
   }
 
-  updateClass(classData: any): Observable<SimClassRequestUpdate> {
-    return this.http.put<SimClassRequestUpdate>(`${this.apiUrl}`, classData);
+  updateClass(classData: any): Observable<CreatedSimClassResponse> {
+    return this.http.put<CreatedSimClassResponse>(`${this.apiUrl}`, classData);
   }
 
   deleteClass(id: string): Observable<void> {

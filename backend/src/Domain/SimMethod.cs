@@ -161,7 +161,9 @@ public class SimMethod
 
     public string GetMethodSignature(Signature signature)
     {
-        var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
+        var simParams = string.Join(", ",
+            signature.Parameters.Select(p =>
+                $"{p.Name}: {p.Reference?.Name ?? "null"} {p.Instance?.Name ?? "null"}"));
         return RelatedClass.Name + "." + signature.Name + "(" + simParams + ")";
     }
 
