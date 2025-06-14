@@ -28,10 +28,8 @@ import { ForbbidenComponent } from './pages/forbbiden/forbbiden.component';
 
 import { TransformerGetComponent } from './pages/transformers/transformer-get/transformer-get.component';
 
-import { PatternExamplesComponent } from './pages/pattern-examples/pattern-examples.component';
 import { VisitorComponent } from './pages/pattern-examples/visitor/visitor.component';
 import { StrategyComponent } from './pages/pattern-examples/strategy/strategy.component';
-import { CompositeComponent } from './pages/pattern-examples/composite/composite.component';
 import { TemplateMethodComponent } from './pages/pattern-examples/template-method/template-method.component';
 
 import { ImplementsComponent } from './pages/implements/implements.component';
@@ -79,9 +77,7 @@ export const routes: Routes = [
 
     { path: 'namespaces/create', component: NamespaceCreateComponent },
 
-    { path: 'patterns/prueba', component: PatternExamplesComponent },
     { path: 'patterns/visitor', component: VisitorComponent },
-    { path: 'patterns/composite', component: CompositeComponent },
     { path: 'patterns/strategy', component: StrategyComponent },
     { path: 'patterns/templateMethod', component: TemplateMethodComponent },
 
