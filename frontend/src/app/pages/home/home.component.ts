@@ -156,7 +156,8 @@ export class HomeComponent implements OnInit {
           })
           .join(', ');
 
-        return `${inv.typeReference}.${inv.methodName}(${invParams})`;
+        const refName = this.getInvocationReferenceName(inv);
+        return `${refName}.${inv.methodName}(${invParams})`;
       });
 
       const variables = (m.variables || []).map(v => ({
@@ -194,31 +195,42 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  private getAttributeNameById(
-    classes: SimClassResponse[],
-    attributeId: string
-  ): string {
-    for (const cls of classes) {
-      const attr = (cls as any).attributes?.find((a: any) => a.id === attributeId);
-      if (attr?.name) {
-        return attr.name;
-      }
-    }
-    return 'Unknown Attribute';
-  }
-
-  private getParameterNameById(
-    classes: SimClassResponse[],
-    parameterId: string
-  ): string {
-    for (const cls of classes) {
-      for (const m of cls.methods || []) {
-        const param = (m.parameters || []).find(p => p.id === parameterId);
-        if (param?.name) {
-          return param.name;
+  private getInvocationReferenceName(inv: any): string {
+    switch (inv.typeReference) {
+      case 'Attribute':
+      case 'StaticAttribute': {
+        for (const cls of this.classes) {
+          const attr = (cls.attributes || []).find((a: any) => a.id === inv.idReference);
+          if (attr?.name) return attr.name;
         }
+        return 'Unknown Attribute';
       }
+      case 'Parameter': {
+        for (const cls of this.classes) {
+          for (const m of cls.methods || []) {
+            const param = (m.parameters || []).find((p: any) => p.id === inv.idReference);
+            if (param?.name) return param.name;
+          }
+        }
+        return 'Unknown Parameter';
+      }
+      case 'LocalVariable': {
+        for (const cls of this.classes) {
+          for (const m of cls.methods || []) {
+            const variable = (m.variables || []).find((v: any) => v.id === inv.idReference);
+            if (variable?.name) return variable.name;
+          }
+        }
+        return 'Unknown Variable';
+      }
+      case 'Base':
+      case 'This':
+      case 'Static': {
+        const className = this.getClassNameById(inv.idReference);
+        return className || 'Unknown Class';
+      }
+      default:
+        return 'Unknown Reference';
     }
-    return 'Unknown Parameter';
   }
 }
