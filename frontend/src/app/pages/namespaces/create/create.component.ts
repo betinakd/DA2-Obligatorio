@@ -37,14 +37,18 @@ export class CreateComponent {
 
     this.namespaceService.createNamespace(namespaceData).subscribe({
       next: (response) => {
-        this.successMessage = response.message + ' - ID: ' + response.namespaceResponse.id + ' - Name: ' + response.namespaceResponse.name;
+        this.successMessage =
+          response.message +
+          ' - ID: ' + response.namespaceResponse.id +
+          ' - Name: ' + response.namespaceResponse.name +
+          (response.namespaceResponse.baseNamespaceId ? ' - Base Namespace ID: ' + response.namespaceResponse.baseNamespaceId : '');
         this.loading = true;
         this.createdNamespace = response;
         this.error = '';
         this.name = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Unknown error');
         this.loading = false;
         this.successMessage = '';
       }

@@ -87,16 +87,15 @@ export class UpdateComponent {
       implements: this.implements,
       methods: this.methods
     };
-    console.log('Sending data:', JSON.stringify(dataToSend));
 
     this.classService.updateClass(dataToSend).subscribe({
-      next: () => {
-        this.success = 'Class updated successfully';
+      next: (response) => {
+        this.success = `Class updated successfully!\n\n${JSON.stringify(response.simClass, null, 2)}`;
         this.loading = false;
         this.error = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Invalid inputs. Please check the form and try again.');
         this.loading = false;
         this.success = '';
       }

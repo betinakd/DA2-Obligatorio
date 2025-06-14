@@ -51,7 +51,7 @@ export class CreateComponent {
           this.loading = false;
         },
         error: (err) => {
-          this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+          this.error = 'Error: ' + (err.error?.message || 'Invalid inputs.');
           this.loading = false;
         }
       });

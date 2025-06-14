@@ -55,14 +55,14 @@ export class CreateComponent implements OnInit {
 
     this.classService.createClass(classData).subscribe({
       next: (response) => {
-        this.successMessage = response.message + ' - ID: ' + response.simClass.id + ' - Name: ' + response.simClass.name;
+        this.successMessage = `Class created successfully!\n\n${JSON.stringify(response.simClass, null, 2)}`;
         this.loading = true;
         this.createdClass = response.simClass;
         this.error = '';
         this.name = '';
       },
       error: (err) => {
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Unknown error');
         this.loading = false;
         this.successMessage = '';
       }

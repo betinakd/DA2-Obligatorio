@@ -54,13 +54,13 @@ export class CreateComponent implements OnInit {
     this.variableService.createVariable(this.methodId, variableData).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.successMessage = 'Variable successfully created';
+        this.successMessage = `${response.message}\n\n${JSON.stringify(variableData, null, 2)}`;
         this.error = '';
 
       },
       error: (err) => {
         this.isLoading = false;
-        this.error = 'Error: ' + (err.error?.message || err.message || 'Unknown error');
+        this.error = 'Error: ' + (err.error?.message || 'Invalid inputs.');
         this.successMessage = '';
       }
     });

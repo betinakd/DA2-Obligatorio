@@ -27,8 +27,8 @@ export class ClassService {
     return this.http.post<CreatedSimClassResponse>(this.apiUrl, classData);
   }
 
-  updateClass(classData: any): Observable<SimClassRequestUpdate> {
-    return this.http.put<SimClassRequestUpdate>(`${this.apiUrl}`, classData);
+  updateClass(classData: any): Observable<CreatedSimClassResponse> {
+    return this.http.put<CreatedSimClassResponse>(`${this.apiUrl}`, classData);
   }
 
   deleteClass(id: string): Observable<void> {
