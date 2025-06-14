@@ -85,3 +85,42 @@
         font-size: 21px;
     }
 }
+
+.execution-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0 0 0;
+    padding: 40px 0;
+    background: linear-gradient(90deg, #180729 0%, #651b80 100%);
+    border: 2px solid #dfeadf;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.15);
+    width: 100%;
+    text-align: center;
+}
+
+.execution-result h5 {
+    color: #fdfdfd;
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.execution-trace {
+    font-size: 1.3rem;
+    color: #000000;
+    font-family: 'Fira Mono', 'Consolas', monospace;
+    background: #f4fff4;
+    border-radius: 6px;
+    padding: 18px 24px;
+    margin: 0 auto;
+    word-break: break-all;
+    white-space: pre-wrap;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.07);
+    width: 90%;
+    text-align: left;
+    font-weight: 500;
+}
