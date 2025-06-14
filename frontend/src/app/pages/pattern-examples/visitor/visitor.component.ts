@@ -10,13 +10,19 @@ import { MethodExecutionRequest } from '../../../models/request/MethodExecutionR
 })
 export class VisitorComponent {
 patternName = 'Visitor pattern';
-  patternIdClasses: string[] = ['11111111-1111-1111-1111-111111111111'] //mock data
+  patternIdClasses: string[] = ["39543612-ba65-4a51-9982-0a6f825a7533", "47378fe9-3742-4984-8a9b-60780b3cd630", "182c1cd6-7bcb-4f49-980b-a500454f6f58", "1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09", "2830eeff-191d-4400-b0ce-a83b27fac848", "2ec687dc-feb6-407b-b4b0-4280fdb6c5cf"]
   executionInfo: MethodExecutionRequest = 
    {
-      "methodName": "Finalize",
-      "parameters": [],
-      "idReferenceType": "11111111-1111-1111-1111-111111111111",
-      "idInstanceType": "11111111-1111-1111-1111-111111111111",
+      "methodName": "Aceptar",
+      "parameters": [
+        {
+          "name": "visitorCaritas",
+          "idReference": "39543612-ba65-4a51-9982-0a6f825a7533",
+          "idInstance": "2ec687dc-feb6-407b-b4b0-4280fdb6c5cf" 
+        }
+      ],
+      "idReferenceType": "47378fe9-3742-4984-8a9b-60780b3cd630",
+      "idInstanceType": "182c1cd6-7bcb-4f49-980b-a500454f6f58",
       "idReturnType": "22222222-2222-2222-2222-222222222222"
-    }; //mock data
+    };
 }
