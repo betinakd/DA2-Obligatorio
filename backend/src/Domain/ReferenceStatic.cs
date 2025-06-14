@@ -7,13 +7,17 @@ public class ReferenceStatic : Reference
 
     public override string GetSignature(Signature method)
     {
-        var simParams = string.Join(", ", method.Parameters.Select(p => p.Name));
+        var simParams = string.Join(", ",
+            method.Parameters.Select(p =>
+                $"{p.Name}: {p.Reference?.Name ?? "null"} {p.Instance?.Name ?? "null"}"));
         return Reference.Name + "." + method.Name + "(" + simParams + ")";
     }
 
     public override string GetSignatureWithClassName(Signature signature)
     {
-        var simParams = string.Join(", ", signature.Parameters.Select(p => p.Name));
+        var simParams = string.Join(", ",
+            signature.Parameters.Select(p =>
+                $"{p.Name}: {p.Reference?.Name ?? "null"} {p.Instance?.Name ?? "null"}"));
         return Reference.Name + "." + signature.Name + "(" + simParams + ")";
     }
 

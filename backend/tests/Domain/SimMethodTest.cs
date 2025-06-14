@@ -164,6 +164,11 @@ public class SimMethodTest
     [TestMethod]
     public void GetMethodSignature_ReturnsCorrectFormat()
     {
+        var referenceClassA = new SimClass { Id = Guid.NewGuid(), Name = "RefA" };
+        var instanceClassA = new SimClass { Id = Guid.NewGuid(), Name = "InstA" };
+        var referenceClassB = new SimClass { Id = Guid.NewGuid(), Name = "RefB" };
+        var instanceClassB = new SimClass { Id = Guid.NewGuid(), Name = "InstB" };
+
         var method = new SimMethod
         {
             RelatedClass = new SimClass { Id = Guid.NewGuid(), Name = "MyClass" },
@@ -175,14 +180,25 @@ public class SimMethodTest
             Name = "MyMethod",
             Parameters =
             [
-                new ParameterSignature { Name = "a", ReferenceId = Guid.NewGuid() },
-                new ParameterSignature { Name = "b", ReferenceId = Guid.NewGuid() }
+                new ParameterSignature
+            {
+                Name = "a",
+                Reference = referenceClassA,
+                Instance = instanceClassA
+            },
+            new ParameterSignature
+            {
+                Name = "b",
+                Reference = referenceClassB,
+                Instance = instanceClassB
+            }
+
             ],
         };
 
         var result = method.GetMethodSignature(signature);
 
-        Assert.AreEqual("MyClass.MyMethod(a, b)", result);
+        Assert.AreEqual("MyClass.MyMethod(a: RefA InstA, b: RefB InstB)", result);
     }
 
     [TestMethod]
