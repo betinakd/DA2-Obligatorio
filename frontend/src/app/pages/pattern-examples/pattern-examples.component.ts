@@ -6,11 +6,11 @@ import { ExecutionService } from '../../services/execution.service';
 import { ClassService } from '../../services/class.service';
 import { MethodExecutionRequest } from '../../models/request/MethodExecutionRequest';
 
-import { AttributeResponse } from '../../models/attribute-response.model';
-import { MethodResponse } from '../../models/method-response.model';
-import { ParameterResponse } from '../../models/parameter-response.model';
-import { VariableResponse } from '../../models/VariableResponse';
-import { InvocationResponse } from '../../models/invocation-response.model';
+import { AttributeResponse } from '../../models/response/AttributeResponse';
+import { MethodResponse } from '../../models/response/MethodResponse';
+import { ParameterResponse } from '../../models/response/ParameterResponse.model';
+import { VariableResponse } from '../../models/response/VariableResponse';
+import { InvocationResponse } from '../../models/response/InvocationResponse.model';
 import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
@@ -75,23 +75,23 @@ export class PatternExamplesComponent implements OnInit {
       },
     });
   }
+  private getClassNameById(classId: string): string {
+    const classObj = this.classes.find(c => c.id === classId)?.name;
+    return classObj ? classObj : '';
+  }
 
   getPatternClasses(id : string): void {
     this.classService.getClass(id).subscribe({
       next: (data) => {
-        data.methods.forEach((method) => {
-          //var parsedMethod = this.parseMethodData(method, data.name || 'Unknown Class');
-          //this.methodList.push(parsedMethod);
-          var parsedClass = this.processSimClass(data);
-          this.classList.push(parsedClass);
-        });
+        this.class = data;
+        for (const method of this.class.methods || []) {
+          const processedMethod = this.processSimMethod(method, data.name ?? 'Unknown Class');
+          this.methodList.push(processedMethod);
+        }
+        var parsedClass = this.processSimClass(this.class);
+        this.classList.push(parsedClass);
       }
     });
-  }
-
-  private getClassNameById(classId: string): string {
-    const classObj = this.classes.find(c => c.id === classId)?.name;
-    return classObj ? classObj : '';
   }
 
   private processSimClass(sc: SimClassResponse): any {
@@ -125,6 +125,115 @@ export class PatternExamplesComponent implements OnInit {
       methods: methods,
       implements: _implements
     };
+  }
+
+  private processSimMethod(m: MethodResponse, className : string): any {
+    const returnType = m.returnTypeId
+      ? this.getClassNameById(m.returnTypeId)
+      : 'void';
+    const parameters = (m.parameters || []).map(p => ({
+      name: p.name,
+      type: p.referenceId
+        ? this.getClassNameById(p.referenceId)
+        : 'Unknown Type'
+    }));
+    const paramsText = parameters
+      .map(p => `${p.name}: ${p.type}`)
+      .join(', ');
+
+    const isStatic = m.isStatic;
+    const isVirtual = m.isVirtual;
+    const isOverride = m.isOverride;
+    const priv = m.privacity;
+    const acc = m.accesibility;
+    const prefixes = [
+      priv,
+      acc,
+      isStatic ? 'static' : null,
+      isVirtual ? 'virtual' : null,
+      isOverride ? 'override' : null
+    ].filter(x => !!x).join(' ');
+
+    const variables = (m.variables || []).map(v => ({
+      name: v.name,
+      reference: v.referenceId
+        ? this.getClassNameById(v.referenceId)
+        : 'Unknown Type',
+      instance: v.instanceId
+        ? this.getClassNameById(v.instanceId)
+        : 'Unknown Instance'
+    }));
+
+    const rawInvs = m.invocations || [];
+
+    const invocations = rawInvs.map(inv => {
+      const invParams = (inv.parameters || [])
+        .map(p => {
+          const pt = p.referenceId
+            ? this.getClassNameById(p.referenceId)
+            : 'Unknown Type';
+          const pi = p.instanceId
+            ? this.getClassNameById(p.instanceId)
+            : '';
+          return `${p.name}: ${pt}${pi ? ' ' + pi : ''}`;
+        })
+        .join(', ');
+
+      const refName = this.getInvocationReferenceName(inv);
+      return `${refName}.${inv.methodName}(${invParams})`;
+    });
+
+    return {
+      class: className,
+      name: m.name,
+      returnType,
+      parameters,
+      isStatic,
+      isVirtual,
+      isOverride,
+      displayText: `${prefixes} ${m.name}(${paramsText}): ${returnType}`.trim(),
+      invocations,
+      variables
+    };
+  }
+
+  private getInvocationReferenceName(inv: any): string {
+    switch (inv.typeReference) {
+      case 'Attribute':
+      case 'StaticAttribute': {
+        for (const cls of this.classes) {
+          const attr = (cls.attributes || []).find((a: any) => a.id === inv.idReference);
+          if (attr?.name) return attr.name;
+        }
+        return 'Unknown Attribute';
+      }
+      case 'Parameter': {
+        for (const cls of this.classes) {
+          for (const m of cls.methods || []) {
+            const param = (m.parameters || []).find((p: any) => p.id === inv.idReference);
+            if (param?.name) return param.name;
+          }
+        }
+        return 'Unknown Parameter';
+      }
+      case 'LocalVariable': {
+        for (const cls of this.classes) {
+          for (const m of cls.methods || []) {
+            const variable = (m.variables || []).find((v: any) => v.id === inv.idReference);
+            if (variable?.name) return variable.name;
+          }
+        }
+        return 'Unknown Variable';
+      }
+      case 'Base':
+      case 'This':
+      case 'Static': {
+        const className = this.getClassNameById(inv.idReference);
+        return className || 'Unknown Class';
+      }
+      default:
+        return 'Unknown Reference';
+    }
   }
 
   /*ngOnInit(): void {

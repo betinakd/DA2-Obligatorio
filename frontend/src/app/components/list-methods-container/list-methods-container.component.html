@@ -8,34 +8,28 @@
 
                 <mat-card-content>
                     <div>
-                        <strong>Signature: </strong> 
-                            <p> {{ methodItem.methodScript }} </p>
+                            <p>Signature: {{ methodItem.displayText }} </p>
                     </div>
                 
                     <div>
-                        @if (methodItem.localVariables.length === 0) {
-                        <p>Local variables: none</p>
-                        }
-                        @else {
-                        <p>Local variables:</p>
-                        <ul>
-                            @for (localVar of methodItem.localVariables; track localVar) {
-                            <li>{{ localVar }}</li>
-                            }
-                        </ul>
+                        @if (methodItem.variables.length !== 0) {
+                            <p>Local variables:</p>
+                            <ul>
+                                @for (localVar of methodItem.variables; track localVar) {
+                                <li>{{ localVar.name }} {{ localVar.reference }} {{ localVar.instance }}</li>
+                                }
+                            </ul>
                         }
                     </div>
+
                     <div>
-                        @if (methodItem.invocations.length === 0) {
-                        <p>Invocations: none</p>
-                        }
-                        @else {
-                        <p>Invocations:</p>
-                        <ul>
-                            @for (invocation of methodItem.invocations; track invocation) {
-                            <li>{{ invocation }}</li>
-                            }
-                        </ul>
+                        @if (methodItem.invocations.length !== 0) {
+                            <p>Invocations:</p>
+                            <ul>
+                                @for (invocation of methodItem.invocations; track invocation) {
+                                <li>{{ invocation }}</li>
+                                }
+                                </ul>
                         }
                     </div>
                 </mat-card-content>
