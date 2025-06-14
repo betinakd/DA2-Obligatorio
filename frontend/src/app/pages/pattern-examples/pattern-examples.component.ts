@@ -34,7 +34,7 @@ export class PatternExamplesComponent implements OnInit {
   class: SimClassResponse | null = null;
   methodList: any[] = [];
 
-  executionOutput = 'empty execution output';
+  executionOutput = 'Execution is not available yet.';
 
   classes: SimClassResponse[] = [];
 
@@ -62,8 +62,7 @@ export class PatternExamplesComponent implements OnInit {
       this.executionOutput = String(response.execution);
       },
       error: (error) => {
-      //this.executionOutput = 'Error loading execution information. Message: ' + error.message;
-      this.executionOutput = info.methodName;
+        this.executionOutput = 'Execution is not available yet.';
     }
     });
   }
