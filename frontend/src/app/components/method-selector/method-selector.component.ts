@@ -6,8 +6,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MethodService } from '../../services/method.service';
 import { ClassService } from '../../services/class.service';
-import { SimClassResponse } from '../../models/SimClassResponse';
-import { MethodResponse } from '../../models/method-response.model';
+import { SimClassResponse } from '../../models/response/SimClassResponse';
+import { MethodResponse } from '../../models/response/MethodResponse';
 
 @Component({
   selector: 'app-method-selector',

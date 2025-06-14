@@ -6,7 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { NamespaceService } from '../../services/namespace.service';
-import { Namespace } from '../../models/namespace.model';
+import { NamespaceResponse } from '../../models/response/NamespaceResponse';
 
 @Component({
   selector: 'app-namespace-selector',
@@ -27,7 +27,7 @@ export class NamespaceSelectorComponent implements OnInit {
   @Input() reload = false;
 
   namespaceControl = new FormControl('');
-  namespaces: Namespace[] = [];
+  namespaces: NamespaceResponse[] = [];
   loading = false;
   error: string | null = null;
 

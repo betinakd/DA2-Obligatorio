@@ -4,7 +4,7 @@ import { ClassService } from '../../../services/class.service';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
-import { SimClassResponse } from '../../../models/SimClassResponse';
+import { SimClassResponse } from '../../../models/response/SimClassResponse';
 
 @Component({
   selector: 'app-create',

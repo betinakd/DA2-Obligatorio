@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { VariableService } from '../../../services/variable.service';
-import { Variable } from '../../../models/variable.model';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { MethodSelectorComponent } from '../../../components/method-selector/method-selector.component';
-import { VariableRequest } from '../../../models/variable-request.model';
-import { Router } from '@angular/router';
+import { VariableRequest } from '../../../models/request/VariableRequest.model';
+import { VariableResponse } from '../../../models/response/VariableResponse';
 
 @Component({
   selector: 'app-create',
@@ -23,7 +22,7 @@ import { Router } from '@angular/router';
   styleUrl: './create.component.scss'
 })
 export class CreateComponent implements OnInit {
-  variable: Variable = {};
+  variable: VariableResponse = {};
   varName = '';
   methodId = '';
   referenceClassId = '';

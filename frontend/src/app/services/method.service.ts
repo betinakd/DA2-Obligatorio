@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../shared/constants/api-endpoints';
 import { MethodRequest } from '../models/request/MethodRequest';
-import { MethodCreatedResponse } from '../models/MethodCreatedResponse';
+import { MethodCreatedResponse } from '../models/response/MethodCreatedResponse';
 import { InvocationRequest } from '../models/request/InvocationRequest';
-import { InvocationResponse } from '../models/invocation-response.model';
-import { CreatedInvocationResponse } from '../models/invocation.model';
+import { InvocationResponse } from '../models/response/InvocationResponse.model';
+import { CreatedInvocationResponse } from '../models/response/CreatedInvocationResponse.model';
 import { ParameterRequest } from '../models/request/ParameterRequest.model';
 
 

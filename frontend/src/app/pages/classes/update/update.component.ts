@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { AttributeListComponent } from '../../../components/attribute-list/attribute-list.component';
-import { Attribute } from '../../../models/attribute.model';
 import { AttributeRequest } from '../../../models/request/AttributeRequest';
 import { ClassSelectorComponent } from '../../../components/class-selector/class-selector.component';
 import { MethodRequest } from '../../../models/request/MethodRequest';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { ClassTypeSelectorComponent } from '../../../components/accesibility-selector/accesibility-selector.component';
 import { ImplementsListComponent } from '../../../components/implements-list/implements-list.component';
-import { Interface } from '../../../models/Interface';
+import { Interface } from '../../../models/request/Interface';
 import { MethodListComponent } from '../../../components/method-list/method-list.component';
 import { ClassService } from '../../../services/class.service';
 import { CommonModule } from '@angular/common';

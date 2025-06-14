@@ -1,4 +1,4 @@
-import { AttributeResponse } from "./attribute-response.model";
+import { AttributeResponse } from './AttributeResponse';
 
 export class CreatedAttributeResponse {
   message: string = '';

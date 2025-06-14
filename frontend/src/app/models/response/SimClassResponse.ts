@@ -1,7 +1,7 @@
-import { MethodResponse } from './method-response.model';
-import { AttributeResponse } from './attribute-response.model';
+import { MethodResponse } from './MethodResponse';
+import { AttributeResponse } from './AttributeResponse';
 import { NamespaceResponse } from './NamespaceResponse';
-import { InterfaceResponse } from './interface-response.model';
+import { InterfaceResponse } from './InterfaceResponse.model';
 
 export interface SimClassResponse {
     id?: string;

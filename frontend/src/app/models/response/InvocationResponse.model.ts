@@ -1,4 +1,4 @@
-import { ParameterSignatureResponse } from './parameter-signature-response.model';
+import { ParameterSignatureResponse } from './ParameterSignatureResponse.model';
 
 export interface InvocationResponse {
     id: string;

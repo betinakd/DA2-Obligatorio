@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NamespaceService } from '../../../services/namespace.service';
 import { NamespaceSelectorComponent } from '../../../components/namespace-selector/namespace-selector.component';
 import { NamespaceRequest } from '../../../models/request/NamespaceRequest.model';
-import { CreatedNamespaceResponse } from '../../../models/CreatedNamespaceResponse';
+import { CreatedNamespaceResponse } from '../../../models/response/CreatedNamespaceResponse';
 
 @Component({
   selector: 'app-create',

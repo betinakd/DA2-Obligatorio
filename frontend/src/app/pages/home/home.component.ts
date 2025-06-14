@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NamespaceService } from '../../services/namespace.service';
-import { Namespace } from '../../models/namespace.model';
-import { ErrorResponse } from '../../models/ErrorResponse.model';
+import { ErrorResponse } from '../../models/response/ErrorResponse.model';
 import { ClassService } from '../../services/class.service';
-import { SimClassResponse } from '../../models/SimClassResponse';
+import { SimClassResponse } from '../../models/response/SimClassResponse';
+import { NamespaceResponse } from '../../models/response/NamespaceResponse';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +14,7 @@ import { SimClassResponse } from '../../models/SimClassResponse';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  namespaces: Namespace[] = [];
+  namespaces: NamespaceResponse[] = [];
   classes: SimClassResponse[] = [];
   loading = false;
   loadingclasses = false;
