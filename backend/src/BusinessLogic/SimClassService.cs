@@ -96,6 +96,11 @@ public class SimClassService(ISimClassDataAccess simClassDA, ISimAttributeDataAc
             throw new NonExistentValueLogic("SimClass not found.");
         }
 
+        if(_simClassDA.HasCyclicDependency(simClass.Id, simClass.BaseClassId))
+        {
+            throw new InvalidAttributeLogic("Cyclic dependency detected in class inheritance.");
+        }
+
         InUseByOther(simClass.Id);
 
         simClass.Namespace = simNamespace;
