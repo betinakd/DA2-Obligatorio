@@ -1,34 +1,12 @@
 {
 	"info": {
-		"_postman_id": "d842877a-7154-42ea-8a78-abbfadebc88c",
+		"_postman_id": "5c00148a-8258-43ec-a102-838a6647ad31",
 		"name": "Ejemplo 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39789209"
+		"_exporter_id": "39889195",
+		"_collection_link": "https://mmmmmmmm-0686.postman.co/workspace/mmmmmmmm%C3%B1%C3%B1%C3%B1%C3%B1-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-5c00148a-8258-43ec-a102-838a6647ad31?action=share&source=collection_link&creator=39889195"
 	},
 	"item": [
-		{
-			"name": "Namespace Ejemplo2",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Ejemplo2\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{domain}}namespaces",
-					"host": [
-						"{{domain}}namespaces"
-					]
-				}
-			},
-			"response": []
-		},
 		{
 			"name": "Create Notificacion class",
 			"request": {
@@ -36,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Name\": \"Notificacion\",\r\n  \"IdBaseNamespace\": \"a8599d51-b72e-4fa2-ae09-5a85abc10f8d\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\", //object\r\n  \"State\": \"Abstract\"\r\n}",
+					"raw": "{\r\n  \"Name\": \"Notificacion\",\r\n  \"IdBaseNamespace\": \"866E3B1E-914A-4B7F-A9D8-51D2FB88B273\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\", //object\r\n  \"State\": \"Abstract\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -113,7 +91,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Name\": \"Email\",\r\n  \"IdBaseNamespace\": \"a8599d51-b72e-4fa2-ae09-5a85abc10f8d\", //\r\n  \"IdBaseClass\": \"42f209f7-bb09-4087-afe5-e354f5003c70\", // Notification class id\r\n  \"State\": \"Normal\"\r\n}",
+					"raw": "{\r\n  \"Name\": \"Email\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\", //System\r\n  \"IdBaseClass\": \"0238a0d9-add7-4b65-a05f-347d69d9946c\", // Notification class id\r\n  \"State\": \"Normal\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -163,7 +141,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Name\": \"SMS\",\r\n  \"IdBaseNamespace\": \"a8599d51-b72e-4fa2-ae09-5a85abc10f8d\", // System\r\n  \"IdBaseClass\": \"42f209f7-bb09-4087-afe5-e354f5003c70\", // Notification class id\r\n  \"State\": \"Normal\"\r\n}",
+					"raw": "{\r\n  \"Name\": \"SMS\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\",\r\n  \"IdBaseClass\": \"0238a0d9-add7-4b65-a05f-347d69d9946c\", // Notification class id\r\n  \"State\": \"Normal\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -213,7 +191,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Name\": \"Notificador\",\r\n  \"IdBaseNamespace\": \"a8599d51-b72e-4fa2-ae09-5a85abc10f8d\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\", //object\r\n  \"State\": \"Normal\"\r\n}",
+					"raw": "{\r\n  \"Name\": \"Notificador\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\", //System\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\", //object\r\n  \"State\": \"Normal\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -236,7 +214,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"Notificar\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
+					"raw": "{\r\n    \"Name\": \"Notificar\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\":\r\n    [{\r\n        \"Name\": \"aviso\",\r\n        \"IdReference\": \"0238a0d9-add7-4b65-a05f-347d69d9946c\" //Notificacion\r\n    }],\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -257,40 +235,13 @@
 			"response": []
 		},
 		{
-			"name": "Notificar method params",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Name\": \"aviso\",\r\n    \"IdReference\": \"42f209f7-bb09-4087-afe5-e354f5003c70\" //Notificacion\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{domain}}methods/{{method_Notificar}}/parameters",
-					"host": [
-						"{{domain}}methods"
-					],
-					"path": [
-						"{{method_Notificar}}",
-						"parameters"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Create localVar otroAviso",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Name\":\"otroAviso\",\r\n    \"IdReference\": \"2513b9f9-e81b-4c97-9617-f27d3f6eb43f\", //Email\r\n    \"IdInstance\": \"2513b9f9-e81b-4c97-9617-f27d3f6eb43f\" // Email\r\n}",
+					"raw": "{\r\n    \"Name\":\"otroAviso\",\r\n    \"IdReference\": \"440bba9a-acab-4d71-8720-c858c4016244\", //Email\r\n    \"IdInstance\": \"440bba9a-acab-4d71-8720-c858c4016244\" // Email\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -317,7 +268,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\":\"b8e41e90-7f84-42b4-abd1-34398f132880\", //aviso\r\n    \"MethodName\": \"Enviar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+					"raw": "{\r\n    \"IdReference\":\"dac397ec-d00e-4197-976d-e3422a93a741\", //aviso\r\n    \"MethodName\": \"Enviar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -344,7 +295,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\":\"b8e41e90-7f84-42b4-abd1-34398f132880\", //aviso\r\n    \"MethodName\": \"Confirmar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+					"raw": "{\r\n    \"IdReference\":\"dac397ec-d00e-4197-976d-e3422a93a741\", //aviso\r\n    \"MethodName\": \"Confirmar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -371,7 +322,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\":\"43de2e92-75e2-4171-9437-9fb2fb2c8671\", //otroAviso\r\n    \"MethodName\": \"Enviar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"LocalVariable\"\r\n}",
+					"raw": "{\r\n    \"IdReference\":\"112c81fe-1b57-45f7-b67c-cb3d71ac7e33\", //otroAviso\r\n    \"MethodName\": \"Enviar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"LocalVariable\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -398,7 +349,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\":\"43de2e92-75e2-4171-9437-9fb2fb2c8671\", //otroAviso\r\n    \"MethodName\": \"Confirmar\",\r\n    \"Parameters\":[],\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"TypeReference\": \"LocalVariable\"\r\n}",
+					"raw": "{\r\n    \"IdReference\":\"112c81fe-1b57-45f7-b67c-cb3d71ac7e33\", //otroAviso\r\n    \"MethodName\": \"Confirmar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"LocalVariable\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -425,7 +376,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"MethodName\": \"Notificar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\": [\r\n        {\r\n            \"name\": \"aviso\",\r\n            \"IdInstance\": \"2513b9f9-e81b-4c97-9617-f27d3f6eb43f\", //Email (subclass notificacion)\r\n            \"IdReference\": \"42f209f7-bb09-4087-afe5-e354f5003c70\"//NOTIFICACION\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"246ab3e1-05c0-40a5-93c0-6576cdf63c7d\", //NOTIFICADOR\r\n    \"IdInstanceType\": \"246ab3e1-05c0-40a5-93c0-6576cdf63c7d\" //NOTIFICADOR\r\n}",
+					"raw": "{\r\n    \"MethodName\": \"Notificar\",\r\n    \"Parameters\": [\r\n        {\r\n            \"name\": \"aviso\",\r\n            \"IdInstance\": \"440bba9a-acab-4d71-8720-c858c4016244\", //Email (subclass notificacion)\r\n            \"IdReference\": \"0238a0d9-add7-4b65-a05f-347d69d9946c\"//NOTIFICACION\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"b70b656d-7e02-4c27-9a52-e8e52e728276\", //NOTIFICADOR\r\n    \"IdInstanceType\": \"b70b656d-7e02-4c27-9a52-e8e52e728276\", //NOTIFICADOR\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

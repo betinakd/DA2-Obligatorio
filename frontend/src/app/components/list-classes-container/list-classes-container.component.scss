@@ -43,14 +43,14 @@ mat-card-title {
     padding: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-    mat-card-title {
-        color: #f3f3f3;
-        font-size: 1.2em;
-        border-bottom: none;
-    }
-
-    strong {
-        font-weight: normal;
+    .name-class {
+            color: #f3f3f3;
+            font-size: 1.2em;
+            font-weight: 500;
+            font-family: Roboto, "Helvetica Neue", sans-serif;
+            border-bottom: none;
+            margin-bottom: 8px;
+            margin-top: 8px;
     }
 
     ul {

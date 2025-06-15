@@ -1,37 +1,15 @@
 {
 	"info": {
-		"_postman_id": "a739dfef-e10c-49d9-bd2a-244146c8f455",
+		"_postman_id": "462e0b2c-76ac-499d-a26b-7eb9f54f9202",
 		"name": "Ejemplo 3",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39789209"
+		"_exporter_id": "39889195",
+		"_collection_link": "https://mmmmmmmm-0686.postman.co/workspace/mmmmmmmm%C3%B1%C3%B1%C3%B1%C3%B1-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-462e0b2c-76ac-499d-a26b-7eb9f54f9202?action=share&source=collection_link&creator=39889195"
 	},
 	"item": [
 		{
 			"name": "Ejemplo 3",
 			"item": [
-				{
-					"name": "Namespace Ejemplo3",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Ejemplo3\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}namespaces",
-							"host": [
-								"{{domain}}namespaces"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Class Validator",
 					"request": {
@@ -39,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"Validador\",\r\n  \"IdBaseNamespace\": \"2bcb052c-f756-4d47-a456-9e0c2da561cc\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"Validador\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -89,7 +67,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"Entrada\",\r\n  \"IdBaseNamespace\": \"2bcb052c-f756-4d47-a456-9e0c2da561cc\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"Entrada\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -193,7 +171,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"db079933-9eac-4f2b-864c-11e925a0d485\", //Entrada\r\n    \"MethodName\": \"Inicializar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"145c503a-0f12-49d3-8b21-733af6b54964\", //Entrada\r\n    \"MethodName\": \"Inicializar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -220,7 +198,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"EntradaTexto\",\r\n  \"IdBaseNamespace\": \"2bcb052c-f756-4d47-a456-9e0c2da561cc\",\r\n  \"IdBaseClass\": \"db079933-9eac-4f2b-864c-11e925a0d485\", //Entrada\r\n  \"State\": \"Normal\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"EntradaTexto\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\",\r\n  \"IdBaseClass\": \"145c503a-0f12-49d3-8b21-733af6b54964\", //Entrada\r\n  \"State\": \"Normal\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -270,7 +248,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"5a6f1a9d-8f24-4cdc-8f49-750b068d3db2\", //EntradaTexto\r\n    \"MethodName\": \"EsValido\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Base\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"6d0b56bd-5afa-4b3d-9d72-7beba4800425\", //EntradaTexto\r\n    \"MethodName\": \"EsValido\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Base\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\"//bool\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -297,7 +275,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"5a6f1a9d-8f24-4cdc-8f49-750b068d3db2\", //EntradaTexto\r\n    \"MethodName\": \"Limpiar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"6d0b56bd-5afa-4b3d-9d72-7beba4800425\", //EntradaTexto\r\n    \"MethodName\": \"Limpiar\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\"//void\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -324,7 +302,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"EntradaTextoEspecial\",\r\n  \"IdBaseNamespace\": \"00000000-1111-0000-0000-000000000001\",\r\n  \"IdBaseClass\": \"5a6f1a9d-8f24-4cdc-8f49-750b068d3db2\", //EntradaTexto\r\n  \"State\": \"Sealed\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"EntradaTextoEspecial\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\",\r\n  \"IdBaseClass\": \"6d0b56bd-5afa-4b3d-9d72-7beba4800425\", //EntradaTexto\r\n  \"State\": \"Sealed\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -347,7 +325,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\":\"input\",\r\n    \"IdInstance\": \"d24ee440-1084-4fae-a163-4e9e8f510fe8\", //EntradaTextoEspecial\r\n    \"IdReference\": \"d24ee440-1084-4fae-a163-4e9e8f510fe8\" //EntradaTextoEspecial\r\n}",
+							"raw": "{\r\n    \"Name\":\"input\",\r\n    \"IdInstance\": \"597f8d01-c550-41dc-9839-25cc8eeead17\", //EntradaTextoEspecial\r\n    \"IdReference\": \"597f8d01-c550-41dc-9839-25cc8eeead17\" //EntradaTextoEspecial\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -374,7 +352,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"4db8c778-5313-4daf-9a10-919b7eaafe94\", //input\r\n    \"MethodName\": \"EsValido\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"LocalVariable\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"91b1e6b7-5182-4e84-844b-5628267d2898\", //input\r\n    \"MethodName\": \"EsValido\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"LocalVariable\",\r\n    \"idReturnType\": \"22223222-2222-2222-2222-222222222222\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -428,7 +406,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"d24ee440-1084-4fae-a163-4e9e8f510fe8\", //EntradaTextoEspecial\r\n    \"MethodName\": \"EsValido\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Base\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"597f8d01-c550-41dc-9839-25cc8eeead17\", //EntradaTextoEspecial\r\n    \"MethodName\": \"EsValido\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Base\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -455,7 +433,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"MethodName\": \"Validar\",\r\n    \"Parameters\": [],\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\",\r\n    \"IdReferenceType\": \"0a266d0f-28ad-4a29-ae12-1610f329ea49\", //validador\r\n    \"IdInstanceType\": \"0a266d0f-28ad-4a29-ae12-1610f329ea49\" //validador\r\n}",
+							"raw": "{\r\n    \"MethodName\": \"Validar\",\r\n    \"Parameters\": [],\r\n    \"IdReferenceType\": \"a841fe19-0b72-4efb-93f5-7ac4a1f75d7b\", //validador\r\n    \"IdInstanceType\": \"a841fe19-0b72-4efb-93f5-7ac4a1f75d7b\", //validador\r\n    \"idReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
