@@ -1,0 +1,558 @@
+{
+	"info": {
+		"_postman_id": "e9c686ef-7517-4fb9-a382-a8d8a8c9fd1b",
+		"name": "STRATEGY",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39889195",
+		"_collection_link": "https://mmmmmmmm-0686.postman.co/workspace/mmmmmmmm%C3%B1%C3%B1%C3%B1%C3%B1-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-e9c686ef-7517-4fb9-a382-a8d8a8c9fd1b?action=share&source=collection_link&creator=39889195"
+	},
+	"item": [
+		{
+			"name": "Namespace",
+			"item": [
+				{
+					"name": "Namespace creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Strategy_pattern_namespace\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}namespaces",
+							"host": [
+								"{{domain}}namespaces"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Strategy Class",
+			"item": [
+				{
+					"name": "Interface creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"Strategy\",\r\n    \"State\": 3,\r\n    \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n    \"idBaseNamespace\": \"7fe5faad-11af-41a2-aa53-dd9475f0d25a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"execute\",\r\n    \"privacity\": 2,\r\n    \"accesibility\": 3,\r\n    \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\": [],\r\n    \"isStatic\": false,\r\n    \"isVirtual\": false,\r\n    \"isOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ConcreteStrategy_1 Class",
+			"item": [
+				{
+					"name": "Class creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"ConcreteStrategy_1\",\r\n    \"State\": 2,\r\n    \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n    \"idBaseNamespace\": \"7fe5faad-11af-41a2-aa53-dd9475f0d25a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Make class implement interface",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"idInterface\": \"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6\",\r\n  \"methods\": [\r\n    {\r\n    \"name\": \"execute\",\r\n    \"privacity\": 2,\r\n    \"accesibility\": 2,\r\n    \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\": [],\r\n    \"isStatic\": false,\r\n    \"isVirtual\": true,\r\n    \"isOverride\": true\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/f9681b3e-9f95-4ac9-8a69-2b68e2c8b4b9/implements",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"f9681b3e-9f95-4ac9-8a69-2b68e2c8b4b9",
+								"implements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ConcreteStrategy_2 Class",
+			"item": [
+				{
+					"name": "Class creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"ConcreteStrategy_2\",\r\n    \"State\": 2,\r\n    \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n    \"idBaseNamespace\": \"7fe5faad-11af-41a2-aa53-dd9475f0d25a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Make class implement interface",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"idInterface\": \"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6\",\r\n  \"methods\": [\r\n    {\r\n    \"name\": \"execute\",\r\n    \"privacity\": 2,\r\n    \"accesibility\": 2,\r\n    \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\": [],\r\n    \"isStatic\": false,\r\n    \"isVirtual\": true,\r\n    \"isOverride\": true\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/ee8461c4-5a6f-492f-b70c-2bc14d234f0d/implements",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"ee8461c4-5a6f-492f-b70c-2bc14d234f0d",
+								"implements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Context Class",
+			"item": [
+				{
+					"name": "Class creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"Context\",\r\n    \"State\": 2,\r\n    \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n    \"idBaseNamespace\": \"7fe5faad-11af-41a2-aa53-dd9475f0d25a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attribute strategy creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"strategy\",\r\n    \"IdReference\": \"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6\",\r\n    \"IdInstance\": \"f9681b3e-9f95-4ac9-8a69-2b68e2c8b4b9\", //simulamos ShippingStrategy strategy = new PickupShipping()\r\n    \"Privacity\": \"Public\", \"isStatic\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/efbbe130-5753-4866-95c0-c93cb023efac/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"efbbe130-5753-4866-95c0-c93cb023efac",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method setStrategy creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"SetStrategy\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"isStatic\" : false, \"isVirtual\": false, \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/efbbe130-5753-4866-95c0-c93cb023efac/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"efbbe130-5753-4866-95c0-c93cb023efac",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SetStategy methods params added",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"str\",\r\n    \"IdReference\": \"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/431bd4c7-f632-42d1-9792-a3bd11736634/parameters",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"431bd4c7-f632-42d1-9792-a3bd11736634",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Methods callExecute creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"CallExecute\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"isStatic\" : false, \"isVirtual\": false, \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/efbbe130-5753-4866-95c0-c93cb023efac/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"efbbe130-5753-4866-95c0-c93cb023efac",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Execute invocation from callExecute",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"83d7a4cf-228b-4ac3-b1ba-ae582164ecfd\", //atributo strategy\r\n    \"MethodName\": \"execute\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Attribute\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/15bddae7-ff12-4241-918b-93604da6b108/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"15bddae7-ff12-4241-918b-93604da6b108",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client Class",
+			"item": [
+				{
+					"name": "Class creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"Client\",\r\n    \"State\": 2,\r\n    \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n    \"idBaseNamespace\": \"7fe5faad-11af-41a2-aa53-dd9475f0d25a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attribute context creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"context\",\r\n    \"IdReference\": \"efbbe130-5753-4866-95c0-c93cb023efac\",\r\n    \"IdInstance\": \"efbbe130-5753-4866-95c0-c93cb023efac\",\r\n    \"Privacity\": \"Public\", \"isStatic\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/2dd354f9-d03d-4f03-801c-79c61b922722/attributes",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"2dd354f9-d03d-4f03-801c-79c61b922722",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method main creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"main\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"isStatic\" : false, \"isVirtual\": false, \"IsOverride\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}classes/2dd354f9-d03d-4f03-801c-79c61b922722/methods",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"2dd354f9-d03d-4f03-801c-79c61b922722",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Main local var str creation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\":\"str\",\r\n    \"IdReference\": \"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6\",\r\n    \"IdInstance\": \"f9681b3e-9f95-4ac9-8a69-2b68e2c8b4b9\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/3c71f2b4-cd0e-4062-b738-2117e1bc111d/variables",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"3c71f2b4-cd0e-4062-b738-2117e1bc111d",
+								"variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "context.SetStrategy(str)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"6aa405f4-8300-4fc2-8835-bc3fd7571e80\", //atributo context\r\n    \"MethodName\": \"SetStrategy\",\r\n    \"Parameters\":[\r\n        {\r\n            \"Name\":\"str\",\r\n            \"IdReference\": \"b27b0c0b-9c4b-4f19-a9d7-84d29554cbc6\",\r\n            \"IdInstance\": \"f9681b3e-9f95-4ac9-8a69-2b68e2c8b4b9\"\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/3c71f2b4-cd0e-4062-b738-2117e1bc111d/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"3c71f2b4-cd0e-4062-b738-2117e1bc111d",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "context.CallExecute()",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"6aa405f4-8300-4fc2-8835-bc3fd7571e80\", //atributo context\r\n    \"MethodName\": \"CallExecute\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Attribute\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}methods/3c71f2b4-cd0e-4062-b738-2117e1bc111d/invocations",
+							"host": [
+								"{{domain}}methods"
+							],
+							"path": [
+								"3c71f2b4-cd0e-4062-b738-2117e1bc111d",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Execution",
+			"item": [
+				{
+					"name": "client main execution",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"methodName\": \"Main\",\r\n  \"parameters\": [],\r\n  \"idReferenceType\": \"a685a30b-5abf-4287-bdf0-7cb03de7f63d\",\r\n  \"idInstanceType\": \"a685a30b-5abf-4287-bdf0-7cb03de7f63d\",\r\n  \"idReturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}executions",
+							"host": [
+								"{{domain}}executions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
