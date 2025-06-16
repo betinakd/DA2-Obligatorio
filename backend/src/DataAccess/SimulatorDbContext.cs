@@ -2,7 +2,7 @@
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Context;
+namespace DataAccess;
 
 public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
 {

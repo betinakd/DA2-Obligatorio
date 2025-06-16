@@ -1,7 +1,7 @@
 using BusinessLogic;
-using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Enums;
+using IBusinessLogic.Exceptions;
 using IDataAccess;
 using Moq;
 

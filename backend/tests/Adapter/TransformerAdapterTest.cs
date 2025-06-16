@@ -1,8 +1,8 @@
 using Adapter;
-using BusinessLogic.Exceptions;
 using IAdapter;
 using IAdapter.Exceptions;
 using IBusinessLogic;
+using IBusinessLogic.Exceptions;
 using Models.Request;
 using Models.Response;
 using Moq;

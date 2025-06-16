@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\backend\src\TransformerAbstractions\TransformerAbstractions.csproj" />
+    <Reference Include="TransformerAbstractions">
+      <HintPath>TransformerAbstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <PropertyGroup>

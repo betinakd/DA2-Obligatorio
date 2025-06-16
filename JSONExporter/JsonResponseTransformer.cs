@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using TransformerAbstractions;
-namespace JSONExportercopy;
+namespace JSONExporter;
 
-public class JsonResponseTransformer : IExporter
+public class JsonResponseTransformer : TransformerAbstractions.IExporter
 {
     public string GetName() => "JSON";
 
