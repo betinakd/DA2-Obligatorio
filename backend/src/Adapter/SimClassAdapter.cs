@@ -1,10 +1,10 @@
 using Adapter.Helpers;
-using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
 using IAdapter;
 using IAdapter.Exceptions;
 using IBusinessLogic;
+using IBusinessLogic.Exceptions;
 using Models.Request;
 using Models.Response;
 

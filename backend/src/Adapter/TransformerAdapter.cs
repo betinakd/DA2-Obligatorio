@@ -1,7 +1,7 @@
-using BusinessLogic.Exceptions;
 using IAdapter;
 using IAdapter.Exceptions;
 using IBusinessLogic;
+using IBusinessLogic.Exceptions;
 using Models.Request;
 
 namespace Adapter;

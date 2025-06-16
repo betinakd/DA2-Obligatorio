@@ -1,9 +1,9 @@
 using Adapter;
-using BusinessLogic.Exceptions;
 using Domain;
 using Domain.Exceptions;
 using IAdapter.Exceptions;
 using IBusinessLogic;
+using IBusinessLogic.Exceptions;
 using Moq;
 
 namespace Tests.Adapter;
