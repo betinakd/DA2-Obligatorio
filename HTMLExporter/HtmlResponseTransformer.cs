@@ -1,13 +1,13 @@
 ﻿using TransformerAbstractions;
-namespace HTMLExportercopy;
+namespace HTMLExporterFormat;
 
-public class HtmlResponseTransformer : IExporter
+public class HtmlResponseTransformer : TransformerAbstractions.IExporter
 {
     public string GetName() => "HTML";
 
     public string ExportData(string executionResult)
     {
-        if(string.IsNullOrEmpty(executionResult))
+        if (string.IsNullOrEmpty(executionResult))
         {
             return "<pre>Empty result</pre>";
         }

@@ -5,7 +5,6 @@
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\IBusinessLogic\IBusinessLogic.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
