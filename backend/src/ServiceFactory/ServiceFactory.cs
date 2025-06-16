@@ -2,7 +2,6 @@
 using Adapter;
 using BusinessLogic;
 using DataAccess;
-using DataAccess.Context;
 using IAdapter;
 using IBusinessLogic;
 using IDataAccess;
