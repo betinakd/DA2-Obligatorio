@@ -1,0 +1,26 @@
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+  input, select {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #222;
+    color: white;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    
+    &:focus {
+      outline: none;
+      border-color: #7d1db5;
+      box-shadow: 0 0 0 2px rgba(125, 29, 181, 0.3);
+    }
+  }
+  
+  label {
+    color: #d1b8e0;
+    margin-bottom: 5px;
+    display: block;
+  }
+

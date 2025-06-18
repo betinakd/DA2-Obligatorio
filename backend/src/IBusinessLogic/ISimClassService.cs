@@ -1,0 +1,18 @@
+﻿using Domain;
+using Domain.Enums;
+
+namespace IBusinessLogic;
+
+public interface ISimClassService
+{
+    IList<SimClass> GetAllSimClasses();
+    SimClass CreateSimClass(string name, SimAccesibility state, Guid baseClassId, Guid? namespaceId);
+    SimClass UpdateSimClass(SimClass simClass);
+    SimClass GetSimClassById(Guid id);
+    void DeleteSimClass(Guid id);
+    public void ClassInheritAttribute(Guid idClass, Guid idAttribute);
+    void ValidPolymorphism(SimClass type, SimClass instance);
+    public List<SimClass> GetClassesOfNamespaces(Guid id);
+    SimClass ImplementInterface(SimClass simClassToUpdate);
+    public bool SimClassImplementsInterface(Guid classId, Guid interfaceId);
+}

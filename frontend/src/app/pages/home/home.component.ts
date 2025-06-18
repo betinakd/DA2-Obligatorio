@@ -1,0 +1,236 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NamespaceService } from '../../services/namespace.service';
+import { ErrorResponse } from '../../models/response/ErrorResponse.model';
+import { ClassService } from '../../services/class.service';
+import { SimClassResponse } from '../../models/response/SimClassResponse';
+import { NamespaceResponse } from '../../models/response/NamespaceResponse';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss'
+})
+export class HomeComponent implements OnInit {
+  namespaces: NamespaceResponse[] = [];
+  classes: SimClassResponse[] = [];
+  loading = false;
+  loadingclasses = false;
+  error: string = '';
+  classId: string | null = null;
+  methodOptions: { id: string, displayText: string }[] = [];
+  processedNamespaces: any[] = [];
+
+  constructor(private namespaceService: NamespaceService, private classService: ClassService) { }
+
+  ngOnInit(): void {
+    this.getNamespaces();
+    this.loadClasses();
+    this.loading = true;
+    this.loadingclasses = true;
+  }
+
+  get isLoading(): boolean {
+    return this.loading || this.loadingclasses;
+  }
+
+  getNamespaces(): void {
+    this.loading = true;
+    this.error = '';
+    this.namespaceService.fetchNamespaces().subscribe({
+      next: (data) => {
+        this.namespaces = data;
+        this.processNamespaceData();
+      },
+      error: (err) => {
+        const apiError = err.error as ErrorResponse;
+        console.error('Complete error:', err);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  loadClasses(): void {
+    this.loadingclasses = true;
+    this.error = '';
+
+    this.classService.getAllClasses().subscribe({
+      next: (data) => {
+        this.classes = data;
+      },
+      error: (err) => {
+        this.error = 'Error al cargar métodos';
+      },
+      complete: () => {
+        this.processNamespaceData();
+        this.loadingclasses = false;
+      }
+    });
+  }
+
+  private getClassNameById(classId: string): string {
+    const classObj = this.classes.find(c => c.id === classId)?.name;
+    return classObj ? classObj : '';
+  }
+
+  private processNamespaceData(): void {
+    this.processedNamespaces = [];
+
+    const nsMap = new Map<string, string>();
+    this.namespaces.forEach(ns => nsMap.set(ns.id, ns.name));
+
+    for (const ns of this.namespaces) {
+      this.processedNamespaces.push({
+        id: ns.id,
+        name: ns.name,
+        baseNamespace: ns.baseNamespaceId
+          ? nsMap.get(ns.baseNamespaceId)
+          : 'None',
+        classes: ns.elements.map(el => this.processSimClass(el))
+      });
+    }
+  }
+
+  private processSimClass(sc: SimClassResponse): any {
+    const state = sc.state || 'Unknown State';
+    const baseClass = sc.idBaseClass
+      ? this.getClassNameById(sc.idBaseClass)
+      : null;
+
+    const attributes = sc.attributes.map(attr => ({
+      name: attr.name,
+      reference: attr.referenceId
+        ? this.getClassNameById(attr.referenceId)
+        : 'Unknown Type',
+      instance: attr.instanceId
+        ? this.getClassNameById(attr.instanceId)
+        : 'Unknown Instance',
+      privacity: attr.privacity,
+      static: attr.isStatic ? 'static' : ''
+    }));
+
+    const methods = sc.methods.map(m => {
+      const returnType = m.returnTypeId
+        ? this.getClassNameById(m.returnTypeId)
+        : 'void';
+      const parameters = (m.parameters || []).map(p => ({
+        name: p.name,
+        type: p.referenceId
+          ? this.getClassNameById(p.referenceId)
+          : 'Unknown Type'
+      }));
+      const paramsText = parameters
+        .map(p => `${p.name}: ${p.type}`)
+        .join(', ');
+
+      const isStatic = m.isStatic;
+      const isVirtual = m.isVirtual;
+      const isOverride = m.isOverride;
+      const priv = m.privacity;
+      const acc = m.accesibility;
+
+      const prefixes = [
+        priv,
+        acc,
+        isStatic ? 'static' : null,
+        isVirtual ? 'virtual' : null,
+        isOverride ? 'override' : null
+      ].filter(x => !!x).join(' ');
+
+      const rawInvs = m.invocations || [];
+
+      const invocations = rawInvs.map(inv => {
+        const invParams = (inv.parameters || [])
+          .map(p => {
+            const pt = p.referenceId
+              ? this.getClassNameById(p.referenceId)
+              : 'Unknown Type';
+            const pi = p.instanceId
+              ? this.getClassNameById(p.instanceId)
+              : '';
+            return `${p.name}: ${pt}${pi ? ' ' + pi : ''}`;
+          })
+          .join(', ');
+
+        const refName = this.getInvocationReferenceName(inv);
+        return `${refName}.${inv.methodName}(${invParams})`;
+      });
+
+      const variables = (m.variables || []).map(v => ({
+        name: v.name,
+        reference: v.referenceId
+          ? this.getClassNameById(v.referenceId)
+          : 'Unknown Type',
+        instance: v.instanceId
+          ? this.getClassNameById(v.instanceId)
+          : 'Unknown Instance'
+      }));
+      return {
+        name: m.name,
+        returnType,
+        parameters,
+        isStatic,
+        isVirtual,
+        isOverride,
+        displayText: `${prefixes} ${m.name}(${paramsText}): ${returnType}`.trim(),
+        invocations,
+        variables
+      };
+    });
+
+    const impls = sc.implements.map(i => i.name);
+
+    return {
+      id: sc.id,
+      name: sc.name,
+      baseClass,
+      state,
+      attributes,
+      methods,
+      implements: impls
+    };
+  }
+
+  private getInvocationReferenceName(inv: any): string {
+    switch (inv.typeReference) {
+      case 'Attribute':
+      case 'StaticAttribute': {
+        for (const cls of this.classes) {
+          const attr = (cls.attributes || []).find((a: any) => a.id === inv.idReference);
+          if (attr?.name) return attr.name;
+        }
+        return 'Unknown Attribute';
+      }
+      case 'Parameter': {
+        for (const cls of this.classes) {
+          for (const m of cls.methods || []) {
+            const param = (m.parameters || []).find((p: any) => p.id === inv.idReference);
+            if (param?.name) return param.name;
+          }
+        }
+        return 'Unknown Parameter';
+      }
+      case 'LocalVariable': {
+        for (const cls of this.classes) {
+          for (const m of cls.methods || []) {
+            const variable = (m.variables || []).find((v: any) => v.id === inv.idReference);
+            if (variable?.name) return variable.name;
+          }
+        }
+        return 'Unknown Variable';
+      }
+      case 'Base':
+      case 'This':
+      case 'Static': {
+        const className = this.getClassNameById(inv.idReference);
+        return className || 'Unknown Class';
+      }
+      default:
+        return 'Unknown Reference';
+    }
+  }
+}

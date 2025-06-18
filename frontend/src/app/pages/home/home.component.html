@@ -1,0 +1,60 @@
+<h1>Welcome to Simulator </h1>
+
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+  <p>Please wait...</p>
+</div>
+
+<div class="namespaces-container">
+  <div *ngFor="let ns of processedNamespaces" class="namespace-card">
+    <h2>Namespace: {{ ns.name }}</h2>
+    <p>Base: {{ ns.baseNamespace }}</p>
+
+    <div *ngIf="ns.classes?.length; else noClasses">
+      <div *ngFor="let cls of ns.classes" class="class-card">
+        <h3>Class: {{ cls.name }}</h3>
+        <p *ngIf="cls.baseClass">Extends: {{ cls.baseClass }}</p>
+        <p>State: {{ cls.state }}</p>
+        <div *ngIf="cls.attributes?.length">
+          <h4>Attributes</h4>
+          <ul>
+            <li *ngFor="let attr of cls.attributes">
+              {{attr.privacity}} {{attr.static}} {{ attr.name }}: {{ attr.reference }} {{attr.instance}}
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="cls.methods?.length">
+          <h4>Methods</h4>
+          <ul>
+            <li *ngFor="let m of cls.methods">
+              {{ m.displayText }}
+              <ul *ngIf="m.invocations?.length" class="invocations-list">
+                <li *ngFor="let invText of m.invocations">
+                  {{ invText }}
+                </li>
+              </ul>
+              <ul *ngIf="m.variables?.length">
+                <h4>Variables:</h4>
+                <li *ngFor="let locVar of m.variables">
+                  {{ locVar.name }} {{ locVar.reference }} {{ locVar.instance }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="cls.implements?.length">
+          <h4>Implements</h4>
+          <ul>
+            <li *ngFor="let i of cls.implements">
+              {{ i }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <ng-template #noClasses>
+      <p class="no-classes">This namespace doesn't contain classes.</p>
+    </ng-template>
+  </div>
+</div>

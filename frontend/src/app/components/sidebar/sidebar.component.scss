@@ -1,0 +1,131 @@
+.sidenav-container {
+    height: 100%;
+    
+    .sidenav {
+      width: 260px;
+      background: linear-gradient(145deg, #1a0229, #270350);
+      border-right: none;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
+  
+      .logo-container {
+        padding: 20px 0;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 15px;
+        
+        h2 {
+          margin: 0;
+          font-weight: 700;
+          font-size: 28px;
+          letter-spacing: 1px;
+          background-image: linear-gradient(
+            to right,
+            #ff00ff 10%,
+            #de5dbc 50%,
+            #ff66cc 90%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+  
+    mat-sidenav-content {
+      background-color: #1c1515;
+      padding: 25px;
+    }
+  }
+  
+  .custom-nav-buttons {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px;
+    
+    .nav-button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 12px 16px;
+      background-color: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.9);
+      border: none;
+      transition: all 0.2s ease-in-out;
+      justify-content: flex-start;
+    
+      mat-icon {
+        margin-right: 12px;
+        color: #de5dbc;
+      }
+      
+      span {
+        flex: 1;
+        font-weight: 500;
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateX(3px);
+        color: white;
+        
+        mat-icon {
+          color: #ff66cc;
+        }
+      }
+      
+      &.active {
+        background-color: rgba(222, 93, 188, 0.3);
+        border-left: 3px solid #ff66cc;
+      }
+    }
+  
+    .nav-expansion-panel {
+      background-color: transparent;
+      box-shadow: none;
+      margin-bottom: 10px;
+      
+      ::ng-deep .mat-expansion-panel-body {
+        padding: 0 0 0 16px;
+      }
+      
+      ::ng-deep .mat-expansion-panel-header {
+        height: auto;
+        padding: 12px 16px;
+        background-color: rgba(255, 255, 255, 0.07);
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      }
+      
+      ::ng-deep .mat-expansion-panel-header-title {
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        
+        mat-icon {
+          margin-right: 12px;
+          color: #de5dbc;
+        }
+      }
+    }
+  }
+  
+  ::ng-deep {
+    .mat-expansion-panel {
+      background-color: transparent !important;
+    }
+    
+    .mat-expansion-indicator::after {
+      color: #de5dbc !important;
+      border-color: #de5dbc !important;
+    }
+    
+    .mat-expansion-panel-body .nav-button {
+      margin-top: 6px;
+      border-left: 1px solid rgba(222, 93, 188, 0.3);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+  }

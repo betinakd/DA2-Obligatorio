@@ -1,0 +1,36 @@
+<mat-card class="main-container">
+    <mat-card-title>List of clases</mat-card-title>
+    <mat-card-content>
+        <div class="list-classes-container">
+            <div *ngIf="classList?.length; else noClasses">
+                <div *ngFor="let cls of classList" class="class-card">
+                    <h3 class="name-class"> {{ cls.name }}</h3>
+                    <p *ngIf="cls.baseClass">Extends: {{ cls.baseClass }}</p> <!-- no esta mostrando pq el metodo getclassname devuelve null -->
+                    <div *ngIf="cls.implements?.length">
+                        <p> Implements: {{cls.implements}}</p>
+                    </div>
+                    <div *ngIf="cls.attributes?.length">
+                        <p>Attributes</p>
+                        <ul>
+                            <li *ngFor="let attr of cls.attributes">
+                                {{attr.privacity}} {{attr.static}} {{ attr.name }}: {{ attr.reference }} {{attr.instance}}
+                            </li>
+                        </ul>
+                    </div>
+            
+                    <div *ngIf="cls.methods?.length">
+                        <p>Methods</p>
+                        <ul>
+                            <li *ngFor="let m of cls.methods">
+                                {{ m.name }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noClasses>
+                <p class="no-classes">Classes info is not available yet.</p>
+                </ng-template>
+        </div>
+    </mat-card-content>
+</mat-card>

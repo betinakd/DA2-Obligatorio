@@ -1,0 +1,21 @@
+<div class="selector-container">
+    <div *ngIf="loading" class="loading-indicator">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>Loading parameters...</span>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        <p>{{ error }}</p>
+        <button (click)="loadClasses()">Try again</button>
+    </div>
+
+    <mat-form-field *ngIf="!loading && !error" appearance="outline" class="full-width">
+        <mat-label>{{ labelText }}</mat-label>
+        <mat-select [formControl]="parameterControl">
+            <mat-option value="">Select Parameter</mat-option>
+            <mat-option *ngFor="let parameter of parameterOptions" [value]="parameter.id">
+                {{ parameter.displayText }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>

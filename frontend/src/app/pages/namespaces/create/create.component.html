@@ -1,0 +1,23 @@
+<div class="page-container">
+    <h1>Create Namespace</h1>
+    <label>Namespace name:</label>
+    <input #namespaceNameInput [value]="name" (input)="name = namespaceNameInput.value" placeholder="Namespace Name"
+        required>
+
+    <app-namespace-selector [labelText]="'Select Base Namespace'" (namespaceSelected)="onNamespaceSelected($event)"
+        [reload]="loading"></app-namespace-selector>
+
+    <div *ngIf="successMessage" class="success-message">
+        <p>{{ successMessage }}</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        <p>{{ error }}</p>
+    </div>
+
+    <div class="create-button-container">
+        <button class="btn-create" (click)="handleButtonClick()">
+            <span class="material-icons">add_circle</span> Create Namespace
+        </button>
+    </div>
+</div>

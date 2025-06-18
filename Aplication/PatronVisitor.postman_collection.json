@@ -1,0 +1,498 @@
+{
+	"info": {
+		"_postman_id": "3ed1fb58-ab0d-4904-8196-6a67149bea58",
+		"name": "PatronVisitor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39889195",
+		"_collection_link": "https://mmmmmmmm-0686.postman.co/workspace/mmmmmmmm%C3%B1%C3%B1%C3%B1%C3%B1-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-3ed1fb58-ab0d-4904-8196-6a67149bea58?action=share&source=collection_link&creator=39889195"
+	},
+	"item": [
+		{
+			"name": "Namespace PatronVisitor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"PatronVisitor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}namespaces",
+					"host": [
+						"{{domain}}namespaces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Class Visitante",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Name\": \"Visitante\",\r\n  \"IdBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\",\r\n  \"State\": \"Interface\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Class Reels",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Name\": \"Reel\",\r\n  \"IdBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\",\r\n  \"State\": \"Normal\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Class Historia",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Name\": \"Historia\",\r\n  \"IdBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\",\r\n  \"State\": \"Normal\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Class Visitante methods",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"39543612-ba65-4a51-9982-0a6f825a7533\", // Class Visistante\r\n  \"name\": \"Visitante\",\r\n  \"state\": \"Interface\",\r\n  \"methods\": [\r\n    {\r\n      \"name\": \"VisitarReel\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Interface\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"t\",\r\n          \"idReference\": \"182c1cd6-7bcb-4f49-980b-a500454f6f58\" //Reel\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": false,\r\n      \"isOverride\": false\r\n    },\r\n        {\r\n      \"name\": \"VisitarHistoria\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Interface\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"h\",\r\n          \"idReference\": \"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\" //Historia\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": false,\r\n      \"isOverride\": false\r\n    }\r\n  ],\r\n  \"idBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Interface Publicacion",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Name\": \"Publicacion\",\r\n  \"IdBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\",\r\n  \"State\": \"Interface\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Method Aceptar Publicacion",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Aceptar\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\": \"Interface\",\r\n  \"idReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n  \"parameters\": [\r\n    {\r\n      \"name\": \"v\",\r\n      \"idReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\" // visitor\r\n    }\r\n  ],\r\n  \"isStatic\": false,\r\n  \"isVirtual\": false,\r\n  \"isOverride\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes/{{idClassPublicacion}}/methods",
+					"host": [
+						"{{domain}}classes"
+					],
+					"path": [
+						"{{idClassPublicacion}}",
+						"methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Implements Class Reels",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"IdInterface\":\"47378fe9-3742-4984-8a9b-60780b3cd630\", //Publicacion\r\n  \"methods\": [\r\n    {\r\n      \"name\": \"Aceptar\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Normal\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"v\",\r\n          \"idReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\" //Visitar\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": true,\r\n      \"isOverride\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes/{{idReelClass}}/implements",
+					"host": [
+						"{{domain}}classes"
+					],
+					"path": [
+						"{{idReelClass}}",
+						"implements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Implements Class History",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"IdInterface\":\"47378fe9-3742-4984-8a9b-60780b3cd630\", //Publicacion\r\n  \"methods\": [\r\n    {\r\n      \"name\": \"Aceptar\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Normal\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"v\",\r\n          \"idReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\" //Visitor\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": true,\r\n      \"isOverride\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes/{{idClassHistory}}/implements",
+					"host": [
+						"{{domain}}classes"
+					],
+					"path": [
+						"{{idClassHistory}}",
+						"implements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Class FiltroBYN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Name\": \"FiltroBYN\",\r\n  \"IdBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\",\r\n  \"State\": \"Normal\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Class FiltroCaritas",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Name\": \"FiltroCaritas\",\r\n  \"IdBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\",\r\n  \"State\": \"Normal\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes",
+					"host": [
+						"{{domain}}classes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Implements FitroBYN Visitante",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"IdInterface\":\"39543612-ba65-4a51-9982-0a6f825a7533\",\r\n  \"methods\": [\r\n    {\r\n      \"name\": \"VisitarReel\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Normal\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"t\",\r\n          \"idReference\": \"182c1cd6-7bcb-4f49-980b-a500454f6f58\" //Reel\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": true,\r\n      \"isOverride\": true\r\n    },\r\n        {\r\n      \"name\": \"VisitarHistoria\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Normal\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"h\",\r\n          \"idReference\": \"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\" //Historia\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": true,\r\n      \"isOverride\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes/{{idFiltroByN}}/implements",
+					"host": [
+						"{{domain}}classes"
+					],
+					"path": [
+						"{{idFiltroByN}}",
+						"implements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Implements FitroCaritas Visitante",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"IdInterface\":\"39543612-ba65-4a51-9982-0a6f825a7533\", //Visitor\r\n  \"methods\": [\r\n    {\r\n      \"name\": \"VisitarReel\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Normal\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"t\",\r\n          \"idReference\": \"182c1cd6-7bcb-4f49-980b-a500454f6f58\" //Reel\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": true,\r\n      \"isOverride\": true\r\n    },\r\n        {\r\n      \"name\": \"VisitarHistoria\",\r\n      \"privacity\": \"Public\",\r\n      \"accesibility\": \"Normal\",\r\n      \"idReturnType\": \"22222222-2222-2222-2222-222222222222\", // Void\r\n      \"parameters\": [\r\n        {\r\n          \"name\": \"h\",\r\n          \"idReference\": \"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\" //Historia\r\n        }\r\n      ],\r\n      \"isStatic\": false,\r\n      \"isVirtual\": true,\r\n      \"isOverride\": true\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}classes/{{idFiltroCaritas}}/implements",
+					"host": [
+						"{{domain}}classes"
+					],
+					"path": [
+						"{{idFiltroCaritas}}",
+						"implements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Aceptar(v) Reels invoks v.VisitarReel(This)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\":\"49D0D640-1FBB-4724-8CE1-0CE855BFDD85\", //v visitante parameter\r\n    \"MethodName\": \"VisitarReel\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\": [\r\n        {\r\n          \"name\": \"this\",\r\n          \"idReference\": \"182c1cd6-7bcb-4f49-980b-a500454f6f58\", //Reel\r\n          \"IdInstance\": \"182c1cd6-7bcb-4f49-980b-a500454f6f58\" //Reel\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}methods/{{id_method_Aceptar_Reel}}/invocations",
+					"host": [
+						"{{domain}}methods"
+					],
+					"path": [
+						"{{id_method_Aceptar_Reel}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Aceptar(v) Historia invoks v.VisitarHistoria(This)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdReference\":\"D2EE6066-3B84-4BDE-A2B8-B3A211A69AD0\", //v visitante parameter\r\n    \"MethodName\": \"VisitarHistoria\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\": [\r\n        {\r\n          \"name\": \"this\",\r\n          \"idReference\": \"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\", //Historia\r\n          \"IdInstance\": \"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\" //Historia\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}methods/{{id_method_Aceptar_Historia}}/invocations",
+					"host": [
+						"{{domain}}methods"
+					],
+					"path": [
+						"{{id_method_Aceptar_Historia}}",
+						"invocations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excec Publicacion Reel aceptar (VisitanteFiltroCaritas)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"Aceptar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n            \"Name\": \"visitorCaritas\",\r\n            \"IdReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\", //Visitante\r\n            \"IdInstance\": \"2ec687dc-feb6-407b-b4b0-4280fdb6c5cf\" //FiltroCaritas\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"47378fe9-3742-4984-8a9b-60780b3cd630\", //Publicacion\r\n    \"IdInstanceType\":\"182c1cd6-7bcb-4f49-980b-a500454f6f58\" // Reel\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}executions",
+					"host": [
+						"{{domain}}executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excec Publicacion Reel aceptar (VisitanteBYN)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"Aceptar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n            \"Name\": \"visitorCaritas\",\r\n            \"IdReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\", //Visitante\r\n            \"IdInstance\": \"2830eeff-191d-4400-b0ce-a83b27fac848\" //FiltroBYN\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"47378fe9-3742-4984-8a9b-60780b3cd630\", //Publicacion\r\n    \"IdInstanceType\":\"182c1cd6-7bcb-4f49-980b-a500454f6f58\" // Reel\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}executions",
+					"host": [
+						"{{domain}}executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excec Publicacion Historia aceptar (VisitanteFiltroCaritas)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"Aceptar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n            \"Name\": \"visitorCaritas\",\r\n            \"IdReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\", //Visitante\r\n            \"IdInstance\": \"2ec687dc-feb6-407b-b4b0-4280fdb6c5cf\" //FiltroCaritas\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"47378fe9-3742-4984-8a9b-60780b3cd630\", //Publicacion\r\n    \"IdInstanceType\":\"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\" // Historia\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}executions",
+					"host": [
+						"{{domain}}executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excec Publicacion Historia aceptar (VisitanteBYN)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"MethodName\" : \"Aceptar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n            \"Name\": \"visitorCaritas\",\r\n            \"IdReference\": \"39543612-ba65-4a51-9982-0a6f825a7533\", //Visitante\r\n            \"IdInstance\": \"2830eeff-191d-4400-b0ce-a83b27fac848\" //FiltroBYN\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"47378fe9-3742-4984-8a9b-60780b3cd630\", //Publicacion\r\n    \"IdInstanceType\":\"1DAD63D4-6D7F-42DC-8B4B-CE9D68835B09\" // Historia\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}executions",
+					"host": [
+						"{{domain}}executions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "idClassPublicacion",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "idClassHistory",
+			"value": "39d7c1d8-00a4-44b9-acf8-ef6bbdbbd0d9",
+			"type": "default"
+		},
+		{
+			"key": "id_method_Aceptar_Reel",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "id_method_Aceptar_Historia",
+			"value": "731ba0c3-7461-4d83-b93c-f393f7b1daf5",
+			"type": "default"
+		}
+	]
+}

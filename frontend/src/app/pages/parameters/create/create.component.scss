@@ -1,0 +1,131 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.method-selector-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.parameter-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 16px;
+    border-left: 3px solid #7d1db5;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.parameter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.parameter-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.form-row {
+    margin-bottom: 15px;
+}
+
+.parameter-label {
+    display: block;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.compact-input {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.create-btn {
+    min-width: 150px;
+    padding: 10px 20px;
+    background-color: #7d1db5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.create-btn:hover:not([disabled]) {
+    background-color: #9331d4;
+}
+
+.create-btn[disabled] {
+    background-color: rgba(125, 29, 181, 0.5);
+    cursor: not-allowed;
+}
+
+.messages {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+.success-message,
+.error-message {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid #4CAF50;
+    color: #4CAF50;
+}
+
+.error-message {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-left: 4px solid #f44336;
+    color: #f44336;
+}
+
+.success-message i,
+.error-message i {
+    margin-right: 8px; }

@@ -1,0 +1,30 @@
+<div class="container">
+    <h2 class="section-title">Available Transformers</h2>
+
+    <div *ngIf="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading transformers...</p>
+    </div>
+
+    <div *ngIf="error" class="error-container">
+        <span class="material-icons">error</span>
+        <p>{{ error }}</p>
+    </div>
+
+    <div class="transformers-grid">
+        <div *ngFor="let transformer of transformers" class="transformer-card">
+            <div class="card-header">
+                <h3>{{ transformer }}</h3>
+            </div>
+            <div class="card-body">
+                <span class="material-icons">transform</span>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="transformers.length === 0 && !loading && !error" class="no-data">
+        <p>No transformers available</p>
+    </div>
+</div>

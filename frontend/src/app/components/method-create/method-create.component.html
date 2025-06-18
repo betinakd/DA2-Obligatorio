@@ -1,0 +1,33 @@
+<div class="method-create-container">
+
+  <label for="methodName">Method name:</label>
+  <input type="text" id="methodName" [(ngModel)]="method.name" placeholder="Method Name" />
+
+  <app-privacity-selector [labelText]="'Select Privacity'"
+    (privacitySelected)="onPrivacitySelected($event)"></app-privacity-selector>
+
+  <app-accesibility-selector [labelText]="'Select Accessibility'"
+    (typeSelected)="onAccessibilitySelected($event)"></app-accesibility-selector>
+
+  <app-class-selector [labelText]="'Return Type'" (classSelected)="onReturnTypeSelected($event)"></app-class-selector>
+
+  <div class="form-row checkbox-row">
+    <mat-checkbox [(ngModel)]="method.isStatic" (change)="onStaticChanged($event)">
+      Static
+    </mat-checkbox>
+  </div>
+
+  <div class="form-row checkbox-row">
+    <mat-checkbox [(ngModel)]="method.isVirtual" (change)="onVirtualChanged($event)">
+      Virtual
+    </mat-checkbox>
+  </div>
+
+  <div class="form-row checkbox-row">
+    <mat-checkbox [(ngModel)]="method.isOverride" (change)="onOverrideChanged($event)">
+      Override
+    </mat-checkbox>
+  </div>
+
+  <app-parameter-list (parametersChange)="onParametersChange($event)"></app-parameter-list>
+</div>

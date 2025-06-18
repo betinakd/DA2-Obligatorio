@@ -1,15 +1,38 @@
 {
 	"info": {
-		"_postman_id": "bc437c52-3297-4f0e-88cd-4bd9829aec10",
-		"name": "Ejemplos collection",
+		"_postman_id": "f0f169d1-c972-44cb-b616-54ae4a833838",
+		"name": "Ejemplo 5",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "44702541",
-		"_collection_link": "https://solar-sunset-202803-4564.postman.co/workspace/solar-sunset-202803-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-bc437c52-3297-4f0e-88cd-4bd9829aec10?action=share&source=collection_link&creator=44702541"
+		"_exporter_id": "39889195",
+		"_collection_link": "https://mmmmmmmm-0686.postman.co/workspace/mmmmmmmm%C3%B1%C3%B1%C3%B1%C3%B1-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-f0f169d1-c972-44cb-b616-54ae4a833838?action=share&source=collection_link&creator=39889195"
 	},
 	"item": [
 		{
 			"name": "Ejemplo 5",
 			"item": [
+				{
+					"name": "Namespace Ejemplo5",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Ejemplo5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}namespaces",
+							"host": [
+								"{{domain}}namespaces"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Class Cliente",
 					"request": {
@@ -17,7 +40,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"Cliente\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"Cliente\",\r\n  \"IdBaseNamespace\": \"f20a282b-badc-4a26-8b8b-8117be1361ac\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,7 +63,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\":\"Id\",\r\n    \"IdClassType\": \"33333333-7777-1111-1111-111111111111\", //int\r\n    \"Privacity\": \"Public\"\r\n}",
+							"raw": "{\r\n    \"Name\":\"Id\",\r\n    \"IdReference\": \"33333333-7777-1111-1111-111111111111\", //int\r\n    \"IdInstance\": \"33333333-7777-1111-1111-111111111111\", //int\r\n    \"Privacity\": \"Public\",\r\n    \"isStatic\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -67,7 +90,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"ValidarIdentidad\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
+							"raw": "{\r\n    \"Name\": \"ValidarIdentidad\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -94,7 +117,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"Comunicacion\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"Comunicacion\",\r\n  \"IdBaseNamespace\": \"72f0ff33-977d-4b5e-b1f1-7c5625de3979\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,13 +139,8 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"EnviarNotificacion\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"mode": "file",
+							"file": {}
 						},
 						"url": {
 							"raw": "{{domain}}classes/{{ComunicacionClass}}/methods",
@@ -138,40 +156,13 @@
 					"response": []
 				},
 				{
-					"name": "EnviarNotificacion params",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"mensaje\",\r\n    \"IdClassType\": \"44444444-1111-1111-1111-111111111111\" //string\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}methods/{{method_EnviarNotificacion}}/parameters",
-							"host": [
-								"{{domain}}methods"
-							],
-							"path": [
-								"{{method_EnviarNotificacion}}",
-								"parameters"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Class Proceso",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"Proceso\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Abstract\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"Proceso\",\r\n  \"IdBaseNamespace\": \"72f0ff33-977d-4b5e-b1f1-7c5625de3979\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Abstract\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,7 +185,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\":\"notificador\",\r\n    \"IdClassType\": \"f1405a7f-a3f6-4127-9e56-0e2f75beb4f8\", //Comunicacion\r\n    \"Privacity\": \"Protected\"\r\n}",
+							"raw": "{\r\n    \"Name\":\"notificador\",\r\n    \"IdReference\": \"0429b2e7-c01b-430d-8e82-4468a1e90124\", //Comunicacion\r\n    \"IdInstance\": \"0429b2e7-c01b-430d-8e82-4468a1e90124\", //Comunicacion\r\n    \"Privacity\": \"Protected\",\r\n    \"isStatic\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -215,13 +206,13 @@
 					"response": []
 				},
 				{
-					"name": "Method Ejecutar",
+					"name": "Methods add",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Ejecutar\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
+							"raw": "{\r\n \"id\": \"de12915b-662a-4464-ad29-ffe3211eb5e2\", \r\n  \"name\": \"Proceso\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"state\": \"Abstract\",\r\n  \"methods\": [\r\n\t{\r\n    \"Name\": \"RealizarProceso\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Abstract\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\": \r\n    [{\r\n    \"Name\": \"cliente\",\r\n    \"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\" //Cliente\r\n    }],\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": false,\r\n    \"IsOverride\": false\r\n     },\r\n    {\r\n    \"Name\": \"Ejecutar\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"PARAMETERS\":[{\r\n    \"Name\": \"cliente\",\r\n    \"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\" //Cliente\r\n    }],\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n},\r\n{\r\n    \"Name\": \"Validar\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"Parameters\":[{\r\n                    \"Name\": \"cliente\",\r\n                    \"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\" //Cliente\r\n                }],\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}],\r\n  \"attributes\": [\r\n    {\r\n      \"id\": \"ae040330-dcf3-4c00-aa13-199e3a2b0bed\",\r\n      \"name\": \"notificador\",\r\n      \"idreference\": \"0429b2e7-c01b-430d-8e82-4468a1e90124\",\r\n      \"idinstance\": \"0429b2e7-c01b-430d-8e82-4468a1e90124\",\r\n      \"privacity\": \"Protected\",\r\n      \"relatedClassId\": \"de12915b-662a-4464-ad29-ffe3211eb5e2\",\r\n      \"isStatic\": false\r\n    }\r\n  ],\r\n  \"implements\": [],\r\n  \"idBaseNamespace\": \"19440348-6B91-4578-A9E8-2B6BD1819454\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -229,94 +220,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{domain}}classes/{{ProcesoClass}}/methods",
+							"raw": "{{domain}}classes",
 							"host": [
 								"{{domain}}classes"
-							],
-							"path": [
-								"{{ProcesoClass}}",
-								"methods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Ejecutar params",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"cliente\",\r\n    \"IdClassType\": \"cd8f2ab5-de49-4e85-b7a4-54bd621f8dc0\" //Cliente\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}methods/{{method_ejecutar}}/parameters",
-							"host": [
-								"{{domain}}methods"
-							],
-							"path": [
-								"{{method_ejecutar}}",
-								"parameters"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Method RealizarProceso",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"RealizarProceso\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Abstract\", \r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}classes/{{ProcesoClass}}/methods",
-							"host": [
-								"{{domain}}classes"
-							],
-							"path": [
-								"{{ProcesoClass}}",
-								"methods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RealizarProceso params",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"cliente\",\r\n    \"IdClassType\": \"cd8f2ab5-de49-4e85-b7a4-54bd621f8dc0\" //Cliente\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}methods/{{method_RealizarProceso}}/parameters",
-							"host": [
-								"{{domain}}methods"
-							],
-							"path": [
-								"{{method_RealizarProceso}}",
-								"parameters"
 							]
 						}
 					},
@@ -329,7 +235,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"1839409d-3a1d-471f-b31b-fdf8d4475a2e\", //Proceso\r\n    \"MethodName\": \"RealizarProceso\",\r\n    \"Parameters\":[\r\n        {\r\n                \"Name\": \"cliente\",\r\n                \"IdClassType\": \"cd8f2ab5-de49-4e85-b7a4-54bd621f8dc0\" //Cliente\r\n        }\r\n    ],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"de12915b-662a-4464-ad29-ffe3211eb5e2\", //Proceso\r\n    \"MethodName\": \"RealizarProceso\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n                \"Name\": \"cliente\",\r\n                \"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\", //Cliente\r\n                \"IdInstance\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\" //Cliente\r\n        }\r\n    ],\r\n    \"TypeReference\": \"This\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -356,7 +262,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"96966252-d9a1-4c08-8ee1-e67d139306fe\", //notificador de Comunicador\r\n    \"MethodName\": \"EnviarNotificacion\",\r\n    \"Parameters\":[\r\n        {\r\n                \"Name\": \"string\",\r\n                \"IdClassType\": \"44444444-1111-1111-1111-111111111111\" //string\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"22748FDE-50D8-460C-A601-4F2DD14F3FA5\", //notificador de Comunicador\r\n    \"MethodName\": \"EnviarNotificacion\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n                \"Name\": \"string\",\r\n                \"IdReference\": \"44444444-1111-1111-1111-111111111111\", //string\r\n                \"IdInstance\": \"44444444-1111-1111-1111-111111111111\" //string\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -383,7 +289,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Validar\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
+							"raw": "{\r\n    \"Name\": \"Validar\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"Parameters\":[{\r\n                    \"Name\": \"cliente\",\r\n                    \"IdReference\": \"08ac28ea-28cc-4519-bce0-69083f60a42b\" //Cliente\r\n                }],\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -404,40 +310,13 @@
 					"response": []
 				},
 				{
-					"name": "Validar params",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"cliente\",\r\n    \"IdClassType\": \"aa903535-e950-4bae-966e-ff6c5451f8a4\" //Cliente\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}methods/{{method_Validar}}/parameters",
-							"host": [
-								"{{domain}}methods"
-							],
-							"path": [
-								"{{method_Validar}}",
-								"parameters"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Validar invoks ValidarIdentidad",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"fcd27a0f-2230-4c42-ae7a-1a2fb7d032d0\",//param cliente\r\n    \"MethodName\": \"ValidarIdentidad\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"885ea724-b37d-44ba-9181-2eafea007a3d\",//param cliente\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\",\r\n    \"MethodName\": \"ValidarIdentidad\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -464,7 +343,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"Name\": \"ProcesoCompra\",\r\n  \"IdBaseClass\": \"1839409d-3a1d-471f-b31b-fdf8d4475a2e\", //Proceso\r\n  \"State\": \"Sealed\"\r\n}",
+							"raw": "{\r\n  \"Name\": \"ProcesoCompra\",\r\n  \"IdBaseNamespace\": \"72f0ff33-977d-4b5e-b1f1-7c5625de3979\",\r\n  \"IdBaseClass\": \"DE12915B-662A-4464-AD29-FFE3211EB5E2\", //Proceso\r\n  \"State\": \"Sealed\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -481,13 +360,13 @@
 					"response": []
 				},
 				{
-					"name": "Attribute inventarioDisponible",
+					"name": "Add attributes and methods",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"inventarioDisponible\",\r\n    \"IdClassType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"Privacity\": \"Private\"\r\n}",
+							"raw": "{\r\n\"id\": \"603fb133-202b-4344-83a7-39912455585f\",\r\n        \"name\": \"ProcesoCompra\",\r\n        \"idBaseClass\": \"de12915b-662a-4464-ad29-ffe3211eb5e2\",\r\n        \"state\": \"Sealed\",\r\n        \"methods\": [\r\n\t\t{\r\n\t\t\t\"Name\": \"ComprobarInventario\",\r\n\"Privacity\": \"Private\",\r\n\"Accesibility\": \"Normal\",\r\n\"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n\"IsStatic\": false,\r\n\"IsVirtual\": true,\r\n\"IsOverride\": false\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"Name\": \"RealizarProceso\",\r\n\"Privacity\": \"Protected\",\r\n\"Accesibility\": \"Sealed\",\r\n\"parameters\": [{\r\n\"Name\": \"cliente\",\r\n\"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\" //Cliente\r\n}],\r\n\"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n\"IsStatic\": false,\r\n\"IsVirtual\": true,\r\n\"IsOverride\": true\r\n\t\t}\r\n\t],\r\n        \"attributes\": [{\r\n\t\"Name\": \"inventarioDisponible\",\r\n\t\"IdInstance\":\"22223222-2222-2222-2222-222222222222\", //bool\r\n\t\"IdReference\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n\t\"Privacity\": \"Private\",\r\n\t\"isStatic\": false\r\n\t}],\r\n        \"implements\": [],\r\n        \"IdBasenamespace\": \"72f0ff33-977d-4b5e-b1f1-7c5625de3979\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -495,94 +374,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{domain}}classes/{{ProcesoCompraClass}}/attributes",
+							"raw": "{{domain}}classes",
 							"host": [
 								"{{domain}}classes"
-							],
-							"path": [
-								"{{ProcesoCompraClass}}",
-								"attributes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Method ComprobarInventario",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"ComprobarInventario\",\r\n    \"Privacity\": \"Private\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}classes/{{ProcesoCompraClass}}/methods",
-							"host": [
-								"{{domain}}classes"
-							],
-							"path": [
-								"{{ProcesoCompraClass}}",
-								"methods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Method RealizarProceso",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"RealizarProceso\",\r\n    \"Privacity\": \"Protected\",\r\n    \"Accesibility\": \"Sealed\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\" //bool\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}classes/{{ProcesoCompraClass}}/methods",
-							"host": [
-								"{{domain}}classes"
-							],
-							"path": [
-								"{{ProcesoCompraClass}}",
-								"methods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RealizarProceso params",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"cliente\",\r\n    \"IdClassType\": \"cd8f2ab5-de49-4e85-b7a4-54bd621f8dc0\" //Cliente\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{domain}}methods/{{method_RealizarProceso_ProcesoCompra}}/parameters",
-							"host": [
-								"{{domain}}methods"
-							],
-							"path": [
-								"{{method_RealizarProceso_ProcesoCompra}}",
-								"parameters"
 							]
 						}
 					},
@@ -595,7 +389,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"IdReference\": \"d87fe0fe-ca69-4952-a387-7f9c31d6f822\",//ProcesoCompra\r\n  \"MethodName\": \"Validar\",\r\n  \"Parameters\": [\r\n    {\r\n      \"Name\": \"cliente\",\r\n      \"IdClassType\": \"cd8f2ab5-de49-4e85-b7a4-54bd621f8dc0\" //Cliente\r\n    }\r\n  ],\r\n  \"TypeReference\": \"This\"\r\n}",
+							"raw": "{\r\n  \"IdReference\": \"603FB133-202B-4344-83A7-39912455585F\",//ProcesoCompra\r\n  \"MethodName\": \"Validar\",\r\n  \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n  \"Parameters\": [\r\n    {\r\n      \"Name\": \"cliente\",\r\n      \"IdInstance\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\", //Cliente\r\n      \"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\" //Cliente\r\n    }\r\n  ],\r\n  \"TypeReference\": \"This\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -622,7 +416,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"d87fe0fe-ca69-4952-a387-7f9c31d6f822\", //ProcesoCompra\r\n    \"MethodName\": \"ComprobarInventario\",\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"603FB133-202B-4344-83A7-39912455585F\", //ProcesoCompra\r\n    \"MethodName\": \"ComprobarInventario\",\r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"Parameters\":[],\r\n    \"TypeReference\": \"This\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -649,7 +443,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"IdReference\":\"96966252-d9a1-4c08-8ee1-e67d139306fe\", //notificador de Proceso\r\n    \"MethodName\": \"EnviarNotificacion\",\r\n    \"Parameters\":[\r\n        {\r\n        \"Name\": \"mensaje\",\r\n        \"IdClassType\": \"44444444-1111-1111-1111-111111111111\" //string\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
+							"raw": "{\r\n    \"IdReference\":\"22748FDE-50D8-460C-A601-4F2DD14F3FA5\", //notificador de Proceso\r\n    \"MethodName\": \"EnviarNotificacion\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\":[\r\n        {\r\n        \"Name\": \"mensaje\",\r\n        \"IdReference\": \"44444444-1111-1111-1111-111111111111\", //string\r\n        \"IdInstance\": \"44444444-1111-1111-1111-111111111111\" //string\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Attribute\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -676,7 +470,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"MethodName\": \"Ejecutar\",\r\n    \"Parameters\": [\r\n        {\r\n            \"name\": \"cliente\",\r\n            \"IdclassType\": \"cd8f2ab5-de49-4e85-b7a4-54bd621f8dc0\" //CLIENTE\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"1839409d-3a1d-471f-b31b-fdf8d4475a2e\", //PROCESO\r\n    \"IdInstanceType\": \"d87fe0fe-ca69-4952-a387-7f9c31d6f822\" //PROCESOCOMPRA\r\n}",
+							"raw": "{\r\n    \"MethodName\": \"Ejecutar\",\r\n    \"IdReturnType\":\"22222222-2222-2222-2222-222222222222\",\r\n    \"Parameters\": [\r\n        {\r\n            \"name\": \"cliente\",\r\n            \"IdReference\": \"4de6a172-c616-4699-9e4b-d9e7334337d3\", //CLIENTE\r\n            \"IdInstance\": \"603FB133-202B-4344-83A7-39912455585F\" //CLIENTE\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"DE12915B-662A-4464-AD29-FFE3211EB5E2\", //PROCESO\r\n    \"IdInstanceType\": \"603FB133-202B-4344-83A7-39912455585F\" //PROCESOCOMPRA\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -693,6 +487,53 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "ClientClass",
+			"value": "08ac28ea-28cc-4519-bce0-69083f60a42b",
+			"type": "default"
+		},
+		{
+			"key": "ComunicacionClass",
+			"value": "c3be4ac2-a895-435a-92b2-550a61e8bcba",
+			"type": "default"
+		},
+		{
+			"key": "method_EnviarNotificacion",
+			"value": "456afcca-acff-4c93-ad06-39b19e584036",
+			"type": "default"
+		},
+		{
+			"key": "ProcesoClass",
+			"value": "e929c57c-dac7-486a-86da-4798de09ce34",
+			"type": "default"
+		},
+		{
+			"key": "method_ejecutar",
+			"value": "e929c57c-dac7-486a-86da-4798de09ce34",
+			"type": "default"
+		},
+		{
+			"key": "method_RealizarProceso",
+			"value": "2aa7fe43-aa71-4a83-a664-7ef3813d61c6",
+			"type": "default"
+		},
+		{
+			"key": "method_Validar",
+			"value": "66e51423-cde6-4366-8fde-3f3d68397a3d",
+			"type": "default"
+		},
+		{
+			"key": "ProcesoCompraClass",
+			"value": "6722c439-142d-4eca-94a3-4d636ee7594c",
+			"type": "default"
+		},
+		{
+			"key": "method_RealizarProceso_ProcesoCompra",
+			"value": "2618291c-8b63-42ca-839e-3b27523522b2",
+			"type": "default"
 		}
 	]
 }

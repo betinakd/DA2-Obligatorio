@@ -1,0 +1,148 @@
+using Domain;
+using Domain.Enums;
+using IBusinessLogic;
+using IBusinessLogic.Exceptions;
+using IDataAccess;
+
+namespace BusinessLogic;
+
+public class ExecutionService(IExecutionDataAccess executionDataAccess, ISimClassService simClassService) : IExecutionService
+{
+    private readonly IExecutionDataAccess _executionDA = executionDataAccess;
+    private readonly ISimClassService _simClassService = simClassService;
+
+    public string ExecuteMethod(SimClass referenceClass, SimClass instanceClass, Reference reference, Signature signature, HashSet<Guid>? visited, int level = 0)
+    {
+        visited ??= [];
+
+        _simClassService.ValidPolymorphism(referenceClass, instanceClass);
+
+        SimMethod? staticMethod = _executionDA.FindMethodInHierarchyPublicOrProtected(referenceClass, signature);
+
+        if(staticMethod == null)
+        {
+            throw new InvalidOperationLogic($"Method not executable from reference.");
+        }
+
+        var useDynamicDispatch = reference.UsesDynamicDispatch() && (staticMethod.Accesibility == SimAccesibility.Abstract ||
+                                staticMethod.Accesibility == SimAccesibility.Interface
+                                || staticMethod.IsVirtual);
+
+        return ExecuteMethodInternal(referenceClass, instanceClass, reference, signature, level, visited, useDynamicDispatch);
+    }
+
+    private string ExecuteMethodInternal(SimClass referenceClass, SimClass instanceClass, Reference reference, Signature signature, int level, HashSet<Guid> visited, bool useDynamicDispatch)
+    {
+        var identation = new string(' ', level * 4);
+
+        SimMethod? methodToExecute;
+
+        if(useDynamicDispatch)
+        {
+            methodToExecute = _executionDA.FindOverrideOrReferenceMethod(instanceClass, referenceClass, signature);
+
+            if(methodToExecute != null && (methodToExecute.Accesibility == SimAccesibility.Abstract ||
+               methodToExecute.Accesibility == SimAccesibility.Interface))
+            {
+                throw new InvalidOperationLogic($"Method '{signature.Name}' cannot be executed because is abstract or in interface.");
+            }
+        }
+        else
+        {
+            methodToExecute = _executionDA.FindMethodInHierarchyPublicOrProtected(referenceClass, signature);
+
+            if(methodToExecute != null &&
+               methodToExecute.Privacity == SimPrivacity.Private &&
+               referenceClass.Id != instanceClass.Id)
+            {
+                throw new InvalidOperationLogic($"Private method '{signature.Name}' not accessible from this context.");
+            }
+        }
+
+        if(methodToExecute == null)
+        {
+            throw new InvalidOperationLogic($"Method not executable from reference.");
+        }
+
+        if(visited.Contains(methodToExecute.Id))
+        {
+            return $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
+        }
+
+        var result = level == 0
+            ? $"{identation}{reference.GetSignatureWithClassName(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n"
+            : $"{identation}{reference.GetSignature(signature)} -> {methodToExecute.GetMethodSignature(signature)}\n";
+
+        visited.Add(methodToExecute.Id);
+
+        foreach(var invocation in methodToExecute.Invocations)
+        {
+            Reference invocRef = invocation.Reference;
+            SimClass invocInstance = invocRef.GetInstanceClass(signature, instanceClass);
+            SimClass invocReference = invocRef.GetReferenceClass();
+
+            result += ExecuteMethod(invocReference, invocInstance, invocRef, invocation.Signature, [.. visited], level + 1);
+        }
+
+        return result;
+    }
+
+    public void ValidateMethodExistsInClass(SimClass classId, Signature methodName, bool isNotAbstract)
+    {
+        var method = _executionDA.FindMethodInHierarchyPublicOrProtected(classId, methodName);
+        if(method == null)
+        {
+            throw new NonExistentValueLogic($"Method '{methodName.Name}' is not accessible from this context");
+        }
+
+        if(method.Accesibility == SimAccesibility.Abstract && isNotAbstract)
+        {
+            throw new InvalidAttributeLogic($"Cannot add an abstract method to execute Method {methodName.Name}");
+        }
+    }
+
+    public void SaveExecutionLog(string reference, string objCreate, string execution)
+    {
+        var executionLog = new ExecutionLog()
+        {
+            Execution = execution,
+            ObjectCreate = objCreate,
+            Reference = reference
+        };
+        _executionDA.SaveExecutionLog(executionLog);
+    }
+
+    public bool IsReferenceBaseOfInstance(SimClass refer, SimClass obj)
+    {
+        if(refer == null || obj == null)
+        {
+            return false;
+        }
+
+        if(refer.Id == obj.Id)
+        {
+            return true;
+        }
+
+        if(!obj.BaseClassId.HasValue)
+        {
+            return false;
+        }
+
+        if(obj.BaseClassId.Value == refer.Id)
+        {
+            return true;
+        }
+
+        var baseClass = _executionDA.GetFilteredClasses(query =>
+            query.Where(c => c.Id == obj.BaseClassId.Value))
+            .FirstOrDefault();
+
+        if(baseClass == null)
+        {
+            return false;
+        }
+
+        return IsReferenceBaseOfInstance(refer, baseClass);
+    }
+}

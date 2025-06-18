@@ -1,11 +1,40 @@
 {
 	"info": {
-		"_postman_id": "b9a9d57f-6ea5-4858-bf20-373392f3c6b5",
+		"_postman_id": "7bdcc000-9ba2-415b-a7b4-dda2331262a3",
 		"name": "Ejemplo 1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39789209"
+		"_exporter_id": "39889195",
+		"_collection_link": "https://mmmmmmmm-0686.postman.co/workspace/mmmmmmmm%C3%B1%C3%B1%C3%B1%C3%B1-Workspace~6751dd8b-92e2-4d57-8bbe-dab6518da9c4/collection/39889195-7bdcc000-9ba2-415b-a7b4-dda2331262a3?action=share&source=collection_link&creator=39889195"
 	},
 	"item": [
+		{
+			"name": "Namespace creation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"EXAMPLE 1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/namespaces",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"namespaces"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "CreateMotor",
 			"request": {
@@ -13,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Motor\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Motor\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Auto\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Auto\",\r\n  \"IdBaseNamespace\": \"866e3b1e-914a-4b7f-a9d8-51d2fb88b273\", //System\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"11111111-1111-1111-1111-111111111111\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -70,7 +99,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Encender\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Encender\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n  \"IsStatic\": false,\r\n  \"IsVirtual\": true,\r\n  \"IsOverride\": false \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,7 +129,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Apagar\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Apagar\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"IsStatic\": false,\r\n  \"IsVirtual\": true,\r\n  \"IsOverride\": false \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -130,7 +159,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "    {\r\n        \"Name\": \"motorAuto\",\r\n        \"IdClassType\" : \"10678b1c-7b4c-433e-95ce-08abd98b035a\", // motor\r\n        \"Privacity\" : \"Private\"\r\n    }",
+					"raw": "    {\r\n        \"Name\": \"motorAuto\",\r\n        \"IdReference\" : \"82a0f6ae-a9c4-4eba-8fea-9e339ef8b2f9\", // motor\r\n        \"IdInstance\" : \"82a0f6ae-a9c4-4eba-8fea-9e339ef8b2f9\", // motor\r\n        \"Privacity\" : \"Private\",\r\n        \"IsStatic\": false\r\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -160,7 +189,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"IniciarViaje\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"raw": "{\r\n  \"name\": \"IniciarViaje\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"IsStatic\": false,\r\n  \"IsVirtual\": true,\r\n  \"IsOverride\": false \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -190,7 +219,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"FinalizarViaje\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\"\r\n}",
+					"raw": "{\r\n  \"name\": \"FinalizarViaje\",\r\n  \"privacity\": \"Public\",\r\n  \"accesibility\" : \"Normal\",\r\n  \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"IsStatic\": false,\r\n  \"IsVirtual\": true,\r\n  \"IsOverride\": false \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -220,7 +249,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\" :\"20ab6572-2c16-4bc8-b73c-7de8cdd9170e\", // motorAuto\r\n    \"MethodName\" :\"Encender\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\"\r\n}",
+					"raw": "{\r\n    \"IdReference\" :\"07203853-69fa-455b-bf14-88abbf729834\", // motorAuto\r\n    \"MethodName\" :\"Encender\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -250,7 +279,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\" :\"7318004c-ed47-4ded-a2e1-032c87b273a2\", //auto\r\n    \"MethodName\" :\"IniciarViaje\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\"\r\n}",
+					"raw": "{\r\n    \"IdReference\" :\"66cf9b92-657e-4e68-ac3c-316b41bdb39b\", //auto\r\n    \"MethodName\" :\"IniciarViaje\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"This\",\r\n    \"IdReturnType\" :\"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -280,7 +309,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"IdReference\" :\"20ab6572-2c16-4bc8-b73c-7de8cdd9170e\", //motorAuto\r\n    \"MethodName\" : \"Apagar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\"\r\n}",
+					"raw": "{\r\n    \"IdReference\" :\"07203853-69fa-455b-bf14-88abbf729834\", //motorAuto\r\n    \"MethodName\" : \"Apagar\",\r\n    \"Parameters\" :[],\r\n    \"TypeReference\" :\"Attribute\",\r\n    \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\" //void\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -310,7 +339,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"MethodName\" : \"IniciarViaje\",\r\n    \"Parameters\": [],\r\n    \"IdReferenceType\": \"7318004c-ed47-4ded-a2e1-032c87b273a2\", //Auto\r\n    \"IdInstanceType\":\"7318004c-ed47-4ded-a2e1-032c87b273a2\"  //Auto\r\n}",
+					"raw": "{\r\n    \"MethodName\" : \"IniciarViaje\",\r\n    \"Parameters\": [],\r\n    \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IdReferenceType\": \"66cf9b92-657e-4e68-ac3c-316b41bdb39b\", //Auto\r\n    \"IdInstanceType\":\"66cf9b92-657e-4e68-ac3c-316b41bdb39b\"  //Auto\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -1,0 +1,45 @@
+<div class="container">
+    <h2>Create Parameter</h2>
+
+    <div class="messages">
+        <div *ngIf="success" class="success-message">
+            <i class="material-icons">check_circle</i>
+            <span>{{ success }}</span>
+        </div>
+
+        <div *ngIf="error" class="error-message">
+            <i class="material-icons">error</i>
+            <span>{{ error }}</span>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="method-selector-container">
+            <app-method-selector [labelText]="'Method'" (methodSelected)="onMethodSelected($event)">
+            </app-method-selector>
+        </div>
+
+        <div class="parameter-card">
+            <div class="parameter-header">
+                <span class="parameter-title">Parameter</span>
+            </div>
+
+            <div class="form-row">
+                <label class="parameter-label">Name:</label>
+                <input type="text" [(ngModel)]="parameter.name" placeholder="Parameter name" class="compact-input" />
+            </div>
+
+            <div class="form-row">
+                <app-class-selector (classSelected)="onTypeSelected($event)" [labelText]="'Select Reference Type'">
+                </app-class-selector>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="create-btn" [disabled]="loading" (click)="clickCreate()">
+                <span *ngIf="!loading">Create Parameter</span>
+                <span *ngIf="loading">Creating...</span>
+            </button>
+        </div>
+    </div>
+    </div>

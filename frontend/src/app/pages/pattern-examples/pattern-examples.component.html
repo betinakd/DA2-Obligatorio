@@ -1,0 +1,18 @@
+<div class="page-container">
+    <h1 class="page-title">{{ patternName }}</h1>
+    <app-treefeature-grid 
+        [classList]="classList" 
+        [methodList]="methodList"
+        [executionOutput]="executionOutput">
+    </app-treefeature-grid>
+    <div class="selector-container" *ngIf="executionsOptions && executionsOptions.length > 0">
+        <mat-form-field appearance="fill">
+            <mat-label>Scenario to simulate</mat-label>
+            <mat-select (selectionChange)="getExecutionOutput($event.value)">
+                <mat-option *ngFor="let option of executionsOptions; let i = index" [value]="i">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
