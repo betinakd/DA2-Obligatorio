@@ -192,6 +192,18 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
             .HasForeignKey(r => r.ReferenceId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        _ = modelBuilder.Entity<ReferenceStatic>()
+            .HasOne(r => r.Reference)
+            .WithMany()
+            .HasForeignKey(r => r.ReferenceId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<ReferenceStaticAttribute>()
+            .HasOne(r => r.Reference)
+            .WithMany()
+            .HasForeignKey(r => r.ReferenceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         _ = modelBuilder.Entity<Signature>()
             .HasMany(s => s.Parameters)
             .WithOne(ps => ps.Signature)

@@ -52,12 +52,13 @@ public class SimMethodDataAccess(SimulatorDbContext context) : ISimMethodDataAcc
             .Include(m => m.Invocations)
             .FirstOrDefault(m => m.Id == idMethod);
 
+        if(method.Invocations == null)
+        {
+            method.Invocations = [];
+        }
+
         newInvocation.Index = method.Invocations.Count;
         newInvocation.RelatedMethodId = method.Id;
-
-        var updatedInvocations = method.Invocations;
-        updatedInvocations.Add(newInvocation);
-        method.Invocations = updatedInvocations;
 
         _context.Invocations.Add(newInvocation);
         _context.SaveChanges();
