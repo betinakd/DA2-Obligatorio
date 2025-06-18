@@ -3,6 +3,7 @@ using Domain;
 using Models.Response;
 
 namespace Adapter.Helpers;
+
 [ExcludeFromCodeCoverage]
 public static class NamespaceResponseMapper
 {

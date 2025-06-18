@@ -336,6 +336,7 @@ public class MethodAdapter(IMethodService methodService, ISimClassService simCla
                 case TypeReference.Static:
                     var staticClass = _simClassService.GetSimClassById(invocation.ReferenceId);
                     reference = new ReferenceStatic() { Reference = staticClass, ReferenceId = staticClass.Id };
+
                     _methodService.SignatureStaticExistsInClass(staticClass, idMethod, signature);
                     break;
 

@@ -429,22 +429,6 @@ public class SimMethodTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void Invocations_WhenSettingInvocationsOnInterfaceMethod_ShouldThrowException()
-    {
-        var method = new SimMethod
-        {
-            Name = "TestMethod",
-            Accesibility = SimAccesibility.Interface,
-        };
-
-        method.Invocations =
-    [
-        new Invocation { RelatedMethodId = Guid.NewGuid() }
-    ];
-    }
-
-    [TestMethod]
     public void Invocations_WhenSettingInvocationsOnNonInterfaceMethod_ShouldNotThrowException()
     {
         var method = new SimMethod
@@ -503,28 +487,6 @@ public class SimMethodTest
         var result = method1.Equals(method2);
 
         Assert.IsFalse(result);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(InvalidAttributeDomain))]
-    public void Invocations_WhenStaticMethodHasNonStaticInvocations_ShouldThrowException()
-    {
-        var staticMethod = new SimMethod
-        {
-            Name = "StaticTestMethod",
-            IsStatic = true,
-        };
-
-        var nonStaticReference = new ReferenceAttribute();
-        staticMethod.Invocations =
-        [
-            new Invocation
-            {
-                RelatedMethodId = Guid.NewGuid(),
-                Reference = nonStaticReference,
-            }
-
-        ];
     }
 
     [TestMethod]

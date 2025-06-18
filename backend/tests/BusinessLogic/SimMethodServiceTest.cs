@@ -48,34 +48,6 @@ public class SimMethodServiceTest
     }
 
     [TestMethod]
-    public void AddInvocation_ShouldReturnInvocation_WhenMethodExists()
-    {
-        var methodId = Guid.NewGuid();
-        var returnTypeId = Guid.NewGuid();
-        var newInvocation = new Invocation
-        {
-            Signature = new Signature
-            {
-                ReturnTypeId = returnTypeId,
-                Name = "TestInvocation",
-                Parameters = [],
-            }
-        };
-        var expectedInvocation = new Invocation();
-
-        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
-        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
-        _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, newInvocation)).Returns(expectedInvocation);
-
-        var result = _simMethodService!.AddInvocation(methodId, newInvocation);
-
-        Assert.AreEqual(expectedInvocation, result);
-        _mockSimClassDataAccess.Verify(m => m.ExistSimClassById(returnTypeId), Times.Once);
-        _mockSimMethodDataAccess.Verify(m => m.ExistMethodById(methodId), Times.Once);
-        _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, newInvocation), Times.Once);
-    }
-
-    [TestMethod]
     public void AddMethod_ShouldThrowException_WhenSimClassDoesNotExist()
     {
         var classId = Guid.NewGuid();
@@ -1467,5 +1439,204 @@ public class SimMethodServiceTest
 
         Assert.AreEqual(method, result);
         _mockSimMethodDataAccess.Verify(m => m.CreateMethod(classId, method), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInvocation_ShouldThrowException_WhenReturnTypeDoesNotExist()
+    {
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var invocation = new Invocation();
+        invocation.Signature = new Signature
+        {
+            ReturnTypeId = returnTypeId,
+            Name = "TestInvocation",
+            Parameters = []
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(false);
+
+        Assert.ThrowsException<NonExistentValueLogic>(() =>
+            _simMethodService!.AddInvocation(methodId, invocation));
+        _mockSimClassDataAccess.Verify(m => m.ExistSimClassById(returnTypeId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInvocation_ShouldThrowException_WhenMethodIsInterface()
+    {
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var invocation = new Invocation();
+        invocation.Signature = new Signature
+        {
+            ReturnTypeId = returnTypeId,
+            Name = "TestInvocation",
+            Parameters = []
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            Accesibility = SimAccesibility.Interface
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(method);
+
+        Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simMethodService!.AddInvocation(methodId, invocation));
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInvocation_ShouldThrowException_WhenStaticMethodWithNonStaticReference()
+    {
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var reference = new ReferenceThis { Reference = new SimClass() };
+
+        var invocation = new Invocation
+        {
+            Reference = reference,
+            Signature = new Signature
+            {
+                ReturnTypeId = returnTypeId,
+                Name = "TestInvocation",
+                Parameters = []
+            }
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsStatic = true,
+            Accesibility = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(method);
+
+        Assert.ThrowsException<InvalidAttributeLogic>(() =>
+            _simMethodService!.AddInvocation(methodId, invocation));
+        _mockSimMethodDataAccess.Verify(m => m.GetMethodById(methodId), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInvocation_ShouldCreateInvocation_WhenAllValidationsPass()
+    {
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var reference = new ReferenceStatic { Reference = new SimClass() };
+
+        var invocation = new Invocation
+        {
+            Reference = reference,
+            Signature = new Signature
+            {
+                ReturnTypeId = returnTypeId,
+                Name = "TestInvocation",
+                Parameters = []
+            }
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsStatic = true,
+            Accesibility = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(method);
+        _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, invocation)).Returns(invocation);
+
+        var result = _simMethodService!.AddInvocation(methodId, invocation);
+
+        Assert.AreEqual(invocation, result);
+        _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, invocation), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInvocation_ShouldCreateInvocation_ForNonStaticMethod()
+    {
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var reference = new ReferenceThis { Reference = new SimClass() };
+
+        var invocation = new Invocation
+        {
+            Reference = reference,
+            Signature = new Signature
+            {
+                ReturnTypeId = returnTypeId,
+                Name = "TestInvocation",
+                Parameters = []
+            }
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsStatic = false,
+            Accesibility = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(method);
+        _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, invocation)).Returns(invocation);
+
+        var result = _simMethodService!.AddInvocation(methodId, invocation);
+
+        Assert.AreEqual(invocation, result);
+        _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, invocation), Times.Once);
+    }
+
+    [TestMethod]
+    public void AddInvocation_ShouldCreateInvocation_ForStaticMethodWithStaticAttribute()
+    {
+        var methodId = Guid.NewGuid();
+        var returnTypeId = Guid.NewGuid();
+
+        var reference = new ReferenceStaticAttribute
+        {
+            Reference = new SimAttribute { IsStatic = true }
+        };
+
+        var invocation = new Invocation
+        {
+            Reference = reference,
+            Signature = new Signature
+            {
+                ReturnTypeId = returnTypeId,
+                Name = "TestInvocation",
+                Parameters = []
+            }
+        };
+
+        var method = new SimMethod
+        {
+            Id = methodId,
+            IsStatic = true,
+            Accesibility = SimAccesibility.Normal
+        };
+
+        _mockSimClassDataAccess!.Setup(m => m.ExistSimClassById(returnTypeId)).Returns(true);
+        _mockSimMethodDataAccess!.Setup(m => m.ExistMethodById(methodId)).Returns(true);
+        _mockSimMethodDataAccess.Setup(m => m.GetMethodById(methodId)).Returns(method);
+        _mockSimMethodDataAccess.Setup(m => m.CreateInvocation(methodId, invocation)).Returns(invocation);
+
+        var result = _simMethodService!.AddInvocation(methodId, invocation);
+
+        Assert.AreEqual(invocation, result);
+        _mockSimMethodDataAccess.Verify(m => m.CreateInvocation(methodId, invocation), Times.Once);
     }
 }

@@ -24,6 +24,20 @@ public class SimMethodService(ISimMethodDataAccess simMethodDA, ISimClassDataAcc
             throw new NonExistentValueLogic("Method does not exist.");
         }
 
+        var method = _simMethodDA.GetMethodById(idMethod);
+
+        if(method.Accesibility == SimAccesibility.Interface)
+        {
+            throw new InvalidAttributeLogic("Interface methods cannot have invocations.");
+        }
+
+        if(method.IsStatic &&
+           (newInvocation.Reference.GetReferenceTypeDescription() != "Static" &&
+            newInvocation.Reference.GetReferenceTypeDescription() != "StaticAttribute"))
+        {
+            throw new InvalidAttributeLogic("Static methods cannot have non-static invocations.");
+        }
+
         return _simMethodDA.CreateInvocation(idMethod, newInvocation);
     }
 
