@@ -1,0 +1,645 @@
+{
+	"info": {
+		"_postman_id": "d0948f92-3cf7-4b60-b0bd-5d2b9fd436cc",
+		"name": "Endpoints Simulator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39789209"
+	},
+	"item": [
+		{
+			"name": "Classes",
+			"item": [
+				{
+					"name": "GetAllClasses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}classes",
+							"host": [
+								"{{domain}}classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetClass",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}classes/{{idClass}}",
+							"host": [
+								"{{domain}}classes"
+							],
+							"path": [
+								"{{idClass}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClass",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": \"c41a14b3-d89b-48b0-9541-42616b2e0697\",\r\n  \"name\": \"Prueba\",\r\n  \"state\": \"Normal\",\r\n  \"idBaseClass\": \"\",\r\n  \"implements\": [\r\n    {\r\n        \"IdInterface\": \"e0876a40-bdd8-475f-9efd-283c2d35a27f\"\r\n    }],\r\n  \"attributes\":[],\r\n  \"methods\":[]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateClass",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Validador\",\r\n  \"IdBaseNamespace\": \"2bcb052c-f756-4d47-a456-9e0c2da561cc\",\r\n  \"IdBaseClass\": \"11111111-1111-1111-1111-111111111111\",\r\n  \"State\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddInterfaceInClass",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"IdInterface\": \"adbfdfe6-c690-4191-85cb-70c111f2c9c6\",\r\n  \"methods\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}/implements",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}",
+								"implements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteClass",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Attributes",
+			"item": [
+				{
+					"name": "GetAttribute",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/attributes/{{idAttribute}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attributes",
+								"{{idAttribute}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAttribute",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"Name\": \"AtributoPrueba2\",\r\n        \"IdRefernce\" : \"07b198b9-ac67-4d05-a79d-d4688516f8fd\",\r\n        \"IdInstance\" : \"07b198b9-ac67-4d05-a79d-d4688516f8fd\",\r\n        \"Privacity\" : \"Public\",\r\n        \"IsStatic\" : false\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}/attributes",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAttribute",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/attributes/{{idAttribute}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attributes",
+								"{{idAttribute}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAttribute",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"Name\": \"AtributoPrueba2\",\r\n    \"IdRelatedClass\": \"22222222-2222-2222-2222-222222222222\",\r\n    \"IdRefernce\" : \"07b198b9-ac67-4d05-a79d-d4688516f8fd\",\r\n    \"IdInstance\" : \"07b198b9-ac67-4d05-a79d-d4688516f8fd\",\r\n    \"Privacity\" : \"Public\",\r\n    \"IsStatic\" : false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/attributes",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Methods",
+			"item": [
+				{
+					"name": "GetMethod",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateMethod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"EsValido\",\r\n    \"Privacity\": \"Public\",\r\n    \"Accesibility\": \"Normal\", \r\n    \"IdReturnType\": \"22223222-2222-2222-2222-222222222222\", //bool\r\n    \"IsStatic\": false,\r\n    \"IsVirtual\": true,\r\n    \"IsOverride\": true    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/classes/{{idClass}}/methods",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"classes",
+								"{{idClass}}",
+								"methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMethod",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddParameter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"gg\",\r\n    \"IdReference\" : \"ffcd25a6-f332-4b7d-8963-73067185d1df\",\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}/parameters",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}",
+								"parameters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddVariable",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\" : \"Queso\",\r\n    \"IdReference\" : \"0bb96744-1385-45b6-81bc-ca47b8d8177a\",\r\n    \"IdInstance\" : \"0bb96744-1385-45b6-81bc-ca47b8d8177a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}/variables",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}",
+								"variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddInvocation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IdReference\":\"f4c46058-6128-405a-bfc4-93e65b236aed\", //v visitante parameter\r\n    \"MethodName\": \"VisitarReel\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"parameters\": [\r\n        {\r\n          \"name\": \"this\",\r\n          \"idReference\": \"fd0a54db-cdcb-4074-98f6-81e32b10c376\", //Reel\r\n          \"IdInstance\": \"fd0a54db-cdcb-4074-98f6-81e32b10c376\" //Reel\r\n        }\r\n    ],\r\n    \"TypeReference\": \"Parameter\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/methods/{{idMethod}}/invocations",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"methods",
+								"{{idMethod}}",
+								"invocations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Executions",
+			"item": [
+				{
+					"name": "ExecuteMethod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"MethodName\" : \"Aceptar\",\r\n    \"IdReturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"Parameters\":[\r\n        {\r\n            \"Name\": \"visitorCaritas\",\r\n            \"IdReference\": \"27b8e0dd-94f3-4ffc-800b-6110c31729b6\", //Visitante\r\n            \"IdInstance\": \"c39859f7-0a0c-4b0e-b04e-ca3438236923\" //FiltroBYN\r\n        }\r\n    ],\r\n    \"IdReferenceType\": \"b1ba9ec7-f138-41f0-92bc-8c25b63244f1\", //Publicacion\r\n    \"IdInstanceType\":\"39d7c1d8-00a4-44b9-acf8-ef6bbdbbd0d9\" // Historia\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/executions",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"executions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Namespaces",
+			"item": [
+				{
+					"name": "Get Namespace",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{domain}}namespaces/{{idNamespace}}",
+							"host": [
+								"{{domain}}namespaces"
+							],
+							"path": [
+								"{{idNamespace}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Namespaces",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{domain}}namespaces",
+							"host": [
+								"{{domain}}namespaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create namespace",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Domain\",\r\n  \"BaseNamespaceId\": \"4425af66-f347-4cc9-b331-e8b9fa3f656a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}namespaces",
+							"host": [
+								"{{domain}}namespaces"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transformers",
+			"item": [
+				{
+					"name": "Transformers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"connection": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "77777777-aaaa-1111-1111-111111111111",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/transformers",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transformers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transformers execute",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "77777777-aaaa-1111-1111-111111111111",
+								"type": "text"
+							},
+							{
+								"key": "Content",
+								"value": "text/html; charset=UTF-8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\"TransformerName\": \"html\",\r\n\"Execution\": {\r\n    \"MethodName\" : \"IniciarViaje\",\r\n    \"Parameters\": [        {\r\n            \"Name\": \"parametroX\",\r\n            \"IdReference\": \"27b8e0dd-94f3-4ffc-800b-6110c31729b6\",\r\n            \"IdInstance\": \"c39859f7-0a0c-4b0e-b04e-ca3438236923\"\r\n        }],\r\n    \"IdreturnType\": \"22222222-2222-2222-2222-222222222222\", //void\r\n    \"IdReferenceType\": \"d6566e7b-04ca-4de3-abe4-85e73e42f422\", //Auto\r\n    \"IdInstanceType\":\"d6566e7b-04ca-4de3-abe4-85e73e42f422\"  //Auto\r\n}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/transformers",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transformers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://localhost:5128",
+			"type": "default"
+		},
+		{
+			"key": "idClass",
+			"value": "Guid",
+			"type": "default"
+		},
+		{
+			"key": "State",
+			"value": "Normal",
+			"type": "default"
+		},
+		{
+			"key": "idMethod",
+			"value": "Guid",
+			"type": "default"
+		}
+	]
+}
