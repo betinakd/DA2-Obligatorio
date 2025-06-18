@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddResponseCaching();
 
-// web services
+// web service
 var app = builder.Build();
 
 app.UseCors();
