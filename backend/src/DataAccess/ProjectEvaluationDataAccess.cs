@@ -17,7 +17,12 @@ public class ProjectEvaluationDataAccess(SimulatorDbContext context) : IProjectE
     public ProjectEvaluation GetById(Guid id)
     {
         var projectEvaluation = _context.ProjectEvaluations.Find(id);
-        return projectEvaluation!;
+        if (projectEvaluation == null)
+        {
+            throw new InvalidOperationException($"ProjectEvaluation with ID {id} not found");
+        }
+
+        return projectEvaluation;
     }
 
     public IEnumerable<ProjectEvaluation> GetAll()
