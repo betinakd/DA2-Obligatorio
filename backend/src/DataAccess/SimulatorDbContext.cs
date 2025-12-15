@@ -19,6 +19,7 @@ public class SimulatorDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<ExecutionLog> ExecutionLogs { get; set; }
     public DbSet<ApiKey> ApiKeys { get; set; }
     public DbSet<SimNamespace> SimNamespaces { get; set; }
+    public DbSet<ProjectEvaluation> ProjectEvaluations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -34,6 +34,9 @@ public static class SimulatorServiceFactory
         services.AddScoped<IExecutionDataAccess, ExecutionDataAccess>();
         services.AddScoped<ITransformerAdapter, TransformerAdapter>();
         services.AddScoped<ITransformerService, TransformerService>();
+        services.AddScoped<IProjectEvaluationAdapter, ProjectEvaluationAdapter>();
+        services.AddScoped<IProjectEvaluationService, ProjectEvaluationService>();
+        services.AddScoped<IProjectEvaluationDataAccess, ProjectEvaluationDataAccess>();
         services.AddDbContext<DbContext, SimulatorDbContext>(options =>
             options.UseSqlServer(connectionString, sqlOptions =>
             {
